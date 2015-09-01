@@ -8,5 +8,27 @@
     <artifactId>core</artifactId>
     <version>experimental</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20080701</version>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>Aurawin</id>
+            <build>
+                <finalName>com.aurawin.core</finalName>
+                <resources>
+                    <resource>
+                        <directory>${basedir}/src/main/resources/</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                </resources>
+            </build>
 
+
+        </profile>
+    </profiles>
 </project>
