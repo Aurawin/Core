@@ -1,0 +1,18 @@
+{ "table" :
+  {
+    "language" : "english-us",
+    "comments" : [
+      {"Notice" : "This language file can be copied and modified to localize."},
+      {"Requirement" : "Only edit the values of each key."},
+      {"Warning:": "Do not remove % symbols get replaced by values at runtime."}
+    ]
+    "manifest" : [
+      { "table.label.item" : "item"},
+      { "table.label.items": "items"},
+      { "table.label.collection" : "collection"},
+      { "table.label.collections": "collections"},
+      { "table.exception.rsr.websocket.securityoption.invalid" : "Invalid security option %s"},
+      { "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set" }
+    ]
+  }
+}
