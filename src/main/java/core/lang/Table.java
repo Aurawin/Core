@@ -39,7 +39,7 @@ public class Table {
 
         }
     }
-    public static final String getEntry(String NameSpace){
+    public static final String String(String NameSpace){
         try {
             return Manifest.getString(NameSpace);
         } catch (java.lang.Exception E){
@@ -47,12 +47,31 @@ public class Table {
         }
     }
     public static class Label{
-        public static final String Item = "table.label.item";
-        public static final String Items = "table.label.items";
-        public static final String  Collection = "table.label.collection";
-        public static final String  Collections = "table.label.collections";
+        public static final String Item = "table.label.Item";
+        public static final String Items = "table.label.Items";
+        public static final String Collection = "table.label.Collection";
+        public static final String Collections = "table.label.Collections";
+        public static final String Name = "table.label.Name";
+        public static final String Value = "table.label.Value";
+    }
+    public static class Item{
+        public static final String JSONObject = "table.item.JSONObject";
+    }
+    public static class Action{
+        public static final String AddNew="table.action.AddNew";
 
-
+        public static String Format(String Namespace, String Name) {
+            try {
+                return String.format(Manifest.getString(Namespace), Manifest.getString(Name));
+            } catch (java.lang.Exception e) {
+                return "missing";
+            }
+        }
+    }
+    public static class JSON{
+        public static final String Array = "table.json.Array";
+        public static final String Object = "table.json.Object";
+        public static final String KeyPair = "table.json.Keypair";
     }
     public static class Exception{
         public static class RSR{

@@ -1,18 +1,22 @@
-{ "table" :
   {
     "language" : "english-us",
-    "comments" : [
-      {"Notice" : "This language file can be copied and modified to localize."},
-      {"Requirement" : "Only edit the values of each key."},
-      {"Warning:": "Do not remove % symbols get replaced by values at runtime."}
-    ]
-    "manifest" : [
-      { "table.label.item" : "item"},
-      { "table.label.items": "items"},
-      { "table.label.collection" : "collection"},
-      { "table.label.collections": "collections"},
-      { "table.exception.rsr.websocket.securityoption.invalid" : "Invalid security option %s"},
-      { "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set" }
-    ]
+    "comments": [
+        { "Notice": "This language file can be copied and modified to localize."},
+        { "Requirement": "Only edit the values of each key." },
+        { "Warning:": "Do not remove % symbols get replaced by values at runtime."}
+    ],
+    "table.action.AddNew" : "Add a new %s",
+    "table.label.Item" : "Item",
+    "table.label.Items": "Items",
+    "table.label.Name": "Name",
+    "table.label.Value": "Value",
+    "table.label.Collection" : "Collection",
+    "table.label.Collections": "Collections",
+    "table.json.Array" : "Array",
+    "table.json.Object": "Object",
+    "table.json.Keypair" : "Simple",
+    "table.item.JSONObject" : "JSON Object",
+    "table.exception.rsr.websocket.securityoption.invalid" : "Invalid security option %s",
+    "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set"
   }
-}
+
