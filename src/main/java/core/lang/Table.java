@@ -1,4 +1,4 @@
-package com.aurawin.core.lang;
+package core.lang;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,6 +54,7 @@ public class Table {
     }
     public static class Action{
         public static final String a="table.action.a";
+        public static final String an="table.action.an";
         public static final String one="table.action.one";
     }
     public static class Label{
@@ -71,6 +72,7 @@ public class Table {
         public static final String Rename = "table.hint.rename";
         public static final String Refresh = "table.hint.refresh";
         public static final String Input = "table.hint.input";
+        public static final String Unsaved = "table.hint.unsaved";
 
         public static String Format(String Namespace, String Arg){
             try{
@@ -102,6 +104,7 @@ public class Table {
     }
     public static class Item{
         public static final String JSONObject = "table.item.JSONObject";
+        public static final String JSONSource = "table.item.JSONSource";
         public static final String Mailbox = "table.item.Mailbox";
         public static final String Message = "table.item.Message";
     }

@@ -1,2 +1,2 @@
 
-package com.aurawin.core.rsr.transport;
+package core.rsr.transport;

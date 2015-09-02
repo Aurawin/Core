@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.buffer;
+package core.rsr.buffer;
 
 public class Position {
     public volatile long Read;

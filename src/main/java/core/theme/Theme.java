@@ -1,4 +1,4 @@
-package com.aurawin.core.theme;
+package core.theme;
 
 
 import org.json.JSONObject;
@@ -55,26 +55,43 @@ public class Theme {
                 public static String Add = "table.light.button.default.add";
                 public static String Delete = "table.light.button.default.delete";
                 public static String New = "table.light.button.default.new";
+                public static String File = "table.light.button.default.file";
+                public static String Folder = "table.light.button.default.folder";
+            }
+            public static class Disabled {
+                public static String Add = "table.light.button.disabled.add";
+                public static String Delete = "table.light.button.disabled.delete";
+                public static String New = "table.light.button.disabled.new";
+                public static String File = "table.light.button.disabled.file";
+                public static String Folder = "table.light.button.disabled.folder";
             }
             public static class Pressed{
                 public static String Add = "table.light.button.pressed.add";
                 public static String Delete = "table.light.button.pressed.delete";
                 public static String New = "table.light.button.pressed.new";
+                public static String File = "table.light.button.pressed.file";
+                public static String Folder = "table.light.button.pressed.folder";
             }
             public static class Rollover{
                 public static String Add = "table.light.button.rollover.add";
                 public static String Delete = "table.light.button.rollover.delete";
                 public static String New = "table.light.button.rollover.new";
+                public static String File = "table.light.button.rollover.file";
+                public static String Folder = "table.light.button.rollover.folder";
             }
             public static class RolloverSelected{
                 public static String Add = "table.light.button.rollover-selected.add";
                 public static String Delete = "table.light.button.rollover-selected.delete";
                 public static String New = "table.light.button.rollover-selected.new";
+                public static String File = "table.light.button.rollover-selected.file";
+                public static String Foldder = "table.light.button.rollover-selected.folder";
             }
             public static class Selected{
                 public static String Add = "table.light.button.selected.add";
                 public static String Delete = "table.light.button.selected.delete";
                 public static String New = "table.light.button.selected.new";
+                public static String File = "table.light.button.selected.file";
+                public static String Folder = "table.light.button.selected.folder";
             }
         }
 

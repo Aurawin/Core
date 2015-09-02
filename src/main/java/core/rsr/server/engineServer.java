@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.server;
+package core.rsr.server;
 
 
 public class engineServer {

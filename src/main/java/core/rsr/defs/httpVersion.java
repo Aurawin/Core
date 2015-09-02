@@ -1,8 +1,4 @@
-package com.aurawin.core.rsr.defs;
-
-/**
- * Created by Andrew on 8/28/2015.
- */
+package core.rsr.defs;
 public class httpVersion {
     public volatile int Major;
     public volatile int Minor;

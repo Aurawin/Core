@@ -1,1 +1,1 @@
-package com.aurawin.core.stream;
+package core.stream;

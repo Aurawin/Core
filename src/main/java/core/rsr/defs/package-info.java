@@ -1,2 +1,2 @@
 
-package com.aurawin.core.rsr.defs;
+package core.rsr.defs;

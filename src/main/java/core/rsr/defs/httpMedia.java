@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.defs;
+package core.rsr.defs;
 
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;

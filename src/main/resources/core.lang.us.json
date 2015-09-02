@@ -7,6 +7,7 @@
     ],
 
     "table.action.a" : "a",
+    "table.action.an" : "an",
     "table.action.one" : "one",
 
     "table.label.Item" : "Item",
@@ -22,6 +23,7 @@
     "table.json.Keypair" : "Simple",
 
     "table.item.JSONObject" : "JSON Object",
+    "table.item.JSONSource" : "JSON source",
     "table.item.Mailbox" : "Mailbox",
     "table.item.Message" : "Message",
 
@@ -30,8 +32,9 @@
 
     "table.hint.add" : "Add %s new %s",
     "table.hint.rename" : "Rename %s",
-    "table.hint.delete" : "Delete %s",
+    "table.hint.delete" : "Delete %s %s",
     "table.hint.refresh" : "Refresh %s",
-    "table.hint.input"  : "Input a value for %s"
+    "table.hint.input"  : "Input a value for %s",
+    "table.hint.unsaved" : "This %s is not saved"
   }
 

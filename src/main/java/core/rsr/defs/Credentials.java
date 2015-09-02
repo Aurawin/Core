@@ -1,7 +1,7 @@
-package com.aurawin.core.rsr.defs;
+package core.rsr.defs;
 
-import com.aurawin.core.enryption.md5;
-import com.aurawin.core.stream.MemoryStream;
+import core.enryption.md5;
+import core.stream.MemoryStream;
 
 /**
  * Created by Andrew on 8/28/2015.

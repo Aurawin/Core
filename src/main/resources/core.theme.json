@@ -9,21 +9,37 @@
   "table.light.button.default.add"      : "/theme/light/button/default/add_16.png",
   "table.light.button.default.delete"   : "/theme/light/button/default/delete_16.png",
   "table.light.button.default.new"      : "/theme/light/button/default/new_16.png",
+  "table.light.button.default.file"      : "/theme/light/button/default/file_16.png",
+  "table.light.button.default.folder"      : "/theme/light/button/default/folder_16.png",
+
+  "table.light.button.disabled.add"      : "/theme/light/button/disabled/add_16.png",
+  "table.light.button.disabled.delete"   : "/theme/light/button/disabled/delete_16.png",
+  "table.light.button.disabled.new"      : "/theme/light/button/disabled/new_16.png",
+  "table.light.button.disabled.file"      : "/theme/light/button/disabled/file_16.png",
+  "table.light.button.disabled.folder"      : "/theme/light/button/disabled/folder_16.png",
 
   "table.light.button.pressed.add"      : "/theme/light/button/pressed/add_16.png",
   "table.light.button.pressed.delete"   : "/theme/light/button/pressed/delete_16.png",
   "table.light.button.pressed.new"      : "/theme/light/button/pressed/new_16.png",
+  "table.light.button.pressed.file"      : "/theme/light/button/pressed/file_16.png",
+  "table.light.button.pressed.folder"      : "/theme/light/button/pressed/folder_16.png",
 
   "table.light.button.rollover.add"     : "/theme/light/button/rollover/add_16.png",
   "table.light.button.rollover.delete"  : "/theme/light/button/rollover/delete_16.png",
-  "table.light.button.rollover.new"     : "/theme/light/button/rollover/new_16.png"
+  "table.light.button.rollover.new"     : "/theme/light/button/rollover/new_16.png",
+  "table.light.button.rollover.file"     : "/theme/light/button/rollover/file_16.png",
+  "table.light.button.rollover.folder"     : "/theme/light/button/rollover/foler_16.png",
 
   "table.light.button.rollover-selected.add"     : "/theme/light/button/rollover-selected/add_16.png",
   "table.light.button.rollover-selected.delete"  : "/theme/light/button/rollover-selected/delete_16.png",
-  "table.light.button.rollover-selected.new"     : "/theme/light/button/rollover-selected/new_16.png"
+  "table.light.button.rollover-selected.new"     : "/theme/light/button/rollover-selected/new_16.png",
+  "table.light.button.rollover-selected.file"     : "/theme/light/button/rollover-selected/file_16.png",
+  "table.light.button.rollover-selected.folder"     : "/theme/light/button/rollover-selected/folder_16.png",
 
   "table.light.button.selected.add"      : "/theme/light/button/pressed/add_16.png",
   "table.light.button.selected.delete"   : "/theme/light/button/pressed/delete_16.png",
-  "table.light.button.selected.new"      : "/theme/light/button/pressed/new_16.png"
+  "table.light.button.selected.new"      : "/theme/light/button/pressed/new_16.png",
+  "table.light.button.selected.file"      : "/theme/light/button/pressed/file_16.png",
+  "table.light.button.selected.folder"      : "/theme/light/button/pressed/folder_16.png"
 
 }

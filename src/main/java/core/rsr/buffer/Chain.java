@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.buffer;
+package core.rsr.buffer;
 
 import java.util.LinkedList;
 

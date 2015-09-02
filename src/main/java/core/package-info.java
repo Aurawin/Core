@@ -1,1 +1,1 @@
-package com.aurawin.core;
+package core;

@@ -1,7 +1,7 @@
-package com.aurawin.core.rsr.defs;
+package core.rsr.defs;
 
-import com.aurawin.core.array.KeyPair;
-import com.aurawin.core.stream.MemoryStream;
+import core.array.KeyPair;
+import core.stream.MemoryStream;
 
 public class httpRequest {
     private volatile MemoryStream FData;

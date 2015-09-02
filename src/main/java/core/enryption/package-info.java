@@ -1,2 +1,2 @@
 
-package com.aurawin.core.enryption;
+package core.enryption;

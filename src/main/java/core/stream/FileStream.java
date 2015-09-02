@@ -1,4 +1,4 @@
-package com.aurawin.core.stream;
+package core.stream;
 
 
 import java.io.IOException;

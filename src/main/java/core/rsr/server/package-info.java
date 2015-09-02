@@ -1,1 +1,1 @@
-package com.aurawin.core.rsr.server;
+package core.rsr.server;

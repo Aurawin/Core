@@ -1,6 +1,6 @@
-package com.aurawin.core.enryption;
+package core.enryption;
 
-import com.aurawin.core.stream.MemoryStream;
+import core.stream.MemoryStream;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

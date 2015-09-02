@@ -1,1 +1,1 @@
-package com.aurawin.core.lang;
+package core.lang;

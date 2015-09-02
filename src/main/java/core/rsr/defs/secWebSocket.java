@@ -1,8 +1,8 @@
-package com.aurawin.core.rsr.defs;
+package core.rsr.defs;
 
 import java.lang.Exception;
 
-import com.aurawin.core.lang.Table;
+import core.lang.Table;
 
 public class secWebSocket {
     public volatile String Accept;

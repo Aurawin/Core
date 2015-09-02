@@ -1,4 +1,4 @@
-package com.aurawin.core.array;
+package core.array;
 
 
 public class KeyItem {

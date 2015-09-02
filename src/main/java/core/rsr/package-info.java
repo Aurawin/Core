@@ -1,2 +1,2 @@
 
-package com.aurawin.core.rsr;
+package core.rsr;

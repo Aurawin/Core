@@ -1,4 +1,4 @@
-package com.aurawin.core.array;
+package core.array;
 
 import java.util.ArrayList;
 import java.util.Iterator;

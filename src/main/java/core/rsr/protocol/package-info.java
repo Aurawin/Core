@@ -1,1 +1,1 @@
-package com.aurawin.core.rsr.protocol;
+package core.rsr.protocol;

@@ -1,1 +1,1 @@
-package com.aurawin.core.array;
+package core.array;
