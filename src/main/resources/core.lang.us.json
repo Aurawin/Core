@@ -5,7 +5,10 @@
         { "Requirement": "Only edit the values of each key." },
         { "Warning:": "Do not remove % symbols get replaced by values at runtime."}
     ],
-    "table.action.AddNew" : "Add a new %s",
+
+    "table.action.a" : "a",
+    "table.action.one" : "one",
+
     "table.label.Item" : "Item",
     "table.label.Items": "Items",
     "table.label.Name": "Name",
@@ -17,8 +20,18 @@
     "table.json.Array" : "Array",
     "table.json.Object": "Object",
     "table.json.Keypair" : "Simple",
+
     "table.item.JSONObject" : "JSON Object",
+    "table.item.Mailbox" : "Mailbox",
+    "table.item.Message" : "Message",
+
     "table.exception.rsr.websocket.securityoption.invalid" : "Invalid security option %s",
-    "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set"
+    "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set",
+
+    "table.hint.add" : "Add %s new %s",
+    "table.hint.rename" : "Rename %s",
+    "table.hint.delete" : "Delete %s",
+    "table.hint.refresh" : "Refresh %s",
+    "table.hint.input"  : "Input a value for %s"
   }
 
