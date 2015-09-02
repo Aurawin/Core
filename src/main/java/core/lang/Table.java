@@ -53,6 +53,7 @@ public class Table {
         public static final String Collections = "table.label.Collections";
         public static final String Name = "table.label.Name";
         public static final String Value = "table.label.Value";
+        public static final String Untitled = "table.label.Untitled";
     }
     public static class Item{
         public static final String JSONObject = "table.item.JSONObject";

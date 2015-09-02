@@ -10,6 +10,8 @@
     "table.label.Items": "Items",
     "table.label.Name": "Name",
     "table.label.Value": "Value",
+    "table.label.Untitled": "Untitled",
+
     "table.label.Collection" : "Collection",
     "table.label.Collections": "Collections",
     "table.json.Array" : "Array",
