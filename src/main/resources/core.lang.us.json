@@ -5,6 +5,10 @@
         { "Requirement": "Only edit the values of each key." },
         { "Warning:": "Do not remove % symbols get replaced by values at runtime."}
     ],
+    "table.status.Editing"  : "Editing %s.",
+    "table.status.Loading"  : "Loading %s...  Please wait.",
+    "table.status.Sending"  : "Sending %s... Please wait.",
+    "table.status.Deleting" : "Deleting %s... Please wait.",
 
     "table.action.a" : "a",
     "table.action.an" : "an",

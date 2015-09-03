@@ -111,7 +111,12 @@ public class Table {
         public static final String Mailbox = "table.item.Mailbox";
         public static final String Message = "table.item.Message";
     }
-
+    public static class Status{
+        public static final String Editing = "table.status.Editing";
+        public static final String Loading = "table.status.Loading";
+        public static final String Sending = "table.status.Sending";
+        public static final String Deleting = "table.status.Deleting";
+    }
     public static class JSON{
         public static final String Array = "table.json.Array";
         public static final String Object = "table.json.Object";

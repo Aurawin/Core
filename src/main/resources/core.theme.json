@@ -5,6 +5,7 @@
     { "Requirement": "Only edit the values of each key." },
     { "Warning:": "Do not remove % symbols get replaced by values at runtime."}
   ],
+  
 
   "table.light.button.default.add"      : "/theme/light/button/default/add_16.png",
   "table.light.button.default.delete"   : "/theme/light/button/default/delete_16.png",
