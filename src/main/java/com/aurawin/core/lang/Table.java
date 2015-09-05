@@ -55,11 +55,49 @@ public class Table {
             return "missing";
         }
     }
+    public static String Format(String Namespace, String Arg){
+        try{
+            try {
+                Arg = Manifest.getString(Arg);
+            } catch (java.lang.Exception e){
+            }                return String.format(Manifest.getString(Namespace),Arg);
+        } catch (java.lang.Exception e){
+            return e.getMessage();
+        }
+
+    }
+    public static String Format(String Namespace, String Arg1, String Arg2){
+        try {
+            if (Loaded != true) Load();
+            try {
+                try {
+                    Arg1 = Manifest.getString(Arg1);
+                } catch (java.lang.Exception e) {
+                }
+                try {
+                    Arg2 = Manifest.getString(Arg2);
+                } catch (java.lang.Exception e) {
+                }
+                return String.format(Manifest.getString(Namespace), Arg1, Arg2);
+            } catch (java.lang.Exception e) {
+                return e.getMessage();
+            }
+        } catch (java.lang.Exception e){
+            return e.getMessage();
+
+        }
+
+    }
+
     public static class Action{
         public static final String a="table.action.a";
         public static final String an="table.action.an";
         public static final String one="table.action.one";
+        public static final String selected="table.action.selected";
+        public static final String $this="table.action.this";
+
     }
+
     public static class Label{
         public static final String Item = "table.label.Item";
         public static final String Items = "table.label.Items";
@@ -71,43 +109,15 @@ public class Table {
     }
     public static class Hint{
         public static final String Add = "table.hint.add";
+        public static final String Create = "table.hint.create";
         public static final String Delete = "table.hint.delete";
         public static final String Rename = "table.hint.rename";
         public static final String Refresh = "table.hint.refresh";
         public static final String Input = "table.hint.input";
         public static final String Unsaved = "table.hint.unsaved";
-
-        public static String Format(String Namespace, String Arg){
-            try{
-                try {
-                    Arg = Manifest.getString(Arg);
-                } catch (java.lang.Exception e){
-                }                return String.format(Manifest.getString(Namespace),Arg);
-            } catch (java.lang.Exception e){
-                return e.getMessage();
-            }
-
-        }
-        public static String Format(String Namespace, String Arg1, String Arg2){
-            try{
-                try {
-                    Arg1 = Manifest.getString(Arg1);
-                } catch (java.lang.Exception e){
-                }
-                try {
-                    Arg2 = Manifest.getString(Arg2);
-                } catch (java.lang.Exception e){
-                }
-                return String.format(Manifest.getString(Namespace),Arg1,Arg2);
-            } catch (java.lang.Exception e){
-                return e.getMessage();
-            }
-
-        }
     }
     public static class Item{
-        public static final String JSONObject = "table.item.JSONObject";
-        public static final String JSONSource = "table.item.JSONSource";
+        public static final String Object = "table.item.Object";
         public static final String Mailbox = "table.item.Mailbox";
         public static final String Message = "table.item.Message";
     }
@@ -118,6 +128,9 @@ public class Table {
         public static final String Deleting = "table.status.Deleting";
     }
     public static class JSON{
+        public static final String Title = "table.json.Title";
+        public static final String Document = "table.json.Document";
+        public static final String Source = "table.json.Source";
         public static final String Array = "table.json.Array";
         public static final String Object = "table.json.Object";
         public static final String KeyPair = "table.json.Keypair";
