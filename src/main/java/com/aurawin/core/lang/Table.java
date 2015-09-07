@@ -52,7 +52,7 @@ public class Table {
             if (Loaded!=true) Load();
             return Manifest.getString(NameSpace);
         } catch (java.lang.Exception E){
-            return "missing";
+            return "core.lang is missing "+NameSpace;
         }
     }
     public static String Format(String Namespace, String Arg){
@@ -97,7 +97,14 @@ public class Table {
         public static final String $this="table.action.this";
 
     }
-
+    public static class Dialog{
+        public static final String New = "table.dialog.New";
+        public static final String Open = "table.dialog.Open";
+        public static final String Save = "table.dialog.Save";
+        public static class Filter{
+            public static final String All = "table.dialog.filter.All";
+        }
+    }
     public static class Label{
         public static final String Item = "table.label.Item";
         public static final String Items = "table.label.Items";

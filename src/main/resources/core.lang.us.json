@@ -10,6 +10,11 @@
     "table.status.Sending"  : "Sending %s... Please wait.",
     "table.status.Deleting" : "Deleting %s... Please wait.",
 
+    "table.dialog.New" : "Create %s new %s",
+    "table.dialog.Open" : "Open %s %s",
+    "table.dialog.Save" : "Save %s %s",
+    "table.dialog.filter.All":"All files (*.*)",
+
     "table.action.a" : "a",
     "table.action.an" : "an",
     "table.action.one" : "one",

@@ -58,6 +58,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.default.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.default.arrowhead.up";
                 public static String Delete = "table.light.button.default.delete";
+                public static String Download = "table.light.button.default.download";
                 public static String New = "table.light.button.default.new";
                 public static String File = "table.light.button.default.file";
                 public static String Folder = "table.light.button.default.folder";
@@ -73,6 +74,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.disabled.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.disabled.arrowhead.up";
                 public static String Delete = "table.light.button.disabled.delete";
+                public static String Download = "table.light.button.disabled.download";
                 public static String New = "table.light.button.disabled.new";
                 public static String File = "table.light.button.disabled.file";
                 public static String Folder = "table.light.button.disabled.folder";
@@ -87,6 +89,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.pressed.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.pressed.arrowhead.up";
                 public static String Delete = "table.light.button.pressed.delete";
+                public static String Download = "table.light.button.pressed.download";
                 public static String New = "table.light.button.pressed.new";
                 public static String File = "table.light.button.pressed.file";
                 public static String Folder = "table.light.button.pressed.folder";
@@ -101,6 +104,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.rollover.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.rollover.arrowhead.up";
                 public static String Delete = "table.light.button.rollover.delete";
+                public static String Download = "table.light.button.rollover.download";
                 public static String New = "table.light.button.rollover.new";
                 public static String File = "table.light.button.rollover.file";
                 public static String Folder = "table.light.button.rollover.folder";
@@ -115,6 +119,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.rollover-selected.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.rollover-selected.arrowhead.up";
                 public static String Delete = "table.light.button.rollover-selected.delete";
+                public static String Download = "table.light.button.rollover-selected.download";
                 public static String New = "table.light.button.rollover-selected.new";
                 public static String File = "table.light.button.rollover-selected.file";
                 public static String Folder = "table.light.button.rollover-selected-selected.folder";
@@ -129,6 +134,7 @@ public class Theme {
                 public static String ArrowheadRight = "table.light.button.selected.arrowhead.right";
                 public static String ArrowheadUp = "table.light.button.selected.arrowhead.up";
                 public static String Delete = "table.light.button.selected.delete";
+                public static String Download = "table.light.button.selected.download";
                 public static String New = "table.light.button.selected.new";
                 public static String File = "table.light.button.selected.file";
                 public static String Folder = "table.light.button.selected.folder";
