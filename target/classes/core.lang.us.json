@@ -21,6 +21,14 @@
     "table.action.selected":"selected",
     "table.action.this":"this",
 
+    "table.label.File" : "File",
+    "table.label.Folder" : "Folder",
+    "table.label.New" : "New",
+    "table.label.Open" : "Open",
+    "table.label.Save" : "Save",
+    "table.label.SaveAs" : "Save as",
+    "table.label.Close" : "Close",
+    "table.label.Delete" : "Delete",
     "table.label.Item" : "Item",
     "table.label.Items": "Items",
     "table.label.Name": "Name",
@@ -39,6 +47,7 @@
     "table.item.Object" : "Object",
     "table.item.Mailbox" : "Mailbox",
     "table.item.Message" : "Message",
+    "table.item.File" : "File",
 
     "table.exception.rsr.websocket.securityoption.invalid" : "Invalid security option %s",
     "table.exception.rsr.websocket.securityoption.alreadyset" : "%s is already set",

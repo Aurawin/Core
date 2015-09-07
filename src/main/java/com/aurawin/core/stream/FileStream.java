@@ -1,8 +1,9 @@
 package com.aurawin.core.stream;
 
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import javafx.geometry.Pos;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
@@ -10,16 +11,15 @@ import java.nio.channels.SeekableByteChannel;
 public class FileStream extends base {
     private RandomAccessFile Data;
 
-    public FileStream(String name, String mode){
-        try {
-            Data = new RandomAccessFile(name, mode);
-            Size=Data.length();
-            Position=Data.getFilePointer();
-        } catch (IOException e){
-            Data=null;
-            Size=0;
-            Position=0;
-        }
+    public FileStream(File f, String mode) throws IOException{
+        Data = new RandomAccessFile(f, mode);
+        Size=Data.length();
+        Position=Data.getFilePointer();
+    }
+    public FileStream(String name, String mode) throws IOException{
+        Data = new RandomAccessFile(name, mode);
+        Size=Data.length();
+        Position=Data.getFilePointer();
     }
     public SeekableByteChannel truncate(long size){
         FileChannel ch = Data.getChannel();
@@ -88,6 +88,20 @@ public class FileStream extends base {
 
             }
             Data=null;
+        }
+    }
+    public String toString(){
+        String Result="";
+        try {
+            Data.seek(0);
+            String Line = Data.readLine();
+            while (Line != null) {
+                Result += Line + "\n";
+                Line = Data.readLine();
+            }
+            return Result;
+        } catch (IOException e){
+            return "";
         }
     }
 }

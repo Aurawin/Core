@@ -12,5 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.json:json:20080701" level="project" />
+    <orderEntry type="library" name="Maven: com.miglayout:miglayout-swing:5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.miglayout:miglayout-core:5.0" level="project" />
   </component>
 </module>

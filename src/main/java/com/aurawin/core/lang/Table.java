@@ -106,6 +106,16 @@ public class Table {
         }
     }
     public static class Label{
+
+        public static final String New = "table.label.New";
+        public static final String Open = "table.label.Open";
+        public static final String Close = "table.label.Close";
+        public static final String Save = "table.label.Save";
+        public static final String SaveAs = "table.label.SaveAs";
+
+        public static final String File = "table.label.File";
+        public static final String Folder = "table.label.Folder";
+
         public static final String Item = "table.label.Item";
         public static final String Items = "table.label.Items";
         public static final String Collection = "table.label.Collection";
