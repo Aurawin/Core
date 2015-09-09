@@ -1,6 +1,6 @@
-package com.aurawin.core.rsr.def;
+package com.aurawin.core.rsr.def.http;
 
-public class httpFields {
+public class Field {
 
     public final static String Accept = "Accept";
     public final static String AcceptCharset = "Accept-Charset";
