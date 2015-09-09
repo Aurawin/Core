@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.defs;
+package com.aurawin.core.rsr.def;
 
 import com.aurawin.core.enryption.md5;
 import com.aurawin.core.stream.MemoryStream;

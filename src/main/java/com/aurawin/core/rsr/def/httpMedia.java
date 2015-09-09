@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.defs;
+package com.aurawin.core.rsr.def;
 
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
@@ -8,7 +8,7 @@ import java.nio.channels.FileChannel;
  * Created by Andrew on 8/28/2015.
  */
 public class httpMedia {
-    public enum State {None,Idle,Query,Established};
+    public enum State {None,Idle,Query,Established}
     public class Range {
         public volatile long Start = 0;
         public volatile long Stop = 0;

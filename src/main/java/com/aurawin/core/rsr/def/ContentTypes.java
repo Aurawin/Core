@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.defs;
+package com.aurawin.core.rsr.def;
 
 
 import org.json.JSONArray;

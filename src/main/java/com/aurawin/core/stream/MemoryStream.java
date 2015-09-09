@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.util.LinkedList;
 
-public class MemoryStream extends base {
+public class MemoryStream extends Channel {
 
     private LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
@@ -17,6 +17,7 @@ public class MemoryStream extends base {
         Size=0;
         Position=0;
     }
+    @Override
     public SeekableByteChannel truncate(long size){
         /*
          This will chop off data at a certain length;
@@ -24,16 +25,19 @@ public class MemoryStream extends base {
         if (size==0){
             Clear();
         } else {
+            // todo
         }
         return this;
     }
-
+    @Override
     public long size(){
         return Size; //todo
     }
+    @Override
     public long position(){
         return Position; // todo
     }
+    @Override
     public int write(ByteBuffer src){
         // write entire to
         if (src.hasRemaining()==true){
@@ -49,11 +53,12 @@ public class MemoryStream extends base {
         }
 
     }
+    @Override
     public SeekableByteChannel position(long newPosition){
         Position=newPosition;
         return this;
     }
-
+    @Override
     public int read(ByteBuffer dst){
         if (dst.hasRemaining()==true){
             long iPreSeek=0;
@@ -87,9 +92,11 @@ public class MemoryStream extends base {
             return 0;
         }
     }
+    @Override
     public boolean isOpen(){
         return true;
     }
+    @Override
     public void close(){}
 
     public synchronized int Write (byte[] Value){

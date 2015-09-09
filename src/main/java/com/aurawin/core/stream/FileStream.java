@@ -1,14 +1,12 @@
 package com.aurawin.core.stream;
 
 
-import javafx.geometry.Pos;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 
-public class FileStream extends base {
+public class FileStream extends Channel {
     private RandomAccessFile Data;
 
     public FileStream(File f, String mode) throws IOException{
