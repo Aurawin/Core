@@ -1,6 +1,7 @@
 package com.aurawin.core.log;
 
 import com.aurawin.core.lang.Concat;
+import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.FileStream;
 
 import java.io.IOException;
@@ -11,12 +12,19 @@ import java.sql.Timestamp;
 public class Syslog {
     private static String _charset = "UTF-8";
     private static String _delimit = "\t";
-    private static String _end = "\r\n";
+    private static String _end = System.getProperty("line.separator");
     public volatile FileStream _fs;
+    public Syslog(){
+        try {
+            _fs = new FileStream(Settings.File.Log.Path(), "rw");
+        } catch (IOException e) {
+            System.err.println("Notice: Unable to create default log file "+Settings.File.Log.Path());
+        }
+    }
     public Syslog(String filename){
         try {
             _fs = new FileStream(filename, "rw");
-        }catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Notice: Unable to create log file "+filename);
         }
     }
