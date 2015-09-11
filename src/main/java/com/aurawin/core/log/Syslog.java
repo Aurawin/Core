@@ -14,6 +14,7 @@ public class Syslog {
     private static String _delimit = "\t";
     private static String _end = System.getProperty("line.separator");
     public volatile FileStream _fs;
+
     public Syslog(){
         try {
             _fs = new FileStream(Settings.File.Log.Path(), "rw");

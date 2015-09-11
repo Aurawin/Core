@@ -1,7 +1,7 @@
 package com.aurawin.core.solution;
 
 public class Settings {
-    public static String lang = "us";
+    public static String Language = "us";
     public static class File{
         public static class Log{
             public static String Ext = "log";

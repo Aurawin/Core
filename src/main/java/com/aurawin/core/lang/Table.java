@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.aurawin.core.solution.Settings;
 import org.json.JSONObject;
 
 public class Table {
@@ -15,7 +16,7 @@ public class Table {
         Load();
     }
     public static final int MaxSize = 1024*1024;
-    public static final String defaultResource = "/core.lang.us.json";
+    public static final String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
     public static Boolean getLoaded(){
         return Loaded;
