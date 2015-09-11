@@ -153,6 +153,9 @@ public class Table {
         public static final String KeyPair = "table.json.Keypair";
     }
     public static class Exception{
+        public static class Strings {
+            final String InvalidEncoding = "table.exception.string.invalid-encoding";
+        }
         public static class RSR{
             public static class WebSocket{
                 public static class SecurityOption {

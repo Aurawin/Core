@@ -60,7 +60,6 @@ public class FileStream extends Channel {
         Position=newPosition;
         return this;
     }
-
     public int read(ByteBuffer dst){
         int iCount=0;
         FileChannel ch = Data.getChannel();
@@ -75,6 +74,10 @@ public class FileStream extends Channel {
         }
         return iCount;
     }
+    public int Write (String s){
+        return write(ByteBuffer.wrap(s.getBytes()));
+    }
+
     public boolean isOpen(){
         return (Data!=null);
     }
@@ -88,6 +91,7 @@ public class FileStream extends Channel {
             Data=null;
         }
     }
+
     public String toString(){
         String Result="";
         try {

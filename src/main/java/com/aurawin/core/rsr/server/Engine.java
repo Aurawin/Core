@@ -12,15 +12,10 @@ public class Engine implements Runnable{
     private volatile State _state= State.ssNone;
     private volatile InetSocketAddress _address;
     private volatile ServerSocketChannel _cListen;
-    public synchronized void setState(State state){
-       _state=state;
-    }
     public Engine(InetSocketAddress sa) throws IOException {
         _state=State.ssCreated;
         _address=sa;
         _cListen = ServerSocketChannel.open();
-        _cListen.socket().bind(sa);
-        _cListen.configureBlocking(false);
     }
     @Override
     public void run(){
@@ -33,16 +28,31 @@ public class Engine implements Runnable{
                         // select client manager
                         // add channel to client Manager queue
                     } catch (IOException e){
-                        // todo
-                        // trip wait timer
-                        // could be waiting for network interface to appear
+                        // todo log error
+                        // todo trip wait timer
+                        // todo could be waiting for network interface to appear
                     }
                     break;
                 case ssStart:
-                    setState(State.ssRun);
+                    try{
+                        _cListen.socket().bind(_address);
+                        _cListen.configureBlocking(false);
+                        setState(State.ssRun);
+
+                    } catch (IOException e){
+                        // log error (only 1 per minute)
+                        // try again in a few seconds
+                        // network interface maybe swapping
+                    }
+
                     break;
                 case ssStop:
-                    // do not accept connection requests from channel
+                    try {
+                        _cListen.close();
+                        _cListen=null;
+                    } catch  (IOException e){
+                        // todo log error
+                    }
                     break;
                 case ssUpgrade:
                     // obtain namespace[]
@@ -58,5 +68,17 @@ public class Engine implements Runnable{
             }
 
         }
+    }
+    private synchronized void setState(State state){
+        _state=state;
+    }
+    public synchronized void Start(){
+
+    }
+    public synchronized void Stop(){
+
+    }
+    public synchronized void CheckForUpdates(){
+
     }
 }
