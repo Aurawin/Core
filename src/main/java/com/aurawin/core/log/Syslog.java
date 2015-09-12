@@ -1,6 +1,7 @@
 package com.aurawin.core.log;
 
 import com.aurawin.core.lang.Concat;
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.FileStream;
 
@@ -13,23 +14,45 @@ public class Syslog {
     private static String _charset = "UTF-8";
     private static String _delimit = "\t";
     private static String _end = System.getProperty("line.separator");
-    public volatile FileStream _fs;
+    public static volatile FileStream _fs;
 
-    public Syslog(){
-        try {
-            _fs = new FileStream(Settings.File.Log.Path(), "rw");
-        } catch (IOException e) {
-            System.err.println("Notice: Unable to create default log file "+Settings.File.Log.Path());
-        }
+    public Syslog() throws Exception{
+        checkBase();
+        createFile(Settings.File.Log.Path());
     }
-    public Syslog(String filename){
-        try {
-            _fs = new FileStream(filename, "rw");
-        } catch (IOException e) {
-            System.err.println("Notice: Unable to create log file "+filename);
-        }
+    public Syslog(String filename)throws Exception{
+        checkBase();
+        createFile(filename);
     }
-    public synchronized void Append(String unit, String entryPoint, String message){
+    public static void createFile(String filename) throws Exception{
+        if (_fs!=null){
+            _fs.close();
+        }
+        _fs = new FileStream(filename, "rw");
+    }
+    private static void checkBase() throws Exception{
+        java.io.File Path = new java.io.File(Settings.File.Log.Base());
+        if (!Path.exists()) Path.mkdirs();
+    }
+    public static void main(String[] args) throws Exception {
+//        Settings.Initialize("com.aurawin.core");
+        Syslog log = new Syslog();
+        log.Append("Syslog","main","test");
+        log.Release();
+    }
+    public static synchronized void Append(String unit, String entryPoint, String message){
+        if (_fs==null){
+            try {
+                checkBase();
+                createFile(Settings.File.Log.Path());
+            } catch (Exception e){
+                try {
+                    System.err.println(Table.Exception.Syslog.Notice(Table.Exception.Syslog.UnableToCreateDefaultLogfile, Settings.File.Log.Path()));
+                } catch (Exception e1){
+                    // do nothing
+                }
+            }
+        }
         if (_fs!=null) {
             String[] Data = new String[]{
                     new Timestamp(new java.util.Date().getTime()).toString(),
@@ -44,12 +67,15 @@ public class Syslog {
             try {
                 _fs.write(Concat.toByteBuffer(Data));
             } catch (UnsupportedEncodingException e) {
-                System.err.println("Notice: Unable to write UTF-8 log entry!");
+                System.err.println(Table.Exception.Syslog.Notice(Table.Exception.Syslog.UnableToWriteEntry));
             }
         } else {
-            System.err.println("Notice: Unable to write any entries to disk!");
-
+            System.err.println(Table.Exception.Syslog.Notice(Table.Exception.Syslog.UnableToWriteEntries));
         }
 
+    }
+    public synchronized void Release(){
+        if (_fs!=null) _fs.close();
+        _fs=null;
     }
 }

@@ -1,6 +1,7 @@
 package test.com.aurawin.core.log; 
 
-import org.junit.Test; 
+import com.aurawin.core.log.Syslog;
+import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After; 
 
@@ -12,13 +13,16 @@ import org.junit.After;
 * @version 1.0 
 */ 
 public class SyslogTest { 
-
+  Syslog Log;
 @Before
-public void before() throws Exception { 
+public void before() throws Exception {
+    Log = new Syslog();
 } 
 
 @After
-public void after() throws Exception { 
+public void after() throws Exception {
+    Log.Release();
+    Log=null;
 } 
 
 /** 
@@ -28,8 +32,8 @@ public void after() throws Exception {
 */ 
 @Test
 public void testAppend() throws Exception { 
-//TODO: Test goes here... 
-} 
+  Log.Append("SylogTest","testAppend","Test ok");
+}
 
 
 } 
