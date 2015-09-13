@@ -15,6 +15,7 @@ public class Settings {
             public static int ManagerItemCascadeLimit = 100;
             public static int ListenWaitPause = 30/*sec*/ * 1000/*ms-sec*/;
             public static int BindWaitPause   = 10/*sec*/ * 1000/*ms-sec*/;
+            public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
         }
     }
     public static class File{

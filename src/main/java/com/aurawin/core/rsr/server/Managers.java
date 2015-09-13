@@ -2,10 +2,11 @@ package com.aurawin.core.rsr.server;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
+import com.aurawin.core.rsr.def.server.ItemState;
+import static com.aurawin.core.rsr.def.server.ItemState.*;
 import com.aurawin.core.solution.Settings;
 
 import java.nio.channels.SocketChannel;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -36,7 +37,7 @@ public class Managers extends ConcurrentLinkedQueue<Items>{
             if (result.size()>=Settings.RSR.Server.ManagerItemCascadeThreshold) result=null;
         }
         if ( (result==null) && (size()<Settings.RSR.Server.ManagerItemCascadeLimit) ){
-            result = new Items(this);
+            result = new Items(this,Owner);
             add(result);
         }
         return result;
@@ -47,18 +48,18 @@ public class Managers extends ConcurrentLinkedQueue<Items>{
         // Have mechanism to grow/reuse thread
         Items itms = getManager();
         try {
-            Item itm = Owner._itmClass.newInstance();
+            Item itm = Owner.itmclass.newInstance();
             itm.setOwner(itms);
             itm.setChannel(ch);
             if (itms != null) {
-                itms.add(itm);
+                itms.qAddItems.add(itm);
             } else {
                 itm.onRejected();
             }
         } catch (InstantiationException ise){
-            Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToCreateItemInstance, Owner._itmClass.getName()));
+            Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToCreateItemInstance, Owner.itmclass.getName()));
         } catch (IllegalAccessException iae){
-            Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToAccessItemInstance,Owner._itmClass.getName()));
+            Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToAccessItemInstance,Owner.itmclass.getName()));
         }
     }
 }

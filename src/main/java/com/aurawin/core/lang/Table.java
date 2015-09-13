@@ -153,42 +153,50 @@ public class Table {
         public static final String Object = "table.json.Object";
         public static final String KeyPair = "table.json.Keypair";
     }
-    public static class Exception{
+    public static class Exception {
         public static class Strings {
             final String InvalidEncoding = "table.exception.string.invalid-encoding";
         }
-        public static class Syslog{
+        public static class Syslog {
             public static final String UnableToWriteEntries = "table.exception.syslog.unable-to-write-entries";
             public static final String UnableToWriteEntry = "table.exception.syslog.unable-to-write-entry";
             public static final String UnableToCreateLogfile = "table.exception.syslog.unable-to-create-logfile";
             public static final String UnableToCreateDefaultLogfile = "table.exception.syslog.unable-to-create-default-logfile";
-            public static String Notice(String Namespace){
-                return Label.Notice+": "+String(Namespace);
+
+            public static String Notice(String Namespace) {
+                return Label.Notice + ": " + String(Namespace);
             }
-            public static String Notice(String Namespace, String Arg){
-                return Label.Notice+": "+String.format(String(Namespace),Arg);
+
+            public static String Notice(String Namespace, String Arg) {
+                return Label.Notice + ": " + String.format(String(Namespace), Arg);
             }
         }
-        public static class Settings{
+
+        public static class Settings {
             public static final String NotInitialized = "table.exception.settings.not-initialized";
             public static final String NoProgramName = "table.exception.settings.no-program-name";
 
         }
-        public static class RSR{
+
+        public static class RSR {
             public static class Server {
-                public static final String UnableToBindAddress="table.exception.rsr.unable-to-bind-address";
-                public static final String UnableToAcceptSocket="table.exception.rsr.unable-to-accept-socket";
-                public static final String UnableToCloseAcceptSocket="table.exception.rsr.unable-to-close-accept-socket";
-                public static final String UnableToCreateItemInstance="table.exception.rsr.unable-to-create-item-instance";
-                public static final String UnableToAccessItemInstance="table.exception.rsr.unable-to-access-item-instance";
+                public static final String UnableToBindAddress = "table.exception.rsr.unable-to-bind-address";
+                public static final String UnableToAcceptSocket = "table.exception.rsr.unable-to-accept-socket";
+                public static final String UnableToCloseAcceptSocket = "table.exception.rsr.unable-to-close-accept-socket";
+                public static final String UnableToCreateItemInstance = "table.exception.rsr.unable-to-create-item-instance";
+                public static final String UnableToAccessItemInstance = "table.exception.rsr.unable-to-access-item-instance";
+                public static final String UnableToOpenItemChannelSelector = "table.exception.rsr.unable-to-open-item-channel-selector";
+                public static final String UnableToRegisterItemChannel = "table.exception.rsr.unable-to-register-item-channel";
             }
-            public static class WebSocket{
+
+            public static class WebSocket {
                 public static class SecurityOption {
                     public static final String Invalid = "table.exception.rsr.websocket.securityoption.invalid";
                     public static final String AlreadySet = "table.exception.rsr.websocket.securityoption.alreadyset";
+
                     public static String getMessage(String OptionTarget, String OptionSource) {
                         try {
-                            if (Loaded!=true) Load();
+                            if (Loaded != true) Load();
                             return String.format(Manifest.getString(Invalid), OptionTarget) + ". " +
                                     String.format(Manifest.getString(AlreadySet), OptionSource) + ".";
                         } catch (java.lang.Exception e) {
@@ -197,6 +205,14 @@ public class Table {
 
                     }
                 }
+            }
+        }
+    }
+    public static class Error {
+        public static class RSR {
+            public static class Server {
+                public static final String AcceptFailure = "table.error.rsr.server.accept-failure";
+
             }
         }
     }

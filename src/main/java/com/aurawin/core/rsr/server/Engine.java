@@ -8,35 +8,35 @@ import java.nio.channels.SocketChannel;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
+import com.aurawin.core.rsr.def.server.ServerState;
+import static com.aurawin.core.rsr.def.server.ServerState.*;
 import com.aurawin.core.solution.Settings;
 
-import static com.aurawin.core.rsr.def.server.State.*;
 
 
 public class Engine extends Thread {
-
-    protected volatile com.aurawin.core.rsr.def.server.State _state= ssNone;
-    private InetSocketAddress _address;
-    private ServerSocketChannel _cListen;
-    protected Class<? extends Item> _itmClass = null;
-    protected Managers _managers = null;
+    protected volatile ServerState state = ssNone;
+    private InetSocketAddress address;
+    private ServerSocketChannel cListen;
+    protected Class<? extends Item> itmclass = null;
+    protected Managers managers = null;
     public <T extends Item> Engine(InetSocketAddress sa, Class<T> cItem) throws IOException {
-        _state=ssCreated;
-        _address=sa;
-        _cListen = ServerSocketChannel.open();
-        _itmClass=cItem;
-        _managers = new Managers(this);
+        state = ssCreated;
+        address = sa;
+        cListen = ServerSocketChannel.open();
+        itmclass = cItem;
+        managers = new Managers(this);
     }
     @Override
     public void run(){
-        while (_state!=ssFinalize) {
-            switch (_state) {
+        while (state !=ssFinalize) {
+            switch (state) {
                 case ssRun:
                     try {
-                        SocketChannel chRemote = _cListen.accept();
-                        _managers.Accept(chRemote);
+                        SocketChannel chRemote = cListen.accept();
+                        managers.Accept(chRemote);
                     } catch (IOException ioe) {
-                        Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.Server.UnableToAcceptSocket,_address.toString()));
+                        Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.Server.UnableToAcceptSocket, address.toString()));
                         try{
                             wait(Settings.RSR.Server.ListenWaitPause);
                         } catch (InterruptedException ie){
@@ -46,12 +46,12 @@ public class Engine extends Thread {
                     break;
                 case ssStart:
                     try{
-                        _cListen.socket().bind(_address);
-                        _cListen.configureBlocking(false);
+                        cListen.socket().bind(address);
+                        cListen.configureBlocking(false);
                         setServerState(ssRun);
                     } catch (IOException ioe){
                         // network interface maybe swapping
-                        Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.Server.UnableToBindAddress,_address.toString()));
+                        Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.Server.UnableToBindAddress, address.toString()));
                         try {
                             wait(Settings.RSR.Server.BindWaitPause);
                         } catch (InterruptedException ie){
@@ -61,11 +61,11 @@ public class Engine extends Thread {
                     break;
                 case ssStop:
                     try {
-                        _cListen.close();
-                        _cListen=null;
+                        cListen.close();
+                        cListen =null;
                     } catch  (IOException ioe){
                         // network interface maybe down
-                        Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.Server.UnableToCloseAcceptSocket,_address.toString()));
+                        Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.Server.UnableToCloseAcceptSocket, address.toString()));
                     }
                     break;
                 case ssUpgrade:
@@ -87,8 +87,8 @@ public class Engine extends Thread {
             }
         }
     }
-    private synchronized void setServerState(com.aurawin.core.rsr.def.server.State state){
-        _state=state;
+    private synchronized void setServerState(ServerState aState) {
+        state = aState;
     }
     public synchronized void Start(){
 
