@@ -1,9 +1,9 @@
-package com.aurawin.core.rsr.server.Commands;
+package com.aurawin.core.rsr.Commands;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.server.Engine;
-import com.aurawin.core.rsr.server.Items;
+import com.aurawin.core.rsr.Engine;
+import com.aurawin.core.rsr.Items;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -36,9 +36,9 @@ public class Commands extends ConcurrentLinkedQueue<Command> {
             cmd.Name = cCommand.getSimpleName();
             addList.add(cmd);
         } catch (InstantiationException ie){
-            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToCreateCommandInstance, cCommand.getName()));
+            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.UnableToCreateCommandInstance, cCommand.getName()));
         } catch (IllegalAccessException ile){
-            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToAccessCommandInstance, cCommand.getName()));
+            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.UnableToAccessCommandInstance, cCommand.getName()));
         }
 
     }

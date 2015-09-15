@@ -3,47 +3,39 @@ package com.aurawin.core.rsr.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.Buffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.def.server.ServerState;
-import static com.aurawin.core.rsr.def.server.ServerState.*;
+import com.aurawin.core.rsr.Engine;
+import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.EngineState;
+import static com.aurawin.core.rsr.def.EngineState.*;
 import com.aurawin.core.solution.Settings;
 
 
 
-public class Engine extends Thread {
-    protected Boolean Infinite = false;
-    protected volatile ServerState state = ssNone;
+public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
-    protected int BufferSizeRead;
-    protected int BufferSizeWrite;
 
-    protected Class<? extends Item> itmclass = null;
-    protected Managers managers = null;
-    public <T extends Item> Engine(InetSocketAddress sa, Class<T> cItem) throws IOException {
-        state = ssCreated;
+    public <T extends Item> Server(InetSocketAddress sa, Class<T> cItem, boolean aInfinate) throws IOException {
+        super (cItem,aInfinate);
+        State = esCreated;
         address = sa;
         cListen = ServerSocketChannel.open();
-        itmclass = cItem;
-        managers = new Managers(this);
-        BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
-        BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
     }
     @Override
     public void run(){
-        while (state !=ssFinalize) {
-            switch (state) {
-                case ssRun:
+        while (State !=esFinalize) {
+            switch (State) {
+                case esRun:
                     try {
                         SocketChannel chRemote = cListen.accept();
-                        managers.Accept(chRemote);
+                        Managers.Accept(chRemote);
                     } catch (IOException ioe) {
-                        Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.Server.UnableToAcceptSocket, address.toString()));
+                        Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
                         try{
                             wait(Settings.RSR.Server.ListenWaitPause);
                         } catch (InterruptedException ie){
@@ -51,14 +43,14 @@ public class Engine extends Thread {
                         }
                     }
                     break;
-                case ssStart:
+                case esStart:
                     try{
                         cListen.socket().bind(address);
                         cListen.configureBlocking(false);
-                        state=ssRun;
+                        State=esRun;
                     } catch (IOException ioe){
                         // network interface maybe swapping
-                        Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.Server.UnableToBindAddress, address.toString()));
+                        Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, address.toString()));
                         try {
                             wait(Settings.RSR.Server.BindWaitPause);
                         } catch (InterruptedException ie){
@@ -66,25 +58,25 @@ public class Engine extends Thread {
                         }
                     }
                     break;
-                case ssStop:
+                case esStop:
                     try {
                         cListen.close();
                         cListen =null;
                     } catch  (IOException ioe){
                         // network interface maybe down
-                        Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.Server.UnableToCloseAcceptSocket, address.toString()));
+                        Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, address.toString()));
                     }
                     break;
-                case ssUpgrade:
+                case esUpgrade:
                     // obtain namespace[]
                     // shutdown each namespaced socket
-                    state=ssUpgrading;
+                    State=esUpgrading;
                     break;
-                case ssUpgrading:
+                case esUpgrading:
                     //for (cls : ns[])
                     //unload_old_class
                     //load_class
-                    state=ssRun;
+                    State=esRun;
                     break;
             }
             try {
@@ -94,9 +86,7 @@ public class Engine extends Thread {
             }
         }
     }
-    private synchronized void setServerState(ServerState aState) {
-        state = aState;
-    }
+
     public synchronized void Start(){
 
     }
@@ -106,18 +96,5 @@ public class Engine extends Thread {
     public synchronized void CheckForUpdates(){
 
     }
-    public void setReadBufferSize(int size){
-        BufferSizeRead = size;
-        managers.adjustReadBufferSize();
-    }
-    public void setWriteBufferSize(int size){
-        BufferSizeWrite = size;
-        managers.adjustWriteBufferSize();
-    }
-    public int getReadBufferSize(){
-        return BufferSizeRead;
-    }
-    public int getWriteBufferSize(){
-        return BufferSizeWrite;
-    }
+
 }

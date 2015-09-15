@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.server.Commands;
+package com.aurawin.core.rsr.Commands;
 
 import com.aurawin.core.lang.Table;
 
@@ -13,7 +13,7 @@ public class cmdAdjustBufferSizeRead extends Command {
         } catch (Exception e){
             logEntry(
                     Table.Format(
-                            Table.Exception.RSR.Server.UnableToSetReadBuffer,
+                            Table.Exception.RSR.UnableToSetReadBuffer,
                             Table.Print(Owner.Engine.getReadBufferSize())
                     )
             );

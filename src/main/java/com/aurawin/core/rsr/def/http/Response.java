@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.rsr.def.Credentials;
-import com.aurawin.core.rsr.server.Item;
+import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stream.MemoryStream;
 
 public class Response {

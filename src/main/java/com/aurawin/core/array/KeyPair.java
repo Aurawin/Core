@@ -39,6 +39,9 @@ public class KeyPair extends ArrayList<KeyItem> {
             Append(args[iLcv].split(Delimiter));
         }
     }
+    public KeyPair(){
+
+    }
 
     public String ValueAsString(String Name){
         KeyItem itm = null;

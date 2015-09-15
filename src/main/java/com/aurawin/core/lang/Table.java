@@ -179,21 +179,22 @@ public class Table {
         }
 
         public static class RSR {
-            public static class Server {
-                public static final String UnableToBindAddress = "table.exception.rsr.unable-to-bind-address";
-                public static final String UnableToAcceptSocket = "table.exception.rsr.unable-to-accept-socket";
-                public static final String UnableToCloseAcceptSocket = "table.exception.rsr.unable-to-close-accept-socket";
-                public static final String UnableToCreateCommandInstance = "table.exception.rsr.unable-to-create-command-instance";
-                public static final String UnableToAccessCommandInstance = "table.exception.rsr.unable-to-access-command-instance";
-                public static final String UnableToCreateItemInstance = "table.exception.rsr.unable-to-create-item-instance";
-                public static final String UnableToAccessItemInstance = "table.exception.rsr.unable-to-access-item-instance";
-                public static final String UnableToOpenItemChannelSelector = "table.exception.rsr.unable-to-open-item-channel-selector";
-                public static final String UnableToRegisterItemChannel = "table.exception.rsr.unable-to-register-item-channel";
-                public static final String UnableToCloseItemChannel = "table.exception.rsr.unable-to-close-item-channel";
-                public static final String UnableToSetReadBuffer = "table.exception.rsr.unable-to-set-read-buffer";
-                public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
-                public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
-            }
+
+            public static final String UnableToBindAddress = "table.exception.rsr.unable-to-bind-address";
+            public static final String UnableToAcceptSocket = "table.exception.rsr.unable-to-accept-socket";
+            public static final String UnableToCloseAcceptSocket = "table.exception.rsr.unable-to-close-accept-socket";
+            public static final String UnableToCreateCommandInstance = "table.exception.rsr.unable-to-create-command-instance";
+            public static final String UnableToAccessCommandInstance = "table.exception.rsr.unable-to-access-command-instance";
+            public static final String UnableToCreateItemInstance = "table.exception.rsr.unable-to-create-item-instance";
+            public static final String UnableToAccessItemInstance = "table.exception.rsr.unable-to-access-item-instance";
+            public static final String UnableToOpenItemChannelSelector = "table.exception.rsr.unable-to-open-item-channel-selector";
+            public static final String UnableToRegisterItemChannel = "table.exception.rsr.unable-to-register-item-channel";
+            public static final String UnableToCloseItemChannel = "table.exception.rsr.unable-to-close-item-channel";
+            public static final String UnableToSetReadBuffer = "table.exception.rsr.unable-to-set-read-buffer";
+            public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
+            public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
+            public static final String UnableToSelectItemKeys = "table.exception.rsr.unable-to-select-item-keys";
+
 
             public static class WebSocket {
                 public static class SecurityOption {
@@ -216,14 +217,19 @@ public class Table {
     }
     public static class Error {
         public static class RSR {
-            public static class Server {
-                public static final String AcceptFailure = "table.error.rsr.server.accept-failure";
-                public static final String PeekFailure = "table.error.rsr.server.peek-failure";
-                public static final String DisconnectFailure = "table.error.rsr.server.disconnect-failure";
-                public static final String InitializeFailure = "table.error.rsr.server.initialize-failure";
-                public static final String FinalizeFailure = "table.error.rsr.server.finalize-failure";
 
-            }
+            public static final String AcceptFailure = "table.error.rsr.accept-failure";
+            public static final String PeekFailure = "table.error.rsr.peek-failure";
+            public static final String ProcessFailure = "table.error.rsr.process-failure";
+            public static final String DisconnectFailure = "table.error.rsr.disconnect-failure";
+            public static final String InitializeFailure = "table.error.rsr.initialize-failure";
+            public static final String FinalizeFailure = "table.error.rsr.finalize-failure";
+
+            public static final String Read="table.error.rsr.read";
+            public static final String Reset="table.error.rsr.reset";
+            public static final String DNS="table.error.rsr.dns";
+            public static final String Timeout = "table.error.rsr.timeout";
+            public static final String Write="table.error.rsr.write";
         }
     }
 

@@ -1,7 +1,7 @@
-package com.aurawin.core.rsr.server;
+package com.aurawin.core.rsr;
 
-import com.aurawin.core.rsr.def.server.ItemState;
-import com.aurawin.core.rsr.def.server.rsrResult;
+import com.aurawin.core.rsr.def.ItemState;
+import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.time.Time;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
+import java.util.EnumSet;
 
 public abstract class Item {
     protected Buffers Buffers;
@@ -20,7 +21,8 @@ public abstract class Item {
     protected Date TTL;
     protected int Timeout;
 
-    protected ItemState state;
+    protected ItemState State;
+    protected EnumSet<ItemError> Errors;
 
     protected abstract rsrResult onPeek();
     protected abstract rsrResult onProcess();
@@ -53,7 +55,21 @@ public abstract class Item {
         Key=null;
     }
     public void renewTTL(){
-        TTL = (Infinite!=true) ? Time.incMilliSeconds(new Date(),Timeout) :  null;
+        TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Time.incMilliSeconds(new Date(),Timeout);
+    }
+    public void Teardown(){
+        if (Channel.isConnected()==true) {
+            try{
+                Channel.close();
+            }catch (IOException ioe){
+                // do nothing
+            }
+        }
+        Timeout=0;
+        TTL=null; // we don't want any timeout errors
+        Key.cancel();
+        Owner.qRemoveItems.add(this);
+        Owner.qWriteItems.remove(this);
     }
     public int Read(){
         if (Channel.isConnected()==true) {
@@ -61,14 +77,37 @@ public abstract class Item {
             try {
                 Channel.read(Owner.BufferRead);
             } catch (IOException ioe){
-                return -1;
+                return 0;
             }
             int iWrite = Buffers.Read.write(Owner.BufferRead);
             Owner.BufferRead.clear();
             return iWrite;
         } else {
-            return -1;
+            return 0;
         }
     }
+    public int Write(){
+        int iWritten=0;
+        if (Buffers.Write.Size>0) {
+            Owner.BufferWrite.clear();
+            // initially  1 MB buffer copy
+            Buffers.Write.read(Owner.BufferWrite);
+            Owner.BufferWrite.flip();
+            while (Owner.BufferWrite.hasRemaining()) {
+                try {
+                    iWritten+=Channel.write(Owner.BufferWrite);
+                } catch (IOException ioe){
+                    return -1;
+                }
+                Owner.BufferWrite.compact();
+            }
+            Buffers.Write.sliceAtPosition();
+            if (Buffers.Write.Size==0) Owner.qWriteItems.remove(this);
+        } else {
+            if (Buffers.Write.Size == 0) Owner.qWriteItems.remove(this);
+        }
+        return iWritten;
+    }
+
 
 }

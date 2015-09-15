@@ -1,24 +1,23 @@
 package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.KeyPair;
-import com.aurawin.core.rsr.server.Item;
+import com.aurawin.core.rsr.def.rsrResult;
+import static com.aurawin.core.rsr.def.rsrResult.*;
+import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stream.MemoryStream;
-import com.aurawin.core.rsr.def.http.Version;
 import com.aurawin.core.rsr.def.Credentials;
 
 public class Request {
-    private Item Owner;
-
-    private volatile MemoryStream FData;
-    private volatile String FProtocol;
+    protected Item Owner;
 
     public volatile Version Version;
     public volatile KeyPair Headers;
     public volatile KeyPair Cookies;
     public volatile KeyPair Parameters;
     public volatile Credentials Credentials;
+    public volatile MemoryStream Payload;
 
-    public volatile String Status;
+    public volatile String Protocol;
     public volatile String UserAgent;
     public volatile String Referrer;
     public volatile String Method;
@@ -28,14 +27,23 @@ public class Request {
     public volatile String ETag;
 
     public Request(Item owner) {
-        FData=new MemoryStream();
         Owner = owner;
+        Version = new Version(1,1);
+        Headers = new KeyPair();
+        Cookies = new KeyPair();
+        Parameters = new KeyPair();
+        Credentials = new Credentials();
+        Payload=new MemoryStream();
+
+        Reset();
     }
     public void Reset(){
         Headers.clear();
         Cookies.clear();
         Parameters.clear();
         Credentials.Empty();
+        Payload.Clear();
+        Protocol="";
         UserAgent="";
         Referrer="";
         Method="";
@@ -46,7 +54,7 @@ public class Request {
     }
 
     public void Release(){
-        FData.Clear();
+        Payload.Clear();
 
         Version.Release();
         Headers.Release();
@@ -54,7 +62,7 @@ public class Request {
         Parameters.Release();
         Credentials.Release();
 
-        FData=null;
+        Payload=null;
         Version=null;
         Headers=null;
         Cookies=null;
@@ -68,5 +76,9 @@ public class Request {
         URI=null;
         Query=null;
         ETag=null;
+    }
+    public rsrResult Peek(){
+        //Owner.Buffers.
+        return rSuccess;
     }
 }
