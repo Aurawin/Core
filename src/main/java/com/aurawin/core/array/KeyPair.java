@@ -84,4 +84,9 @@ public class KeyPair extends ArrayList<KeyItem> {
         }
         return 0;
     }
+
+    public void Release(){
+        clear();
+    }
+
 }

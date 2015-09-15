@@ -40,4 +40,11 @@ public class Credentials {
 
         Digest=md5.Print(ms);
     }
+
+    public void Release(){
+        Username=null;
+        Password=null;
+        Digest=null;
+        Id=0;
+    }
 }

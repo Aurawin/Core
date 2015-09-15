@@ -10,5 +10,9 @@ public class Version {
     public String toString(){
         return String.format("HTTP/%d.%d",Major,Minor);
     }
+    public void Release(){
+        Major = 0;
+        Minor = 0;
+    }
 
 }

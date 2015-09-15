@@ -22,20 +22,22 @@ public class MemoryStream extends Channel {
         /*
          This will chop off data at a certain length;
         */
-        if (size==0){
+        if ( (size==0) || (size>Size) ) {
             Clear();
         } else {
-            // todo
+            // todo truncate data
         }
         return this;
     }
     @Override
     public long size(){
-        return Size; //todo
+        long size =0 ;
+        for (byte[] b : Collection) size+=b.length;
+        return size;
     }
     @Override
     public long position(){
-        return Position; // todo
+        return Position;
     }
     @Override
     public int write(ByteBuffer src){
@@ -209,6 +211,37 @@ public class MemoryStream extends Channel {
         }
         Position=0;
         Size=0;
+    }
+    public synchronized void sliceAtPosition(){
+        int iLcv =0;
+        int iColSize=0;
+
+        long iPreSeek=0;
+        int iOffset=0;
+        int iChunk=0;
+
+        while ( (iLcv<Collection.size()) && (Position>0) ) {
+            iColSize=Collection.get(iLcv).length;
+            if (iPreSeek+iColSize>=Position) {
+                // this array is the current []
+                iOffset=(int)(Position-iPreSeek);
+                iChunk=iColSize-iOffset;
+                if (iChunk>0) {
+                    byte[] baChunk = new byte[iChunk];
+                    System.arraycopy(Collection.get(iLcv), iOffset, baChunk, 0, iChunk);
+                    Collection.set(iLcv, baChunk);
+                    iLcv = Collection.size();
+                } else {
+                    Collection.remove(iLcv);
+                }
+
+            } else {
+                Collection.remove(iLcv);
+            }
+            iPreSeek+=iColSize;
+        }
+        Size=size();
+        Position=0;
     }
 
 }

@@ -16,6 +16,8 @@ public class Settings {
             public static int ListenWaitPause = 30/*sec*/ * 1000/*ms-sec*/;
             public static int BindWaitPause   = 10/*sec*/ * 1000/*ms-sec*/;
             public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
+            public static int BufferSizeRead = 1024*1024*5; // 5MiB
+            public static int BufferSizeWrite = 1024*1024; // 1MiB
         }
     }
     public static class File{

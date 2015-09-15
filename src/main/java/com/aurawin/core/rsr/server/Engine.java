@@ -3,6 +3,7 @@ package com.aurawin.core.rsr.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.Buffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
@@ -15,9 +16,13 @@ import com.aurawin.core.solution.Settings;
 
 
 public class Engine extends Thread {
+    protected Boolean Infinite = false;
     protected volatile ServerState state = ssNone;
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
+    protected int BufferSizeRead;
+    protected int BufferSizeWrite;
+
     protected Class<? extends Item> itmclass = null;
     protected Managers managers = null;
     public <T extends Item> Engine(InetSocketAddress sa, Class<T> cItem) throws IOException {
@@ -26,6 +31,8 @@ public class Engine extends Thread {
         cListen = ServerSocketChannel.open();
         itmclass = cItem;
         managers = new Managers(this);
+        BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
+        BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
     }
     @Override
     public void run(){
@@ -48,7 +55,7 @@ public class Engine extends Thread {
                     try{
                         cListen.socket().bind(address);
                         cListen.configureBlocking(false);
-                        setServerState(ssRun);
+                        state=ssRun;
                     } catch (IOException ioe){
                         // network interface maybe swapping
                         Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.Server.UnableToBindAddress, address.toString()));
@@ -71,13 +78,13 @@ public class Engine extends Thread {
                 case ssUpgrade:
                     // obtain namespace[]
                     // shutdown each namespaced socket
-                    setServerState(ssUpgrading);
+                    state=ssUpgrading;
                     break;
                 case ssUpgrading:
                     //for (cls : ns[])
                     //unload_old_class
                     //load_class
-                    setServerState(ssRun);
+                    state=ssRun;
                     break;
             }
             try {
@@ -98,5 +105,19 @@ public class Engine extends Thread {
     }
     public synchronized void CheckForUpdates(){
 
+    }
+    public void setReadBufferSize(int size){
+        BufferSizeRead = size;
+        managers.adjustReadBufferSize();
+    }
+    public void setWriteBufferSize(int size){
+        BufferSizeWrite = size;
+        managers.adjustWriteBufferSize();
+    }
+    public int getReadBufferSize(){
+        return BufferSizeRead;
+    }
+    public int getWriteBufferSize(){
+        return BufferSizeWrite;
     }
 }

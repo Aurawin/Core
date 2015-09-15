@@ -118,7 +118,7 @@ public class Table {
         public static final String Folder = "table.label.Folder";
 
         public static final String Item = "table.label.Item";
-        public static final String Items = "table.label.Items";
+        public static final String Items = "table.label.Implements";
         public static final String Collection = "table.label.Collection";
         public static final String Collections = "table.label.Collections";
         public static final String Name = "table.label.Name";
@@ -183,10 +183,16 @@ public class Table {
                 public static final String UnableToBindAddress = "table.exception.rsr.unable-to-bind-address";
                 public static final String UnableToAcceptSocket = "table.exception.rsr.unable-to-accept-socket";
                 public static final String UnableToCloseAcceptSocket = "table.exception.rsr.unable-to-close-accept-socket";
+                public static final String UnableToCreateCommandInstance = "table.exception.rsr.unable-to-create-command-instance";
+                public static final String UnableToAccessCommandInstance = "table.exception.rsr.unable-to-access-command-instance";
                 public static final String UnableToCreateItemInstance = "table.exception.rsr.unable-to-create-item-instance";
                 public static final String UnableToAccessItemInstance = "table.exception.rsr.unable-to-access-item-instance";
                 public static final String UnableToOpenItemChannelSelector = "table.exception.rsr.unable-to-open-item-channel-selector";
                 public static final String UnableToRegisterItemChannel = "table.exception.rsr.unable-to-register-item-channel";
+                public static final String UnableToCloseItemChannel = "table.exception.rsr.unable-to-close-item-channel";
+                public static final String UnableToSetReadBuffer = "table.exception.rsr.unable-to-set-read-buffer";
+                public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
+                public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
             }
 
             public static class WebSocket {
@@ -212,6 +218,10 @@ public class Table {
         public static class RSR {
             public static class Server {
                 public static final String AcceptFailure = "table.error.rsr.server.accept-failure";
+                public static final String PeekFailure = "table.error.rsr.server.peek-failure";
+                public static final String DisconnectFailure = "table.error.rsr.server.disconnect-failure";
+                public static final String InitializeFailure = "table.error.rsr.server.initialize-failure";
+                public static final String FinalizeFailure = "table.error.rsr.server.finalize-failure";
 
             }
         }

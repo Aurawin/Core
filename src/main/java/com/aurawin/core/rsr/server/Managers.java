@@ -4,6 +4,9 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.def.server.ItemState;
 import static com.aurawin.core.rsr.def.server.ItemState.*;
+
+import com.aurawin.core.rsr.server.Commands.cmdAdjustBufferSizeRead;
+import com.aurawin.core.rsr.server.Commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.solution.Settings;
 
 import java.nio.channels.SocketChannel;
@@ -60,6 +63,22 @@ public class Managers extends ConcurrentLinkedQueue<Items>{
             Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToCreateItemInstance, Owner.itmclass.getName()));
         } catch (IllegalAccessException iae){
             Syslog.Append("Managers", "newInstance", Table.Format(Table.Exception.RSR.Server.UnableToAccessItemInstance,Owner.itmclass.getName()));
+        }
+    }
+    public void adjustReadBufferSize(){
+        Iterator<Items> it = iterator();
+        Items itms = null;
+        while (it.hasNext()) {
+            itms=it.next();
+            itms.Commands.Queue(cmdAdjustBufferSizeRead.class);
+        }
+    }
+    public void adjustWriteBufferSize(){
+        Iterator<Items> it = iterator();
+        Items itms = null;
+        while (it.hasNext()) {
+            itms=it.next();
+            itms.Commands.Queue(cmdAdjustBufferSizeWrite.class);
         }
     }
 }
