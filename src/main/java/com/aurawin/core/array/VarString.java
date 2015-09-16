@@ -1,5 +1,6 @@
 package com.aurawin.core.array;
 
+
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  */
 public class VarString extends ArrayList<String> {
     public String Delimiter = "\\n";
-
+    public enum ExtractOption {eoSingleton,eoMultiple};
     public VarString(String[] args){
         for (int iLcv=0; iLcv<args.length; iLcv++){
             this.add(args[iLcv]);
@@ -20,4 +21,21 @@ public class VarString extends ArrayList<String> {
             this.add(lst[iLcv]);
         }
     }
+    public static String[] Extract(String sData, String Delimiter, ExtractOption Option){
+        switch (Option){
+            case eoSingleton:
+                int idx=sData.indexOf(Delimiter);
+                if (idx>-1) {
+                    return new String [] { sData.substring(0,idx-1) ,sData.substring(idx+1) };
+                } else {
+                    return new String [] {sData,""};
+                }
+            case eoMultiple:
+                return sData.split(Delimiter);
+
+        }
+        return new String[] {sData,""};
+
+    }
+
 }

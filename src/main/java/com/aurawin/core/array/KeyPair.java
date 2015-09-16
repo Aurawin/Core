@@ -2,9 +2,11 @@ package com.aurawin.core.array;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class KeyPair extends ArrayList<KeyItem> {
-    public String Delimiter = "\\=";
+    public String DelimiterField = "\\=";
+    public String DelimiterItem = "\r\n";
 
     public KeyItem Append(String[] itm){
         KeyItem ki = null;
@@ -27,22 +29,36 @@ public class KeyPair extends ArrayList<KeyItem> {
         return ki;
     }
     public KeyPair(String args){
-        KeyItem ki = null;
-
-        Append(args.split(Delimiter));
-    }
-
-    public KeyPair(String[] args){
-        KeyItem ki = null;
-        VarString[] itm = null;
-        for (int iLcv=0; iLcv<args.length; iLcv++){
-            Append(args[iLcv].split(Delimiter));
+        String[] saItems = args.split(DelimiterItem);
+        for (String sItem : saItems) {
+            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.eoSingleton));
         }
     }
+
     public KeyPair(){
 
     }
-
+    public void Load(String Data){
+        String[] saItems = Data.split(DelimiterItem);
+        for (String sItem : saItems) {
+            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.eoSingleton));
+        }
+    }
+    public void Load(byte[] Data){
+        byte[] bItem;
+        int iChunk;
+        clear();
+        List<SearchResult> srItems;
+        String[] saItem;
+        srItems = Bytes.Split(Data,DelimiterItem.getBytes());
+        for( SearchResult r : srItems) {
+            iChunk=r.End-r.Start;
+            bItem=new byte[iChunk];
+            System.arraycopy(Data,r.Start,bItem,0,iChunk);
+            saItem=VarString.Extract(Bytes.toString(bItem),DelimiterField, VarString.ExtractOption.eoSingleton);
+            Append(saItem);
+        }
+    }
     public String ValueAsString(String Name){
         KeyItem itm = null;
 
