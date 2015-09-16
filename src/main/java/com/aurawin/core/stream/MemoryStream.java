@@ -1,6 +1,9 @@
 package com.aurawin.core.stream;
 
 
+import com.aurawin.core.array.Bytes;
+
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.util.LinkedList;
@@ -220,7 +223,7 @@ public class MemoryStream extends Channel {
         int iOffset=0;
         int iChunk=0;
 
-        while ( (iLcv<Collection.size()) && (Position>0) ) {
+        while ( (iLcv<Collection.size()) && (Position<Size) ) {
             iColSize=Collection.get(iLcv).length;
             if (iPreSeek+iColSize>=Position) {
                 // this array is the current []
@@ -242,6 +245,65 @@ public class MemoryStream extends Channel {
         }
         Size=size();
         Position=0;
+    }
+    public synchronized void Move(MemoryStream dest, long length){
+        int iLcv =0;
+        int iColSize=0;
+        int iChunk=0;
+        long iMoved=0;
+        sliceAtPosition();
+        dest.Clear();
+        while ( (iLcv<Collection.size()) && (Position<Size) && (iMoved<length))  {
+            iColSize=Collection.get(iLcv).length;
+            iChunk=iColSize;
+            if ( (iChunk+iMoved) > length) iChunk= (int) (length-iMoved);
+            if (iChunk>0) {
+                byte[] baChunk = new byte[iChunk];
+                System.arraycopy(Collection.get(iLcv),0,baChunk,0,iChunk);
+                dest.Write(baChunk);
+                iMoved+=iChunk;
+                iLcv++;
+                Position+=iChunk;
+            } else {
+                iLcv++;
+            }
+        }
+        sliceAtPosition();
+    }
+    public synchronized long Find(String Term){
+        long iPreSeek=0;
+        int iOffset=0;
+        int iChunk=0;
+        long iSeek = Position;
+        long iResult = -1;
+        int iLcv =0;
+        int idxTerm=-1;
+        int iColSize=0;
+        int iTermLen=0;
+        byte[] bTerm = null;
+        try {
+            bTerm=Term.getBytes("UTF-8");
+            iTermLen=bTerm.length;
+        } catch (UnsupportedEncodingException uee){
+            return iResult;
+        }
+
+        while ( (iLcv<Collection.size()) && (iSeek<Size) ) {
+            iColSize = Collection.get(iLcv).length;
+            if (iPreSeek+iColSize>=Position) {
+                idxTerm = Bytes.indexOf(Collection.get(iLcv), bTerm);
+                if (idxTerm > -1) {
+                    iResult = idxTerm + iPreSeek;
+                } else {
+                    iSeek += iColSize;
+                    iLcv++;
+                }
+            } else {
+                iPreSeek+=iColSize;
+            }
+        }
+        return iResult;
+
     }
 
 }

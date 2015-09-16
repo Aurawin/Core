@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr.server.Implements;
 
 import com.aurawin.core.rsr.def.rsrResult;
+import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.http.*;
@@ -18,12 +19,17 @@ public class http_1_1 extends Item {
 
     @Override
     protected rsrResult onPeek() {
-        return null;
+        return Request.Peek();
     }
 
     @Override
     protected rsrResult onProcess() {
-        return null;
+        if (Request.Read()==rSuccess) {
+            return rSuccess;
+        } else {
+            return rFailure;
+        }
+
     }
 
     @Override

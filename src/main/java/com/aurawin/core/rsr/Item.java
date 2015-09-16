@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.EnumSet;
 
 public abstract class Item {
-    protected Buffers Buffers;
+    public volatile Buffers Buffers;
     protected boolean Infinite;
     protected Items Owner;
     protected SocketChannel Channel;
