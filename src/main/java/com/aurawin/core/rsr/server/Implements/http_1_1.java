@@ -28,6 +28,8 @@ public class http_1_1 extends Item {
     @Override
     protected rsrResult onProcess() {
         if (Request.Read()==rSuccess) {
+            // todo process request
+            Request.Resolve();
             return rSuccess;
         } else {
             return rFailure;
