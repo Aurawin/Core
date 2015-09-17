@@ -2,8 +2,10 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.rsrResult;
+import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.rsr.def.*;
+import com.aurawin.core.rsr.def.ItemError;
+import static com.aurawin.core.rsr.def.ItemError.*;
 import com.aurawin.core.time.Time;
 
 import java.io.IOException;
@@ -34,11 +36,18 @@ public abstract class Item {
     protected abstract rsrResult onInitialize();
 
     public Item(Items aOwner){
-        Infinite = aOwner.Infinite;
-        Owner = aOwner;
+        if (aOwner!=null){
+            Infinite = aOwner.Infinite;
+            Owner = aOwner;
+        } else {
+            Infinite = Settings.RSR.Finite;
+        }
+        Errors = EnumSet.noneOf(ItemError.class);
+        Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
-
     }
+    public abstract Item newInstance(Items aOwner);
+
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }
@@ -79,6 +88,7 @@ public abstract class Item {
             } catch (IOException ioe){
                 return 0;
             }
+            Owner.BufferRead.flip();
             int iWrite = Buffers.Read.write(Owner.BufferRead);
             Owner.BufferRead.clear();
             return iWrite;

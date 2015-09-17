@@ -7,12 +7,16 @@ import java.io.File;
 public class Settings {
     public static String Language = "us";
     public static class RSR{
+        public static boolean Finite = false;
+        public static boolean Infinite = true;
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
         public static class Server{
             public static int AcceptYield = 25/*ms-sec*/;
             public static int AcceptPool = 10; // can adjust size later
+            public static int ManagerYield = 25/*ms*/;
             public static int ManagerItemCascadeThreshold = 1;
             public static int ManagerItemCascadeLimit = 100;
+            public static int ManagerItemNewThreadThreshold = 10;
             public static int ListenWaitPause = 30/*sec*/ * 1000/*ms-sec*/;
             public static int BindWaitPause   = 10/*sec*/ * 1000/*ms-sec*/;
             public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
@@ -36,5 +40,6 @@ public class Settings {
     }
     public static void Initialize(String name){
         System.setProperty("program.name",name);
+        Table.Load();
     }
 }

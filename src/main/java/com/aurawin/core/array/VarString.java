@@ -3,9 +3,7 @@ package com.aurawin.core.array;
 
 import java.util.ArrayList;
 
-/**
- * Created by Andrew on 8/28/2015.
- */
+
 public class VarString extends ArrayList<String> {
     public String Delimiter = "\\n";
     public enum ExtractOption {eoSingleton,eoMultiple};
@@ -21,12 +19,26 @@ public class VarString extends ArrayList<String> {
             this.add(lst[iLcv]);
         }
     }
+    public static int toInteger(String input, int Default){
+        try {
+            return Integer.parseInt(input);
+        } catch (Exception e) {
+            return Default;
+        }
+    }
+    public static long toLong(String input, long Default){
+        try {
+            return Long.parseLong(input);
+        } catch (Exception e) {
+            return Default;
+        }
+    }
     public static String[] Extract(String sData, String Delimiter, ExtractOption Option){
         switch (Option){
             case eoSingleton:
                 int idx=sData.indexOf(Delimiter);
                 if (idx>-1) {
-                    return new String [] { sData.substring(0,idx-1) ,sData.substring(idx+1) };
+                    return new String [] { sData.substring(0,idx) ,sData.substring(idx+1) };
                 } else {
                     return new String [] {sData,""};
                 }

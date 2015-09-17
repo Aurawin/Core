@@ -2,6 +2,7 @@ package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.VarString;
 import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.rsr.def.rsrResult;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -84,9 +85,9 @@ public class Request {
     public rsrResult Peek(){
         long iLoc=Owner.Buffers.Read.Find(Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Read.Read( (int) (iLoc-1) ))==rSuccess){
-                long cLen=Headers.ValueAsLong(Field.ContentLength);
-                return ( (cLen+iLoc+3)<=Owner.Buffers.Read.Size) ? rSuccess : rPostpone;
+            if (Read(Owner.Buffers.Read.Read(0,(int) (iLoc+Payload.Separator.length()),true ))==rSuccess){
+                long cLen=Headers.ValueAsLong(Field.ContentLength,0);
+                return ( (cLen==0) || ( (cLen+iLoc+3)<=Owner.Buffers.Read.Size) ) ? rSuccess : rPostpone;
             } else{
                 return rPostpone;
             }
@@ -98,9 +99,9 @@ public class Request {
         Reset();
         long iLoc=Owner.Buffers.Read.Find(Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Read.Read(0, (int) (iLoc-1) ))==rSuccess){
-                long cLen=Headers.ValueAsLong(Field.ContentLength);
-                if ((cLen+iLoc+3)<=Owner.Buffers.Read.Size){
+            if (Read(Owner.Buffers.Read.Read(0,(int) (iLoc+Payload.Separator.length()),false ))==rSuccess){
+                long cLen=Headers.ValueAsLong(Field.ContentLength,0);
+                if ( (cLen==0) || ((cLen+iLoc+3)<=Owner.Buffers.Read.Size) ) {
                     Owner.Buffers.Read.Position=iLoc + 3;
                     Content.Move(Owner.Buffers.Read,cLen);
                     return rSuccess;
@@ -129,7 +130,7 @@ public class Request {
         idxLineEnd=Bytes.indexOf(input,Bytes.CRLF,0);
         idxHeadersEnd =Bytes.indexOf(input,Payload.Separator.getBytes(),0);
         if ( (idxLineEnd>-1) && (idxHeadersEnd>-1)) {
-            iChunk = iOffset + idxLineEnd - 2;
+            iChunk = iOffset + idxLineEnd;
             aLine = new byte[iChunk];
             System.arraycopy(input, iOffset, aLine, 0, iChunk);
             sLine=Bytes.toString(aLine);
@@ -138,23 +139,20 @@ public class Request {
             if (saLine.length==3){
                 Method=saLine[0];
                 URI=saLine[1];
-                saLine = saLine[2].split("/");
-                if (saLine.length==2) {
-                    Version.Major = Integer.parseInt(saLine[0]);
-                    Version.Minor = Integer.parseInt(saLine[1]);
-                    // it's a valid request
+                if ( Version.Load(saLine[2])==true) {
                     int idx = URI.indexOf("?");
-                    if (idx>-1) {
-                        Parameters.Load(URI.substring(idx+1));
-                        URI=URI.substring(1,idx-1);
-                        // Load Headers
-                        iOffset = idxLineEnd+1;
-                        iChunk = idxHeadersEnd - 1 - iOffset;
-                        aHeaders = new byte[iChunk];
-                        System.arraycopy(input,iOffset,aHeaders,0,iChunk);
-                        Headers.Load(aHeaders);
+                    if (idx > -1) {
+                        Parameters.Load(URI.substring(idx + 1));
+                        URI = URI.substring(0, idx);
                     }
+                    // Load Headers
+                    iOffset = idxLineEnd + 2;
+                    iChunk = idxHeadersEnd - 1 - iOffset;
+                    aHeaders = new byte[iChunk];
+                    System.arraycopy(input, iOffset, aHeaders, 0, iChunk);
+                    Headers.Load(aHeaders);
                     return rSuccess;
+
                 } else {
                     return rFailure;
                 }

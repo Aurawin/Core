@@ -6,19 +6,21 @@ import static com.aurawin.core.rsr.def.EngineState.*;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 
 public abstract class Engine extends Thread {
-    public volatile EngineState State = esNone;
+    public volatile EngineState State;
     public Boolean Infinite = false;
-    public Class<? extends Item> itmClass;
+    public Item itmRoot;
+
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
     public Managers Managers;
 
-    public <T extends Item> Engine(Class<T> cItem, boolean aInfinate) throws IOException {
+    public Engine(Item aRootItem, boolean aInfinate) throws IOException,NoSuchMethodException {
         Infinite=aInfinate;
-        itmClass=cItem;
+        itmRoot=aRootItem;
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Managers = new Managers(this);

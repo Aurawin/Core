@@ -16,7 +16,10 @@ public class http_1_1 extends Item {
         Response=new Response(this);
 
     }
-
+    @Override
+    public http_1_1 newInstance(Items aOwner){
+        return new http_1_1(aOwner);
+    }
     @Override
     protected rsrResult onPeek() {
         return Request.Peek();
@@ -34,22 +37,22 @@ public class http_1_1 extends Item {
 
     @Override
     protected rsrResult onDisconnected() {
-        return null;
+        return rSuccess;
     }
 
     @Override
     protected rsrResult onAccepted() {
-        return null;
+        return rSuccess;
     }
 
     @Override
     protected rsrResult onRejected() {
-        return null;
+        return rSuccess;
     }
 
     @Override
     protected rsrResult onError() {
-        return null;
+        return rSuccess;
     }
 
     @Override
@@ -60,12 +63,12 @@ public class http_1_1 extends Item {
         Request=null;
         Response = null;
 
-        return rsrResult.rSuccess;
+        return rSuccess;
     }
 
     @Override
     protected rsrResult onInitialize() {
-        return null;
+        return rSuccess;
 
     }
 }

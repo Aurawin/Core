@@ -92,16 +92,16 @@ public class KeyPair extends ArrayList<KeyItem> {
         }
         return 0;
     }
-    public long ValueAsLong(String Name){
+    public long ValueAsLong(String Name, long Default){
         KeyItem itm = null;
 
         for (Iterator<KeyItem> itr = this.iterator(); itr.hasNext();){
             itm=itr.next();
             if (itm.Name.compareToIgnoreCase(Name)==0){
-                return Long.parseLong(itm.Value);
+                return VarString.toLong(itm.Value,0);
             }
         }
-        return 0;
+        return Default;
     }
 
     public void Release(){

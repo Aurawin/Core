@@ -84,7 +84,7 @@ public class Bytes {
             if (found==true) {
                 sResults.add(new SearchResult(iStart,iLcv));
                 iStart=iLcv+Term.length;
-                iLcv+=Term.length;
+                iLcv=iStart-1; // bias b/c it will be incremented
             }
         }
         // add remaining items

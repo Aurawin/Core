@@ -20,8 +20,8 @@ public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
 
-    public <T extends Item> Server(InetSocketAddress sa, Class<T> cItem, boolean aInfinate) throws IOException {
-        super (cItem,aInfinate);
+    public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate) throws IOException,NoSuchMethodException {
+        super (aRootItem,aInfinate);
         State = esCreated;
         address = sa;
         cListen = ServerSocketChannel.open();
@@ -33,11 +33,11 @@ public class Server extends Engine {
                 case esRun:
                     try {
                         SocketChannel chRemote = cListen.accept();
-                        Managers.Accept(chRemote);
+                        if (chRemote!=null) Managers.Accept(chRemote);
                     } catch (IOException ioe) {
                         Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
                         try{
-                            wait(Settings.RSR.Server.ListenWaitPause);
+                            sleep(Settings.RSR.Server.ListenWaitPause);
                         } catch (InterruptedException ie){
 
                         }
@@ -52,7 +52,7 @@ public class Server extends Engine {
                         // network interface maybe swapping
                         Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, address.toString()));
                         try {
-                            wait(Settings.RSR.Server.BindWaitPause);
+                            sleep(Settings.RSR.Server.BindWaitPause);
                         } catch (InterruptedException ie){
 
                         }
@@ -68,8 +68,6 @@ public class Server extends Engine {
                     }
                     break;
                 case esUpgrade:
-                    // obtain namespace[]
-                    // shutdown each namespaced socket
                     State=esUpgrading;
                     break;
                 case esUpgrading:
@@ -80,7 +78,7 @@ public class Server extends Engine {
                     break;
             }
             try {
-              wait(Settings.RSR.Server.AcceptYield);
+              sleep(Settings.RSR.Server.AcceptYield);
             } catch (InterruptedException irqe) {
                 // release
             }
@@ -88,10 +86,15 @@ public class Server extends Engine {
     }
 
     public synchronized void Start(){
-
+        if (State==esCreated){
+            State=esStart;
+            start();
+        }
     }
     public synchronized void Stop(){
-
+        if (State!=esFinalize){
+            State=esStop;
+        }
     }
     public synchronized void CheckForUpdates(){
 

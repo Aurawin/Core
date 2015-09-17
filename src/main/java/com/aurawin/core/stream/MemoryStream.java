@@ -144,14 +144,15 @@ public class MemoryStream extends Channel {
     }
     public synchronized byte[] Read(int Count){
         int iOffset=0;
-        return Read(iOffset,Count);
+        return Read(iOffset,Count,false);
     }
     public synchronized byte[] Read(){
         int iOffset=0;
         int  iCount=(int) Size;
-        return Read(iOffset,iCount);
+        return Read(iOffset,iCount,false);
     }
-    public synchronized byte[] Read(int Offset,int Count){
+
+    public synchronized byte[] Read(int Offset,int Count, boolean Peak){
         long OldPosition=Position;
         Position=Offset;
 
@@ -160,7 +161,7 @@ public class MemoryStream extends Channel {
         int iChunk=0;
         int iTotal=0;
         int iColSize=0;
-        int iWrite=Count;
+        int iRead=Count;
         int iLcv =0;
 
 
@@ -170,24 +171,24 @@ public class MemoryStream extends Channel {
         // seek to Collection with position
 
 
-        while ( (iLcv<Collection.size()) && (iWrite>0) ) {
+        while ( (iLcv<Collection.size()) && (iRead>0) ) {
             iColSize=Collection.get(iLcv).length;
             if (iPreSeek+iColSize>=Position) {
                 iOffset=(int)(Position-iPreSeek);
                 iChunk=iColSize-iOffset;
-
+                if (iChunk>iRead)
+                    iChunk=iRead;
                 System.arraycopy(Collection.get(iLcv), (int) iOffset, Result, iTotal, iChunk);
 
                 Position+=iChunk;
 
-                iWrite-=iChunk;
+                iRead-=iChunk;
                 iTotal+=iChunk;
             }
             iPreSeek+=iColSize;
             iLcv++;
         }
-
-        Position=OldPosition;
+        if (Peak==true) Position=OldPosition;
         return Result;
     }
     public synchronized int Write (boolean Value){
@@ -247,28 +248,31 @@ public class MemoryStream extends Channel {
         Position=0;
     }
     public synchronized void Move(MemoryStream dest, long length){
-        int iLcv =0;
-        int iColSize=0;
-        int iChunk=0;
-        long iMoved=0;
         sliceAtPosition();
         dest.Clear();
-        while ( (iLcv<Collection.size()) && (Position<Size) && (iMoved<length))  {
-            iColSize=Collection.get(iLcv).length;
-            iChunk=iColSize;
-            if ( (iChunk+iMoved) > length) iChunk= (int) (length-iMoved);
-            if (iChunk>0) {
-                byte[] baChunk = new byte[iChunk];
-                System.arraycopy(Collection.get(iLcv),0,baChunk,0,iChunk);
-                dest.Write(baChunk);
-                iMoved+=iChunk;
-                iLcv++;
-                Position+=iChunk;
-            } else {
-                iLcv++;
+        if (length>0) {
+            int iLcv = 0;
+            int iColSize = 0;
+            int iChunk = 0;
+            long iMoved = 0;
+
+            while ((iLcv < Collection.size()) && (Position < Size) && (iMoved < length)) {
+                iColSize = Collection.get(iLcv).length;
+                iChunk = iColSize;
+                if ((iChunk + iMoved) > length) iChunk = (int) (length - iMoved);
+                if (iChunk > 0) {
+                    byte[] baChunk = new byte[iChunk];
+                    System.arraycopy(Collection.get(iLcv), 0, baChunk, 0, iChunk);
+                    dest.Write(baChunk);
+                    iMoved += iChunk;
+                    iLcv++;
+                    Position += iChunk;
+                } else {
+                    iLcv++;
+                }
             }
+            sliceAtPosition();
         }
-        sliceAtPosition();
     }
     public synchronized long Find(String Term){
         long iPreSeek=0;
@@ -294,6 +298,7 @@ public class MemoryStream extends Channel {
                 idxTerm = Bytes.indexOf(Collection.get(iLcv), bTerm);
                 if (idxTerm > -1) {
                     iResult = idxTerm + iPreSeek;
+                    break;
                 } else {
                     iSeek += iColSize;
                     iLcv++;

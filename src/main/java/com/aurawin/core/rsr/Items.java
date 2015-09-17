@@ -34,7 +34,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private Item itm;
     private Iterator<Item> it;
     private Iterator<SelectionKey> isk;
-
+    protected Thread Thread;
     protected Engine Engine;
     protected Managers Owner;
     protected Selector csSelector;
@@ -45,8 +45,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     protected ConcurrentHashMap<SocketChannel,Item> ChannelMap;
     protected ByteBuffer BufferRead;
     protected ByteBuffer BufferWrite;
-    public Items(Managers aOwner, Engine aEngine){
+    public Items(Managers aOwner, Engine aEngine, boolean aInfinite){
         super ();
+        Infinite = aInfinite;
         Owner = aOwner;
         Engine = aEngine;
         qAddItems = new ConcurrentLinkedQueue<Item>();
@@ -58,7 +59,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         try {
             csSelector = Selector.open();
         } catch (IOException ioe){
-            Syslog.Append(getClass().getCanonicalName(),"Selector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmClass.getName()));
+            Syslog.Append(getClass().getCanonicalName(),"Selector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
         }
 
     }
@@ -100,15 +101,15 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                         itm.State=isEstablished;
                     } else {
                         qRemoveItems.add(itm);
-                        logEntry(itm, Table.Error.RSR.InitializeFailure, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                        logEntry(itm, Table.Error.RSR.InitializeFailure, itm.getClass().getCanonicalName(), "processItems.onInitialize");
                     }
                 } else {
                     qRemoveItems.add(itm);
-                    logEntry(itm, Table.Error.RSR.AcceptFailure, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                    logEntry(itm, Table.Error.RSR.AcceptFailure, itm.getClass().getCanonicalName(), "processItems.onAccepted");
                 }
             } catch (Exception e){
                 // Discard connection
-                logEntry(itm, Table.Exception.RSR.UnableToRegisterItemChannel, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                logEntry(itm, Table.Exception.RSR.UnableToRegisterItemChannel, itm.getClass().getCanonicalName(),"processItems - "+e.getMessage() );
             }
             itm=qAddItems.poll();
         }
@@ -119,17 +120,17 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 itm.Channel.close();
             } catch (Exception e){
                 // Discard connection
-                logEntry(itm, Table.Exception.RSR.UnableToCloseItemChannel, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                logEntry(itm, Table.Exception.RSR.UnableToCloseItemChannel, getClass().getCanonicalName(), "processItems -> removeItems -> close channel");
             }
             if (itm.onDisconnected()==rSuccess){
                 itm.State=isFinalize;
             } else {
-                logEntry(itm, Table.Error.RSR.DisconnectFailure, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                logEntry(itm, Table.Error.RSR.DisconnectFailure, getClass().getCanonicalName(), "processItems -> removeItems -> onDisconnected");
             }
             if (itm.onFinalize()==rSuccess){
                 itm.State=isNone;
             } else {
-                logEntry(itm, Table.Error.RSR.FinalizeFailure, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                logEntry(itm, Table.Error.RSR.FinalizeFailure, getClass().getCanonicalName(),  "processItems -> removeItems -> onFinalize");
             }
             remove(itm);
             itm=qAddItems.poll();
@@ -158,17 +159,16 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                                 itm.renewTTL();
                                                 break;
                                             case rSuccess:
-                                                itm.Buffers.Read.sliceAtPosition();
                                                 itm.renewTTL();
                                                 break;
                                             case rFailure:
-                                                logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                                                logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(),  "processItems -> Read -> onProcess");
                                                 itm.Teardown();
                                                 break;
                                         }
                                         break;
                                     case rFailure :
-                                        logEntry(itm,Table.Error.RSR.PeekFailure,getClass().getCanonicalName(),getClass().getEnclosingMethod().getName());
+                                        logEntry(itm,Table.Error.RSR.PeekFailure,getClass().getCanonicalName(), "processItems -> Read -> onPeek");
                                         itm.Teardown();
                                         break;
                                 }
@@ -204,7 +204,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                         itm.Teardown();
                         break;
                     case rFailure:
-                        logEntry(itm,Table.Error.RSR.Timeout,getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                        logEntry(itm,Table.Error.RSR.Timeout,getClass().getCanonicalName(), "processItems -> Timeout -> onError");
                         itm.Teardown();
                         break;
                 }
@@ -220,10 +220,15 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 itm.Errors.add(eWrite);
                 evResult=itm.onError();
                 if (evResult==rFailure)
-                    logEntry(itm,Table.Error.RSR.Write,getClass().getCanonicalName(), getClass().getEnclosingMethod().getName());
+                    logEntry(itm,Table.Error.RSR.Write,getClass().getCanonicalName(), "processItems -> Write -> onError");
                 itm.Teardown();
             }
 
+        }
+        try {
+            Thread.sleep(Settings.RSR.Server.ManagerYield);
+        } catch (InterruptedException ie){
+            // do nothing
         }
     }
     public void adjustReadBufferSize() throws Exception{
