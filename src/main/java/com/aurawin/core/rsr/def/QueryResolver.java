@@ -1,5 +1,5 @@
 package com.aurawin.core.rsr.def;
 
-public interface Resolver {
+public interface QueryResolver {
     ResolveResult Resolve();
 }

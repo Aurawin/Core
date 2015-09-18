@@ -18,6 +18,7 @@ public class Table {
     public static final int MaxSize = 1024*1024;
     public static final String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
+    public static final String CRLF = "\r\n";
     public static Boolean getLoaded(){
         return Loaded;
     }

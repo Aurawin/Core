@@ -16,7 +16,7 @@ public class Field {
     public final static String AccessControlMaxAge= "Access-Control-Max-Age";
     public final static String AccessControlRequestHeaders= "Access-Control-Request-Headers";
     public final static String AccessControlRequestMethod="Access-Control-Request-Method";
-    public final static String AccessControlAllowCredentials="Access-Control-Allow-Credentials";
+    public final static String AccessControlAllowCredentials="Access-Control-Allow-Manifest";
 
     public final static String Allow = "Allow";
     public final static String Authorization = "Authorization";

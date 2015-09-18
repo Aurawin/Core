@@ -3,16 +3,16 @@ package com.aurawin.core.rsr.def.http;
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.array.VarString;
-import com.aurawin.core.rsr.def.Buffers;
-import com.aurawin.core.rsr.def.rsrResult;
+import com.aurawin.core.rsr.def.*;
+
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.http.Payload;
 
+import com.aurawin.core.storage.Define;
 import com.aurawin.core.stream.MemoryStream;
-import com.aurawin.core.rsr.def.Credentials;
 
-public class Request {
+public class Request implements QueryResolver {
     protected Item Owner;
 
     public volatile Version Version;
@@ -163,9 +163,28 @@ public class Request {
         } else {
             return rFailure;
         }
+    }
 
-
-
-
+    @Override
+    public ResolveResult Resolve() {
+        // look at URI
+        String[] saPath=URI.split("/");
+        if (saPath.length>0) {
+            if (saPath[0].compareToIgnoreCase(Define.Path.Core)==0){
+                // todo we need to further examine path
+                // todo ensure core object / command exists
+                return ResolveResult.rrCore;
+            } else {
+                // todo prepend Define.Path.Web to URI
+                // todo it may be directory ? or file ?
+                // todo we need to make sure file exists
+                // todo if directory append Define.File.Index to URI
+                return ResolveResult.rrFile;
+            }
+        } else {
+            URI = "/"+Define.File.Index;
+            // todo we need to make sure file exists
+            return ResolveResult.rrFile;
+        }
     }
 }
