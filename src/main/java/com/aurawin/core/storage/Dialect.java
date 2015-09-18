@@ -12,4 +12,15 @@ public enum Dialect {
     private Dialect(String value){
         this.value = value;
     }
-    public String getValue(){return value;}}
+    public String getValue(){return value;}
+    public static Dialect fromString(String value){
+        for (Dialect d : Dialect.values()){
+            if (d.getValue().compareToIgnoreCase(value)==0){
+                return d;
+            }
+        }
+        return null;
+    }
+
+
+}

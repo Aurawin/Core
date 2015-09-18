@@ -10,8 +10,8 @@ public class Manifest {
     public int Port;
     public int Poolsize;
     public String Database;
-    public String Dialect;
-    public String Driver;
+    public Dialect Dialect;
+    public Driver Driver;
 
     public Manifest(String username, String password, String host, int port, int poolsize, String database, String dialect, String driver) {
         Username = username;
@@ -20,7 +20,7 @@ public class Manifest {
         Port = port;
         Poolsize = poolsize;
         Database = database;
-        Dialect = dialect;
-        Driver = driver;
+        Dialect = Dialect.fromString(dialect);
+        Driver = Driver.fromString(driver);
     }
 }

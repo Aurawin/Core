@@ -40,8 +40,8 @@ public class Hibernate{
     public static SessionFactory openSession(Manifest manifest){
         Configuration cfg = new Configuration();
         cfg.configure();
-        cfg.setProperty("hibernate.dialect", manifest.Dialect);
-        cfg.setProperty("hibernate.connection.driver_class", manifest.Driver);
+        cfg.setProperty("hibernate.dialect", manifest.Dialect.getValue());
+        cfg.setProperty("hibernate.connection.driver_class", manifest.Driver.getValue());
         cfg.setProperty("hibernate.connection.username", manifest.Username);
         cfg.setProperty("hibernate.connection.password", manifest.Password);
         cfg.setProperty("hibernate.connection.pool_size", Integer.toString(manifest.Poolsize));
