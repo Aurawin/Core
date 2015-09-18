@@ -25,7 +25,7 @@ public class HibernateTest {
                 1,                                      // Pool Acquire Increment
                 50,                                     // Max statements
                 3600,                                   // timeout
-                Database.Config.Automatic.Update,       //
+                Database.Config.Automatic.Create,       //
                 "Test",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue()            // Driver
@@ -36,9 +36,6 @@ public class HibernateTest {
     public void after() throws Exception {
     }
 
-    /**
-     * Method: buildConfig(Manifest manifest)
-     */
     @Test
     public void testBuildConfigManifest() throws Exception {
         SessionFactory sf = Hibernate.openSession(Manifest);

@@ -1,7 +1,7 @@
 package com.aurawin.core.storage;
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.storage.entities.UserAccount;
+import com.aurawin.core.storage.entities.Domain.UserAccount;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
