@@ -34,7 +34,6 @@ public class http_1_1 extends Item {
         } else {
             return rFailure;
         }
-
     }
 
     @Override
