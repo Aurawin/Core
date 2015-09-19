@@ -1,7 +1,6 @@
 package com.aurawin.core.storage;
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.storage.entities.Domain.UserAccount;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -69,7 +68,7 @@ public class Hibernate{
         cfg.setProperty("hibernate.c3p0.max_statements", Integer.toString(manifest.StatementsMax));
         cfg.setProperty("hibernate.connection.url", manifest.getConnectionURL());
 
-        cfg.addAnnotatedClass(UserAccount.class);
+        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.UserAccount.class);
 
         cfg.configure();
 

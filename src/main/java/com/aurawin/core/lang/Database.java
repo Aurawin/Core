@@ -30,5 +30,12 @@ public class Database {
             public static final String Validate = "validate";
         }
     }
+    public static class Test{
+        public static class Entities{
+            public static class Domain{
+                public static final String UserAccount = "/test/storage.entities.domain.UserAccount.json";
+            }
+        }
+    }
 
 }

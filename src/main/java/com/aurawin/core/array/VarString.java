@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 
 public class VarString extends ArrayList<String> {
-    public String Delimiter = "\\n";
+    public String Delimiter = "\n";
     public enum ExtractOption {eoSingleton,eoMultiple};
     public VarString(String[] args){
         for (int iLcv=0; iLcv<args.length; iLcv++){

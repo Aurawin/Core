@@ -32,7 +32,10 @@ public class Manifest {
         Driver = Driver.fromString(driver);
     }
     public String getConnectionURL(){
-        String url = "jdbc:".concat(Driver.getTemplate());
-        return url.replace("$host",Host).replace("$port",Integer.toString(Port)).replace("$database",Database);
+        return "jdbc:".concat(Driver.getTemplate()
+                .replace("$host",Host)
+                .replace("$port",Integer.toString(Port))
+                .replace("$database",Database)
+        );
     }
 }

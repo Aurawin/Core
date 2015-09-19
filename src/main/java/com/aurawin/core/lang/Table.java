@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.aurawin.core.VarString;
 import com.aurawin.core.solution.Settings;
 import org.json.JSONObject;
 
@@ -34,20 +35,8 @@ public class Table {
         }
     }
     public static final void Load(){
-        try {
-            InputStream is = Class.class.getResourceAsStream(defaultResource);
-            InputStreamReader ir = new InputStreamReader(is, StandardCharsets.UTF_8);
-            BufferedReader r = new BufferedReader(ir);
-            StringBuilder sb = new StringBuilder(MaxSize);
-            String sLine = "";
-            while ( (sLine = r.readLine()) !=null) {
-              sb.append(sLine);
-            }
-            Load(sb.toString());
-            Loaded=true;
-        } catch(java.lang.Exception E){
-
-        }
+        Load(VarString.fromResource(defaultResource));
+        Loaded=true;
     }
     public static final String String(String NameSpace){
         try {
