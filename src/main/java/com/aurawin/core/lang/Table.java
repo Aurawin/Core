@@ -168,6 +168,16 @@ public class Table {
 
         }
 
+        public static class Entities{
+            public static class Domain{
+                public static class UserAccount{
+                    public static String UnableToCreateUserExists = "table.exception.entities.domain.useraccount.unable-to-create-user-exists";
+
+                }
+            }
+
+        }
+
         public static class RSR {
 
             public static final String UnableToBindAddress = "table.exception.rsr.unable-to-bind-address";

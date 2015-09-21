@@ -7,13 +7,38 @@ import org.hibernate.Session;
 public class Database {
     public static class Table{
         public static class Domain{
+            public static final String Items = "tbl_d_itm";
             public static final String UserAccounts = "tbl_d_uas";
 
         }
     }
     public static class Query{
         public static class Domain{
+            public static class lookupById {
+                public static final String name = "lookupById";
+                public static final String value = "from Domain where Id = :Id";
+                public static org.hibernate.Query Create(Session ssn, long Id){
+                    return ssn.getNamedQuery(name)
+                            .setLong("Id",Id);
+                }
+            }
+            public static class lookupByName {
+                public static final String name = "lookupByName";
+                public static final String value = "from Domain where Name = :Name";
+                public static org.hibernate.Query Create(Session ssn, String Name){
+                    return ssn.getNamedQuery(name)
+                            .setString("Name", Name);
+                }
+            }
             public static class UserAccount{
+                public static class lookupByName {
+                    public static final String name = "lookupByName";
+                    public static final String value = "from UserAccount where Name = :Name";
+                    public static org.hibernate.Query Create(Session ssn, String Name){
+                        return ssn.getNamedQuery(name)
+                                .setString("Name",Name);
+                    }
+                }
                 public static class lookupByAuth {
                     public static final String name = "lookupByAuth";
                     public static final String value = "from UserAccount where Auth = :Auth";
@@ -36,6 +61,14 @@ public class Database {
     }
     public static class Field{
         public static class Domain{
+            public static final String Id="itmid";
+            public static final String CertId = "itmcid";
+            public static final String Root="itmrt";
+            public static final String FriendlyName="itfme";
+            public static final String DefaultOptionCatchAll="itmdca";
+            public static final String DefaultOptionQuota="itmdqo";
+            public static final String DefaultOptionFiltering="itmdfl";
+
             public static class UserAccount{
                 public static final String Id="itmid";
                 public static final String User="itmun";
