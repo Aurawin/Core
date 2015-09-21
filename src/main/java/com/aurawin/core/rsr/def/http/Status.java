@@ -35,7 +35,7 @@ public enum Status {
     s410 ("410 Gone"),
     s411 ("411 Length Required"),
     s412 ("412 Precondition Failed"),
-    s413 ("413 Request Entity Too Large"),
+    s413 ("413 Request Stored Too Large"),
     s414 ("414 Request-URI Too Long"),
     s415 ("415 Unsupported Media Type"),
     s416 ("416 Requested Range Not Satisfiable"),
