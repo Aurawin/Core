@@ -3,7 +3,6 @@ package com.aurawin.core.storage.entities.domain;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.storage.entities.Stored;
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -39,7 +38,7 @@ public class UserAccount extends Stored {
     @Column(name = Database.Field.Domain.UserAccount.Id)
     private long Id;
 
-    @NotNull
+
     @Column(name = Database.Field.Domain.UserAccount.DomainId)
     private long DomainId;
 

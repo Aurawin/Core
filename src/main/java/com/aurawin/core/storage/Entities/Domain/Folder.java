@@ -3,9 +3,10 @@ package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.storage.entities.Stored;
-import com.sun.istack.internal.NotNull;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
+
 @Table(name = Database.Table.Domain.Folder)
 @NamedQueries(
         {
@@ -35,23 +37,18 @@ public class Folder extends Stored {
     @Column(name = Database.Field.Domain.Folders.Id)
     private long Id;
 
-    @NotNull
     @Column(name = Database.Field.Domain.Folders.DomainId)
     private long DomainId;
 
-    @NotNull
     @Column(name = Database.Field.Domain.Folders.Kind)
     private long Kind;
 
-    @NotNull
     @Column(name = Database.Field.Domain.Folders.Created)
     private double Created;
 
-    @NotNull
     @Column(name = Database.Field.Domain.Folders.Modified)
     private double Modified;
 
-    @NotNull
     @Column(name = Database.Field.Domain.Folders.Path)
     private String Path;
 
@@ -76,6 +73,7 @@ public class Folder extends Stored {
         Modified=0.0;
         Path="";
     }
+
 
     public Folder(long domainId, long kind, String path) {
         DomainId = domainId;

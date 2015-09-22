@@ -1,18 +1,20 @@
 package com.aurawin.core.storage.entities;
 
+
 import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
-import com.sun.istack.internal.NotNull;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 @Entity
@@ -39,7 +41,7 @@ public class UniqueId  {
         @Column(name = Database.Field.UniqueId.Id)
         private long Id;
 
-        @NotNull
+
         @Column(name = Database.Field.UniqueId.Namespace, unique = true)
         private String Namespace;
 
@@ -84,5 +86,4 @@ public class UniqueId  {
                         }
                 }
         }
-
 }

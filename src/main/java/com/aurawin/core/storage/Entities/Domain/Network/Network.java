@@ -17,6 +17,7 @@ import javax.persistence.*;
 @SelectBeforeUpdate(value=true)
 @Table(name = Database.Table.Domain.Network)
 
+
 public class Network extends Stored {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,7 +69,6 @@ public class Network extends Stored {
         Description = description;
     }
 
-
     public static void entityCreated(Session ssn, Transaction tx, Stored Entity) {
         if (Entity instanceof UserAccount){
             UserAccount ua = (UserAccount) Entity;
@@ -81,9 +81,9 @@ public class Network extends Stored {
 
     }
 
-
     public static void entityDeleted(Session ssn, Transaction tx, Stored Entity) {
 
     }
+
 
 }

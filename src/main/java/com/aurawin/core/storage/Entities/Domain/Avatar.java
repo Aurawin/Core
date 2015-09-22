@@ -2,7 +2,7 @@ package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.storage.entities.Stored;
-import com.sun.istack.internal.NotNull;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -25,7 +25,7 @@ public class Avatar extends Stored {
     @Column(name = Database.Field.Domain.Avatar.Id)
     private long Id;
 
-    @NotNull
+
     @Column (name= Database.Field.Domain.Avatar.DomainId)
     private long DomainId;
 
@@ -53,4 +53,5 @@ public class Avatar extends Stored {
     public static void entityDeleted(Session ssn, Transaction tx, Stored Entity)throws Exception {
 
     }
+
 }

@@ -1,5 +1,6 @@
 package com.aurawin.core.storage.entities.domain;
 
+
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.lang.Database;
 import com.google.gson.Gson;
@@ -52,37 +53,38 @@ public class Domain extends Stored {
     private long DefaultOptionQuota;
 
     public Domain() {
-        Id=0;
-        CertId=0;
-        Root="";
-        FriendlyName="";
-        DefaultOptionCatchAll=true;
-        DefaultOptionFiltering=true;
-        DefaultOptionQuota=1024*1024*32; // todo create storage entity for end-user plans
+        Id = 0;
+        CertId = 0;
+        Root = "";
+        FriendlyName = "";
+        DefaultOptionCatchAll = true;
+        DefaultOptionFiltering = true;
+        DefaultOptionQuota = 1024 * 1024 * 32; // todo create storage entity for end-user plans
     }
 
-    public static Domain fromJSON(Gson Parser, String Data){
-        return (Domain) Parser.fromJson(Data,Domain.class);
+    public static Domain fromJSON(Gson Parser, String Data) {
+        return (Domain) Parser.fromJson(Data, Domain.class);
     }
 
-    public boolean equals(Domain o){
-        return (Id==o.Id &&
-                Root.compareTo(o.Root)==0 &&
-                FriendlyName.compareTo(o.FriendlyName)==0 &&
-                DefaultOptionCatchAll==o.DefaultOptionCatchAll &&
-                DefaultOptionFiltering==o.DefaultOptionFiltering &&
-                DefaultOptionQuota==o.DefaultOptionQuota
+    public boolean equals(Domain o) {
+        return (Id == o.Id &&
+                Root.compareTo(o.Root) == 0 &&
+                FriendlyName.compareTo(o.FriendlyName) == 0 &&
+                DefaultOptionCatchAll == o.DefaultOptionCatchAll &&
+                DefaultOptionFiltering == o.DefaultOptionFiltering &&
+                DefaultOptionQuota == o.DefaultOptionQuota
         );
 
     }
-    public void Assign(Domain src){
-        Id=src.Id;
-        CertId=src.CertId;
-        Root=src.Root;
-        FriendlyName=src.FriendlyName;
-        DefaultOptionFiltering=src.DefaultOptionFiltering;
-        DefaultOptionQuota=src.DefaultOptionQuota;
-        DefaultOptionCatchAll=src.DefaultOptionCatchAll;
+
+    public void Assign(Domain src) {
+        Id = src.Id;
+        CertId = src.CertId;
+        Root = src.Root;
+        FriendlyName = src.FriendlyName;
+        DefaultOptionFiltering = src.DefaultOptionFiltering;
+        DefaultOptionQuota = src.DefaultOptionQuota;
+        DefaultOptionCatchAll = src.DefaultOptionCatchAll;
     }
 
     public long getId() {
@@ -138,19 +140,20 @@ public class Domain extends Stored {
     }
 
 
-    public static void entityCreated(Session ssn, Transaction tx, Stored obj){
-        if (obj instanceof Domain){
-
-        } else if (obj instanceof UserAccount){
-
-        }
-    }
-
-    public static void entityDeleted(Session ssn, Transaction tx, Stored obj){
+    public static void entityCreated(Session ssn, Transaction tx, Stored obj) {
         if (obj instanceof Domain) {
 
         } else if (obj instanceof UserAccount) {
 
         }
     }
+
+    public static void entityDeleted(Session ssn, Transaction tx, Stored obj) {
+        if (obj instanceof Domain) {
+
+        } else if (obj instanceof UserAccount) {
+
+        }
+    }
+
 }
