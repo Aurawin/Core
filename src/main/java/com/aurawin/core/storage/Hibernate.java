@@ -1,8 +1,13 @@
 package com.aurawin.core.storage;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.storage.entities.Stored;
+import com.aurawin.core.storage.entities.UniqueId;
+import com.aurawin.core.storage.entities.domain.network.Network;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import java.util.Iterator;
 
 public class Hibernate{
 
@@ -68,7 +73,18 @@ public class Hibernate{
         cfg.setProperty("hibernate.c3p0.max_statements", Integer.toString(manifest.StatementsMax));
         cfg.setProperty("hibernate.connection.url", manifest.getConnectionURL());
 
-        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.UserAccount.class);
+        Iterator it = manifest.Annotated.iterator();
+        while (it.hasNext()){
+            Class<Stored> cos = (Class<Stored>) it.next();
+            cfg.addAnnotatedClass(cos);
+        }
+
+
+//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.Domain.class);
+//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.UserAccount.class);
+//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.Avatar.class);
+//        cfg.addAnnotatedClass(Network.class);
+//        cfg.addAnnotatedClass(Network.Member.class);
 
         cfg.configure();
 

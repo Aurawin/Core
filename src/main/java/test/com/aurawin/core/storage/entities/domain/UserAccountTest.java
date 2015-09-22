@@ -22,7 +22,7 @@ public class UserAccountTest {
     @Before
     public void before() throws Exception {
         Parser = new Gson();
-        Account1=new UserAccount(1,"test","Password");
+        Account1=new UserAccount(1,1,"test","Password");
         Account1.setAuth("AuthString");
         Account1.setFirstIP(3);
         Account1.setLastIP(49);
@@ -51,7 +51,7 @@ public class UserAccountTest {
     public void saveUserAccount1(Session ssn){
         Transaction tx= ssn.beginTransaction();
         try{
-            Query query = Database.Query.Domain.UserAccount.lookupById.Create(ssn,Account1.getId());
+            Query query = Database.Query.Domain.UserAccount.ById.Create(ssn,Account1.getDomainId(),Account1.getId());
             UserAccount ua = (UserAccount) query.uniqueResult();
             if ( (ua!=null) && (ua.getId()== Account1.getId() ) )  {
                 ua.Assign(Account1);
@@ -67,7 +67,7 @@ public class UserAccountTest {
 
     }
     public void lookupUserAccount1ByAuth(Session ssn) throws Exception {
-        Query query = Database.Query.Domain.UserAccount.lookupByAuth.Create(ssn,Account1.getAuth());
+        Query query = Database.Query.Domain.UserAccount.ByAuth.Create(ssn,Account1.getDomainId(),Account1.getAuth());
         UserAccount ua = (UserAccount) query.uniqueResult();
         if ( (ua==null) || (ua.getId()!= Account1.getId() ) ) throw new Exception("Unable to locate Account1");
 

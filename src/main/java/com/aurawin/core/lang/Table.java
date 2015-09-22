@@ -169,6 +169,12 @@ public class Table {
         }
 
         public static class Entities{
+            public static final String EntityCreatedMethodNotDefined = "table.exception.entities.entity-created-method-not-defined";
+            public static final String EntityDeletedMethodNotDefined = "table.exception.entities.entity-deleted-method-not-defined";
+            public static class UniqueId {
+                public static String UnableToCreateNamespaceEmpty = "table.exception.entities.uniqueid.unable-to-create-namespace-empty";
+            }
+
             public static class Domain{
                 public static class UserAccount{
                     public static String UnableToCreateUserExists = "table.exception.entities.domain.useraccount.unable-to-create-user-exists";

@@ -23,14 +23,14 @@ import javax.persistence.Entity;
 * @version 1.0 
 */ 
 public class EntitiesTest {
+    private Entities entities;
     private SessionFactory sf;
     private Session ssn;
-    public com.aurawin.core.storage.Manifest Manifest;
+    public Manifest manifest;
 
 @Before
 public void before() throws Exception {
-    Entities.checkEntities();
-    Manifest = new Manifest(
+    manifest = new Manifest(
             "Test",                                 // username
             "Test",                                 // password
             "172.16.1.1",                           // host
@@ -45,22 +45,21 @@ public void before() throws Exception {
             Dialect.Postgresql.getValue(),          // Dialect
             Driver.Postgresql.getValue()            // Driver
     );
-    sf = Hibernate.openSession(Manifest);
+    entities = new Entities(manifest);
+
+    sf = Hibernate.openSession(manifest);
     ssn = sf.openSession();
+
 }
 
 @After
 public void after() throws Exception { 
 } 
 
-/** 
-* 
-* Method: checkEntities() 
-* 
-*/ 
+
 @Test
 public void testCheckEntities() throws Exception {
-    UserAccount ua=Entities.Domain.UserAccount.Create(ssn,"root");
+    UserAccount ua=Entities.Domain.UserAccount.Create(entities,ssn,1,"root");
 
 } 
 
