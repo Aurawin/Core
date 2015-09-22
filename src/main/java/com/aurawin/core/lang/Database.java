@@ -141,6 +141,7 @@ public class Database {
                 public static final String Id ="itmid";
                 public static final String DomainId="itmdi";
                 public static final String Kind = "itmkd";
+                public static final String Exposition = "itme";
                 public static final String Path = "itmp";
                 public static final String Created ="itctd";
                 public static final String Modified = "itmtd";
@@ -153,17 +154,20 @@ public class Database {
                 public static final String Ext = "itmext";
                 public static final String Created ="itctd";
                 public static final String Modified = "itmtd";
+                public static final String Data = "itmdat";
             }
             public static class Network{
                 public static final String Id = "itmid";
                 public static final String DomainId = "itmdi";
                 public static final String OwnerId = "itmoid";
                 public static final String AvatarId = "itmaid";
-                public static final String Exposure = "itme";
+                public static final String Exposition = "itme";
+                public static final String Flags    = "itmf";
                 public static final String Created = "itmctd";
                 public static final String Modified = "itmmtd";
                 public static final String Title = "itmtit";
                 public static final String Description = "itmdsc";
+                public static final String CustomFolders = "icflds";
                 public static class Member{
                     public static final String Id = "itmid";
                     public static final String DomainId = "itmdi";
