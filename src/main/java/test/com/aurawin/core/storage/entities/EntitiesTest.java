@@ -49,7 +49,7 @@ public void before() throws Exception {
 
     sf = Hibernate.openSession(manifest);
     ssn = sf.openSession();
-
+    manifest.Verify(ssn);
 }
 
 @After

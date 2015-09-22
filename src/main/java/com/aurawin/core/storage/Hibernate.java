@@ -78,14 +78,6 @@ public class Hibernate{
             Class<Stored> cos = (Class<Stored>) it.next();
             cfg.addAnnotatedClass(cos);
         }
-
-
-//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.Domain.class);
-//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.UserAccount.class);
-//        cfg.addAnnotatedClass(com.aurawin.core.storage.entities.domain.Avatar.class);
-//        cfg.addAnnotatedClass(Network.class);
-//        cfg.addAnnotatedClass(Network.Member.class);
-
         cfg.configure();
 
         return cfg.buildSessionFactory();

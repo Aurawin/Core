@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.storage.entities.domain.network.Member;
 import com.aurawin.core.storage.entities.domain.network.Network;
+import org.hibernate.Session;
 
 public class Manifest {
     public String Username;
@@ -27,7 +28,7 @@ public class Manifest {
     public Dialect Dialect;
     public Driver Driver;
 
-    public ArrayList<Class <? extends Stored>> Annotated= new ArrayList<Class <? extends Stored>>();
+    public ArrayList<Class <?>> Annotated= new ArrayList<Class <?>>();
     public ArrayList<UniqueId> Namespaces = new ArrayList<UniqueId>();
 
     public Manifest(String username, String password, String host, int port, int poolsizeMin, int poolsizeMax, int poolAcrement, int statementsMax, int timeout, String automation, String database, String dialect, String driver) {
@@ -45,6 +46,7 @@ public class Manifest {
         Dialect = Dialect.fromString(dialect);
         Driver = Driver.fromString(driver);
 
+        Annotated.add(UniqueId.class);
         Annotated.add(Domain.class);
         Annotated.add(UserAccount.class);
         Annotated.add(Avatar.class);
@@ -56,6 +58,11 @@ public class Manifest {
         Namespaces.add(Namespace.Entities.Folder.Social);
         Namespaces.add(Namespace.Entities.Network.ACL);
 
+    }
+    public void Verify(Session ssn){
+        for (UniqueId uid : Namespaces){
+            uid.Verify(ssn);
+        }
     }
     public String getConnectionURL(){
         return "jdbc:".concat(Driver.getTemplate()
