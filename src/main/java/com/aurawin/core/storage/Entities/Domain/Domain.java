@@ -1,6 +1,7 @@
 package com.aurawin.core.storage.entities.domain;
 
 
+import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.lang.Database;
 import com.google.gson.Gson;
@@ -29,13 +30,16 @@ import javax.persistence.*;
         }
 )
 public class Domain extends Stored {
-    @javax.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.Id)
     private long Id;
 
     @Column(name = Database.Field.Domain.CertId)
     private long CertId;
+
+    @Column(name = Database.Field.Domain.Name, nullable = false)
+    private String Name;
 
     @Column(name = Database.Field.Domain.Root, nullable = false)
     private String Root;
@@ -55,11 +59,22 @@ public class Domain extends Stored {
     public Domain() {
         Id = 0;
         CertId = 0;
+        Name="";
         Root = "";
         FriendlyName = "";
         DefaultOptionCatchAll = true;
         DefaultOptionFiltering = true;
         DefaultOptionQuota = 1024 * 1024 * 32; // todo create storage entity for end-user plans
+    }
+    public Domain(String name, String root){
+        Id=0;
+        CertId=0;
+        Name=name;
+        Root=root;
+        FriendlyName=name;
+        DefaultOptionCatchAll = true;
+        DefaultOptionFiltering = true;
+        DefaultOptionQuota  = 1024*1014*32; // todo get from system
     }
 
     public static Domain fromJSON(Gson Parser, String Data) {
@@ -107,6 +122,14 @@ public class Domain extends Stored {
         Root = root;
     }
 
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
     public String getFriendlyName() {
         return FriendlyName;
     }
@@ -140,18 +163,16 @@ public class Domain extends Stored {
     }
 
 
-    public static void entityCreated(Session ssn, Transaction tx, Stored obj) {
-        if (obj instanceof Domain) {
+    public static void entityCreated(Entities List,Stored Entity) {
+        if (Entity instanceof Domain) {
 
-        } else if (obj instanceof UserAccount) {
 
         }
     }
 
-    public static void entityDeleted(Session ssn, Transaction tx, Stored obj) {
-        if (obj instanceof Domain) {
+    public static void entityDeleted(Entities List,Stored Entity) {
+        if (Entity instanceof Domain) {
 
-        } else if (obj instanceof UserAccount) {
 
         }
     }

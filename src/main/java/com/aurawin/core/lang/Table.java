@@ -51,7 +51,7 @@ public class Table {
             try {
                 Arg = Manifest.getString(Arg);
             } catch (java.lang.Exception e){
-            }                return String.format(Manifest.getString(Namespace),Arg);
+            }                return String.format(Manifest.getString(Namespace), Arg);
         } catch (java.lang.Exception e){
             return e.getMessage();
         }
@@ -79,7 +79,47 @@ public class Table {
         }
 
     }
+    public static String Format(String Namespace, String Arg1, String Arg2, String Arg3){
+        try {
+            if (Loaded != true) Load();
+            try {
+                try {
+                    Arg1 = Manifest.getString(Arg1);
+                } catch (java.lang.Exception e) {
+                }
+                try {
+                    Arg2 = Manifest.getString(Arg2);
+                } catch (java.lang.Exception e) {
+                }
+                try {
+                    Arg3 = Manifest.getString(Arg3);
+                } catch (java.lang.Exception e) {
+                }
+                return String.format(Manifest.getString(Namespace), Arg1, Arg2,Arg3);
+            } catch (java.lang.Exception e) {
+                return e.getMessage();
+            }
+        } catch (java.lang.Exception e){
+            return e.getMessage();
 
+        }
+
+    }
+    public static class Entities{
+        public static class Domain{
+            public static final String Root = "table.entities.domain.root";
+            public static class Roster{
+                public static final String Me = "table.entities.domain.roster.me";
+            }
+            public static class Network{
+                public static class Default {
+                    public static final String Title = "table.entities.domain.network.title";
+                    public static final String Description = "table.entities.domain.network.description";
+                }
+            }
+
+        }
+    }
     public static class Action{
         public static final String a="table.action.a";
         public static final String an="table.action.an";
@@ -176,9 +216,13 @@ public class Table {
             }
 
             public static class Domain{
+                public static String UnableToCreateDomainExists = "table.exception.entities.domain.unable-to-create-domain-exists";
                 public static class UserAccount{
                     public static String UnableToCreateUserExists = "table.exception.entities.domain.useraccount.unable-to-create-user-exists";
 
+                }
+                public static class Avatar{
+                    public static final String UnableToCreateAvatarExists = "table.exception.entities.domain.avatar.unable-to-create-avatar-exists";
                 }
             }
 

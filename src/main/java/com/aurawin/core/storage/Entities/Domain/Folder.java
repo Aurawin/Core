@@ -2,8 +2,10 @@ package com.aurawin.core.storage.entities.domain;
 
 
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 
+import com.aurawin.core.storage.entities.domain.network.Network;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -32,35 +34,47 @@ import javax.persistence.*;
         }
 )
 public class Folder extends Stored {
+
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = Database.Field.Domain.Folders.Id)
+    @Column(name = Database.Field.Domain.Network.Folders.Id)
     private long Id;
 
-    @Column(name = Database.Field.Domain.Folders.DomainId)
+    @Column(name = Database.Field.Domain.Network.Folders.DomainId)
     private long DomainId;
 
-    @Column(name = Database.Field.Domain.Folders.Kind)
+    @Column(name = Database.Field.Domain.Network.Folders.NetworkId)
+    private long NetworkId;
+
+    @Column(name = Database.Field.Domain.Network.Folders.Kind)
     private long Kind;
 
-    @Column(name = Database.Field.Domain.Folders.Created)
-    private double Created;
+    @Column(name = Database.Field.Domain.Network.Folders.Exposition)
+    private byte Exposition;
 
-    @Column(name = Database.Field.Domain.Folders.Modified)
-    private double Modified;
+    @Column(name = Database.Field.Domain.Network.Folders.Created)
+    private long Created;
 
-    @Column(name = Database.Field.Domain.Folders.Path)
+    @Column(name = Database.Field.Domain.Network.Folders.Modified)
+    private long Modified;
+
+    @Column(name = Database.Field.Domain.Network.Folders.Path)
     private String Path;
 
 
-    public static void entityCreated(Session ssn, Transaction tx, Stored obj){
-        if (obj instanceof Folder){
+	public static void entityCreated(Entities List,Stored Entity){
+        if (Entity instanceof Folder){
 
+        } else if (Entity instanceof Network){
+            // the user is new.
+            // Add Mailboxes
+            // Add Trash bin
+            // Add Documents
         }
     }
 
-    public static void entityDeleted(Session ssn, Transaction tx, Stored obj){
-        if (obj instanceof Folder){
+    public static void entityDeleted(Entities List,Stored Entity){
+        if (Entity instanceof Folder){
             // todo delete all files in this folder
         }
     }
@@ -69,15 +83,15 @@ public class Folder extends Stored {
         Id=0;
         DomainId=0;
         Kind=0;
-        Created=0.0;
-        Modified=0.0;
+        Created=0;
+        Modified=0;
         Path="";
     }
-
 
     public Folder(long domainId, long kind, String path) {
         DomainId = domainId;
         Kind = kind;
         Path = path;
     }
+
 }
