@@ -1,5 +1,7 @@
 package com.aurawin.core.time;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class Time {
@@ -17,5 +19,8 @@ public class Time {
     public static Date incMilliSeconds(Date Current, int Duration){
         long msCurrent = Current.getTime();
         return new Date(msCurrent+Duration);
+    }
+    public static long dtUTC(){
+        return ZonedDateTime.now(ZoneOffset.UTC).toInstant().getEpochSecond();
     }
 }

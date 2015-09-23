@@ -6,6 +6,7 @@ import com.aurawin.core.storage.Driver;
 import com.aurawin.core.storage.Hibernate;
 import com.aurawin.core.storage.Manifest;
 import com.aurawin.core.storage.entities.Entities;
+import com.aurawin.core.storage.entities.domain.Domain;
 import com.aurawin.core.storage.entities.domain.UserAccount;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,8 +25,6 @@ import javax.persistence.Entity;
 */ 
 public class EntitiesTest {
     private Entities entities;
-    private SessionFactory sf;
-    private Session ssn;
     public Manifest manifest;
 
 @Before
@@ -46,10 +45,6 @@ public void before() throws Exception {
             Driver.Postgresql.getValue()            // Driver
     );
     entities = new Entities(manifest);
-
-    sf = Hibernate.openSession(manifest);
-    ssn = sf.openSession();
-    manifest.Verify(ssn);
 }
 
 @After
@@ -59,9 +54,9 @@ public void after() throws Exception {
 
 @Test
 public void testCheckEntities() throws Exception {
-    UserAccount ua=Entities.Domain.UserAccount.Create(entities,ssn,1,"root");
 
-} 
+    Domain d = Entities.Domain.Create(entities,"test.com","root");
+}
 
 
 } 

@@ -1,21 +1,30 @@
 package com.aurawin.core.storage.entities.domain;
 
-import com.aurawin.core.lang.Database;
+import com.aurawin.core.lang.*;
+import com.aurawin.core.lang.Table;
+import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 
+import com.aurawin.core.storage.entities.domain.network.Network;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import com.google.gson.Gson;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 @Entity
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
-@Table(name = Database.Table.Domain.UserAccounts)
+@javax.persistence.Table(name = Database.Table.Domain.UserAccounts)
 @NamedQueries(
         {
                 @NamedQuery(
@@ -33,19 +42,27 @@ import javax.persistence.*;
         }
 )
 public class UserAccount extends Stored {
+    @OneToMany(mappedBy = "Owner")
+    @Cascade(CascadeType.PERSIST)
+    public List<Network> Networks= new ArrayList<Network>();
+
+    @OneToMany(mappedBy = "Owner")
+    @Cascade(CascadeType.PERSIST)
+    public List<Roster>Contacts = new ArrayList<Roster>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.UserAccount.Id)
     private long Id;
 
-
     @Column(name = Database.Field.Domain.UserAccount.DomainId)
     private long DomainId;
 
+    @Column(name = Database.Field.Domain.UserAccount.CabinetId)
+    private long CabinetId;
 
-    @Column(name = Database.Field.Domain.UserAccount.NetworkId)
-    private long NetworkId;
-
+    @Column(name = Database.Field.Domain.UserAccount.RosterId)
+    private long RosterId;
 
     @Column(name = Database.Field.Domain.UserAccount.AvatarId)
     private long AvatarId;
@@ -59,6 +76,7 @@ public class UserAccount extends Stored {
     @Column(name = Database.Field.Domain.UserAccount.Auth)
     private String Auth;
 
+
     @Column(name = Database.Field.Domain.UserAccount.FirstIP)
     private long FirstIP;
 
@@ -69,10 +87,10 @@ public class UserAccount extends Stored {
     private int Lockcount;
 
     @Column(name = Database.Field.Domain.UserAccount.LastLogin)
-    private double LastLogin;
+    private long LastLogin;
 
     @Column(name = Database.Field.Domain.UserAccount.LastConsumptionCalc)
-    private double LastConsumptionCalculation;
+    private long LastConsumptionCalculation;
 
     @Column(name = Database.Field.Domain.UserAccount.Consumption)
     private long Consumption;
@@ -80,15 +98,16 @@ public class UserAccount extends Stored {
     @Column(name = Database.Field.Domain.UserAccount.Quota)
     private long Quota;
 
-    public UserAccount(long id,long domainId, String user, String pass) {
-        this.Id=id;
+
+    public UserAccount(long domainId, String user) {
         this.DomainId=domainId;
         this.User = user;
-        this.Pass = pass;
     }
     public UserAccount() {
         this.Id=0;
         this.DomainId=0;
+        this.AvatarId=0;
+        this.CabinetId=0;
         this.User = "";
         this.Pass = "";
         this.Auth = "";
@@ -102,6 +121,8 @@ public class UserAccount extends Stored {
         return (
                 Id==o.Id &&
                 DomainId==o.DomainId &&
+                CabinetId==o.CabinetId &&
+                RosterId==o.RosterId &&
                 User.compareTo(o.User)==0 &&
                 Pass.compareTo(o.Pass)==0 &&
                 Auth.compareTo(o.Auth)==0 &&
@@ -117,6 +138,8 @@ public class UserAccount extends Stored {
     public void Assign(UserAccount src){
         Id=src.Id;
         DomainId=src.DomainId;
+        RosterId=src.RosterId;
+        CabinetId=src.CabinetId;
         User=src.User;
         Pass=src.Pass;
         Auth=src.Auth;
@@ -130,6 +153,7 @@ public class UserAccount extends Stored {
     public long getId() {   return Id; }
     public long getDomainId() {   return DomainId; }
     public long getAvatarId() { return AvatarId; }
+    public void setAvatarId(long id){ AvatarId= id;}
 
     public String getUser() { return User; }
     public void setUser(String user) { this.User = user;}
@@ -138,6 +162,15 @@ public class UserAccount extends Stored {
     public void setPass(String pass) {
         Pass = pass;
     }
+    protected long getCabinetId(long id){
+        return CabinetId;
+    }
+    public void setCabinetId(long id){
+        CabinetId=id;
+    }
+
+    public long getRosterId(){return RosterId;}
+    public void setRosterId(long id){RosterId = id; }
 
     public String getAuth() {
         return Auth;
@@ -167,10 +200,10 @@ public class UserAccount extends Stored {
         Lockcount = lockcount;
     }
 
-    public double getLastLogin() {
+    public long getLastLogin() {
         return LastLogin;
     }
-    public void setLastLogin(double lastLogin) {
+    public void setLastLogin(long lastLogin) {
         LastLogin = lastLogin;
     }
 
@@ -180,18 +213,31 @@ public class UserAccount extends Stored {
     public long getQuota(){return Quota; }
     public void setQuota(long quota){Quota = quota;}
 
+    public Roster getMe(){
+        if (Contacts.isEmpty()==true) return null;
+        //Predicate<Roster> pred = r -> r.getId()==RosterId;
+        return Contacts.stream().filter(r -> r.getId()==RosterId).findFirst().get();
+    }
 
+    public Network getCabinet(){
+        if (Networks.isEmpty()==true) return null;
+        Predicate<Network> IdMatch = (n) -> n.getId()==CabinetId;
+        return Networks.stream().filter(IdMatch).findFirst().get();
+    }
 
-    public static void entityCreated(Session ssn, Transaction tx, Stored Entity){
+    public static void entityCreated(Entities List,Stored Entity) throws Exception{
         if (Entity instanceof UserAccount){
-            // todo add social network for "me"
+            UserAccount ua = (UserAccount) Entity;
             // todo add mail folders
-            // todo add contact for "me";
             // todo add trash bin for "me";
+        } else if (Entity instanceof Domain){
+            Domain d = (Domain) Entity;
+            UserAccount ua = Entities.Domain.UserAccount.Create(List,d.getId(),Table.String(Table.Entities.Domain.Root));
+            ua.Consumption=0;
         }
     }
 
-    public static void entityDeleted(Session ssn, Transaction tx, Stored Entity){
+    public static void entityDeleted(Entities List,Stored Entity){
         if (Entity instanceof Domain) {
             // todo clear out social network "me";
             // todo etc.

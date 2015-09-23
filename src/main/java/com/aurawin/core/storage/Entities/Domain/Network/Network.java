@@ -1,24 +1,51 @@
 package com.aurawin.core.storage.entities.domain.network;
 
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.lang.Table;
+
+import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.domain.UserAccount;
+import com.aurawin.core.storage.entities.domain.network.Exposure;
+
+import javax.persistence.*;
+
+import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
-import javax.persistence.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
 
 @Entity
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
-@Table(name = Database.Table.Domain.Network)
-
-
+@javax.persistence.Table( name = Database.Table.Domain.Network.List)
 public class Network extends Stored {
+    public static class Default {
+        public static class Flag {
+            public static int None = 0;
+            public static int Trash = 1 << 0;
+            public static int Documents = 1 << 1;
+            public static int Mail = 1 << 2;
+            public static int Music = 1 << 3;
+            public static int Pictures = 1 << 4;
+            public static int Videos = 1 << 5;
+            public static int CustomFolders = 1 << 6;
+            public static int Standard(){
+                return Trash | Documents | Mail | Music | Pictures | Videos;
+            }
+        }
+    }
+    @ManyToOne
+    @JoinColumn(name = Database.Field.Domain.Network.OwnerId)
+    private UserAccount Owner;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.Network.Id)
@@ -27,21 +54,22 @@ public class Network extends Stored {
     @Column(name = Database.Field.Domain.Network.DomainId)
     private long DomainId;
 
-    @Column(name = Database.Field.Domain.Network.OwnerId)
-    private long OwnerId;
-
 
     @Column(name = Database.Field.Domain.Network.AvatarId)
     private long AvatarId;
 
-    @Column(name = Database.Field.Domain.Network.Exposure)
-    private long Exposure;
+    @Column(name = Database.Field.Domain.Network.Exposition)
+    private byte Exposition;
+
+    @Column(name = Database.Field.Domain.Network.Flags)
+    private int Flags;
+
 
     @Column(name = Database.Field.Domain.Network.Created)
-    private double Created;
+    private long Created;
 
     @Column(name = Database.Field.Domain.Network.Modified)
-    private double Modified;
+    private long Modified;
 
     @Column(name = Database.Field.Domain.Network.Title)
     private String Title;
@@ -49,39 +77,66 @@ public class Network extends Stored {
     @Column(name = Database.Field.Domain.Network.Description)
     private String Description;
 
+    @Column(name = Database.Field.Domain.Network.CustomFolders)
+    private String CustomFolders;
+
     public Network() {
         Id=0;
-        OwnerId=0;
+        DomainId=0;
         AvatarId=0;
-        Exposure=0;
-        Created = 0.0;
-        Modified = 0.0;
+        Exposition= Exposure.None;
+        Created = 0;
+        Modified =0;
         Title = "";
         Description = "";
     }
-
-    public Network(long ownerId, long avatarId, long exposure, String title, String description){
-        Id = 0;
-        OwnerId = ownerId;
-        AvatarId = avatarId;
-        Exposure = exposure;
+    public Network(UserAccount owner, byte exposition, String title, String description){
+        Id=0;
+        DomainId=owner.getDomainId();
+        Owner = owner;
+        Exposition = exposition;
+        Created = Time.dtUTC();
+        Modified = Created;
         Title = title;
         Description = description;
     }
 
-    public static void entityCreated(Session ssn, Transaction tx, Stored Entity) {
-        if (Entity instanceof UserAccount){
-            UserAccount ua = (UserAccount) Entity;
-            Network net = new Network(ua.getId(),ua.getAvatarId(),0,"","");
-
-            // todo create a me account
-
-
-        }
-
+    public long getAvatarId() {
+        return AvatarId;
     }
 
-    public static void entityDeleted(Session ssn, Transaction tx, Stored Entity) {
+    public static void entityCreated(Entities List,Stored Entity) {
+        if (Entity instanceof UserAccount){
+            UserAccount ua = (UserAccount) Entity;
+            if (ua.getCabinet()==null) {
+                Session ssn = List.Sessions.openSession();
+                try {
+                    Transaction tx = ssn.beginTransaction();
+                    Network cab =new Network(
+                            ua,
+                            Exposure.Private,
+                            Table.String(Table.Entities.Domain.Network.Default.Title),
+                            Table.Format(Table.Entities.Domain.Network.Default.Description, ua.getUser())
+                    );
+                    ua.Networks.add(cab);
+                    ssn.save(cab); // get Id()
+                    ua.setCabinetId(cab.getId());
+
+                    ssn.update(ua);
+                    tx.commit();
+                } finally{
+                    ssn.close();
+                }
+
+            }
+        }
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public static void entityDeleted(Entities List,Stored Entity) {
 
     }
 

@@ -3,11 +3,11 @@ package com.aurawin.core.storage;
 
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.UniqueId;
-import com.aurawin.core.storage.entities.domain.Avatar;
-import com.aurawin.core.storage.entities.domain.Domain;
-import com.aurawin.core.storage.entities.domain.UserAccount;
+import com.aurawin.core.storage.entities.domain.*;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.storage.entities.domain.network.Member;
 import com.aurawin.core.storage.entities.domain.network.Network;
@@ -28,8 +28,8 @@ public class Manifest {
     public Dialect Dialect;
     public Driver Driver;
 
-    public ArrayList<Class <?>> Annotated= new ArrayList<Class <?>>();
-    public ArrayList<UniqueId> Namespaces = new ArrayList<UniqueId>();
+    public List<Class <?>> Annotated= new ArrayList<Class <?>>();
+    public List<UniqueId> Namespaces = new ArrayList<UniqueId>();
 
     public Manifest(String username, String password, String host, int port, int poolsizeMin, int poolsizeMax, int poolAcrement, int statementsMax, int timeout, String automation, String database, String dialect, String driver) {
         Username = username;
@@ -46,18 +46,18 @@ public class Manifest {
         Dialect = Dialect.fromString(dialect);
         Driver = Driver.fromString(driver);
 
-        Annotated.add(UniqueId.class);
         Annotated.add(Domain.class);
+        Annotated.add(UniqueId.class);
         Annotated.add(UserAccount.class);
-        Annotated.add(Avatar.class);
+        Annotated.add(RosterField.class);
+        Annotated.add(Roster.class);
         Annotated.add(Network.class);
+
+        Annotated.add(Avatar.class);
         Annotated.add(Member.class);
+        Annotated.add(Folder.class);
 
-
-        Namespaces.add(Namespace.Entities.Folder.Domain);
-        Namespaces.add(Namespace.Entities.Folder.Social);
-        Namespaces.add(Namespace.Entities.Network.ACL);
-
+        Namespace.Register(Namespaces);
     }
     public void Verify(Session ssn){
         for (UniqueId uid : Namespaces){
