@@ -22,12 +22,12 @@ public class UserAccountTest {
     @Before
     public void before() throws Exception {
         Parser = new Gson();
-        Account1=new UserAccount(1,1,"test","Password");
+        Account1=new UserAccount(1,"test");
         Account1.setAuth("AuthString");
         Account1.setFirstIP(3);
         Account1.setLastIP(49);
         Account1.setLockcount(10);
-        Account1.setLastLogin(1.5);
+        Account1.setLastLogin(15);
         Account1.setConsumption(1000);
         Account1.setQuota(50000);
     }

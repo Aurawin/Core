@@ -5,14 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Database.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Database.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\Entities.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/Entities.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/entities/EntitiesTest.java" afterPath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/entities/EntitiesTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/Manifest.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/Manifest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Namespace.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Namespace.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Table.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Table.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\network\Member.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/network/Member.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\network\Network.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/network/Network.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\Roster.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/Roster.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\RosterField.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/RosterField.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\network\Standing.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/network/Standing.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\Stored.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/Stored.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/time/Time.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/time/Time.java" />
+      <change type="MODIFICATION" beforePath="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\storage\entities\domain\UserAccount.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/storage/entities/domain/UserAccount.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/entities/domain/UserAccountTest.java" afterPath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/entities/domain/UserAccountTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/core.lang.us.json" afterPath="$PROJECT_DIR$/src/main/resources/core.lang.us.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/test/storage.entities.domain.UserAccount.json" afterPath="$PROJECT_DIR$/src/main/resources/test/storage.entities.domain.UserAccount.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -1856,7 +1860,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1902" y="-71" width="1881" height="1059" extended-state="1" />
+    <frame x="-1902" y="-71" width="1881" height="1059" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
