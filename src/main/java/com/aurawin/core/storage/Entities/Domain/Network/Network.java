@@ -5,20 +5,23 @@ import com.aurawin.core.lang.Table;
 
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
+import com.aurawin.core.storage.entities.domain.RosterField;
 import com.aurawin.core.storage.entities.domain.UserAccount;
 import com.aurawin.core.storage.entities.domain.network.Exposure;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+
 
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.annotations.*;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -45,6 +48,11 @@ public class Network extends Stored {
     @ManyToOne
     @JoinColumn(name = Database.Field.Domain.Network.OwnerId)
     private UserAccount Owner;
+
+    @OneToMany(mappedBy = "Owner")
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    private List<Member> Members = new ArrayList<Member>();
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,15 +108,20 @@ public class Network extends Stored {
         Title = title;
         Description = description;
     }
-
+    public long getOwnerId(){
+        return (Owner==null)? 0 : Owner.getId();
+    }
+    public long getDomainId() {
+        return DomainId;
+    }
     public long getAvatarId() {
         return AvatarId;
     }
-
     public static void entityCreated(Entities List,Stored Entity) {
         if (Entity instanceof UserAccount){
             UserAccount ua = (UserAccount) Entity;
             if (ua.getCabinet()==null) {
+
                 Session ssn = List.Sessions.openSession();
                 try {
                     Transaction tx = ssn.beginTransaction();
@@ -118,10 +131,22 @@ public class Network extends Stored {
                             Table.String(Table.Entities.Domain.Network.Default.Title),
                             Table.Format(Table.Entities.Domain.Network.Default.Description, ua.getUser())
                     );
-                    ua.Networks.add(cab);
+
                     ssn.save(cab); // get Id()
+                    Member m= new Member(cab);
+                    cab.Members.add(m);
+                    ua.Networks.add(cab);
+
+                    m.setDomainId(cab.DomainId);
+                    m.setUserId(ua.getId());
+                    m.setExposure(Exposure.Private);
+                    m.setStanding(Standing.Administrator.Level);
+                    m.setACL(Standing.Administrator.Permission);
+                    ssn.save(m);
+
                     ua.setCabinetId(cab.getId());
 
+                    ssn.update(cab);
                     ssn.update(ua);
                     tx.commit();
                 } finally{

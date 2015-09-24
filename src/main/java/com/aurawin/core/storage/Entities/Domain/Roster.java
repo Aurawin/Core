@@ -13,7 +13,9 @@ import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @DynamicInsert(value = true)
@@ -27,7 +29,7 @@ public class Roster extends Stored {
 
     @OneToMany(mappedBy = "Owner")
     @Cascade(CascadeType.PERSIST)
-    private Collection<RosterField> Custom;
+    private List<RosterField> Custom = new ArrayList<RosterField>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

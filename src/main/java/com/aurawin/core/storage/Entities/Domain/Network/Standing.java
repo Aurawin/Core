@@ -1,19 +1,27 @@
 package com.aurawin.core.storage.entities.domain.network;
 
+import static com.aurawin.core.storage.entities.domain.network.Permission.*;
+//import static com.aurawin.core.storage.entities.domain.network.Permission.Create;
+//import static com.aurawin.core.storage.entities.domain.network.Permission.Delete;
+//import static com.aurawin.core.storage.entities.domain.network.Permission.None;
+//import static com.aurawin.core.storage.entities.domain.network.Permission.Read;
+import static com.aurawin.core.storage.entities.domain.network.Permission.Write;
 public enum Standing {
-    None ((byte)0,""),
-    Administrator ((byte)1,""),
-    Affiliate ((byte)2,""),
-    Assistant ((byte)3,""),
-    Friend ((byte)4,""),
-    Family ((byte)5,""),
-    Acquaintance ((byte)6,""),
-    Cohort ((byte)7,"");
+    Anonymous ((byte)0      , None                                      ),
+    Administrator ((byte)1  , All                                       ),
+    Affiliate ((byte)2      , List | Read | Write | Create              ),
+    Assistant ((byte)3      , List | Read | Write | Create | Delete     ),
+    Friend ((byte)4         , List | Read | Write | Create              ),
+    Family ((byte)5         , List | Read | Write | Create | Delete     ),
+    Acquaintance ((byte)6   , List | Read | Write | Create              ),
+    Cohort ((byte)7         , List | Read | Write | Create | Delete     );
+
+
 
     public byte Level =0;
-    public String Permission;
+    public long Permission;
 
-    private Standing(byte level, String permission){
+    private Standing(byte level, long permission){
         this.Level=level;
         this.Permission=permission;
     }

@@ -217,6 +217,7 @@ public class Database {
                 public static final String DomainId = "itmdi";
                 public static final String OwnerId = "itmoid";
                 public static final String AvatarId = "itmaid";
+                public static final String Members = "itmbrs";
                 public static final String Exposition = "itme";
                 public static final String Flags    = "itmf";
                 public static final String Created = "itmctd";
