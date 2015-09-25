@@ -5,6 +5,7 @@ import com.aurawin.core.lang.Table;
 
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
+import com.aurawin.core.storage.entities.domain.Folder;
 import com.aurawin.core.storage.entities.domain.RosterField;
 import com.aurawin.core.storage.entities.domain.UserAccount;
 import com.aurawin.core.storage.entities.domain.network.Exposure;
@@ -87,6 +88,8 @@ public class Network extends Stored {
 
     @Column(name = Database.Field.Domain.Network.CustomFolders)
     private String CustomFolders;
+
+    public List<Folder> Folders = new ArrayList<Folder>();
 
     public Network() {
         Id=0;

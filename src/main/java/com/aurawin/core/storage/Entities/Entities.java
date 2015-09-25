@@ -1,8 +1,6 @@
 package com.aurawin.core.storage.entities;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 import com.aurawin.core.lang.Namespace;
@@ -10,6 +8,7 @@ import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.storage.Hibernate;
 import com.aurawin.core.storage.Manifest;
+import com.aurawin.core.storage.entities.domain.Folder;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,14 +38,25 @@ public class Entities {
             }
         }
     }
-    private static void entityDeleted(Entities entities, Stored obj) throws Exception{
+    private static void entityDeleted(Entities entities, Stored obj, boolean Cascade) throws Exception{
         Iterator it = entities.Owner.Annotated.iterator();
         while (it.hasNext()){
 	        Class<?> goe = (Class<?>) it.next();
 	        if (Stored.class.isAssignableFrom(goe)==true) {
-		        Method m = goe.getMethod("entityDeleted", Entities.class, Stored.class);
-		        if (m!=null) m.invoke(obj, entities, obj);
+		        Method m = goe.getMethod("entityDeleted", Entities.class, Stored.class, boolean.class);
+		        if (m!=null) m.invoke(obj, entities, obj, Cascade);
 	        }
+        }
+
+    }
+    private static void entityUpdated(Entities entities, Stored obj, boolean Cascade) throws Exception{
+        Iterator it = entities.Owner.Annotated.iterator();
+        while (it.hasNext()){
+            Class<?> goe = (Class<?>) it.next();
+            if (Stored.class.isAssignableFrom(goe)==true) {
+                Method m = goe.getMethod("entityUpdated", Entities.class, Stored.class, boolean.class);
+                if (m!=null) m.invoke(obj, entities, obj, Cascade);
+            }
         }
 
     }
@@ -59,7 +69,7 @@ public class Entities {
             q = Database.Query.Domain.ByName.Create(ssn, Name);
             d = (com.aurawin.core.storage.entities.domain.Domain) q.uniqueResult();
             if (d != null) {
-                throw new Exception(Table.Format(Table.Exception.Entities.Domain.UnableToCreateDomainExists, Name));
+                throw new Exception(Table.Format(Table.Exception.Entities.Domain.UnableToCreateExists, Name));
             }
             try {
                 d = new com.aurawin.core.storage.entities.domain.Domain(Name, Root);
@@ -112,7 +122,7 @@ public class Entities {
                 q = Database.Query.Domain.UserAccount.ByName.Create(ssn, DomainId, Name);
                 ua = (com.aurawin.core.storage.entities.domain.UserAccount) q.uniqueResult();
                 if (ua != null) {
-                    throw new Exception(Table.Format(Table.Exception.Entities.Domain.UserAccount.UnableToCreateUserExists, Name));
+                    throw new Exception(Table.Format(Table.Exception.Entities.Domain.UserAccount.UnableToCreateExists, Name));
                 }
                 try {
                     ua = new com.aurawin.core.storage.entities.domain.UserAccount(DomainId, Name);
@@ -134,19 +144,6 @@ public class Entities {
                 q = Database.Query.Domain.UserAccount.ById.Create(ssn, DomainId, Id);
                 return (com.aurawin.core.storage.entities.domain.UserAccount) q.uniqueResult();
             }
-            public void Delete(Entities entities, com.aurawin.core.storage.entities.domain.UserAccount Account) throws Exception {
-                Session ssn = entities.Sessions.openSession();
-                Transaction tx = ssn.beginTransaction();
-                try {
-                    ssn.delete(Account);
-                    tx.commit();
-                    ssn.close();
-                } catch (Exception e) {
-                    tx.rollback();
-                    ssn.close();
-                }
-                entityDeleted(entities, Account);
-            }
         }
         public static class Avatar{
             public static com.aurawin.core.storage.entities.domain.Avatar Create(Entities entities, com.aurawin.core.storage.entities.domain.UserAccount ua) throws Exception{
@@ -156,7 +153,7 @@ public class Entities {
                 q = Database.Query.Domain.Avatar.ByOwnerAndKind.Create(ssn, ua.getDomainId(), ua.getId(),Namespace.Entities.Domain.UserAccount.Avatar.getId());
                 a = (com.aurawin.core.storage.entities.domain.Avatar) q.uniqueResult();
                 if (a != null) {
-                    throw new Exception(Table.String(Table.Exception.Entities.Domain.Avatar.UnableToCreateAvatarExists));
+                    throw new Exception(Table.String(Table.Exception.Entities.Domain.Avatar.UnableToCreateExists));
                 }
                 Transaction tx = ssn.beginTransaction();
                 try {
@@ -195,5 +192,131 @@ public class Entities {
                 return null;
             }
         }
+        public static class Folder{
+            com.aurawin.core.storage.entities.domain.Folder Create(
+                    Entities entities,
+                    com.aurawin.core.storage.entities.domain.UserAccount ua,
+                    com.aurawin.core.storage.entities.domain.network.Network network,
+                    com.aurawin.core.storage.entities.domain.Folder Parent,
+                    String Name) {
+                com.aurawin.core.storage.entities.domain.Folder f = null;
+                String Path = "";
+                Path = (Parent == null) ? Name : Parent.getPath();
+                Session ssn = entities.Sessions.openSession();
+                Query q;
+                try {
+                    q = Database.Query.Domain.Folder.ByPath.Create(ssn, ua.getDomainId(), ua.getId(), network.getId(), Path);
+                    f = (com.aurawin.core.storage.entities.domain.Folder) q.uniqueResult();
+                    if (f != null) {
+                        throw new Exception(Table.String(Table.Exception.Entities.Domain.Folder.UnableToCreateExists));
+                    }
+                } catch (Exception e) {
+                    ssn.close();
+                    return null;
+                }
+                Transaction tx = ssn.beginTransaction();
+                try {
+                    if (Parent == null) {
+                        f = new com.aurawin.core.storage.entities.domain.Folder(ua.getDomainId(), ua.getId(), network.getId(), Name);
+                        network.Folders.add(f);
+                    } else {
+                        f = Parent.addChild(Name);
+                    }
+                    ssn.save(f);
+                    tx.commit();
+                    ssn.close();
+
+                    entityCreated(entities, f);
+
+                    return f;
+                } catch (Exception e) {
+                    tx.rollback();
+                    ssn.close();
+                    return null;
+                }
+
+            }
+        }
+
+    }
+    public static boolean Create(Entities entities, Stored e){
+        Session ssn = entities.Sessions.openSession();
+        Transaction tx = ssn.beginTransaction();
+        try {
+            ssn.save(e);
+            tx.commit();
+            ssn.close();
+
+            entityCreated(entities, e);
+
+            return true;
+        } catch (Exception ex){
+            tx.rollback();
+            ssn.close();
+            return false;
+        }
+    }
+    public static boolean  Update(
+            Entities entities,
+            Stored e,
+            boolean Cascade
+    ) {
+        Session ssn = entities.Sessions.openSession();
+        Transaction tx = ssn.beginTransaction();
+        try {
+            ssn.update(e);
+            tx.commit();
+            ssn.close();
+
+            entityUpdated(entities, e, Cascade);
+
+            return true;
+        } catch (Exception ex) {
+            tx.rollback();
+            ssn.close();
+            return false;
+        }
+    }
+    public static boolean  Delete(
+            Entities entities,
+            Stored e,
+            boolean Cascade
+    ) {
+        Session ssn = entities.Sessions.openSession();
+        Transaction tx = ssn.beginTransaction();
+        try {
+            ssn.delete(e);
+            tx.commit();
+            ssn.close();
+
+            entityDeleted(entities, e, Cascade);
+
+            return true;
+        } catch (Exception ex) {
+            tx.rollback();
+            ssn.close();
+            return false;
+        }
+    }
+
+    public static Stored Lookup(Entities entities,long DomainId, long Id, Class<? extends Stored> CofE) throws Exception {
+        Session ssn = entities.Sessions.openSession();
+        Query q;
+        Stored e = CofE.newInstance();
+        Transaction tx = ssn.beginTransaction();
+        try {
+            ssn.save(e);
+            tx.commit();
+            ssn.close();
+
+            entityCreated(entities,e);
+
+            return e;
+        } catch (Exception ex){
+            tx.rollback();
+            ssn.close();
+            return null;
+        }
     }
 }
+

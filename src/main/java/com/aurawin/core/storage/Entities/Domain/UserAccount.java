@@ -4,8 +4,10 @@ import com.aurawin.core.lang.*;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
+import com.aurawin.core.storage.annotations.QueryInfo;
 
 import com.aurawin.core.storage.entities.domain.network.Network;
+import javafx.scene.layout.Priority;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.Cascade;
@@ -30,6 +32,7 @@ import java.util.function.Predicate;
                 @NamedQuery(
                         name  = Database.Query.Domain.UserAccount.ByName.name,
                         query = Database.Query.Domain.UserAccount.ByName.value
+
                 ),
                 @NamedQuery(
                         name  = Database.Query.Domain.UserAccount.ByAuth.name,
@@ -41,7 +44,15 @@ import java.util.function.Predicate;
                 )
         }
 )
+@QueryInfo(
+        Name = Database.Query.Domain.UserAccount.ById.name,
+        Fields = {
+                "Id",
+                "DomainId"
+        }
+)
 public class UserAccount extends Stored {
+
     @OneToMany(mappedBy = "Owner")
     @Cascade(CascadeType.PERSIST)
     public List<Network> Networks= new ArrayList<Network>();
@@ -215,14 +226,12 @@ public class UserAccount extends Stored {
 
     public Roster getMe(){
         if (Contacts.isEmpty()==true) return null;
-        //Predicate<Roster> pred = r -> r.getId()==RosterId;
-        return Contacts.stream().filter(r -> r.getId()==RosterId).findFirst().get();
+        return Contacts.stream().filter( (r) -> r.getId()==RosterId).findFirst().get();
     }
 
     public Network getCabinet(){
         if (Networks.isEmpty()==true) return null;
-        Predicate<Network> IdMatch = (n) -> n.getId()==CabinetId;
-        return Networks.stream().filter(IdMatch).findFirst().get();
+        return Networks.stream().filter((n) -> n.getId()==CabinetId).findFirst().get();
     }
 
     public static void entityCreated(Entities List,Stored Entity) throws Exception{
