@@ -101,23 +101,23 @@ public class Database {
                 }
             }
             public static class Folder{
-                public static class ByName {
+                public static class ByPath {
                     public static final String name = "QueryDomainFolderByPath";
-                    public static final String value = "from Folder where DomainId=:DomainId and Kind=:Kind and Path=:Path";
-                    public static org.hibernate.Query Create(Session ssn, long DomainId, long Kind, String Path){
+                    public static final String value = "from Folder where DomainId=:DomainId and OwnerId=:OwnerId and Path=:Path";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId, long NetworkId,String Path){
                         return ssn.getNamedQuery(name)
                                 .setLong("DomainId", DomainId)
-                                .setLong("Kind",Kind)
+                                .setLong("OwnerId",OwnerId)
+                                .setLong("NetworkId",NetworkId)
                                 .setString("Path", Path);
                     }
                 }
                 public static class ById {
                     public static final String name = "QueryDomainFolderById";
-                    public static final String value = "from Folder where DomainId=:DomainId and Kind=:Kind and Id=:Id";
-                    public static org.hibernate.Query Create(Session ssn, long DomainId, long Kind, long Id){
+                    public static final String value = "from Folder where DomainId=:DomainId and Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId, long Id){
                         return ssn.getNamedQuery(name)
                                 .setLong("DomainId", DomainId)
-                                .setLong("Kind",Kind)
                                 .setLong("Id",Id );
                     }
                 }
@@ -237,8 +237,8 @@ public class Database {
                 public static class Folders{
                     public static final String Id ="itmid";
                     public static final String DomainId="itmdi";
+                    public static final String OwnerId="itoid";
                     public static final String NetworkId="itmni";
-                    public static final String Kind = "itmkd";
                     public static final String Exposition = "itme";
                     public static final String Path = "itmp";
                     public static final String Created ="itctd";
