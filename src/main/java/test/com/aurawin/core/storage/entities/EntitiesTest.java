@@ -7,7 +7,9 @@ import com.aurawin.core.storage.Hibernate;
 import com.aurawin.core.storage.Manifest;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.domain.Domain;
+import com.aurawin.core.storage.entities.domain.Roster;
 import com.aurawin.core.storage.entities.domain.UserAccount;
+import com.aurawin.core.storage.entities.domain.network.Network;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -27,36 +29,41 @@ public class EntitiesTest {
     private Entities entities;
     public Manifest manifest;
 
-@Before
-public void before() throws Exception {
-    manifest = new Manifest(
-            "Test",                                 // username
-            "Test",                                 // password
-            "172.16.1.1",                           // host
-            5432,                                   // port
-            2,                                      // Min Poolsize
-            20,                                     // Max Poolsize
-            1,                                      // Pool Acquire Increment
-            50,                                     // Max statements
-            10,                                     // timeout
-            Database.Config.Automatic.Create,       //
-            "Test",                                 // database
-            Dialect.Postgresql.getValue(),          // Dialect
-            Driver.Postgresql.getValue()            // Driver
-    );
-    entities = new Entities(manifest);
-}
+    @Before
+    public void before() throws Exception {
+        manifest = new Manifest(
+                "Test",                                 // username
+                "Test",                                 // password
+                "172.16.1.1",                           // host
+                5432,                                   // port
+                2,                                      // Min Poolsize
+                20,                                     // Max Poolsize
+                1,                                      // Pool Acquire Increment
+                50,                                     // Max statements
+                10,                                     // timeout
+                Database.Config.Automatic.Create,       //
+                "Test",                                 // database
+                Dialect.Postgresql.getValue(),          // Dialect
+                Driver.Postgresql.getValue()            // Driver
+        );
+        entities = new Entities(manifest);
+    }
 
-@After
-public void after() throws Exception { 
-} 
+    @After
+    public void after() throws Exception {
+    }
 
 
-@Test
-public void testCheckEntities() throws Exception {
+    @Test
+    public void testCheckEntities() throws Exception {
+        Domain crD = new Domain("test.com","root");
+        Entities.Create(entities,crD);
 
-    Domain d = Entities.Domain.Create(entities,"test.com","root");
-}
+        Domain lD = (Domain) Entities.Lookup(entities, 1l,Domain.class);
+        UserAccount lUA = (UserAccount) Entities.Lookup(entities,lD.getId(),lD.getRootId(),UserAccount.class);
+        Roster lME = lUA.getMe();
+        Network lCAB = lUA.getCabinet();
 
+    }
 
 } 

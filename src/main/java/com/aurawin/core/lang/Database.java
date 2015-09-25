@@ -150,6 +150,7 @@ public class Database {
         }
         public static class Domain{
             public static final String Id="itmid";
+            public static final String RootId = "itmrid";
             public static final String CertId = "itmcid";
             public static final String Name="itnme";
             public static final String Root="itmrt";
@@ -170,6 +171,8 @@ public class Database {
                 public static final String Auth="itmauth";
                 public static final String LastIP="itmlip";
                 public static final String FirstIP="itmfip";
+                public static final String Created="itmctd";
+                public static final String Modified="itmmtd";
                 public static final String LastLogin="itmlln";
                 public static final String LockCount="itmlct";
                 public static final String LastConsumptionCalc="itmlcc";
@@ -230,7 +233,7 @@ public class Database {
                     public static final String DomainId = "itmdi";
                     public static final String NetworkId = "itmni";
                     public static final String UserId = "itmoid";
-                    public static final String Exposure = "itmexp";
+                    public static final String Exposition = "itmexp";
                     public static final String Standing = "itmstd";
                     public static final String ACL = "itmacl";
                 }
