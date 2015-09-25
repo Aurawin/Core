@@ -1,7 +1,6 @@
 package com.aurawin.core.storage;
 
 
-import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.UniqueId;
 import com.aurawin.core.storage.entities.domain.*;
 
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aurawin.core.lang.Namespace;
+import com.aurawin.core.storage.entities.domain.network.Folder;
 import com.aurawin.core.storage.entities.domain.network.Member;
 import com.aurawin.core.storage.entities.domain.network.Network;
 import org.hibernate.Session;

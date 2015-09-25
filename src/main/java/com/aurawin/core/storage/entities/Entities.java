@@ -3,14 +3,10 @@ package com.aurawin.core.storage.entities;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import com.aurawin.core.lang.Namespace;
-import com.aurawin.core.lang.Database;
-import com.aurawin.core.lang.Table;
 import com.aurawin.core.storage.Hibernate;
 import com.aurawin.core.storage.Manifest;
 import com.aurawin.core.storage.annotations.QueryById;
 import com.aurawin.core.storage.annotations.EntityDispatch;
-import com.aurawin.core.storage.entities.domain.Folder;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -66,13 +62,13 @@ public class Entities {
     }
 
 //        public static class Folder{
-//            com.aurawin.core.storage.entities.domain.Folder Create(
+//            com.aurawin.core.storage.entities.domain.network.Folder Create(
 //                    Entities entities,
 //                    com.aurawin.core.storage.entities.domain.UserAccount ua,
 //                    com.aurawin.core.storage.entities.domain.network.Network network,
-//                    com.aurawin.core.storage.entities.domain.Folder Parent,
+//                    com.aurawin.core.storage.entities.domain.network.Folder Parent,
 //                    String Name) {
-//                com.aurawin.core.storage.entities.domain.Folder f = null;
+//                com.aurawin.core.storage.entities.domain.network.Folder f = null;
 //                String Path = "";
 //                Path = (Parent == null) ? Name : Parent.getPath();
 //
@@ -80,7 +76,7 @@ public class Entities {
 //                Query q;
 //                try {
 //                    q = Database.Query.Domain.Folder.ByPath.Create(ssn, ua.getDomainId(), ua.getId(), network.getId(), Path);
-//                    f = (com.aurawin.core.storage.entities.domain.Folder) q.uniqueResult();
+//                    f = (com.aurawin.core.storage.entities.domain.network.Folder) q.uniqueResult();
 //                    if (f != null) {
 //                        throw new Exception(Table.String(Table.Exception.Entities.Domain.Folder.UnableToCreateExists));
 //                    }
@@ -91,7 +87,7 @@ public class Entities {
 //                Transaction tx = ssn.beginTransaction();
 //                try {
 //                    if (Parent == null) {
-//                        f = new com.aurawin.core.storage.entities.domain.Folder(ua.getDomainId(), ua.getId(), network.getId(), Name);
+//                        f = new com.aurawin.core.storage.entities.domain.network.Folder(ua.getDomainId(), ua.getId(), network.getId(), Name);
 //                        network.Folders.add(f);
 //                    } else {
 //                        f = Parent.addChild(Name);
@@ -209,6 +205,28 @@ public class Entities {
         } finally{
             ssn.close();
         }
+    }
+    public static boolean Fetch(Entities entities, Stored e) throws Exception{
+        Session ssn = entities.Sessions.openSession();
+        try {
+            ssn.load(e,new Long(e.getId()));
+            return true;
+//            FieldLoader fl = e.getClass().getAnnotation(FieldLoader.class);
+//            if (fl!=null) {
+//                for (FieldLoaderDef fld : fl.value() ) {
+//                    Field f = e.getClass().getDeclaredField(fld.Target());
+//                    Object val = f.get(e);
+//                    org.hibernate.Hibernate.initialize(val);
+//                };
+//
+//                return true;
+//            } else {
+//                return false;
+//            }
+        } finally{
+            ssn.close();
+        }
+
     }
 }
 

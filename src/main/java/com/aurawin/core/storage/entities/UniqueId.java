@@ -40,6 +40,9 @@ public class UniqueId  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.UniqueId.Id)
     private long Id;
+    public long getId() {
+        return Id;
+    }
 
     @Column(name = Database.Field.UniqueId.Namespace, unique = true)
     private String Namespace;
@@ -53,9 +56,6 @@ public class UniqueId  {
         Namespace=namespace;
     }
 
-    public long getId() {
-            return Id;
-    }
 
     public String getNamespace() {
             return Namespace;

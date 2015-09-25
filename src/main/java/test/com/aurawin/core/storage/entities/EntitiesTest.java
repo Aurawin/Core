@@ -61,8 +61,10 @@ public class EntitiesTest {
 
         Domain lD = (Domain) Entities.Lookup(entities, 1l,Domain.class);
         UserAccount lUA = (UserAccount) Entities.Lookup(entities,lD.getId(),lD.getRootId(),UserAccount.class);
+        Entities.Fetch(entities,lUA);
         Roster lME = lUA.getMe();
         Network lCAB = lUA.getCabinet();
+
 
     }
 
