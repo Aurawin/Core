@@ -3,24 +3,18 @@ package com.aurawin.core.storage.entities.domain.network;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 
+import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
-import com.aurawin.core.storage.entities.domain.Folder;
-import com.aurawin.core.storage.entities.domain.RosterField;
 import com.aurawin.core.storage.entities.domain.UserAccount;
-import com.aurawin.core.storage.entities.domain.network.Exposure;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 
 
 import com.aurawin.core.time.Time;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.annotations.*;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +24,11 @@ import java.util.List;
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
 @javax.persistence.Table( name = Database.Table.Domain.Network.List)
+@EntityDispatch(
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
+)
 public class Network extends Stored {
     public static class Default {
         public static class Flag {
@@ -46,19 +45,23 @@ public class Network extends Stored {
             }
         }
     }
-    @ManyToOne
-    @JoinColumn(name = Database.Field.Domain.Network.OwnerId)
-    private UserAccount Owner;
 
-    @OneToMany(mappedBy = "Owner")
-    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
-    private List<Member> Members = new ArrayList<Member>();
-
-
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.Network.Id)
-    private long Id;
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = Database.Field.Domain.Network.OwnerId)
+    protected UserAccount Owner;
+
+    @OneToMany(mappedBy = "Owner", fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    protected List<Member> Members = new ArrayList<Member>();
 
     @Column(name = Database.Field.Domain.Network.DomainId)
     private long DomainId;
@@ -86,9 +89,10 @@ public class Network extends Stored {
     @Column(name = Database.Field.Domain.Network.Description)
     private String Description;
 
-    @Column(name = Database.Field.Domain.Network.CustomFolders)
+    @Column(name = Database.Field.Domain.Network.CustomFolders, length = 1024*512)
     private String CustomFolders;
 
+    @Transient
     public List<Folder> Folders = new ArrayList<Folder>();
 
     public Network() {
@@ -117,56 +121,31 @@ public class Network extends Stored {
     public long getDomainId() {
         return DomainId;
     }
-    public long getAvatarId() {
-        return AvatarId;
-    }
+    public long getAvatarId() {  return AvatarId; }
+    public void setAvatarId(long id){ AvatarId=id; }
     public static void entityCreated(Entities List,Stored Entity) {
-        if (Entity instanceof UserAccount){
+        if (Entity instanceof UserAccount) {
             UserAccount ua = (UserAccount) Entity;
-            if (ua.getCabinet()==null) {
-
-                Session ssn = List.Sessions.openSession();
-                try {
-                    Transaction tx = ssn.beginTransaction();
-                    Network cab =new Network(
-                            ua,
-                            Exposure.Private,
-                            Table.String(Table.Entities.Domain.Network.Default.Title),
-                            Table.Format(Table.Entities.Domain.Network.Default.Description, ua.getUser())
-                    );
-
-                    ssn.save(cab); // get Id()
-                    Member m= new Member(cab);
-                    cab.Members.add(m);
-                    ua.Networks.add(cab);
-
-                    m.setDomainId(cab.DomainId);
-                    m.setUserId(ua.getId());
-                    m.setExposure(Exposure.Private);
-                    m.setStanding(Standing.Administrator.Level);
-                    m.setACL(Standing.Administrator.Permission);
-                    ssn.save(m);
-
-                    ua.setCabinetId(cab.getId());
-
-                    ssn.update(cab);
-                    ssn.update(ua);
-                    tx.commit();
-                } finally{
-                    ssn.close();
-                }
-
+            if (ua.getCabinet() == null) {
+                Network cab = new Network(
+                        ua,
+                        Exposure.Private,
+                        Table.String(Table.Entities.Domain.Network.Default.Title),
+                        Table.Format(Table.Entities.Domain.Network.Default.Description, ua.getUser())
+                );
+                Entities.Create(List,cab);
+            }
+        } else if (Entity instanceof Network) {
+            Network n = (Network) Entity;
+            if (n.Owner.getCabinet() == null) {
+                n.Owner.setCabinetId(n.getId());
+                n.Owner.Networks.add(n);
+                Entities.Update(List, n.Owner,Entities.CascadeOff);
             }
         }
     }
-
-    public long getId() {
-        return Id;
-    }
-
-    public static void entityDeleted(Entities List,Stored Entity) {
-
-    }
+    public static void entityUpdated(Entities List,Stored Entity, boolean Cascade) { }
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade) { }
 
 
 }

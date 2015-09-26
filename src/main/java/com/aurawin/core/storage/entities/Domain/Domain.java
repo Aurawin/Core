@@ -1,6 +1,7 @@
 package com.aurawin.core.storage.entities.domain;
 
 
+import com.aurawin.core.storage.annotations.*;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.lang.Database;
@@ -29,16 +30,44 @@ import javax.persistence.*;
                 )
         }
 )
+@EntityDispatch(
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
+)
+@QueryById(
+        Name = Database.Query.Domain.ById.name,
+        Fields = { "Id" }
+)
+@QueryByName(
+        Name = Database.Query.Domain.ByName.name,
+        Field = "Name"
+)
+@FetchFields(
+        {
+                @FetchField(
+                        Class = Domain.class,
+                        Target = "Name"
+                )
+        }
+
+)
 public class Domain extends Stored {
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.Id)
-    private long Id;
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+
+    @Column(name = Database.Field.Domain.RootId)
+    private long RootId;
 
     @Column(name = Database.Field.Domain.CertId)
     private long CertId;
 
-    @Column(name = Database.Field.Domain.Name, nullable = false)
+    @Column(name = Database.Field.Domain.Name, nullable = false, unique = true)
     private String Name;
 
     @Column(name = Database.Field.Domain.Root, nullable = false)
@@ -101,15 +130,17 @@ public class Domain extends Stored {
         DefaultOptionQuota = src.DefaultOptionQuota;
         DefaultOptionCatchAll = src.DefaultOptionCatchAll;
     }
+    public long getRootId() {
+        return RootId;
+    }
 
-    public long getId() {
-        return Id;
+    public void setRootId(long rootId) {
+        RootId = rootId;
     }
 
     public long getCertId() {
         return CertId;
     }
-
     public void setCertId(long certId) {
         CertId = certId;
     }
@@ -125,7 +156,6 @@ public class Domain extends Stored {
     public String getName() {
         return Name;
     }
-
     public void setName(String name) {
         Name = name;
     }
@@ -133,7 +163,6 @@ public class Domain extends Stored {
     public String getFriendlyName() {
         return FriendlyName;
     }
-
     public void setFriendlyName(String friendlyName) {
         FriendlyName = friendlyName;
     }
@@ -141,7 +170,6 @@ public class Domain extends Stored {
     public boolean isDefaultOptionCatchAll() {
         return DefaultOptionCatchAll;
     }
-
     public void setDefaultOptionCatchAll(boolean defaultOptionCatchAll) {
         DefaultOptionCatchAll = defaultOptionCatchAll;
     }
@@ -163,18 +191,9 @@ public class Domain extends Stored {
     }
 
 
-    public static void entityCreated(Entities List,Stored Entity) {
-        if (Entity instanceof Domain) {
+    public static void entityCreated(Entities List,Stored Entity) {}
+    public static void entityUpdated(Entities List,Stored Entity, boolean Cascade) {}
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade) {}
 
-
-        }
-    }
-
-    public static void entityDeleted(Entities List,Stored Entity) {
-        if (Entity instanceof Domain) {
-
-
-        }
-    }
 
 }

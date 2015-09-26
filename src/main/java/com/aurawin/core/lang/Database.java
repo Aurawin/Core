@@ -6,6 +6,15 @@ import org.hibernate.Session;
 
 public class Database {
     public static class Table{
+        public static class Cloud{
+            public static final String Group = "tbl_c_g";
+            public static final String Location = "tbl_c_l";
+            public static final String Node = "tbl_c_n";
+            public static final String Resource = "tbl_c_r";
+            public static final String Transactions = "tbl_c_t";
+            public static final String Uptime="tbl_c_u";
+            public static final String Service="tbl_c_s";
+        }
         public static class Domain{
             public static class Network{
                 public static final String List = "tbl_d_ntk";
@@ -24,6 +33,118 @@ public class Database {
         public static final String UniqueId = "tbl_k_uid";
     }
     public static class Query{
+        public static class Cloud{
+            public static class Group{
+                public static class ById{
+                    public static final String name ="QueryCloudGroupById";
+                    public static final String value = "from Group where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+                public static class ByName{
+                    public static final String name ="QueryCloudGroupByName";
+                    public static final String value = "from Group where Name=:Name";
+                    public static org.hibernate.Query Create(Session ssn, String Name){
+                        return ssn.getNamedQuery(name)
+                                .setString("Name",Name);
+                    }
+                }
+            }
+            public static class Service{
+                public static class ById{
+                    public static final String name ="QueryCloudServiceById";
+                    public static final String value = "from Service where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+                public static class ByName{
+                    public static final String name ="QueryCloudServiceByName";
+                    public static final String value = "from Group where Namespace=:Namespace";
+                    public static org.hibernate.Query Create(Session ssn, String Namespace){
+                        return ssn.getNamedQuery(name)
+                                .setString("Namespace",Namespace);
+                    }
+                }
+            }
+            public static class Location{
+                public static class ById{
+                    public static final String name ="QueryCloudLocationById";
+                    public static final String value = "from Location where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+                public static class ByName{
+                    public static final String name ="QueryCloudLocationByName";
+                    public static final String value = "from Location where Name=:Name";
+                    public static org.hibernate.Query Create(Session ssn, String Name){
+                        return ssn.getNamedQuery(name)
+                                .setString("Name",Name);
+                    }
+                }
+            }
+            public static class Node{
+                public static class ById{
+                    public static final String name ="QueryCloudNodeById";
+                    public static final String value = "from Node where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+                public static class ByName{
+                    public static final String name ="QueryCloudNodeByName";
+                    public static final String value = "from Node where Name=:Name";
+                    public static org.hibernate.Query Create(Session ssn, String Name){
+                        return ssn.getNamedQuery(name)
+                                .setString("Name",Name);
+                    }
+                }
+            }
+            public static class Resource{
+                public static class ById{
+                    public static final String name ="QueryCloudResourceById";
+                    public static final String value = "from Resource where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+                public static class ByName{
+                    public static final String name ="QueryCloudResourceByName";
+                    public static final String value = "from Resource where Name=:Name";
+                    public static org.hibernate.Query Create(Session ssn, String Name){
+                        return ssn.getNamedQuery(name)
+                                .setString("Name", Name);
+                    }
+                }
+            }
+            public static class Transactions{
+                public static class ById{
+                    public static final String name ="QueryCloudTransactionsById";
+                    public static final String value = "from Transactions where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+            }
+            public static class Uptime{
+                public static class ById{
+                    public static final String name ="QueryCloudUptimeById";
+                    public static final String value = "from Uptime where Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("Id",Id);
+                    }
+                }
+            }
+        }
         public static class Domain{
             public static class ById {
                 public static final String name = "QueryDomainById";
@@ -80,6 +201,31 @@ public class Database {
                                 .setLong("OwnerId", OwnerId);
                     }
                 }
+                public static class Folder {
+                    public static class ByPath {
+                        public static final String name = "QueryDomainFolderByPath";
+                        public static final String value = "from Folder where DomainId=:DomainId and OwnerId=:OwnerId and Path=:Path";
+
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId, long NetworkId, String Path) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("OwnerId", OwnerId)
+                                    .setLong("NetworkId", NetworkId)
+                                    .setString("Path", Path);
+                        }
+                    }
+
+                    public static class ById {
+                        public static final String name = "QueryDomainFolderById";
+                        public static final String value = "from Folder where DomainId=:DomainId and Id=:Id";
+
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long Id) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("Id", Id);
+                        }
+                    }
+                }
             }
             public static class Avatar{
                 public static class ByOwnerAndKind{
@@ -100,29 +246,6 @@ public class Database {
                     }
                 }
             }
-            public static class Folder{
-                public static class ByPath {
-                    public static final String name = "QueryDomainFolderByPath";
-                    public static final String value = "from Folder where DomainId=:DomainId and OwnerId=:OwnerId and Path=:Path";
-                    public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId, long NetworkId,String Path){
-                        return ssn.getNamedQuery(name)
-                                .setLong("DomainId", DomainId)
-                                .setLong("OwnerId",OwnerId)
-                                .setLong("NetworkId",NetworkId)
-                                .setString("Path", Path);
-                    }
-                }
-                public static class ById {
-                    public static final String name = "QueryDomainFolderById";
-                    public static final String value = "from Folder where DomainId=:DomainId and Id=:Id";
-                    public static org.hibernate.Query Create(Session ssn, long DomainId, long Id){
-                        return ssn.getNamedQuery(name)
-                                .setLong("DomainId", DomainId)
-                                .setLong("Id",Id );
-                    }
-                }
-            }
-
         }
         public static class UniqueId{
             public static class ById {
@@ -147,6 +270,55 @@ public class Database {
         public static class UniqueId{
             public static final String Id="itmid";
             public static final String Namespace="itmns";
+        }
+        public static class Cloud{
+            public static class Location{
+                public static final String Id = "itmid";
+                public static final String GroupId = "itmgid";
+                public static final String Country = "itmctry";
+                public static final String Region = "itmrgn";
+                public static final String Locality = "itmlty";
+                public static final String Area = "itma";
+                public static final String Street = "itmst";
+                public static final String Building = "itbg";
+                public static final String Floor = "itfl";
+                public static final String Room = "itrm";
+                public static final String Zip = "itmz";
+            }
+            public static class Group{
+                public static final String Id = "itmid";
+                public static final String Name = "itmne";
+                public static final String Row = "itmrw";
+                public static final String Rack = "itmrk";
+                public static final String LocationId ="itmld";
+            }
+            public static class Resource{
+                public static final String Id = "itmid";
+                public static final String GroupId = "itgid";
+                public static final String Name = "itmne";
+            }
+            public static class Service{
+                public static final String Id = "itmid";
+                public static final String NodeId = "itnid";
+                public static final String Namespace = "itmns";
+            }
+            public static class Node{
+                public static final String Id = "itmid";
+                public static final String Name = "itmne";
+            }
+            public static class Uptime{
+                public static final String Id = "itmid";
+                public static final String NodeId = "itmnid";
+                public static final String Stamp = "itmstp";
+            }
+            public static class Transactions{
+                public static final String Id = "itmid";
+                public static final String NodeId = "itmnid";
+                public static final String Sent = "itmsnt";
+                public static final String Received = "itmrcv";
+                public static final String Filtered = "itfld";
+                public static final String Streams = "itmst";
+            }
         }
         public static class Domain{
             public static final String Id="itmid";

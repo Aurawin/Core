@@ -1,6 +1,7 @@
 package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.*;
+import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.domain.network.Exposure;
@@ -18,15 +19,22 @@ import javax.persistence.Table;
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
 @Table(name = Database.Table.Domain.RosterField)
+@EntityDispatch(
+        onCreated = false,
+        onDeleted = false,
+        onUpdated = false
+)
 public class RosterField {
-    @ManyToOne()
-    @JoinColumn(name = Database.Field.Domain.RosterField.OwnerId)
-    private Roster Owner;
-
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.RosterField.Id)
-    private long Id;
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+    @ManyToOne()
+    @JoinColumn(name = Database.Field.Domain.RosterField.OwnerId)
+    private Roster Owner;
 
     @Column(name = Database.Field.Domain.RosterField.DomainId)
     private long DomainId;
@@ -45,9 +53,7 @@ public class RosterField {
             UserAccount ua = (UserAccount) Entity;
         }
     }
-
-    public static void entityDeleted(Entities List,Stored Entity) {
-
-    }
+    public static void entitUpdated(Entities List,Stored Entity, boolean Caascade) { }
+    public static void entityDeleted(Entities List,Stored Entity, boolean Caascade) { }
 
 }

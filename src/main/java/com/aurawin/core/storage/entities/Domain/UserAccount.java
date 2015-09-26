@@ -2,14 +2,15 @@ package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.*;
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.storage.annotations.EntityDispatch;
+import com.aurawin.core.storage.annotations.FetchFields;
+import com.aurawin.core.storage.annotations.FetchField;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
-import com.aurawin.core.storage.annotations.QueryInfo;
+import com.aurawin.core.storage.annotations.QueryById;
 
 import com.aurawin.core.storage.entities.domain.network.Network;
-import javafx.scene.layout.Priority;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import com.aurawin.core.time.Time;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
@@ -18,9 +19,7 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import com.google.gson.Gson;
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Entity
 @DynamicInsert(value=true)
@@ -44,27 +43,49 @@ import java.util.function.Predicate;
                 )
         }
 )
-@QueryInfo(
+@QueryById(
         Name = Database.Query.Domain.UserAccount.ById.name,
         Fields = {
                 "Id",
                 "DomainId"
         }
 )
+@EntityDispatch(
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
+)
+@FetchFields(
+        {
+                @FetchField(
+                        Class = UserAccount.class,
+                        Target = "Networks"
+                ),
+                @FetchField(
+                        Class = UserAccount.class,
+                        Target = "Contacts"
+                )
+        }
+
+
+
+)
 public class UserAccount extends Stored {
-
-    @OneToMany(mappedBy = "Owner")
-    @Cascade(CascadeType.PERSIST)
-    public List<Network> Networks= new ArrayList<Network>();
-
-    @OneToMany(mappedBy = "Owner")
-    @Cascade(CascadeType.PERSIST)
-    public List<Roster>Contacts = new ArrayList<Roster>();
-
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.UserAccount.Id)
-    private long Id;
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+
+    @OneToMany(mappedBy = "Owner",fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    public List<Network> Networks= new ArrayList<Network>();
+
+    @OneToMany(mappedBy = "Owner",fetch = FetchType.LAZY)
+    @Cascade(CascadeType.ALL)
+    public List<Roster>Contacts = new ArrayList<Roster>();
 
     @Column(name = Database.Field.Domain.UserAccount.DomainId)
     private long DomainId;
@@ -97,6 +118,12 @@ public class UserAccount extends Stored {
     @Column(name = Database.Field.Domain.UserAccount.LockCount)
     private int Lockcount;
 
+    @Column(name = Database.Field.Domain.UserAccount.Created)
+    private long Created;
+
+    @Column(name = Database.Field.Domain.UserAccount.Modified)
+    private long Modified;
+
     @Column(name = Database.Field.Domain.UserAccount.LastLogin)
     private long LastLogin;
 
@@ -109,10 +136,11 @@ public class UserAccount extends Stored {
     @Column(name = Database.Field.Domain.UserAccount.Quota)
     private long Quota;
 
-
     public UserAccount(long domainId, String user) {
         this.DomainId=domainId;
         this.User = user;
+        this.Created = Time.dtUTC();
+        this.Modified = this.Created;
     }
     public UserAccount() {
         this.Id=0;
@@ -122,6 +150,8 @@ public class UserAccount extends Stored {
         this.User = "";
         this.Pass = "";
         this.Auth = "";
+        this.Created = Time.dtUTC();
+        this.Modified = this.Created;
     }
 
     public static UserAccount fromJSON(Gson Parser, String Data){
@@ -161,7 +191,7 @@ public class UserAccount extends Stored {
         Quota=src.Quota;
         Consumption=src.Consumption;
     }
-    public long getId() {   return Id; }
+
     public long getDomainId() {   return DomainId; }
     public long getAvatarId() { return AvatarId; }
     public void setAvatarId(long id){ AvatarId= id;}
@@ -235,21 +265,15 @@ public class UserAccount extends Stored {
     }
 
     public static void entityCreated(Entities List,Stored Entity) throws Exception{
-        if (Entity instanceof UserAccount){
-            UserAccount ua = (UserAccount) Entity;
-            // todo add mail folders
-            // todo add trash bin for "me";
-        } else if (Entity instanceof Domain){
+        if (Entity instanceof Domain){
             Domain d = (Domain) Entity;
-            UserAccount ua = Entities.Domain.UserAccount.Create(List,d.getId(),Table.String(Table.Entities.Domain.Root));
-            ua.Consumption=0;
+            UserAccount ua = new UserAccount(d.getId(),Table.String(Table.Entities.Domain.Root));
+            Entities.Create(List,ua);
+            d.setRootId(ua.getId());
+            Entities.Update(List,d, Entities.CascadeOff);
         }
     }
+    public static void entityUpdated(Entities List, Stored Entity, boolean Cascade){}
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade){}
 
-    public static void entityDeleted(Entities List,Stored Entity){
-        if (Entity instanceof Domain) {
-            // todo clear out social network "me";
-            // todo etc.
-        }
-    }
 }

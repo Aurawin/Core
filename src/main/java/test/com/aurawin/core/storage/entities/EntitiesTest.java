@@ -18,19 +18,22 @@ import org.junit.After;
 
 import javax.persistence.Entity;
 
-/** 
-* Entities Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>Sep 21, 2015</pre> 
-* @version 1.0 
-*/ 
 public class EntitiesTest {
     private Entities entities;
     public Manifest manifest;
 
     @Before
     public void before() throws Exception {
+
+    }
+
+    @After
+    public void after() throws Exception {
+    }
+
+
+    @Test
+    public void testCheckEntitiesAsCreate() throws Exception {
         manifest = new Manifest(
                 "Test",                                 // username
                 "Test",                                 // password
@@ -47,25 +50,48 @@ public class EntitiesTest {
                 Driver.Postgresql.getValue()            // Driver
         );
         entities = new Entities(manifest);
-    }
 
-    @After
-    public void after() throws Exception {
+        Domain crD = new Domain("test.com","root");
+        if (Entities.Create(entities,crD)==true) {
+            Domain lD = (Domain) Entities.Lookup(Domain.class,entities, 1l);
+            UserAccount lUA = (UserAccount) Entities.Lookup(UserAccount.class,entities, lD.getId(), lD.getRootId());
+            Entities.Fetch(entities, lUA);
+            Network lCAB = lUA.getCabinet();
+            Roster lME = lUA.getMe();
+        } else{
+            throw new Exception("Create Domain Failed!");
+        }
     }
-
 
     @Test
-    public void testCheckEntities() throws Exception {
-        Domain crD = new Domain("test.com","root");
-        Entities.Create(entities,crD);
-
-        Domain lD = (Domain) Entities.Lookup(entities, 1l,Domain.class);
-        UserAccount lUA = (UserAccount) Entities.Lookup(entities,lD.getId(),lD.getRootId(),UserAccount.class);
-        Entities.Fetch(entities,lUA);
-        Roster lME = lUA.getMe();
-        Network lCAB = lUA.getCabinet();
-
-
+    public void testCheckEntitiesAsUpdate() throws Exception {
+        manifest = new Manifest(
+                "Test",                                 // username
+                "Test",                                 // password
+                "172.16.1.1",                           // host
+                5432,                                   // port
+                2,                                      // Min Poolsize
+                20,                                     // Max Poolsize
+                1,                                      // Pool Acquire Increment
+                50,                                     // Max statements
+                10,                                     // timeout
+                Database.Config.Automatic.Update,       //
+                "Test",                                 // database
+                Dialect.Postgresql.getValue(),          // Dialect
+                Driver.Postgresql.getValue()            // Driver
+        );
+        entities = new Entities(manifest);
+        Domain crD = (Domain) Entities.Lookup(Domain.class,entities,"test.com");
+        if (crD!=null){
+            if (Entities.Fetch(entities, crD)==true) {
+                UserAccount lUA = (UserAccount) Entities.Lookup(UserAccount.class,entities,crD.getId(), crD.getRootId());
+                Entities.Fetch(entities, lUA);
+                Network lCAB = lUA.getCabinet();
+                Roster lME = lUA.getMe();
+            };
+        } else {
+            throw new Exception("Load Domain Failed!");
+        }
     }
 
 } 

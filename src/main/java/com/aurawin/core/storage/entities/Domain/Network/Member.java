@@ -3,6 +3,7 @@ package com.aurawin.core.storage.entities.domain.network;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Namespace;
+import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.domain.Roster;
@@ -20,15 +21,23 @@ import javax.persistence.*;
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value =true)
 @Table(name = Database.Table.Domain.Network.Member)
+@EntityDispatch(
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
+)
 public class Member extends Stored {
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = Database.Field.Domain.Network.Member.Id)
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+
     @ManyToOne()
     @JoinColumn(name = Database.Field.Domain.Network.Member.NetworkId)
     private Network Owner;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = Database.Field.Domain.Network.Member.Id)
-    private long Id;
 
     @Column(name = Database.Field.Domain.Network.Member.DomainId)
     private long DomainId;
@@ -36,11 +45,11 @@ public class Member extends Stored {
     @Column(name =Database.Field.Domain.Network.Member.UserId)
     private long UserId;
 
-    @Column(name = Database.Field.Domain.Network.Member.Exposure)
-    private byte Exposure;
+    @Column(name = Database.Field.Domain.Network.Member.Exposition)
+    private byte Exposition;
 
     @Column(name = Database.Field.Domain.Network.Member.Standing)
-    private byte Standing;
+    private byte Level;
 
     @Column(name =Database.Field.Domain.Network.Member.ACL)
     private long ACL;
@@ -49,6 +58,9 @@ public class Member extends Stored {
         Owner = owner;
         DomainId = owner.getDomainId();
         UserId = owner.getOwnerId();
+    }
+
+    public Member() {
     }
 
     public long getDomainId() {
@@ -67,20 +79,17 @@ public class Member extends Stored {
         UserId = userId;
     }
 
-    public byte getExposure() {
-        return Exposure;
-    }
-
-    public void setExposure(byte exposure) {
-        Exposure = exposure;
+    public byte getExposition() { return Exposition; }
+    public void setExposition(byte exposition) {
+        Exposition = exposition;
     }
 
     public byte getStanding() {
-        return Standing;
+        return Level;
     }
 
     public void setStanding(byte standing) {
-        Standing = standing;
+        Level = standing;
     }
 
     public long getACL() {
@@ -92,18 +101,21 @@ public class Member extends Stored {
     }
 
     public static void entityCreated(Entities List,Stored Entity) {
-        if (Entity instanceof Network) {
+        if (Entity instanceof Member) {
+            Member m = (Member) Entity;
+            m.Owner.Members.add(m);
+        } else if (Entity instanceof Network) {
             Network n = (Network) Entity;
-            //todo Member m = Entities.Domain.Network.addMember(n);
-
-
+            Member m = new Member(n);
+            m.setExposition(Exposure.Private);
+            m.setStanding(Standing.Administrator.Level);
+            m.setACL(Standing.Administrator.Permission);
+            Entities.Create(List, m);
         }
     }
 
-
-    public static void entityDeleted(Entities List,Stored Entity) {
-
-    }
+    public static void entityUpdated(Entities List,Stored Entity, boolean Cascade) {}
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade) {}
 
 
 }

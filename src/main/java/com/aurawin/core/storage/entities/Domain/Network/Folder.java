@@ -26,12 +26,12 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(
-                        name  = Database.Query.Domain.Folder.ByPath.name,
-                        query = Database.Query.Domain.Folder.ByPath.value
+                        name  = Database.Query.Domain.Network.Folder.ByPath.name,
+                        query = Database.Query.Domain.Network.Folder.ByPath.value
                 ),
                 @NamedQuery(
-                        name  = Database.Query.Domain.Folder.ById.name,
-                        query = Database.Query.Domain.Folder.ById.value
+                        name  = Database.Query.Domain.Network.Folder.ById.name,
+                        query = Database.Query.Domain.Network.Folder.ById.value
                 )
         }
 )

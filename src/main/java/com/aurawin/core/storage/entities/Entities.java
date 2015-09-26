@@ -1,12 +1,13 @@
 package com.aurawin.core.storage.entities;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.storage.Hibernate;
 import com.aurawin.core.storage.Manifest;
-import com.aurawin.core.storage.annotations.QueryById;
-import com.aurawin.core.storage.annotations.EntityDispatch;
+import com.aurawin.core.storage.annotations.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -60,55 +61,6 @@ public class Entities {
         }
 
     }
-
-//        public static class Folder{
-//            com.aurawin.core.storage.entities.domain.network.Folder Create(
-//                    Entities entities,
-//                    com.aurawin.core.storage.entities.domain.UserAccount ua,
-//                    com.aurawin.core.storage.entities.domain.network.Network network,
-//                    com.aurawin.core.storage.entities.domain.network.Folder Parent,
-//                    String Name) {
-//                com.aurawin.core.storage.entities.domain.network.Folder f = null;
-//                String Path = "";
-//                Path = (Parent == null) ? Name : Parent.getPath();
-//
-//                Session ssn = entities.Sessions.openSession();
-//                Query q;
-//                try {
-//                    q = Database.Query.Domain.Folder.ByPath.Create(ssn, ua.getDomainId(), ua.getId(), network.getId(), Path);
-//                    f = (com.aurawin.core.storage.entities.domain.network.Folder) q.uniqueResult();
-//                    if (f != null) {
-//                        throw new Exception(Table.String(Table.Exception.Entities.Domain.Folder.UnableToCreateExists));
-//                    }
-//                } catch (Exception e) {
-//                    ssn.close();
-//                    return null;
-//                }
-//                Transaction tx = ssn.beginTransaction();
-//                try {
-//                    if (Parent == null) {
-//                        f = new com.aurawin.core.storage.entities.domain.network.Folder(ua.getDomainId(), ua.getId(), network.getId(), Name);
-//                        network.Folders.add(f);
-//                    } else {
-//                        f = Parent.addChild(Name);
-//                    }
-//                    ssn.save(f);
-//                    tx.commit();
-//                    ssn.close();
-//
-//                    entityCreated(entities, f);
-//
-//                    return f;
-//                } catch (Exception e) {
-//                    tx.rollback();
-//                    ssn.close();
-//                    return null;
-//                }
-//
-//            }
-//        }
-//
-//    }
     public static boolean Create(Entities entities, Stored e){
         Session ssn = entities.Sessions.openSession();
         Transaction tx = ssn.beginTransaction();
@@ -177,8 +129,18 @@ public class Entities {
             return false;
         }
     }
-
-    public static Stored Lookup(Entities entities,long DomainId, long Id, Class<? extends Stored> CofE) throws Exception {
+    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities, String Name) throws Exception{
+        Session ssn = entities.Sessions.openSession();
+        try {
+            QueryByName qc = CofE.getAnnotation(QueryByName.class);
+            Query q = ssn.getNamedQuery(qc.Name())
+                    .setString(qc.Field(), Name);
+            return CofE.cast(q.uniqueResult());
+        } finally{
+            ssn.close();
+        }
+    }
+    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities,long DomainId, long Id) throws Exception {
         Session ssn = entities.Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
@@ -191,7 +153,7 @@ public class Entities {
             ssn.close();
         }
     }
-    public static Stored Lookup(Entities entities,long Id, Class<? extends Stored> CofE) throws Exception {
+    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities,long Id) throws Exception {
         Session ssn = entities.Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
@@ -210,19 +172,18 @@ public class Entities {
         Session ssn = entities.Sessions.openSession();
         try {
             ssn.load(e,new Long(e.getId()));
-            return true;
-//            FieldLoader fl = e.getClass().getAnnotation(FieldLoader.class);
-//            if (fl!=null) {
-//                for (FieldLoaderDef fld : fl.value() ) {
-//                    Field f = e.getClass().getDeclaredField(fld.Target());
-//                    Object val = f.get(e);
-//                    org.hibernate.Hibernate.initialize(val);
-//                };
-//
-//                return true;
-//            } else {
-//                return false;
-//            }
+            FetchFields fl = e.getClass().getAnnotation(FetchFields.class);
+            if (fl!=null) {
+                for (FetchField fld : fl.value() ) {
+                    Field f = e.getClass().getDeclaredField(fld.Target());
+                    f.setAccessible(true);
+                    Object val = f.get(e);
+                    org.hibernate.Hibernate.initialize(val);
+                }
+                return true;
+            } else {
+                throw new Exception(Table.Format(Table.Exception.Entities.EntityAnnotationForFetchNotDefined,e.getClass().getCanonicalName()));
+            }
         } finally{
             ssn.close();
         }

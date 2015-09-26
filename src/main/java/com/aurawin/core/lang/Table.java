@@ -48,6 +48,7 @@ public class Table {
     }
     public static String Format(String Namespace, String Arg){
         try{
+            if (Loaded!=true) Load();
             try {
                 Arg = Manifest.getString(Arg);
             } catch (java.lang.Exception e){
@@ -212,6 +213,7 @@ public class Table {
             public static final String EntityCreatedMethodNotDefined = "table.exception.entities.entity-created-method-not-defined";
             public static final String EntityDeletedMethodNotDefined = "table.exception.entities.entity-deleted-method-not-defined";
             public static final String EntityUpdatedMethodNotDefined = "table.exception.entities.entity-updated-method-not-defined";
+            public static final String EntityAnnotationForFetchNotDefined = "table.exception.entities.entity-annotation-for-fetch-not-defined";
             public static class UniqueId {
                 public static String UnableToCreateNamespaceEmpty = "table.exception.entities.uniqueid.unable-to-create-namespace-empty";
             }

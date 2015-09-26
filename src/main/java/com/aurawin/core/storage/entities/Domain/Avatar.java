@@ -2,6 +2,7 @@ package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Namespace;
+import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 
@@ -34,11 +35,19 @@ import javax.persistence.*;
                 )
         }
 )
+@EntityDispatch(
+        onCreated = false,
+        onDeleted = false,
+        onUpdated = false
+)
 public class Avatar extends Stored {
-    @Id
+    @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.Domain.Avatar.Id)
-    private long Id;
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
 
     @Column(name = Database.Field.Domain.Avatar.OwnerId)
     protected long OwnerId;
@@ -69,6 +78,9 @@ public class Avatar extends Stored {
         Modified= Created;
     }
 
+    public Avatar() {
+
+    }
 
     public String getExt() {
         return Ext;
@@ -78,33 +90,35 @@ public class Avatar extends Stored {
         Ext = ext;
     }
 
-    public long getId() {
-        return Id;
-    }
-
     public static void entityCreated(Entities List,Stored Entity)throws Exception {
         if (Entity instanceof UserAccount) {
             UserAccount ua = (UserAccount) Entity;
             if (ua.getAvatarId() == 0) {
-                Avatar a = Entities.Domain.Avatar.Create(List, ua);
-
+                Avatar a = new Avatar(ua.getDomainId(),ua.getId(),Namespace.Entities.Domain.UserAccount.Avatar.getId());
+                Entities.Create(List, a);
+                ua.setAvatarId(a.getId());
+                Entities.Update(List,ua,Entities.CascadeOff);
             }
         } else if (Entity instanceof Roster){
             Roster r = (Roster) Entity;
             if (r.getAvatarId()==0) {
-                Avatar a = Entities.Domain.Avatar.Create(List, r);
+                Avatar a = new Avatar(r.getDomainId(),r.getOwnerId(),Namespace.Entities.Domain.Roster.Avatar.getId());
+                Entities.Create(List, a);
+                r.setAvatarId(a.getId());
+                Entities.Update(List,r,Entities.CascadeOff);
+
             }
         } else if (Entity instanceof Network){
             Network n = (Network) Entity;
             if (n.getAvatarId()==0){
-
+                Avatar a = new Avatar(n.getDomainId(),n.getOwnerId(),Namespace.Entities.Domain.Network.Avatar.getId());
+                Entities.Create(List,a);
+                n.setAvatarId(a.getId());
+                Entities.Update(List,n,Entities.CascadeOff);
             }
         }
-
     }
-
-    public static void entityDeleted(Entities List,Stored Entity)throws Exception {
-
-    }
+    public static void entityUpdated(Entities List,Stored Entity, boolean Cascade)throws Exception {}
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade)throws Exception {}
 
 }

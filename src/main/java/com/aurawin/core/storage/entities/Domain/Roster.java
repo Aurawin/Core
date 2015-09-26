@@ -3,6 +3,7 @@ package com.aurawin.core.storage.entities.domain;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.domain.network.Exposure;
@@ -22,7 +23,20 @@ import java.util.List;
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate( value = true)
 @javax.persistence.Table(name = Database.Table.Domain.Roster)
+@EntityDispatch(
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
+)
 public class Roster extends Stored {
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = Database.Field.Domain.Roster.Id)
+    protected long Id;
+    public long getId() {
+        return Id;
+    }
+
     @ManyToOne()
     @JoinColumn(name = Database.Field.Domain.Roster.OwnerId)
     private UserAccount Owner;
@@ -31,10 +45,6 @@ public class Roster extends Stored {
     @Cascade(CascadeType.PERSIST)
     private List<RosterField> Custom = new ArrayList<RosterField>();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = Database.Field.Domain.Roster.Id)
-    private long Id;
 
     @Column(name = Database.Field.Domain.Roster.DomainId)
     private long DomainId;
@@ -72,9 +82,6 @@ public class Roster extends Stored {
     @Column(name = Database.Field.Domain.Roster.Websites)
     private String Websites;
 
-    public long getId(){
-        return Id;
-    }
     public String getFirstName() {
         return FirstName;
     }
@@ -173,17 +180,19 @@ public class Roster extends Stored {
         DomainId = owner.getDomainId();
         Alias=alias;
     }
-
     public static void entityCreated(Entities List,Stored Entity) throws Exception{
         if (Entity instanceof UserAccount){
             UserAccount ua = (UserAccount) Entity;
             if (ua.getMe()==null) {
-                Roster me = Entities.Domain.Roster.Create(List,ua,Table.String(Table.Entities.Domain.Roster.Me));
+                Roster me = new Roster(ua,Table.String(Table.Entities.Domain.Roster.Me));
+                Entities.Create(List,me);
+                ua.Contacts.add(me);
+                ua.setRosterId(me.Id);
+                Entities.Update(List,ua,Entities.CascadeOff);
             }
         }
     }
+    public static void entityUpdated(Entities List,Stored Entity, boolean Cascade) throws Exception {}
+    public static void entityDeleted(Entities List,Stored Entity, boolean Cascade) throws Exception {}
 
-    public static void entityDeleted(Entities List,Stored Entity) throws Exception {
-
-    }
 }
