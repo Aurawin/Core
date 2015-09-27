@@ -66,6 +66,14 @@ public class UniqueId  {
         Namespace = src.Namespace;
     }
 
+    @Override
+    public boolean equals(Object u) {
+        return (
+                    ( u instanceof UniqueId) &&
+                    (Id == ((UniqueId) u).Id) &&
+                    (Namespace.compareTo( ((UniqueId) u).Namespace)==0)
+        );
+    }
     public void Verify(Session ssn){
         if (Id == 0) {
 	        UniqueId uid = null;

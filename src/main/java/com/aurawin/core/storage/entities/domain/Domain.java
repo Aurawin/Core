@@ -109,14 +109,16 @@ public class Domain extends Stored {
     public static Domain fromJSON(Gson Parser, String Data) {
         return (Domain) Parser.fromJson(Data, Domain.class);
     }
-
-    public boolean equals(Domain o) {
-        return (Id == o.Id &&
-                Root.compareTo(o.Root) == 0 &&
-                FriendlyName.compareTo(o.FriendlyName) == 0 &&
-                DefaultOptionCatchAll == o.DefaultOptionCatchAll &&
-                DefaultOptionFiltering == o.DefaultOptionFiltering &&
-                DefaultOptionQuota == o.DefaultOptionQuota
+    @Override
+    public boolean equals(Object o) {
+        return (
+                (o instanceof Domain) &&
+                Id == ((Domain) o).Id &&
+                Root.compareTo( ((Domain) o).Root) == 0 &&
+                FriendlyName.compareTo(((Domain) o).FriendlyName) == 0 &&
+                DefaultOptionCatchAll == ((Domain) o).DefaultOptionCatchAll &&
+                DefaultOptionFiltering == ((Domain) o).DefaultOptionFiltering &&
+                DefaultOptionQuota == ((Domain) o).DefaultOptionQuota
         );
 
     }

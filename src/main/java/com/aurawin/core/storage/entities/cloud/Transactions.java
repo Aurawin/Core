@@ -17,8 +17,8 @@ import javax.persistence.*;
 @SelectBeforeUpdate(value =true)
 @Table(name = Database.Table.Cloud.Transactions)
 @EntityDispatch(
-        onCreated = false,
-        onDeleted = false,
+        onCreated = true,
+        onDeleted = true,
         onUpdated = false
 )
 @QueryById(
@@ -63,10 +63,20 @@ public class Transactions extends Stored {
     @ManyToOne(targetEntity = Node.class, cascade = CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinColumn(name = Database.Field.Cloud.Transactions.NodeId)
     protected Node Node;
-    public Node getNode() {        return Node;    }
-    public void setNode(Node node) {        Node = node;    }
+    public Node getNode() { return Node; }
+    public void setNode(Node node) { Node = node; }
 
-    public static void entityCreated(Entities List, Stored Entity) {}
+    public static void entityCreated(Entities List, Stored Entity) {
+        if (Entity instanceof Node) {
+            Node n = (Node) Entity;
+            if (n.Transactions==null) {
+                n.Transactions= new Transactions();
+                n.Transactions.Node=n;
+                Entities.Create(List,n.Transactions);
+                Entities.Update(List,n,Entities.CascadeOff);
+            }
+        }
+    }
     public static void entityDeleted(Entities List, Stored Entity, boolean Cascade) {}
     public static void entityUpdated(Entities List, Stored Entity, boolean Cascade) {}
 }

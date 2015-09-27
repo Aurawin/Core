@@ -40,135 +40,102 @@ public class Roster extends Stored {
     @ManyToOne()
     @JoinColumn(name = Database.Field.Domain.Roster.OwnerId)
     private UserAccount Owner;
+    public long getOwnerId(){ return Owner.getId();}
 
-    @OneToMany(mappedBy = "Owner")
-    @Cascade(CascadeType.PERSIST)
+    @OneToMany(
+            targetEntity = RosterField.class,
+            mappedBy = "Owner",
+            cascade = javax.persistence.CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
     private List<RosterField> Custom = new ArrayList<RosterField>();
-
 
     @Column(name = Database.Field.Domain.Roster.DomainId)
     private long DomainId;
+    public long getDomainId(){ return DomainId;}
 
     @Column(name = Database.Field.Domain.Roster.AvatarId)
     private long AvatarId;
+    public long getAvatarId(){ return AvatarId;}
+    public void setAvatarId(long id){ AvatarId=id;}
 
     @Column(name = Database.Field.Domain.Roster.FirstName)
     private String FirstName;
-
-    @Column(name = Database.Field.Domain.Roster.MiddleName)
-    private String MiddleName;
-
-    @Column(name = Database.Field.Domain.Roster.FamilyName)
-    private String FamilyName;
-
-    @Column(name = Database.Field.Domain.Roster.Alias)
-    private String Alias;
-
-    @Column(name = Database.Field.Domain.Roster.Addresses)
-    private String Addresses;
-
-    @Column(name = Database.Field.Domain.Roster.City)
-    private String City;
-
-    @Column(name = Database.Field.Domain.Roster.State)
-    private String State;
-
-    @Column(name = Database.Field.Domain.Roster.Postal)
-    private String Postal;
-
-    @Column(name = Database.Field.Domain.Roster.Country)
-    private String Country;
-
-    @Column(name = Database.Field.Domain.Roster.Websites)
-    private String Websites;
-
     public String getFirstName() {
         return FirstName;
     }
-
     public void setFirstName(String firstName) {
         FirstName = firstName;
     }
 
+    @Column(name = Database.Field.Domain.Roster.MiddleName)
+    private String MiddleName;
     public String getMiddleName() {
         return MiddleName;
     }
-
     public void setMiddleName(String middleName) {
         MiddleName = middleName;
     }
 
-    public String getFamilyName() {
-        return FamilyName;
-    }
+    @Column(name = Database.Field.Domain.Roster.FamilyName)
+    private String FamilyName;
+    public String getFamilyName() {        return FamilyName;    }
+    public void setFamilyName(String familyName) {        FamilyName = familyName;    }
 
-    public void setFamilyName(String familyName) {
-        FamilyName = familyName;
-    }
+    @Column(name = Database.Field.Domain.Roster.Alias)
+    private String Alias;
+    public String getAlias() {        return Alias;    }
+    public void setAlias(String alias) {        Alias = alias;    }
 
-    public String getAlias() {
-        return Alias;
-    }
+    @Column(name = Database.Field.Domain.Roster.Addresses)
+    private String Addresses;
+    public String getAddresses() {        return Addresses;    }
+    public void setAddresses(String addresses) {        Addresses = addresses;    }
 
-    public void setAlias(String alias) {
-        Alias = alias;
-    }
-
-    public String getAddresses() {
-        return Addresses;
-    }
-
-    public void setAddresses(String addresses) {
-        Addresses = addresses;
-    }
-
+    @Column(name = Database.Field.Domain.Roster.City)
+    private String City;
     public String getCity() {
         return City;
     }
-
     public void setCity(String city) {
         City = city;
     }
 
+    @Column(name = Database.Field.Domain.Roster.State)
+    private String State;
     public String getState() {
         return State;
     }
-
     public void setState(String state) {
         State = state;
     }
 
+    @Column(name = Database.Field.Domain.Roster.Postal)
+    private String Postal;
     public String getPostal() {
         return Postal;
     }
-
     public void setPostal(String postal) {
         Postal = postal;
     }
 
+    @Column(name = Database.Field.Domain.Roster.Country)
+    private String Country;
     public String getCountry() {
         return Country;
     }
-
     public void setCountry(String country) {
         Country = country;
     }
 
+    @Column(name = Database.Field.Domain.Roster.Websites)
+    private String Websites;
     public String getWebsites() {
         return Websites;
     }
-
     public void setWebsites(String websites) {
         Websites = websites;
     }
-
-    public long getAvatarId(){ return AvatarId;}
-    public void setAvatarId(long id){ AvatarId=id;}
-
-    public long getOwnerId(){ return Owner.getId();}
-
-    public long getDomainId(){ return DomainId;}
-
 
     public Roster() {
         Owner = null;

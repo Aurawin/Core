@@ -11,6 +11,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DynamicInsert(value =true)
@@ -19,9 +21,9 @@ import javax.persistence.*;
 @Table(name = Database.Table.Cloud.Location)
 
 @EntityDispatch(
-        onCreated = false,
-        onDeleted = false,
-        onUpdated = false
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
 )
 @QueryById(
         Name = Database.Query.Cloud.Location.ById.name,
@@ -88,11 +90,13 @@ public class Location extends Stored {
     public String getZip() {      return Zip;  }
     public void setZip(String zip) {        Zip = zip;    }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity=Group.class)
-    @JoinColumn(name = Database.Field.Cloud.Location.GroupId)
-    protected Group Group;
-    public Group getGroup( ){return Group;}
-    public void setGroup(Group group){ Group=group;}
+    @OneToMany(
+            mappedBy = "Location",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            targetEntity=Group.class
+    )
+    protected List<Group> Groups = new ArrayList<Group>();
 
     public Location(long id) {
         Id = id;
@@ -105,8 +109,6 @@ public class Location extends Stored {
         Region = "";
         Room = "";
         Zip="";
-
-        Group=null;
     }
 
     public Location() {
@@ -120,7 +122,6 @@ public class Location extends Stored {
         Region = "";
         Room = "";
         Zip="";
-        Group=null;
     }
 
     public static void entityCreated(Entities List, Stored Entity) {}

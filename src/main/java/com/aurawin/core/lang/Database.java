@@ -274,7 +274,6 @@ public class Database {
         public static class Cloud{
             public static class Location{
                 public static final String Id = "itmid";
-                public static final String GroupId = "itmgid";
                 public static final String Country = "itmctry";
                 public static final String Region = "itmrgn";
                 public static final String Locality = "itmlty";
@@ -300,11 +299,18 @@ public class Database {
             public static class Service{
                 public static final String Id = "itmid";
                 public static final String NodeId = "itnid";
-                public static final String Namespace = "itmns";
+                public static final String UniqueId = "ituid";
+                public static final String ScaleStart = "itss";
+                public static final String ScaleMin = "itsm";
+                public static final String ScaleMax = "itsx";
             }
             public static class Node{
                 public static final String Id = "itmid";
+                public static final String ResourceId = "ircid";
+                public static final String TransactionsId = "itxid";
+                public static final String UptimeId = "iutid";
                 public static final String Name = "itmne";
+                public static final String IP = "itmip";
             }
             public static class Uptime{
                 public static final String Id = "itmid";

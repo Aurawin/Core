@@ -69,7 +69,6 @@ public class Manifest {
         Annotated.add(Uptime.class);
 
 
-
         Namespace.Register(Namespaces);
     }
     public void Verify(Session ssn){

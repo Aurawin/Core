@@ -12,6 +12,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DynamicInsert(value = true)
@@ -19,9 +21,9 @@ import javax.persistence.*;
 @SelectBeforeUpdate(value =true)
 @Table(name = Database.Table.Cloud.Group)
 @EntityDispatch(
-        onCreated = false,
-        onDeleted = false,
-        onUpdated = false
+        onCreated = true,
+        onDeleted = true,
+        onUpdated = true
 )
 @QueryById(
         Name = Database.Query.Cloud.Group.ById.name,
@@ -56,10 +58,21 @@ public class Group extends Stored {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, targetEntity=Location.class)
     @JoinColumn(name = Database.Field.Cloud.Group.LocationId)
-    private Location Location;
+    protected Location Location;
     public Location getLocation() { return Location; }
-    public void setLocation(Location location){ Location=location;}
+    public void setLocation(Location location){
+        Location=location;
+        if (Location.Groups.indexOf(this)==-1)
+            Location.Groups.add(this);
+    }
 
+    @OneToMany(
+            targetEntity = Resource.class,
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "Group"
+    )
+    protected List<Resource> Resources = new ArrayList<Resource>();
 
     @Column(name = Database.Field.Cloud.Group.Name)
     protected String Name;
@@ -102,7 +115,7 @@ public class Group extends Stored {
         Location=null;
     }
 
-    public static void entityCreated(Entities List, Stored Entity){}
+    public static void entityCreated(Entities List, Stored Entity){ }
     public static void entityDeleted(Entities List, Stored Entity, boolean Cascade) {}
     public static void entityUpdated(Entities List, Stored Entity, boolean Cascade) {}
 }

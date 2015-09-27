@@ -9,6 +9,7 @@ import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.domain.UserAccount;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 
 
@@ -55,20 +56,20 @@ public class Network extends Stored {
     }
 
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, targetEntity = UserAccount.class, cascade = CascadeType.ALL)
     @JoinColumn(name = Database.Field.Domain.Network.OwnerId)
     protected UserAccount Owner;
 
-    @OneToMany(mappedBy = "Owner", fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    @OneToMany(mappedBy = "Owner", fetch = FetchType.EAGER, targetEntity = Member.class, cascade = CascadeType.ALL)
     protected List<Member> Members = new ArrayList<Member>();
+
+    @Column(name = Database.Field.Domain.Network.AvatarId)
+    private long AvatarId;
+
 
     @Column(name = Database.Field.Domain.Network.DomainId)
     private long DomainId;
 
-
-    @Column(name = Database.Field.Domain.Network.AvatarId)
-    private long AvatarId;
 
     @Column(name = Database.Field.Domain.Network.Exposition)
     private byte Exposition;

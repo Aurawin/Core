@@ -157,22 +157,23 @@ public class UserAccount extends Stored {
     public static UserAccount fromJSON(Gson Parser, String Data){
         return (UserAccount) Parser.fromJson(Data,UserAccount.class);
     }
-
-    public boolean equals(UserAccount o){
+    @Override
+    public boolean equals(Object o){
         return (
-                Id==o.Id &&
-                DomainId==o.DomainId &&
-                CabinetId==o.CabinetId &&
-                RosterId==o.RosterId &&
-                User.compareTo(o.User)==0 &&
-                Pass.compareTo(o.Pass)==0 &&
-                Auth.compareTo(o.Auth)==0 &&
-                FirstIP==o.FirstIP &&
-                LastIP==o.LastIP &&
-                Lockcount==o.Lockcount &&
-                LastLogin==o.LastLogin &&
-                Quota == o.Quota&&
-                Consumption == o.Consumption
+                (o instanceof UserAccount) &&
+                Id==((UserAccount) o).getId() &&
+                DomainId==((UserAccount) o).DomainId &&
+                CabinetId==((UserAccount) o).CabinetId &&
+                RosterId==((UserAccount) o).RosterId &&
+                User.compareTo(((UserAccount) o).User)==0 &&
+                Pass.compareTo(((UserAccount) o).Pass)==0 &&
+                Auth.compareTo(((UserAccount) o).Auth)==0 &&
+                FirstIP==((UserAccount) o).FirstIP &&
+                LastIP==((UserAccount) o).LastIP &&
+                Lockcount==((UserAccount) o).Lockcount &&
+                LastLogin==((UserAccount) o).LastLogin &&
+                Quota == ((UserAccount) o).Quota&&
+                Consumption == ((UserAccount) o).Consumption
         );
 
     }

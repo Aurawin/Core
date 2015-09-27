@@ -5,6 +5,7 @@ import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.annotations.QueryById;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
+import com.aurawin.core.time.Time;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
@@ -60,16 +61,26 @@ public class Uptime extends Stored{
 
     public Uptime(long id) {
         Id = id;
-        Stamp=0;
+        Stamp= Time.dtUTC();
         Node=null;
     }
 
     public Uptime() {
         Id = 0;
-        Stamp=0;
+        Stamp=Time.dtUTC();
         Node=null;
     }
-    public static void entityCreated(Entities List, Stored Entity) {}
+    public static void entityCreated(Entities List, Stored Entity) {
+        if (Entity instanceof Node){
+            Node n = (Node) Entity;
+            if (n.Uptime==null){
+                n.Uptime=new Uptime();
+                n.Uptime.Node=n;
+                Entities.Create(List,n.Uptime);
+                Entities.Update(List,n,Entities.CascadeOff);
+            }
+        }
+    }
     public static void entityDeleted(Entities List, Stored Entity, boolean Cascade) {}
     public static void entityUpdated(Entities List, Stored Entity, boolean Cascade) {}
 }

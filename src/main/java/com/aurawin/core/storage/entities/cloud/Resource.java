@@ -60,7 +60,11 @@ public class Resource extends Stored{
     @JoinColumn(name = Database.Field.Cloud.Resource.GroupId)
     protected Group Group;
     public Group getGroup() { return Group; }
-    public void setGroup(Group group) { Group = group; }
+    public void setGroup(Group group) {
+        Group = group;
+        if (!group.Resources.contains(this)==true)
+            group.Resources.add(this);
+    }
 
     public Resource(long id) {
         Id = id;
