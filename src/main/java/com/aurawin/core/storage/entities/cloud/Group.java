@@ -31,7 +31,7 @@ import java.util.List;
 )
 @QueryByName(
         Name = Database.Query.Cloud.Group.ByName.name,
-        Field = "Name"
+        Fields = {"Name"}
 )
 @NamedQueries(
         {

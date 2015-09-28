@@ -29,7 +29,7 @@ import javax.persistence.*;
 )
 @QueryByName(
         Name = Database.Query.Cloud.Service.ByName.name,
-        Field = ("Namepsace")
+        Fields = {"Namepsace"}
 )
 @NamedQueries(
         {

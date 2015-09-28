@@ -81,10 +81,13 @@ public class Database {
                 }
                 public static class ByName{
                     public static final String name ="QueryCloudLocationByName";
-                    public static final String value = "from Location where Name=:Name";
-                    public static org.hibernate.Query Create(Session ssn, String Name){
+                    public static final String value = "from Location where Area like :Area or Locality like :Locality or Region like :Region";
+                    public static org.hibernate.Query Create(Session ssn, String Area, String Locality, String Region){
                         return ssn.getNamedQuery(name)
-                                .setString("Name",Name);
+                                .setString("Area", "%" + Area + "%")
+                                .setString("Locality","%"+Locality+"%")
+                                .setString("Region","%"+Region+"%");
+
                     }
                 }
             }

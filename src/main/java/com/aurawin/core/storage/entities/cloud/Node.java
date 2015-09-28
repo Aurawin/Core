@@ -14,6 +14,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DynamicInsert(value=true)
@@ -27,7 +29,7 @@ import javax.persistence.*;
 )
 @QueryByName(
         Name = Database.Query.Cloud.Node.ByName.name,
-        Field = "Name"
+        Fields = {"Name"}
 )
 @QueryById(
         Name = Database.Query.Cloud.Node.ById.name,
@@ -85,6 +87,9 @@ public class Node extends Stored {
     protected Uptime Uptime;
     public Uptime getUptime(){return Uptime;}
     public void setUptime(Uptime uptime){ Uptime = uptime;}
+
+    @OneToMany(targetEntity = Service.class,cascade = CascadeType.ALL,fetch=FetchType.EAGER,mappedBy="Node")
+    protected List<Service> Services = new ArrayList<Service>();
 
     public Node() {
         Id = 0;

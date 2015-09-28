@@ -72,7 +72,7 @@ public class EntitiesTest {
             lc.setStreet("Stage Line Trail");
             lc.setRegion("Southwest");
             lc.setArea("Austin");
-            lc.setLocality("Pflugervile");
+            lc.setLocality("Pflugerville");
             lc.setCountry("USA");
             lc.setFloor("1st");
             lc.setRoom("Office");
@@ -100,13 +100,25 @@ public class EntitiesTest {
                 } else {
                     throw new Exception("Create Node failed!");
                 }
-
-
             } else {
                 throw new Exception("Create Resource failed!");
-
             }
+            Resource rcDataHouse= new Resource();
+            rcDataHouse.setGroup(gp);
+            rcDataHouse.setName("Datahouse");
+            if (Entities.Create(entities,rcDataHouse)==true){
+                Node n=new Node();
+                n.setResource(rcDataHouse);
+                n.setName("datahouse");
+                n.setIP("172.16.1.2");
+                if (Entities.Create(entities,n)==true){
 
+                } else {
+                    throw new Exception("Create DataHouse Node failed!");
+                }
+            } else {
+                throw new Exception("Create Datahouse Resource failed!");
+            }
 
 
         } else {
@@ -144,26 +156,10 @@ public class EntitiesTest {
         } else {
             throw new Exception("Load Domain Failed!");
         }
-    }
-    @Test
-    public void testCheckEntitiesAsCloud()throws Exception{
-        manifest = new Manifest(
-                "Test",                                 // username
-                "Test",                                 // password
-                "172.16.1.1",                           // host
-                5432,                                   // port
-                2,                                      // Min Poolsize
-                20,                                     // Max Poolsize
-                1,                                      // Pool Acquire Increment
-                50,                                     // Max statements
-                10,                                     // timeout
-                Database.Config.Automatic.Update,       //
-                "Test",                                 // database
-                Dialect.Postgresql.getValue(),          // Dialect
-                Driver.Postgresql.getValue()            // Driver
-        );
-        entities = new Entities(manifest);
+        Location l = (Location) Entities.Lookup(Location.class, entities,"Pflugerville");
+        Resource r = (Resource) Entities.Lookup(Resource.class, entities,1l);
 
 
     }
+
 } 

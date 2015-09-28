@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 
 public @interface QueryByName {
     String Name() default "";
-    String Field() default "";
+    String[] Fields() default {""};
 }

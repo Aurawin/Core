@@ -4,6 +4,7 @@ package com.aurawin.core.storage.entities.cloud;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.storage.annotations.EntityDispatch;
 import com.aurawin.core.storage.annotations.QueryById;
+import com.aurawin.core.storage.annotations.QueryByName;
 import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,12 +30,21 @@ import java.util.List;
         Name = Database.Query.Cloud.Location.ById.name,
         Fields = { "Id" }
 )
+@QueryByName(
+        Name = Database.Query.Cloud.Location.ByName.name,
+        Fields = {"Area","Locality","Region"}
+)
 @NamedQueries(
         {
                 @NamedQuery(
                         name  = Database.Query.Cloud.Location.ById.name,
                         query = Database.Query.Cloud.Location.ById.value
+                ),
+                @NamedQuery(
+                        name  = Database.Query.Cloud.Location.ByName.name,
+                        query = Database.Query.Cloud.Location.ByName.value
                 )
+
         }
 )
 public class Location extends Stored {

@@ -41,7 +41,7 @@ import javax.persistence.*;
 )
 @QueryByName(
         Name = Database.Query.Domain.ByName.name,
-        Field = "Name"
+        Fields = {"Name"}
 )
 @FetchFields(
         {

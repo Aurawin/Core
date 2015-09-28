@@ -10,6 +10,8 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DynamicInsert(value =true)
@@ -27,7 +29,7 @@ import javax.persistence.Table;
 )
 @QueryByName(
         Name = Database.Query.Cloud.Resource.ByName.name,
-        Field = "Name"
+        Fields = {"Name"}
 )
 @NamedQueries(
         {
@@ -65,6 +67,8 @@ public class Resource extends Stored{
         if (!group.Resources.contains(this)==true)
             group.Resources.add(this);
     }
+    @OneToMany(mappedBy = "Resource", targetEntity=Node.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    protected List<Node> Nodes = new ArrayList<Node>();
 
     public Resource(long id) {
         Id = id;

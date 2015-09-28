@@ -133,8 +133,10 @@ public class Entities {
         Session ssn = entities.Sessions.openSession();
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
-            Query q = ssn.getNamedQuery(qc.Name())
-                    .setString(qc.Field(), Name);
+            Query q = ssn.getNamedQuery(qc.Name());
+            for (String sF : qc.Fields()){
+                q.setString(sF, Name);
+            }
             return CofE.cast(q.uniqueResult());
         } finally{
             ssn.close();
