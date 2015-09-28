@@ -1,4 +1,4 @@
-package com.aurawin.core.storage.entities;
+package com.aurawin.core.stored.entities;
 
 
 import javax.persistence.*;

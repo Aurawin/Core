@@ -2,14 +2,12 @@ package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPair;
-import com.aurawin.core.array.VarString;
 import com.aurawin.core.rsr.def.*;
 
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
-import com.aurawin.core.rsr.def.http.Payload;
 
-import com.aurawin.core.storage.Define;
+import com.aurawin.core.stored.Define;
 import com.aurawin.core.stream.MemoryStream;
 
 public class Request implements QueryResolver {

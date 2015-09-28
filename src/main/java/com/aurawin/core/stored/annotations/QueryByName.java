@@ -1,4 +1,4 @@
-package com.aurawin.core.storage.annotations;
+package com.aurawin.core.stored.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

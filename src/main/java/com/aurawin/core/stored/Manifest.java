@@ -1,17 +1,17 @@
-package com.aurawin.core.storage;
+package com.aurawin.core.stored;
 
 
-import com.aurawin.core.storage.entities.UniqueId;
-import com.aurawin.core.storage.entities.cloud.*;
-import com.aurawin.core.storage.entities.domain.*;
+import com.aurawin.core.stored.entities.UniqueId;
+import com.aurawin.core.stored.entities.cloud.*;
+import com.aurawin.core.stored.entities.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.aurawin.core.lang.Namespace;
-import com.aurawin.core.storage.entities.domain.network.Folder;
-import com.aurawin.core.storage.entities.domain.network.Member;
-import com.aurawin.core.storage.entities.domain.network.Network;
+import com.aurawin.core.stored.entities.domain.network.Folder;
+import com.aurawin.core.stored.entities.domain.network.Member;
+import com.aurawin.core.stored.entities.domain.network.Network;
 import org.hibernate.Session;
 
 public class Manifest {

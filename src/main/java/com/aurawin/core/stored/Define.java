@@ -1,4 +1,4 @@
-package com.aurawin.core.storage;
+package com.aurawin.core.stored;
 
 public class Define {
     public static class Path{

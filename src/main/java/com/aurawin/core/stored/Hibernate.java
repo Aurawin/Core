@@ -1,9 +1,8 @@
-package com.aurawin.core.storage;
+package com.aurawin.core.stored;
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.storage.entities.Stored;
-import com.aurawin.core.storage.entities.UniqueId;
-import com.aurawin.core.storage.entities.domain.network.Network;
+import com.aurawin.core.stored.entities.Stored;
+import com.aurawin.core.stored.entities.domain.network.Network;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

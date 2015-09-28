@@ -1,4 +1,4 @@
-package com.aurawin.core.storage;
+package com.aurawin.core.stored;
 
 public enum Driver {
     Firebird ("org.firebirdsql.jdbc.FBDriver", "firebirdsql:$host/$port:$database"),

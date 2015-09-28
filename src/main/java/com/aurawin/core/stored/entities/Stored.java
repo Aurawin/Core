@@ -1,12 +1,6 @@
-package com.aurawin.core.storage.entities;
+package com.aurawin.core.stored.entities;
 
-import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 
 public abstract class Stored {

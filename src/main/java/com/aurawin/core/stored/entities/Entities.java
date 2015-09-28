@@ -1,13 +1,13 @@
-package com.aurawin.core.storage.entities;
+package com.aurawin.core.stored.entities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.storage.Hibernate;
-import com.aurawin.core.storage.Manifest;
-import com.aurawin.core.storage.annotations.*;
+import com.aurawin.core.stored.Hibernate;
+import com.aurawin.core.stored.Manifest;
+import com.aurawin.core.stored.annotations.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
