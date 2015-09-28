@@ -7,8 +7,8 @@
     <description>This library contains classes useful for implementing social computing and networking.</description>
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
-    <artifactId>com.aurawin.core</artifactId>
-    <version>experimental</version>
+    <artifactId>core</artifactId>
+    <version>2015.9.28</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -82,7 +82,7 @@
         <profile>
             <id>Experimental</id>
             <build>
-                <finalName>com.aurawin.core-experimental</finalName>
+                <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
                 <resources>
                     <resource>
                         <directory>${basedir}/src/main/resources/</directory>
