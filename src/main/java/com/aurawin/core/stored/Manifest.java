@@ -2,16 +2,14 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.entities.UniqueId;
-import com.aurawin.core.stored.entities.cloud.*;
-import com.aurawin.core.stored.entities.domain.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import com.aurawin.core.lang.Namespace;
-import com.aurawin.core.stored.entities.domain.network.Folder;
-import com.aurawin.core.stored.entities.domain.network.Member;
-import com.aurawin.core.stored.entities.domain.network.Network;
+//import com.aurawin.core.stored.entities.cloud.*;
+//import com.aurawin.core.stored.entities.domain.*;
+//import com.aurawin.core.stored.entities.domain.network.Folder;
+//import com.aurawin.core.stored.entities.domain.network.Member;
+//import com.aurawin.core.stored.entities.domain.network.Network;
 import org.hibernate.Session;
 
 public class Manifest {
@@ -47,26 +45,26 @@ public class Manifest {
         Dialect = Dialect.fromString(dialect);
         Driver = Driver.fromString(driver);
 
-        // basic
-        Annotated.add(Domain.class);
-        Annotated.add(UniqueId.class);
-        Annotated.add(UserAccount.class);
-        Annotated.add(RosterField.class);
-        Annotated.add(Roster.class);
-        Annotated.add(Network.class);
-
-        Annotated.add(Avatar.class);
-        Annotated.add(Member.class);
-        Annotated.add(Folder.class);
-
-        // cloud.*
-        Annotated.add(Group.class);
-        Annotated.add(Location.class);
-        Annotated.add(Node.class);
-        Annotated.add(Resource.class);
-        Annotated.add(Service.class);
-        Annotated.add(Transactions.class);
-        Annotated.add(Uptime.class);
+//        // basic
+//        Annotated.add(Domain.class);
+//        Annotated.add(UniqueId.class);
+//        Annotated.add(UserAccount.class);
+//        Annotated.add(RosterField.class);
+//        Annotated.add(Roster.class);
+//        Annotated.add(Network.class);
+//
+//        Annotated.add(Avatar.class);
+//        Annotated.add(Member.class);
+//        Annotated.add(Folder.class);
+//
+//        // cloud.*
+//        Annotated.add(Group.class);
+//        Annotated.add(Location.class);
+//        Annotated.add(Node.class);
+//        Annotated.add(Resource.class);
+//        Annotated.add(Service.class);
+//        Annotated.add(Transactions.class);
+//        Annotated.add(Uptime.class);
 
 
         Namespace.Register(Namespaces);
