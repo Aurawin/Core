@@ -8,7 +8,6 @@ import com.aurawin.core.storage.entities.Entities;
 import com.aurawin.core.storage.entities.Stored;
 import com.aurawin.core.storage.entities.cloud.Transactions;
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
@@ -67,9 +66,8 @@ public class Node extends Stored {
     public String getIP(){ return IP;}
     public void setIP(String ip){IP=ip;}
 
-    @ManyToOne(targetEntity = Resource.class,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @NotNull
-    @JoinColumn(name  = Database.Field.Cloud.Node.ResourceId)
+    @ManyToOne(targetEntity = Resource.class,cascade = CascadeType.ALL,fetch = FetchType.EAGER )
+    @JoinColumn(name  = Database.Field.Cloud.Node.ResourceId, nullable = false)
     protected Resource Resource;
     public Resource getResource(){return Resource;}
     public void setResource(Resource resource){
