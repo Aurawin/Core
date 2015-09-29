@@ -35,14 +35,13 @@ import javax.persistence.Table;
     }
 )
 
-public class UniqueId  {
+public class UniqueId extends Stored {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.UniqueId.Id)
     private long Id;
-    public long getId() {
-        return Id;
-    }
+    @Override
+    public long getId(){return Id;}
 
     @Column(name = Database.Field.UniqueId.Namespace, unique = true)
     private String Namespace;
@@ -93,4 +92,7 @@ public class UniqueId  {
             }
         }
     }
+    public static void entityCreated(Entities List, Stored Entity){}
+    public static void entityDeleted(Entities List, Stored Entity, boolean Cascade){}
+    public static void entityUpdated(Entities List, Stored Entity, boolean Cascade){}
 }

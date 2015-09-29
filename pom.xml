@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>Aurwain Core</name>
+    <name>Core</name>
     <description>This library contains classes useful for implementing social computing and networking.</description>
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
     <artifactId>core</artifactId>
-    <version>2015.9.28</version>
+    <version>2015.9.28.3</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -108,7 +108,7 @@
         <profile>
             <id>Release</id>
             <build>
-                <finalName>com.aurawin.core</finalName>
+                <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
                 <resources>
                     <resource>
                         <directory>${basedir}/src/main/resources/</directory>

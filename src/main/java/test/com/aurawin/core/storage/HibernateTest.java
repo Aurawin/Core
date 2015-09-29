@@ -3,11 +3,15 @@ package test.com.aurawin.core.storage;
 import com.aurawin.core.lang.*;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
+import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.entities.Stored;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+
+import java.util.ArrayList;
 
 public class HibernateTest {
     private SessionFactory sf;
@@ -16,6 +20,8 @@ public class HibernateTest {
 
     @Before
     public void before() throws Exception {
+        StoredAnnotations annotations = new StoredAnnotations();
+
         Manifest = new Manifest(
                 "Test",                                 // username
                 "Test",                                 // password
@@ -29,7 +35,8 @@ public class HibernateTest {
                 Database.Config.Automatic.Update,       //
                 "Test",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
-                Driver.Postgresql.getValue()            // Driver
+                Driver.Postgresql.getValue(),           // Driver
+                annotations
         );
         sf = Hibernate.openSession(Manifest);
         ssn = sf.openSession();
