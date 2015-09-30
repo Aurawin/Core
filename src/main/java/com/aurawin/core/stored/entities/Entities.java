@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.Manifest;
+import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.*;
 import org.hibernate.Query;
 import org.hibernate.Session;

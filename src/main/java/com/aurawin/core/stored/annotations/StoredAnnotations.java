@@ -1,6 +1,6 @@
 package com.aurawin.core.stored.annotations;
 
-import com.aurawin.core.stored.entities.Stored;
+import com.aurawin.core.stored.Stored;
 
 import java.util.ArrayList;
 

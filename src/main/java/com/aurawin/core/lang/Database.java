@@ -19,12 +19,11 @@ public class Database {
             public static class Network{
                 public static final String List = "tbl_d_ntk";
                 public static final String Member = "tbl_d_ntk_m";
+                public static final String Folder= "tbl_d_frs";
+                public static final String File= "tbl_d_fls";
             }
             public static final String Items = "tbl_d_itm";
             public static final String UserAccounts = "tbl_d_uas";
-            public static final String Folder= "tbl_d_frs";
-            public static final String File= "tbl_d_fls";
-
             public static final String Avatar = "tbl_d_avr";
             public static final String Roster = "tbl_d_rtr";
             public static final String RosterField = "tbl_d_rtf";
@@ -206,25 +205,47 @@ public class Database {
                 }
                 public static class Folder {
                     public static class ByPath {
-                        public static final String name = "QueryDomainFolderByPath";
-                        public static final String value = "from Folder where DomainId=:DomainId and OwnerId=:OwnerId and Path=:Path";
-
-                        public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId, long NetworkId, String Path) {
+                        public static final String name = "QueryDomainNetworkFolderByPath";
+                        public static final String value = "from Folder where DomainId=:DomainId and NetworkId=:NetworkId and Path=:Path";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, String Path) {
                             return ssn.getNamedQuery(name)
                                     .setLong("DomainId", DomainId)
-                                    .setLong("OwnerId", OwnerId)
                                     .setLong("NetworkId", NetworkId)
                                     .setString("Path", Path);
                         }
                     }
 
                     public static class ById {
-                        public static final String name = "QueryDomainFolderById";
+                        public static final String name = "QueryDomainNetworkFolderById";
                         public static final String value = "from Folder where DomainId=:DomainId and Id=:Id";
 
                         public static org.hibernate.Query Create(Session ssn, long DomainId, long Id) {
                             return ssn.getNamedQuery(name)
                                     .setLong("DomainId", DomainId)
+                                    .setLong("Id", Id);
+                        }
+                    }
+                }
+                public static class File {
+                    public static class ByName {
+                        public static final String name = "QueryDomainNetworkFileByName";
+                        public static final String value = "from File where DomainId=:DomainId and NetworkId=:NetworkId and FolderId=:FolderId";
+
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, long FolderId) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("NetworkId", NetworkId)
+                                    .setLong("FolderId", FolderId);
+                        }
+                    }
+
+                    public static class ById {
+                        public static final String name = "QueryDomainNetworkFolderById";
+                        public static final String value = "from File where DomainId=:DomainId and NetworkId=:NetworkId and Id=:Id";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, long Id) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("NetworkId", NetworkId)
                                     .setLong("Id", Id);
                         }
                     }
@@ -339,8 +360,6 @@ public class Database {
             public static final String DefaultOptionCatchAll="itmdca";
             public static final String DefaultOptionQuota="itmdqo";
             public static final String DefaultOptionFiltering="itmdfl";
-
-
             public static class UserAccount{
                 public static final String Id="itmid";
                 public static final String DomainId="itmdi";
@@ -359,6 +378,7 @@ public class Database {
                 public static final String LastConsumptionCalc="itmlcc";
                 public static final String Consumption="itmcspn";
                 public static final String Quota="itmquo";
+                public static final String AllowLogin="italgn";
             }
             public static class Roster{
                 public static final String Id = "itmid";

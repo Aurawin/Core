@@ -1,7 +1,6 @@
 package com.aurawin.core.stored;
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.stored.entities.Stored;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

@@ -1,7 +1,7 @@
 package com.aurawin.core.stored.annotations;
 
 
-import com.aurawin.core.stored.entities.Stored;
+import com.aurawin.core.stored.Stored;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

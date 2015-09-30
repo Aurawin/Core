@@ -2,7 +2,6 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.annotations.StoredAnnotations;
-import com.aurawin.core.stored.entities.Stored;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
 import java.util.List;

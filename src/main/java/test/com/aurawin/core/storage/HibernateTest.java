@@ -4,14 +4,11 @@ import com.aurawin.core.lang.*;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.annotations.StoredAnnotations;
-import com.aurawin.core.stored.entities.Stored;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
-
-import java.util.ArrayList;
 
 public class HibernateTest {
     private SessionFactory sf;

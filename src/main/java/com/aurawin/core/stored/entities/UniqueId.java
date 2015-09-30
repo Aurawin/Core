@@ -4,6 +4,7 @@ package com.aurawin.core.stored.entities;
 import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.stored.Stored;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
