@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.json.JSONObject;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -65,7 +66,10 @@ public class UniqueId extends Stored {
         Id = src.Id;
         Namespace = src.Namespace;
     }
-
+    public void Empty(){
+        Id = 0;
+        Namespace="";
+    }
     @Override
     public boolean equals(Object u) {
         return (
@@ -93,6 +97,7 @@ public class UniqueId extends Stored {
             }
         }
     }
+
     public static void entityCreated(Entities List, Stored Entity){}
     public static void entityDeleted(Entities List, Stored Entity, boolean Cascade){}
     public static void entityUpdated(Entities List, Stored Entity, boolean Cascade){}

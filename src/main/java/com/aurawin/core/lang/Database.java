@@ -28,8 +28,23 @@ public class Database {
             public static final String Roster = "tbl_d_rtr";
             public static final String RosterField = "tbl_d_rtf";
 
+            public static class Vendor {
+                public static final String Items = "tbl_d_v_itm";
+                public static class Hawker {
+                    public static final String Items = "tbl_d_v_h";
+                    public static class Manifest {
+                        public static final String Items = "tbl_d_v_h_m";
+                        public static class Field{
+                            public static final String Items = "tbl_d_v_h_m_f";
+                        }
+                    }
+
+                }
+            }
         }
+
         public static final String UniqueId = "tbl_k_uid";
+
     }
     public static class Query{
         public static class Cloud{
@@ -162,6 +177,73 @@ public class Database {
                 public static org.hibernate.Query Create(Session ssn, String Name){
                     return ssn.getNamedQuery(name)
                             .setString("Name", Name);
+                }
+            }
+            public static class Vendor{
+                public static class ByNamespace{
+                    public static final String name = "QueryDomainVendorByNamespace";
+                    public static final String value = "from Vendor where DomainId=:DomainId and Namespace=:Namespace";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId, String Namespace){
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId", DomainId)
+                                .setString("Namespace", Namespace);
+                    }
+                }
+                public static class ById {
+                    public static final String name = "QueryDomainVendorById";
+                    public static final String value = "from Vendor where DomainId=:DomainId and Id=:Id";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId,long Id){
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId",DomainId)
+                                .setLong("Id", Id);
+                    }
+                }
+                public static class Hawker {
+                    public static class ByNamespace{
+                        public static final String name = "QueryDomainVendorHawkerByNamespace";
+                        public static final String value = "from Hawker where DomainId=:DomainId and VendorId=:VendorId and Namespace=:Namespace";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long VendorId, String Namespace){
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("VendorId", VendorId)
+                                    .setString("Namespace", Namespace);
+                        }
+                    }
+                    public static class ById{
+                        public static final String name = "QueryDomainVendorHawkerById";
+                        public static final String value = "from Hawker where DomainId=:DomainId and VendorId=:VendorId and Id=:Id";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long VendorId,long Id){
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId)
+                                    .setLong("VendorId", VendorId)
+                                    .setLong("Id", Id);
+                        }
+                    }
+                    public static class Manifest {
+                        public static class ById {
+                            public static final String name = "QueryDomainVendorHawkerManifestById";
+                            public static final String value = "from Manifest where DomainId=:DomainId and Id=:Id";
+                            public static org.hibernate.Query Create(Session ssn, long DomainId, long Id) {
+                                return ssn.getNamedQuery(name)
+                                        .setLong("DomainId", DomainId)
+                                        .setLong("Id", Id);
+                            }
+                        }
+                        public static class Field {
+                            public static class ById{
+                                public static final String name = "QueryDomainVendorHawkerManifestById";
+                                public static final String value = "from ManifestField where DomainId=:DomainId and VendorId=:VendorId and OwnerId:OwnerId and Id=:Id";
+                                public static org.hibernate.Query Create(Session ssn, long DomainId, long VendorId, long OwnerId, long Id){
+                                    return ssn.getNamedQuery(name)
+                                            .setLong("DomainId", DomainId)
+                                            .setLong("VendorId", VendorId)
+                                            .setLong("OwnerId", OwnerId)
+                                            .setLong("Id", Id);
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
             public static class UserAccount{
@@ -462,8 +544,41 @@ public class Database {
 
                 }
             }
+            public static class Entities {
+                public static class Vendor {
+                    public static final String Id = "itmid";
+                    public static final String DomainId = "itmdi";
+                    public static final String OwnerId = "ioid";
+                    public static final String NetworkId = "inid";
+                    public static final String Namespace = "imsn";
+                    public static final String Created = "ictd";
+                    public static final String Modified = "imtd";
+
+                    public static class Hawker {
+                        public static final String Id = "itmid";
+                        public static final String DomainId = "itmdi";
+                        public static final String VendorId = "itmvi";
+
+                        public static class Manifest {
+                            public static final String Id = "itmid";
+                            public static final String DomainId = "itmdi";
+                            public static final String VendorId = "itmvi";
+
+                            public static class Fields {
+                                public static final String Id = "itmid";
+                                public static final String DomainId = "itmdi";
+                                public static final String VendorId = "itmvi";
+                                public static final String OwnerId = "itoid";
+                                public static final String Name = "itnme";
+                                public static final String DefaultLength="dlgth";
+                            }
+                        }
+                    }
 
 
+
+                }
+            }
         }
     }
     public static class Config{

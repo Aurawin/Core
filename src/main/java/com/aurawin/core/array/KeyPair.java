@@ -34,9 +34,20 @@ public class KeyPair extends ArrayList<KeyItem> {
             Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.eoSingleton));
         }
     }
+    public KeyPair(KeyPair value){
+        Assign(value);
+    }
 
     public KeyPair(){
 
+    }
+    public void Assign(KeyPair value){
+        DelimiterField=value.DelimiterField;
+        DelimiterItem=value.DelimiterItem;
+        clear();
+        for (KeyItem ki : value){
+            add(new KeyItem(ki));
+        }
     }
     public void Load(String Data){
         String[] saItems = Data.split(DelimiterItem);

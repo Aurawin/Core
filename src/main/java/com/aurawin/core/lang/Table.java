@@ -209,15 +209,23 @@ public class Table {
 
         }
 
-        public static class Entities{
+        public static class Entities {
             public static final String EntityCreatedMethodNotDefined = "table.exception.entities.entity-created-method-not-defined";
             public static final String EntityDeletedMethodNotDefined = "table.exception.entities.entity-deleted-method-not-defined";
             public static final String EntityUpdatedMethodNotDefined = "table.exception.entities.entity-updated-method-not-defined";
+
             public static final String EntityAnnotationForFetchNotDefined = "table.exception.entities.entity-annotation-for-fetch-not-defined";
             public static class UniqueId {
                 public static String UnableToCreateNamespaceEmpty = "table.exception.entities.uniqueid.unable-to-create-namespace-empty";
             }
+            public static class Vendor {
+                public static class Manifest{
+                    public static class Field{
+                        public static final String ValueIsNotOfType = "table.exception.entities.vendor.manifest.value-is-not-of-type";
+                    }
+                }
 
+            }
             public static class Domain{
                 public static String UnableToCreateExists = "table.exception.entities.domain.unable-to-create-domain-exists";
                 public static class Network{

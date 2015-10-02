@@ -8,6 +8,13 @@ public class KeyItem {
     public long Id;
     public Object Data;
 
+    public void Assign(KeyItem value){
+        Name=value.Name;
+        Value=value.Value;
+        Id=value.Id;
+        Data= value.Data;
+    }
+
     public KeyItem() {
         this.Name="";
         this.Value="";
@@ -25,5 +32,8 @@ public class KeyItem {
         this.Value=value;
         this.Id=0;
         this.Data=null;
+    }
+    public KeyItem(KeyItem value){
+        this.Assign(value);
     }
 }
