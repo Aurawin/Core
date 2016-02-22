@@ -12,12 +12,13 @@ import com.aurawin.core.rsr.def.rsrResult;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
+import com.aurawin.core.rsr.transport.ITransport;
 import com.aurawin.core.time.Time;
 
 import java.util.Date;
 
 
-public class http_1_1 extends Item {
+public class http_1_1 extends Item implements ITransport{
     public static final String Protocol = "HTTP";
     public volatile Request Request;
     public volatile Response Response;
@@ -25,6 +26,7 @@ public class http_1_1 extends Item {
 
     public http_1_1(Items aOwner) {
         super(aOwner);
+
         Request=new Request(this);
         Request.Version.Major=1;
         Request.Version.Minor=1;
@@ -39,10 +41,10 @@ public class http_1_1 extends Item {
         return new http_1_1(aOwner);
     }
 
+
     public rsrResult onPeek() {
         return Request.Peek();
     }
-
     public rsrResult onProcess() {
         if (Request.Read()==rSuccess) {
             // todo process request

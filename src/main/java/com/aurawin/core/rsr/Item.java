@@ -13,7 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.EnumSet;
 
-public abstract class Item implements ITransport {
+public abstract class Item  implements ITransport{
     public volatile Buffers Buffers;
     protected boolean Infinite;
     protected Items Owner;
@@ -21,11 +21,8 @@ public abstract class Item implements ITransport {
     protected SelectionKey Key;
     protected Date TTL;
     protected int Timeout;
-
     protected ItemState State;
     protected EnumSet<ItemError> Errors;
-
-
 
     public Item(Items aOwner){
         if (aOwner!=null){
