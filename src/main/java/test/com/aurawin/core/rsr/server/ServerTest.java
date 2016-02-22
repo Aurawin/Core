@@ -1,7 +1,5 @@
 package test.com.aurawin.core.rsr.server; 
 
-import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.server.Server;
 import com.aurawin.core.solution.Settings;
@@ -9,10 +7,8 @@ import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
-import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetSocketAddress;
-import com.aurawin.core.rsr.server.Implements.http_1_1;
+import com.aurawin.core.rsr.transport.http_1_1;
 
 /** 
 * Server Tester. 
@@ -51,7 +47,7 @@ public void testRun() throws Exception {
     System.out.println("ServerTest.serverHTTP running");
     while (serverHTTP.State!= EngineState.esFinalize) {
 
-    };
+    }
 } 
 
 /** 
