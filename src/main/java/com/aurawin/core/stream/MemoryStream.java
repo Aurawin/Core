@@ -9,6 +9,7 @@ import java.nio.channels.SeekableByteChannel;
 import java.util.LinkedList;
 
 public class MemoryStream extends Channel {
+    public static Integer MaxChunkSize = 1024*1024*512;
 
     private LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
@@ -47,10 +48,31 @@ public class MemoryStream extends Channel {
         // write entire to
         if (src.hasRemaining()==true){
             int iWrite=src.remaining();
-            byte[] Chunk= new byte[iWrite];
-            src.get(Chunk,src.position(),iWrite);
+
+
+            byte[] Chunk = null;
+            byte[] baAppend = new byte[iWrite];
+            src.get(baAppend, src.position(), iWrite);
             src.clear();
-            Collection.add(Chunk);
+
+            if (Collection.size()>=1) {
+                Chunk = Collection.removeLast();
+            }
+
+            if ( (Chunk!=null) && (Chunk.length+iWrite>MaxChunkSize)) {
+                Collection.add(baAppend);
+            } else if (Chunk==null){
+                Collection.add(baAppend);
+            } else {
+                byte [] baComb = new byte[Chunk.length+iWrite];
+                System.arraycopy(Chunk,0,baComb,0,Chunk.length);
+                System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
+
+                Collection.add(baComb);
+            }
+
+
+
             Size+=iWrite;
             return iWrite;
         } else {
@@ -224,7 +246,7 @@ public class MemoryStream extends Channel {
         int iOffset=0;
         int iChunk=0;
 
-        while ( (iLcv<Collection.size()) && (Position<Size) ) {
+        while ( (iLcv<Collection.size()) && (Position<=Size) ) {
             iColSize=Collection.get(iLcv).length;
             if (iPreSeek+iColSize>=Position) {
                 // this array is the current []
@@ -285,6 +307,8 @@ public class MemoryStream extends Channel {
         int iColSize=0;
         int iTermLen=0;
         byte[] bTerm = null;
+        byte[] bWindow = null;
+        byte[] col = null;
         try {
             bTerm=Term.getBytes("UTF-8");
             iTermLen=bTerm.length;
@@ -293,8 +317,8 @@ public class MemoryStream extends Channel {
         }
 
         while ( (iLcv<Collection.size()) && (iSeek<Size) ) {
-            iColSize = Collection.get(iLcv).length;
-            if (iPreSeek+iColSize>=Position) {
+            col = Collection.get(iLcv);
+            if (iPreSeek+col.length>=Position) {
                 idxTerm = Bytes.indexOf(Collection.get(iLcv), bTerm);
                 if (idxTerm > -1) {
                     iResult = idxTerm + iPreSeek;
@@ -303,6 +327,7 @@ public class MemoryStream extends Channel {
                     iSeek += iColSize;
                     iLcv++;
                 }
+
             } else {
                 iPreSeek+=iColSize;
             }

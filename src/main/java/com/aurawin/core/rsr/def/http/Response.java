@@ -18,6 +18,20 @@ public class Response {
 
     public Response(Item aOwner) {
         Owner = aOwner;
+        Headers = new KeyPair();
+        Headers.DelimiterItem="\r\n";
+        Headers.DelimiterField=": ";
+
+        Cookies = new KeyPair();
+        Cookies.DelimiterItem="; ";
+        Cookies.DelimiterField="=";
+
+        Parameters = new KeyPair();
+        Parameters.DelimiterItem="&";
+        Parameters.DelimiterField="=";
+
+        Credentials = new Credentials();
+
         FData=new MemoryStream();
         Version = new Version(1,1);
     }

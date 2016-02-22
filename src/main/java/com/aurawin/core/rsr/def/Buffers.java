@@ -1,24 +1,25 @@
 package com.aurawin.core.rsr.def;
 
+
 import com.aurawin.core.stream.MemoryStream;
 
 public class Buffers {
-    public MemoryStream Read;
-    public MemoryStream Write;
+    public MemoryStream Recv;
+    public MemoryStream Send;
 
     public Buffers() {
-        Read = new MemoryStream();
-        Write = new MemoryStream();
+        Recv = new MemoryStream();
+        Send = new MemoryStream();
     }
 
     public void Reset(){
-        Read.Clear();
-        Write.Clear();
+        Recv.Clear();
+        Send.Clear();
     }
     public void Release(){
         Reset();
-        Read=null;
-        Write=null;
+        Recv=null;
+        Send=null;
     }
 
 

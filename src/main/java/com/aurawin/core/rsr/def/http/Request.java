@@ -81,27 +81,29 @@ public class Request implements QueryResolver {
         ETag=null;
     }
     public rsrResult Peek(){
-        long iLoc=Owner.Buffers.Read.Find(Payload.Separator);
+        long iLoc=Owner.Buffers.Recv.Find(Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Read.Read(0,(int) (iLoc+Payload.Separator.length()),true ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Payload.Separator.length()),true ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                return ( (cLen==0) || ( (cLen+iLoc+3)<=Owner.Buffers.Read.Size) ) ? rSuccess : rPostpone;
+                return ( (cLen==0) || ( (cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
             } else{
                 return rPostpone;
             }
+        } else if (Owner.Buffers.Recv.Size<Payload.MaxHeaderSize) {
+            return rPostpone;
         } else {
             return rFailure;
         }
     }
     public rsrResult Read(){
         Reset();
-        long iLoc=Owner.Buffers.Read.Find(Payload.Separator);
+        long iLoc=Owner.Buffers.Recv.Find(Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Read.Read(0,(int) (iLoc+Payload.Separator.length()),false ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Payload.Separator.length()),false ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                if ( (cLen==0) || ((cLen+iLoc+3)<=Owner.Buffers.Read.Size) ) {
-                    Owner.Buffers.Read.Position=iLoc + 3;
-                    Content.Move(Owner.Buffers.Read,cLen);
+                if ( (cLen==0) || ((cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) {
+                    Owner.Buffers.Recv.Position=iLoc + 3;
+                    Content.Move(Owner.Buffers.Recv,cLen);
                     return rSuccess;
                 } else {
                     return rPostpone;
@@ -117,7 +119,7 @@ public class Request implements QueryResolver {
         int iOffset = 0;
         int idxHeadersEnd = 0;
         int idxLineEnd = 0;
-        int len = 0;
+        int len = input.length;
         int iChunk = 0;
         byte [] aLine;
         byte [] aHeaders;
@@ -125,6 +127,7 @@ public class Request implements QueryResolver {
         String sLine;
 
         // METHOD URI VERSION
+
         idxLineEnd=Bytes.indexOf(input,Bytes.CRLF,0);
         idxHeadersEnd =Bytes.indexOf(input,Payload.Separator.getBytes(),0);
         if ( (idxLineEnd>-1) && (idxHeadersEnd>-1)) {
@@ -145,7 +148,7 @@ public class Request implements QueryResolver {
                     }
                     // Load Headers
                     iOffset = idxLineEnd + 2;
-                    iChunk = idxHeadersEnd - 1 - iOffset;
+                    iChunk = idxHeadersEnd - (iOffset) + 2;
                     aHeaders = new byte[iChunk];
                     System.arraycopy(input, iOffset, aHeaders, 0, iChunk);
                     Headers.Load(aHeaders);

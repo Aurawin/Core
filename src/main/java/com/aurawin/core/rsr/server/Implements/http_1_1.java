@@ -1,63 +1,90 @@
 package com.aurawin.core.rsr.server.Implements;
 
+
+import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.def.*;
+import com.aurawin.core.rsr.def.ResolveResult;
+import static com.aurawin.core.rsr.def.http.Payload.*;
+import static com.aurawin.core.rsr.def.ResolveResult.*;
+import com.aurawin.core.rsr.def.http.*;
+import static com.aurawin.core.rsr.def.http.Status.*;
 import com.aurawin.core.rsr.def.rsrResult;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
-import com.aurawin.core.rsr.def.http.*;
+import com.aurawin.core.time.Time;
+
+import java.util.Date;
+
 
 public class http_1_1 extends Item {
+    public static final String Protocol = "HTTP";
     public volatile Request Request;
     public volatile Response Response;
+    public ResolveResult Resolution;
 
     public http_1_1(Items aOwner) {
         super(aOwner);
         Request=new Request(this);
+        Request.Version.Major=1;
+        Request.Version.Minor=1;
+
         Response=new Response(this);
+        Response.Version.Major=1;
+        Response.Version.Minor=1;
 
     }
     @Override
     public http_1_1 newInstance(Items aOwner){
         return new http_1_1(aOwner);
     }
-    @Override
-    protected rsrResult onPeek() {
+
+    public rsrResult onPeek() {
         return Request.Peek();
     }
 
-    @Override
-    protected rsrResult onProcess() {
+    public rsrResult onProcess() {
         if (Request.Read()==rSuccess) {
             // todo process request
-            Request.Resolve();
+            Resolution = Request.Resolve();
+            switch (Resolution) {
+                case rrCore :
+                    //todo additional processing required.
+                    break;
+                case rrFile :
+                    //todo find actual file in dbms
+                    this.Response.Status=s200;
+                    Respond();
+                    break;
+                case rrNotFound:
+                    this.Response.Status=s404;
+                    Respond();
+                    break;
+
+            }
             return rSuccess;
         } else {
             return rFailure;
         }
     }
 
-    @Override
-    protected rsrResult onDisconnected() {
+    public rsrResult onDisconnected() {
         return rSuccess;
     }
 
-    @Override
-    protected rsrResult onAccepted() {
+    public rsrResult onAccepted() {
         return rSuccess;
     }
 
-    @Override
-    protected rsrResult onRejected() {
+    public rsrResult onRejected() {
         return rSuccess;
     }
 
-    @Override
-    protected rsrResult onError() {
+    public  rsrResult onError() {
         return rSuccess;
     }
 
-    @Override
-    protected rsrResult onFinalize() {
+    public rsrResult onFinalize() {
         Request.Release();
         Response.Release();
 
@@ -67,9 +94,31 @@ public class http_1_1 extends Item {
         return rSuccess;
     }
 
-    @Override
-    protected rsrResult onInitialize() {
+    public rsrResult onInitialize() {
         return rSuccess;
 
+    }
+    private void Prepare(){
+
+        Response.Headers.Update(Field.ContentLength,"0");
+        Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
+        Response.Headers.Update(Field.Host,Owner.getHostName());
+    };
+
+    private String getHeaders(){
+        Prepare();
+        return Response.Headers.Stream();
+    }
+    private String getCommandLine(){
+        return this.Protocol+"/"+this.Response.Version.Major+"."+this.Response.Version.Minor+ " " +Response.Status.getValue()+Table.CRLF;
+    }
+    protected void Respond() {
+        this.Buffers.Send.position(this.Buffers.Send.size());
+        this.Buffers.Send.Write(this.getCommandLine());
+
+        this.Buffers.Send.Write(this.getHeaders());
+        this.Buffers.Send.Write(Payload.Separator);
+
+        queueSend();
     }
 }

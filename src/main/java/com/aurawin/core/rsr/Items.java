@@ -87,6 +87,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             // do nothing
         }
     }
+    public String getHostName(){
+        return Engine.HostName;
+    }
     private void processItems(){
         // process add items
         itm = qAddItems.poll();
@@ -113,7 +116,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             }
             itm=qAddItems.poll();
         }
-        // process add items
+        // process remove items
         itm = qRemoveItems.poll();
         while (itm!=null){
             try {
@@ -173,7 +176,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                         break;
                                 }
 
-                            } else {
+                            } else if (itm.Channel.isConnected()==false) {
                                 itm.Errors.add(eReset);
                                 evResult=itm.onError();
                                 itm.Teardown();

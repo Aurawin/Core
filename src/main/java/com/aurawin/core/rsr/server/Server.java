@@ -20,8 +20,8 @@ public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
 
-    public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate) throws IOException,NoSuchMethodException {
-        super (aRootItem,aInfinate);
+    public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
+        super (aRootItem,aInfinate,aHostName);
         State = esCreated;
         address = sa;
         cListen = ServerSocketChannel.open();
@@ -33,7 +33,8 @@ public class Server extends Engine {
                 case esRun:
                     try {
                         SocketChannel chRemote = cListen.accept();
-                        if (chRemote!=null) Managers.Accept(chRemote);
+                        if (chRemote!=null)
+                            Managers.Accept(chRemote);
                     } catch (IOException ioe) {
                         Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
                         try{

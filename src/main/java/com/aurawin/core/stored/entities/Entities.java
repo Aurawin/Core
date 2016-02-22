@@ -2,6 +2,7 @@ package com.aurawin.core.stored.entities;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.aurawin.core.lang.Table;
@@ -164,6 +165,20 @@ public class Entities {
                 Query q = ssn.getNamedQuery(qc.Name())
                         .setLong("Id", Id);
                 return CofE.cast(q.uniqueResult());
+            } else {
+                return null;
+            }
+        } finally{
+            ssn.close();
+        }
+    }
+    public static ArrayList<Stored> Lookup(QueryByDomainId aQuery, Entities entities, long Id) throws Exception{
+        Session ssn = entities.Sessions.openSession();
+        try {
+            Query q = ssn.getNamedQuery(aQuery.Name())
+                    .setLong("DomainId",Id);
+            if (q!=null){
+                return new ArrayList(q.list());
             } else {
                 return null;
             }

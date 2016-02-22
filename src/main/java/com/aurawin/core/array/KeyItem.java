@@ -7,12 +7,14 @@ public class KeyItem {
     public String Value;
     public long Id;
     public Object Data;
+    public Boolean Streams;
 
     public void Assign(KeyItem value){
         Name=value.Name;
         Value=value.Value;
         Id=value.Id;
         Data= value.Data;
+        Streams = value.Streams;
     }
 
     public KeyItem() {
@@ -20,18 +22,21 @@ public class KeyItem {
         this.Value="";
         this.Id=0;
         this.Data=null;
+        this.Streams=true;
     }
     public KeyItem(String name){
         this.Name=name;
         this.Value="";
         this.Id=0;
         this.Data=null;
+        this.Streams=true;
     }
     public KeyItem(String name, String value){
         this.Name=name;
         this.Value=value;
         this.Id=0;
         this.Data=null;
+        this.Streams=true;
     }
     public KeyItem(KeyItem value){
         this.Assign(value);

@@ -1,5 +1,6 @@
 package com.aurawin.core.array;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ public class KeyPair extends ArrayList<KeyItem> {
         if (ki!=null) add(ki);
         return ki;
     }
+
     public KeyPair(String args){
         String[] saItems = args.split(DelimiterItem);
         for (String sItem : saItems) {
@@ -40,6 +42,17 @@ public class KeyPair extends ArrayList<KeyItem> {
 
     public KeyPair(){
 
+    }
+    public KeyItem Update(String Name, String Value){
+        for (KeyItem itm : this){
+            if (itm.Name.compareTo(Name)==0) {
+                itm.Value=Value;
+                return itm;
+            }
+        }
+        KeyItem itm = new KeyItem(Name,Value);
+        this.add(itm);
+        return itm;
     }
     public void Assign(KeyPair value){
         DelimiterField=value.DelimiterField;
@@ -69,6 +82,20 @@ public class KeyPair extends ArrayList<KeyItem> {
             saItem=VarString.Extract(Bytes.toString(bItem),DelimiterField, VarString.ExtractOption.eoSingleton);
             Append(saItem);
         }
+    }
+    public String Stream(){
+        KeyItem itm = null;
+        StringBuilder sr = new StringBuilder();
+
+        for (Iterator<KeyItem> itr = this.iterator(); itr.hasNext(); ){
+            itm=itr.next();
+            if (itm.Streams==true) {
+                sr.append(itm.Name+DelimiterField+itm.Value+DelimiterItem);
+            }
+        }
+        int len = sr.length();
+        if (len>0) sr.setLength(len-DelimiterItem.length());
+        return sr.toString();
     }
     public String ValueAsString(String Name){
         KeyItem itm = null;

@@ -73,6 +73,8 @@ public class Field {
     public final static String SecWebSocketVersionClient = "Sec-WebSocket-Version-Client";
     public final static String SecWebSocketVersionServer = "Sec-WebSocket-Version-Server";
 
+    public final static String TransferEncoding = "Transfer-Encoding";
+
     public final static String Parameters = "Parameters";
     public final static String ETag = "ETag";
     public final static String Id = "ID";

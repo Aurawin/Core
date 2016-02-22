@@ -14,7 +14,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.EnumSet;
 
-public abstract class Item {
+public abstract class Item implements IItem{
     public volatile Buffers Buffers;
     protected boolean Infinite;
     protected Items Owner;
@@ -26,14 +26,7 @@ public abstract class Item {
     protected ItemState State;
     protected EnumSet<ItemError> Errors;
 
-    protected abstract rsrResult onPeek();
-    protected abstract rsrResult onProcess();
-    protected abstract rsrResult onDisconnected();
-    protected abstract rsrResult onAccepted();
-    protected abstract rsrResult onRejected();
-    protected abstract rsrResult onError();
-    protected abstract rsrResult onFinalize();
-    protected abstract rsrResult onInitialize();
+
 
     public Item(Items aOwner){
         if (aOwner!=null){
@@ -66,6 +59,9 @@ public abstract class Item {
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Time.incMilliSeconds(new Date(),Timeout);
     }
+    public String getHostName(){
+        return Owner.getHostName();
+    }
     public void Teardown(){
         if (Channel.isConnected()==true) {
             try{
@@ -80,6 +76,9 @@ public abstract class Item {
         Owner.qRemoveItems.add(this);
         Owner.qWriteItems.remove(this);
     }
+    public void queueSend(){
+        Owner.qWriteItems.add(this);
+    }
     public int Read(){
         if (Channel.isConnected()==true) {
             Owner.BufferRead.clear();
@@ -89,7 +88,7 @@ public abstract class Item {
                 return 0;
             }
             Owner.BufferRead.flip();
-            int iWrite = Buffers.Read.write(Owner.BufferRead);
+            int iWrite = Buffers.Recv.write(Owner.BufferRead);
             Owner.BufferRead.clear();
             return iWrite;
         } else {
@@ -98,10 +97,12 @@ public abstract class Item {
     }
     public int Write(){
         int iWritten=0;
-        if (Buffers.Write.Size>0) {
+        if (Buffers.Send.Size>0) {
+
+
             Owner.BufferWrite.clear();
-            // initially  1 MB buffer copy
-            Buffers.Write.read(Owner.BufferWrite);
+
+            Buffers.Send.read(Owner.BufferWrite);
             Owner.BufferWrite.flip();
             while (Owner.BufferWrite.hasRemaining()) {
                 try {
@@ -109,12 +110,13 @@ public abstract class Item {
                 } catch (IOException ioe){
                     return -1;
                 }
-                Owner.BufferWrite.compact();
+
             }
-            Buffers.Write.sliceAtPosition();
-            if (Buffers.Write.Size==0) Owner.qWriteItems.remove(this);
+            Owner.BufferWrite.clear();
+            Buffers.Send.sliceAtPosition();
+            if (Buffers.Send.Size==0) Owner.qWriteItems.remove(this);
         } else {
-            if (Buffers.Write.Size == 0) Owner.qWriteItems.remove(this);
+            if (Buffers.Send.Size == 0) Owner.qWriteItems.remove(this);
         }
         return iWritten;
     }

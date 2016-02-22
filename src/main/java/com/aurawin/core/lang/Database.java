@@ -16,35 +16,36 @@ public class Database {
             public static final String Service="tbl_c_s";
         }
         public static class Domain{
+            public static final String Items = "tbl_d_itm";
+            public static final String Avatar = "tbl_d_avr";
             public static class Network{
                 public static final String List = "tbl_d_ntk";
                 public static final String Member = "tbl_d_ntk_m";
                 public static final String Folder= "tbl_d_frs";
                 public static final String File= "tbl_d_fls";
             }
-            public static final String Items = "tbl_d_itm";
-            public static final String UserAccounts = "tbl_d_uas";
-            public static final String Avatar = "tbl_d_avr";
-            public static final String Roster = "tbl_d_rtr";
-            public static final String RosterField = "tbl_d_rtf";
-
+            public static class UserAccount{
+                public static final String Items = "tbl_d_uas";
+                public static class Roster {
+                    public static final String Items = "tbl_d_uas_rtr";
+                    public static final String Field = "tbl_d_uas_rtf";
+                }
+            }
             public static class Vendor {
                 public static final String Items = "tbl_d_v_itm";
                 public static class Hawker {
                     public static final String Items = "tbl_d_v_h";
-                    public static class Manifest {
-                        public static final String Items = "tbl_d_v_h_m";
+                    public static class Item {
+                        public static final String Items = "tbl_d_v_h_i";
                         public static class Field{
-                            public static final String Items = "tbl_d_v_h_m_f";
+                            public static final String Items = "tbl_d_v_h_i_f";
                         }
                     }
 
                 }
             }
         }
-
         public static final String UniqueId = "tbl_k_uid";
-
     }
     public static class Query{
         public static class Cloud{
@@ -198,6 +199,14 @@ public class Database {
                                 .setLong("Id", Id);
                     }
                 }
+                public static class ByDomainId {
+                    public static final String name = "QueryDomainVendorByDomainId";
+                    public static final String value = "from Vendor where DomainId=:DomainId";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId){
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId", DomainId);
+                    }
+                }
                 public static class Hawker {
                     public static class ByNamespace{
                         public static final String name = "QueryDomainVendorHawkerByNamespace";
@@ -219,20 +228,36 @@ public class Database {
                                     .setLong("Id", Id);
                         }
                     }
-                    public static class Manifest {
+                    public static class ByDomainId{
+                        public static final String name = "QueryDomainVendorHawkerByDomainId";
+                        public static final String value = "from Hawker where DomainId=:DomainId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId){
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId);
+                        }
+                    }
+                    public static class Item {
                         public static class ById {
-                            public static final String name = "QueryDomainVendorHawkerManifestById";
-                            public static final String value = "from Manifest where DomainId=:DomainId and Id=:Id";
+                            public static final String name = "QueryDomainVendorHawkerItemById";
+                            public static final String value = "from HawkItem where DomainId=:DomainId and Id=:Id";
                             public static org.hibernate.Query Create(Session ssn, long DomainId, long Id) {
                                 return ssn.getNamedQuery(name)
                                         .setLong("DomainId", DomainId)
                                         .setLong("Id", Id);
                             }
                         }
+                        public static class ByDomainId {
+                            public static final String name = "QueryDomainVendorHawkerItemByDomainId";
+                            public static final String value = "from HawkItem where DomainId=:DomainId";
+                            public static org.hibernate.Query Create(Session ssn, long DomainId) {
+                                return ssn.getNamedQuery(name)
+                                        .setLong("DomainId", DomainId);
+                            }
+                        }
                         public static class Field {
                             public static class ById{
-                                public static final String name = "QueryDomainVendorHawkerManifestById";
-                                public static final String value = "from ManifestField where DomainId=:DomainId and VendorId=:VendorId and OwnerId:OwnerId and Id=:Id";
+                                public static final String name = "QueryDomainVendorHawkerItemFieldById";
+                                public static final String value = "from HawkItemField where DomainId=:DomainId and VendorId=:VendorId and OwnerId=:OwnerId and Id=:Id";
                                 public static org.hibernate.Query Create(Session ssn, long DomainId, long VendorId, long OwnerId, long Id){
                                     return ssn.getNamedQuery(name)
                                             .setLong("DomainId", DomainId)
@@ -274,6 +299,34 @@ public class Database {
                                 .setLong("Id", Id);
                     }
                 }
+                public static class ByDomainId {
+                    public static final String name = "QueryDomainUserAccountByDomainId";
+                    public static final String value = "from UserAccount where DomainId=:DomainId";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId){
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId",DomainId);
+                    }
+                }
+                public static class Roster {
+                    public static class ByDomainId {
+                        public static final String name = "QueryDomainUserAccountRosterByDomainId";
+                        public static final String value = "from Roster where DomainId=:DomainId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId){
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId",DomainId);
+                        }
+                    }
+                    public static class RosterField{
+                        public static class ByDomainId {
+                            public static final String name = "QueryDomainUserAccountRosterFieldByDomainId";
+                            public static final String value = "from RosterField where DomainId=:DomainId";
+                            public static org.hibernate.Query Create(Session ssn, long DomainId){
+                                return ssn.getNamedQuery(name)
+                                        .setLong("DomainId",DomainId);
+                            }
+                        }
+                    }
+                }
             }
             public static class Network{
                 public static class ByOwner{
@@ -283,6 +336,14 @@ public class Database {
                         return ssn.getNamedQuery(name)
                                 .setLong("DomainId", DomainId)
                                 .setLong("OwnerId", OwnerId);
+                    }
+                }
+                public static class ByDomainId {
+                    public static final String name = "QueryDomainNetworkByDomainId";
+                    public static final String value = "from Network where DomainId=:DomainId";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId) {
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId", DomainId);
                     }
                 }
                 public static class Folder {
@@ -296,7 +357,6 @@ public class Database {
                                     .setString("Path", Path);
                         }
                     }
-
                     public static class ById {
                         public static final String name = "QueryDomainNetworkFolderById";
                         public static final String value = "from Folder where DomainId=:DomainId and Id=:Id";
@@ -307,6 +367,15 @@ public class Database {
                                     .setLong("Id", Id);
                         }
                     }
+                    public static class ByDomainId {
+                        public static final String name = "QueryDomainNetworkFolderByDomainId";
+                        public static final String value = "from Folder where DomainId=:DomainId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long Id) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId);
+                        }
+                    }
+
                 }
                 public static class File {
                     public static class ByName {
@@ -322,13 +391,31 @@ public class Database {
                     }
 
                     public static class ById {
-                        public static final String name = "QueryDomainNetworkFolderById";
+                        public static final String name = "QueryDomainNetworkFileById";
                         public static final String value = "from File where DomainId=:DomainId and NetworkId=:NetworkId and Id=:Id";
                         public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, long Id) {
                             return ssn.getNamedQuery(name)
                                     .setLong("DomainId", DomainId)
                                     .setLong("NetworkId", NetworkId)
                                     .setLong("Id", Id);
+                        }
+                    }
+                    public static class ByDomainId {
+                        public static final String name = "QueryDomainNetworkFileByDomainId";
+                        public static final String value = "from File where DomainId=:DomainId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId);
+                        }
+                    }
+                }
+                public static class Member{
+                    public static class ByDomainId {
+                        public static final String name = "QueryDomainNetworkMemberByDomainId";
+                        public static final String value = "from Member where DomainId=:DomainId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId) {
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId", DomainId);
                         }
                     }
                 }
@@ -558,11 +645,12 @@ public class Database {
                         public static final String Id = "itmid";
                         public static final String DomainId = "itmdi";
                         public static final String VendorId = "itmvi";
-
-                        public static class Manifest {
+                        public static final String Namespace = "itmns";
+                        public static class HawkItem {
                             public static final String Id = "itmid";
                             public static final String DomainId = "itmdi";
                             public static final String VendorId = "itmvi";
+                            public static final String OwnerId  = "ioid";
 
                             public static class Fields {
                                 public static final String Id = "itmid";

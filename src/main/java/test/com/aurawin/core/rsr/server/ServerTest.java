@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.After;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 import com.aurawin.core.rsr.server.Implements.http_1_1;
 
@@ -27,7 +28,7 @@ public class ServerTest {
 @Before
 public void before() throws Exception {
     Settings.Initialize("server.test");
-    serverHTTP=new Server(new InetSocketAddress("172.16.54.37",80),new http_1_1(null),false);
+    serverHTTP=new Server(new InetSocketAddress("172.16.54.42",80),new http_1_1(null),false,"inspiron.aurawin.com");
 
 } 
 
@@ -44,7 +45,6 @@ public void after() throws Exception {
 */ 
 @Test
 public void testRun() throws Exception { 
-//TODO: Test goes here...
     System.out.println("ServerTest.testRun()");
     System.out.println("ServerTest.serverHTTP Start()");
     serverHTTP.Start();

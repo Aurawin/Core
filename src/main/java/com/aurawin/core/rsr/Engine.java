@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 
 public abstract class Engine extends Thread {
     public volatile EngineState State;
+    public volatile String HostName;
     public Boolean Infinite = false;
     public Item itmRoot;
 
@@ -18,7 +19,8 @@ public abstract class Engine extends Thread {
     public volatile int BufferSizeWrite;
     public Managers Managers;
 
-    public Engine(Item aRootItem, boolean aInfinate) throws IOException,NoSuchMethodException {
+    public Engine(Item aRootItem, boolean aInfinate, String hostName) throws IOException,NoSuchMethodException {
+        HostName = hostName;
         Infinite=aInfinate;
         itmRoot=aRootItem;
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
