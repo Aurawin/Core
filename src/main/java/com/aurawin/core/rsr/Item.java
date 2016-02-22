@@ -2,6 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
+import com.aurawin.core.rsr.transport.ITransport;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.rsr.def.ItemError;
 import com.aurawin.core.time.Time;

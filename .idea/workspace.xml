@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/IItem.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/ITransport.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/ITransport.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/ITransport.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java" />
     </list>
@@ -68,7 +68,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.7771318">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -77,7 +77,7 @@
         </entry>
       </file>
       <file leaf-file-name="ITransport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/ITransport.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/ITransport.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
@@ -208,9 +208,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/array/KeyPair.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Response.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Field.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Implements/http_1_1.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/IItem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java" />
       </list>
     </option>
   </component>
@@ -1524,12 +1524,6 @@
       <option name="number" value="Default" />
       <updated>1441072894308</updated>
     </task>
-    <task id="LOCAL-00012" summary="updated graphics">
-      <created>1441634521934</created>
-      <option name="number" value="00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1441634521934</updated>
-    </task>
     <task id="LOCAL-00013" summary="updated graphics">
       <created>1441659892683</created>
       <option name="number" value="00013" />
@@ -1818,7 +1812,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456152694253</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="HTTP 1.1 work">
+      <created>1456153079061</created>
+      <option name="number" value="00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1456153079061</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1876,11 +1876,11 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1784188" sideWeight="0.6889226" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30424887" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30424887" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24946696" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41880342" sideWeight="0.67754173" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41880342" sideWeight="0.67754173" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2398,7 +2398,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/ITransport.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/ITransport.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
@@ -2419,7 +2419,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7771318">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
