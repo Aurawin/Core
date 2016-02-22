@@ -16,13 +16,13 @@ import java.util.Date;
 
 
 public class http_1_1 extends Item implements Transport {
-    public static final String Protocol = "HTTP";
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
 
     public http_1_1(Items aOwner) {
         super(aOwner);
+        Protocol = "HTTP";
 
         Request=new Request(this);
         Request.Version.Major=1;
@@ -45,6 +45,7 @@ public class http_1_1 extends Item implements Transport {
     public rsrResult onProcess() {
         if (Request.Read()==rSuccess) {
             // todo process request
+            Response.Headers.Update(Field.Connection,Request.Headers.ValueAsString(Field.Connection));
             Resolution = Request.Resolve();
             switch (Resolution) {
                 case rrCore :
@@ -98,11 +99,10 @@ public class http_1_1 extends Item implements Transport {
 
     }
     private void Prepare(){
-
         Response.Headers.Update(Field.ContentLength,"0");
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.getHostName());
-    };
+    }
 
     private String getHeaders(){
         Prepare();

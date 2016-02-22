@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr;
 
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.rsr.transport.Transport;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.EnumSet;
 
 public abstract class Item  implements Transport {
+    public String Protocol;
     public volatile Buffers Buffers;
     protected boolean Infinite;
     protected Items Owner;
@@ -34,6 +36,7 @@ public abstract class Item  implements Transport {
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
+        Protocol = Table.String(Table.Label.Null);
     }
     public abstract Item newInstance(Items aOwner);
 

@@ -155,6 +155,8 @@ public class Table {
         public static final String Name = "table.label.Name";
         public static final String Value = "table.label.Value";
         public static final String Untitled = "table.label.Untitled";
+
+        public static final String Null = "table.label.Null";
     }
     public static class Hint{
         public static final String Add = "table.hint.add";
