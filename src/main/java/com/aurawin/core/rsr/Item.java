@@ -2,7 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
-import com.aurawin.core.rsr.transport.ITransport;
+import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.rsr.def.ItemError;
 import com.aurawin.core.time.Time;
@@ -13,7 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.EnumSet;
 
-public abstract class Item  implements ITransport{
+public abstract class Item  implements Transport {
     public volatile Buffers Buffers;
     protected boolean Infinite;
     protected Items Owner;

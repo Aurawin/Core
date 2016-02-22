@@ -2,23 +2,20 @@ package com.aurawin.core.rsr.server.Implements;
 
 
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.rsr.def.ResolveResult;
-import static com.aurawin.core.rsr.def.http.Payload.*;
-import static com.aurawin.core.rsr.def.ResolveResult.*;
 import com.aurawin.core.rsr.def.http.*;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import com.aurawin.core.rsr.def.rsrResult;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
-import com.aurawin.core.rsr.transport.ITransport;
+import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.time.Time;
 
 import java.util.Date;
 
 
-public class http_1_1 extends Item implements ITransport{
+public class http_1_1 extends Item implements Transport {
     public static final String Protocol = "HTTP";
     public volatile Request Request;
     public volatile Response Response;

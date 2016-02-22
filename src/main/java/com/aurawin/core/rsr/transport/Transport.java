@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport;
 
 import com.aurawin.core.rsr.def.rsrResult;
 
-public interface ITransport {
+public interface Transport {
     rsrResult onPeek();
     rsrResult onProcess();
     rsrResult onDisconnected();
