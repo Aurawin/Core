@@ -58,7 +58,7 @@ public class Manifest {
         Driver = Driver.fromString(driver);
 
         if (Annotated.contains(UniqueId.class)==false)
-          Annotated.add(UniqueId.class);
+          Annotated.add(0,UniqueId.class);
 
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)

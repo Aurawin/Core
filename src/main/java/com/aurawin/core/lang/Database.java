@@ -45,6 +45,7 @@ public class Database {
                 }
             }
         }
+        public static final String Plugin = "tbl_k_pgn";
         public static final String UniqueId = "tbl_k_uid";
     }
     public static class Query{
@@ -440,6 +441,24 @@ public class Database {
                 }
             }
         }
+        public static class Plugin{
+            public static class ById {
+                public static final String name = "QueryPluginById";
+                public static final String value = "from Plugin where Id=:Id";
+                public static org.hibernate.Query Create(Session ssn, long Id){
+                    return ssn.getNamedQuery(name)
+                            .setLong("Id", Id);
+                }
+            }
+            public static class ByNamespace {
+                public static final String name = "QueryPluginByNamspace";
+                public static final String value = "from Plugin where Namespace=:Namespace";
+                public static org.hibernate.Query Create(Session ssn, String Namespace){
+                    return ssn.getNamedQuery(name)
+                            .setString("Namespace", Namespace);
+                }
+            }
+        }
         public static class UniqueId{
             public static class ById {
                 public static final String name = "QueryUniqueIdById";
@@ -460,6 +479,10 @@ public class Database {
         }
     }
     public static class Field{
+        public static class Plugin{
+            public static final String Id="itmid";
+            public static final String Namespace="itmns";
+        }
         public static class UniqueId{
             public static final String Id="itmid";
             public static final String Namespace="itmns";
