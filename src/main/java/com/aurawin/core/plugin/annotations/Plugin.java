@@ -1,5 +1,7 @@
 package com.aurawin.core.plugin.annotations;
 
+import com.aurawin.core.stored.entities.UniqueId;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
