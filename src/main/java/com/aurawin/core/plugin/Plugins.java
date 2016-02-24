@@ -1,23 +1,23 @@
 package com.aurawin.core.plugin;
 
+import com.aurawin.core.stored.Manifest;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
 
 public class Plugins {
     ArrayList<Plugin> Items;
-    Session Session;
 
     public Plugins(org.hibernate.Session session) {
         Items = new ArrayList<Plugin>();
-        Session = session;
     }
 
-    public void Discover(Plugin plugin) {
+    public void Discover(Manifest manifest,Session session, Plugin plugin) {
         if (plugin.Header.Manifest==null)
             plugin.Header.Manifest = plugin.getClass().getAnnotation(com.aurawin.core.plugin.annotations.Plugin.class);
 
-        //if (plugin.Header.Id==0)
+        if (plugin.Header.Id==0)
+            manifest.
 
         Plugin p = getPlugin(plugin.Header.Manifest.Namespace());
         if (p==null) {
