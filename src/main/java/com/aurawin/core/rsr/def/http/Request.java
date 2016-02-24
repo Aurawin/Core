@@ -174,7 +174,7 @@ public class Request implements QueryResolver {
             if (saPath[0].compareToIgnoreCase(Define.Path.Core)==0){
                 // todo we need to further examine path
                 // todo ensure core object / command exists
-                return ResolveResult.rrCore;
+                return ResolveResult.rrPlugin;
             } else {
                 // todo prepend Define.Path.Web to URI
                 // todo it may be directory ? or file ?

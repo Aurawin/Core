@@ -8,4 +8,4 @@ public class StoredAnnotations extends ArrayList< Class <? extends Stored>>{
     public StoredAnnotations(){
         super();
     }
-};
+}

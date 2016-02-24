@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr.transport;
 
 
+import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.http.*;
@@ -13,7 +14,11 @@ import com.aurawin.core.time.Time;
 
 import java.util.Date;
 
-
+@com.aurawin.core.rsr.transport.annotations.Transport(
+        Name = "HTTP/1.1",
+        Protocol = "HTTP",
+        Fields = {"Buffers","Request","Response"}
+)
 public class http_1_1 extends Item implements Transport {
     public volatile Request Request;
     public volatile Response Response;
@@ -21,7 +26,6 @@ public class http_1_1 extends Item implements Transport {
 
     public http_1_1(Items aOwner) {
         super(aOwner);
-        Protocol = "HTTP";
 
         Request=new Request(this);
         Request.Version.Major=1;
@@ -30,13 +34,11 @@ public class http_1_1 extends Item implements Transport {
         Response=new Response(this);
         Response.Version.Major=1;
         Response.Version.Minor=1;
-
     }
     @Override
     public http_1_1 newInstance(Items aOwner){
         return new http_1_1(aOwner);
     }
-
 
     public rsrResult onPeek() {
         return Request.Peek();
@@ -47,8 +49,11 @@ public class http_1_1 extends Item implements Transport {
             Response.Headers.Update(Field.Connection,Request.Headers.ValueAsString(Field.Connection));
             Resolution = Request.Resolve();
             switch (Resolution) {
-                case rrCore :
-                    //todo additional processing required.
+                case rrPlugin :
+
+
+                    this.Response.Status = s501;
+
                     break;
                 case rrFile :
                     //todo find actual file in dbms
@@ -101,6 +106,13 @@ public class http_1_1 extends Item implements Transport {
         Response.Headers.Update(Field.ContentLength,"0");
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.getHostName());
+
+        for (KeyItem itm:Response.Headers){
+            if (itm.Name==Field.Connection){
+                itm.Streams = (itm.Value.length()==0) ? false : true;
+                break;
+            }
+        }
     }
 
     private String getHeaders(){

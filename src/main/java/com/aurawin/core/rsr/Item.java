@@ -27,6 +27,9 @@ public abstract class Item  implements Transport {
     protected EnumSet<ItemError> Errors;
 
     public Item(Items aOwner){
+        com.aurawin.core.rsr.transport.annotations.Transport TA = (com.aurawin.core.rsr.transport.annotations.Transport) getClass().getAnnotation(com.aurawin.core.rsr.transport.annotations.Transport.class);
+        Protocol = (TA!=null) ? TA.Protocol() : Table.String(Table.Label.Null);
+
         if (aOwner!=null){
             Infinite = aOwner.Infinite;
             Owner = aOwner;
@@ -36,7 +39,7 @@ public abstract class Item  implements Transport {
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
-        Protocol = Table.String(Table.Label.Null);
+
     }
     public abstract Item newInstance(Items aOwner);
 

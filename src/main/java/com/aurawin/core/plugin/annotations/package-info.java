@@ -1,0 +1,1 @@
+package com.aurawin.core.plugin.annotations;
