@@ -4,12 +4,18 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.rsr.def.EngineState;
 import static com.aurawin.core.rsr.def.EngineState.*;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.Manifest;
+import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.entities.Entities;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 
 public abstract class Engine extends Thread {
+    protected Manifest Manifest;
+    protected Entities Entities;
+
     public volatile EngineState State;
     public volatile String HostName;
     public Boolean Infinite = false;
@@ -44,4 +50,46 @@ public abstract class Engine extends Thread {
     public synchronized void setState(EngineState aState) {
         State = aState;
     }
+
+    public static Manifest createManifest(
+            String username,
+            String password,
+            String host,
+            int port,
+            int poolsizeMin,
+            int poolsizeMax,
+            int poolAcrement,
+            int statementsMax,
+            int timeout,
+            String automation,
+            String database,
+            String dialect,
+            String driver
+
+    ){
+        StoredAnnotations al = new StoredAnnotations();
+        Manifest m = new Manifest(
+                username,
+                password,
+                host,
+                port,
+                poolsizeMin,
+                poolsizeMax,
+                poolAcrement,
+                statementsMax,
+                timeout,
+                automation,
+                database,
+                dialect,
+                driver,
+                al
+        );
+
+        return m;
+    }
+    public void setManifest(Manifest m){
+        Manifest = m;
+        Entities = new Entities(m);
+    }
+
 }

@@ -9,20 +9,23 @@ import java.util.ArrayList;
 public class Plugins {
     ArrayList<Plugin> Items;
 
-    public Plugins(org.hibernate.Session session) {
+    public Plugins(Session ssn) {
         Items = new ArrayList<Plugin>();
+
+        Plugin p = new Noid();
+        Discover(ssn,p);
     }
 
-    public void Discover(Manifest manifest,Session session, Plugin plugin) {
-        if (plugin.Header.Annotation==null)
+    public void Discover(Session ssn, Plugin plugin) {
+        if (plugin.Header.Annotation==null) {
             plugin.Header.Annotation = plugin.getClass().getAnnotation(com.aurawin.core.plugin.annotations.Plugin.class);
-        /*
-            if (plugin.Header.Id == 0)
-                manifest.
-        */
-
+        }
+        if (plugin.Header.getId() == 0){
+            plugin.Header.setNamespace(plugin.Header.Annotation.Namespace());
+        }
         Plugin p = getPlugin(plugin.Header.Annotation.Namespace());
         if (p==null) {
+            plugin.Setup(ssn);
             Items.add(p);
         }
     }

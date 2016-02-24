@@ -11,6 +11,7 @@ import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.time.Time;
+import org.hibernate.Session;
 
 import java.util.Date;
 
@@ -43,7 +44,7 @@ public class http_1_1 extends Item implements Transport {
     public rsrResult onPeek() {
         return Request.Peek();
     }
-    public rsrResult onProcess() {
+    public rsrResult onProcess(Session ssn) {
         if (Request.Read()==rSuccess) {
             // todo process request
             Response.Headers.Update(Field.Connection,Request.Headers.ValueAsString(Field.Connection));

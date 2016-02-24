@@ -6,6 +6,7 @@ import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.Commands.*;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.time.Time;
+import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
 import static com.aurawin.core.rsr.def.ItemState.*;
@@ -156,18 +157,23 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                         break;
                                     case rSuccess :
                                         itm.renewTTL();
-                                        evResult=itm.onProcess();
-                                        switch (evResult){
-                                            case rPostpone:
-                                                itm.renewTTL();
-                                                break;
-                                            case rSuccess:
-                                                itm.renewTTL();
-                                                break;
-                                            case rFailure:
-                                                logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(),  "processItems -> Read -> onProcess");
-                                                itm.Teardown();
-                                                break;
+                                        Session ssn = Engine.Entities.Sessions.openSession();
+                                        try {
+                                            evResult = itm.onProcess(ssn);
+                                            switch (evResult) {
+                                                case rPostpone:
+                                                    itm.renewTTL();
+                                                    break;
+                                                case rSuccess:
+                                                    itm.renewTTL();
+                                                    break;
+                                                case rFailure:
+                                                    logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
+                                                    itm.Teardown();
+                                                    break;
+                                            }
+                                        } finally {
+                                            ssn.close();
                                         }
                                         break;
                                     case rFailure :

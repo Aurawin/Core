@@ -60,6 +60,7 @@ public class Plugin extends Stored {
     public String getNamespace() {
         return Namespace;
     }
+    public void setNamespace(String namespace){Namespace=namespace;}
 
     public void Assign(Plugin src){
         Id = src.Id;

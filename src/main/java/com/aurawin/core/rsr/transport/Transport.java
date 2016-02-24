@@ -1,10 +1,11 @@
 package com.aurawin.core.rsr.transport;
 
 import com.aurawin.core.rsr.def.rsrResult;
+import org.hibernate.Session;
 
 public interface Transport {
     rsrResult onPeek();
-    rsrResult onProcess();
+    rsrResult onProcess(Session ssn);
     rsrResult onDisconnected();
     rsrResult onAccepted();
     rsrResult onRejected();

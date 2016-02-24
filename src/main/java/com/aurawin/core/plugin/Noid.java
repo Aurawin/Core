@@ -1,5 +1,7 @@
 package com.aurawin.core.plugin;
 
+import org.hibernate.Session;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
@@ -16,6 +18,15 @@ import java.lang.annotation.Target;
 )
 
 public class Noid extends Plugin {
+    @Override
+    public MethodState Setup(Session ssn){
+        Header.Verify(ssn);
+        return MethodState.msSuccess;
+    }
+    @Override
+    public MethodState Teardown(Session ssn){
+        return MethodState.msSuccess;
+    }
     @Override
     public MethodState BeforeExecute() {
         return MethodState.msSuccess;
