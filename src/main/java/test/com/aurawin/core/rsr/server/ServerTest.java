@@ -46,11 +46,8 @@ public class ServerTest {
         serverHTTP = null;
     }
 
-    /**
-     * Method: run()
-     */
     @Test
-    public void testRun() throws Exception {
+    public void testServer() throws Exception {
         System.out.println("ServerTest.testRun()");
         System.out.println("ServerTest.serverHTTP Start()");
         serverHTTP.Start();

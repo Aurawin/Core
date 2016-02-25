@@ -14,14 +14,14 @@ import java.lang.annotation.Target;
         Vendor = "Aurawin LLC",
         ClassName = "Noid",
         Transport = "HTTP/1.1",
+        Domain = "com.aurawin",
         Version = 1
 )
 
 public class Noid extends Plugin {
     @Override
     public MethodState Setup(Session ssn){
-        Header.Verify(ssn);
-        return MethodState.msSuccess;
+        return super.Setup(ssn);
     }
     @Override
     public MethodState Teardown(Session ssn){

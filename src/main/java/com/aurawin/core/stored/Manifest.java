@@ -2,6 +2,7 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.entities.Plugin;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,9 @@ public class Manifest {
 
         if (Annotated.contains(UniqueId.class)==false)
           Annotated.add(0,UniqueId.class);
+
+        if (Annotated.contains(Plugin.class)==false)
+            Annotated.add(0,Plugin.class);
 
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)

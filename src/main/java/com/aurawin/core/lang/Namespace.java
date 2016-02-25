@@ -7,6 +7,16 @@ import java.util.Collection;
 public class Namespace {
 
     public static class Entities{
+        public static class Plugin{
+            public static final UniqueId Method = new UniqueId("com.aurawin.core.stored.plugin.method.$domain.$classname:$major$minor");
+            public static String getNamespace(String Domain, String ClassName, String Major, String Minor){
+                return Method.getNamespace()
+                        .replace("$domain",Domain)
+                        .replace("$classname",ClassName)
+                        .replace("$major",Major)
+                        .replace("$minor",Minor);
+            }
+        }
         public static class Cloud{
             public static class Service{
                 public static final UniqueId HTTP = new UniqueId("com.aurawin.core.stored.entities.cloud.service.http");
@@ -35,6 +45,7 @@ public class Namespace {
         }
     }
     public static void Register(Collection List ){
+
         List.add(Entities.Cloud.Service.HTTP);
         List.add(Entities.Cloud.Service.SMTP);
         List.add(Entities.Cloud.Service.POP3);

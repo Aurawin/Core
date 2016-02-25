@@ -19,5 +19,6 @@ public @interface Plugin {
     String Description() default "";
     String Vendor() default "";
     String ClassName() default "";
+    String Domain() default "";
     int Version() default 0;
 }
