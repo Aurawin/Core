@@ -1,3 +1,3 @@
 package com.aurawin.core.plugin;
 
-public enum MethodState {msFailure,msSuccess,msException}
+public enum MethodState {msFailure,msSuccess,msException,msNotFound}

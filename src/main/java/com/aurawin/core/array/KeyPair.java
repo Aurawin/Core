@@ -33,7 +33,7 @@ public class KeyPair extends ArrayList<KeyItem> {
     public KeyPair(String args){
         String[] saItems = args.split(DelimiterItem);
         for (String sItem : saItems) {
-            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.eoSingleton));
+            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.Singleton));
         }
     }
     public KeyPair(KeyPair value){
@@ -43,10 +43,27 @@ public class KeyPair extends ArrayList<KeyItem> {
     public KeyPair(){
 
     }
+    public void Empty(){
+        clear();
+    }
+    public KeyItem Update(String Name, Object Value){
+        for (KeyItem itm : this){
+            if (itm.Name.compareTo(Name)==0) {
+                itm.Data=Value;
+                itm.Stale=false;
+                return itm;
+            }
+        }
+        KeyItem itm = new KeyItem(Name,Value);
+        itm.Data=Value;
+        this.add(itm);
+        return itm;
+    }
     public KeyItem Update(String Name, String Value){
         for (KeyItem itm : this){
             if (itm.Name.compareTo(Name)==0) {
                 itm.Value=Value;
+                itm.Stale=false;
                 return itm;
             }
         }
@@ -65,7 +82,17 @@ public class KeyPair extends ArrayList<KeyItem> {
     public void Load(String Data){
         String[] saItems = Data.split(DelimiterItem);
         for (String sItem : saItems) {
-            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.eoSingleton));
+            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.Singleton));
+        }
+    }
+    public void Invalidate(){
+        for (KeyItem itm:this) itm.Stale=true;
+    }
+    public void Purge(){
+        Iterator <KeyItem> it = iterator();
+        while (it.hasNext()){
+            KeyItem itm=it.next();
+            if (itm.Stale==true) remove(itm);
         }
     }
     public void Load(byte[] Data){
@@ -79,7 +106,7 @@ public class KeyPair extends ArrayList<KeyItem> {
             iChunk=r.End-r.Start;
             bItem=new byte[iChunk];
             System.arraycopy(Data,r.Start,bItem,0,iChunk);
-            saItem=VarString.Extract(Bytes.toString(bItem),DelimiterField, VarString.ExtractOption.eoSingleton);
+            saItem=VarString.Extract(Bytes.toString(bItem),DelimiterField, VarString.ExtractOption.Singleton);
             Append(saItem);
         }
     }
@@ -121,7 +148,6 @@ public class KeyPair extends ArrayList<KeyItem> {
     }
     public float ValueAsFloat(String Name){
         KeyItem itm;
-
         for (Iterator<KeyItem> itr = this.iterator(); itr.hasNext();){
             itm=itr.next();
             if (itm.Name.compareToIgnoreCase(Name)==0){
@@ -141,7 +167,16 @@ public class KeyPair extends ArrayList<KeyItem> {
         }
         return Default;
     }
-
+    public Object getData(String Name){
+        KeyItem itm;
+        for (Iterator<KeyItem> itr = this.iterator(); itr.hasNext();){
+            itm=itr.next();
+            if (itm.Name.compareToIgnoreCase(Name)==0){
+                return itm.Data;
+            }
+        }
+        return null;
+    }
     public void Release(){
         clear();
     }

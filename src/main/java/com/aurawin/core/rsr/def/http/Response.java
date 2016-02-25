@@ -6,7 +6,7 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stream.MemoryStream;
 
 public class Response {
-    private volatile MemoryStream FData;
+
     private Item Owner;
 
     public volatile KeyPair Headers;
@@ -15,7 +15,7 @@ public class Response {
     public volatile Credentials Credentials;
     public volatile Status Status;
     public volatile Version Version;
-
+    private volatile MemoryStream Payload;
     public Response(Item aOwner) {
         Owner = aOwner;
         Headers = new KeyPair();
@@ -32,15 +32,21 @@ public class Response {
 
         Credentials = new Credentials();
 
-        FData=new MemoryStream();
+        Payload=new MemoryStream();
         Version = new Version(1,1);
     }
-    public void Empty(){
-        // todo Emtpy method
+    public void Reset(){
+        Headers.Empty();
+        Cookies.Empty();
+        Parameters.Empty();
+        Credentials.Empty();
+        Payload.Clear();
+        Version.Major=1;
+        Version.Minor=1;
     }
 
     public void Release(){
-        FData.Clear();
-        FData=null;
+        Payload.Clear();
+        Payload=null;
     }
 }

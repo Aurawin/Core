@@ -8,6 +8,7 @@ public class KeyItem {
     public long Id;
     public Object Data;
     public Boolean Streams;
+    public Boolean Stale;
 
     public void Assign(KeyItem value){
         Name=value.Name;
@@ -15,6 +16,7 @@ public class KeyItem {
         Id=value.Id;
         Data= value.Data;
         Streams = value.Streams;
+        Stale = value.Stale;
     }
 
     public KeyItem() {
@@ -23,6 +25,7 @@ public class KeyItem {
         this.Id=0;
         this.Data=null;
         this.Streams=true;
+        this.Stale=false;
     }
     public KeyItem(String name){
         this.Name=name;
@@ -30,6 +33,7 @@ public class KeyItem {
         this.Id=0;
         this.Data=null;
         this.Streams=true;
+        this.Stale=false;
     }
     public KeyItem(String name, String value){
         this.Name=name;
@@ -37,6 +41,16 @@ public class KeyItem {
         this.Id=0;
         this.Data=null;
         this.Streams=true;
+        this.Stale=false;
+    }
+    public KeyItem(String name, Object value){
+        this.Name=name;
+        this.Value="";
+        this.Data=value;
+        this.Id=0;
+        this.Data=null;
+        this.Streams=true;
+        this.Stale=false;
     }
     public KeyItem(KeyItem value){
         this.Assign(value);

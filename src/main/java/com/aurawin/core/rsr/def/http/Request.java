@@ -2,6 +2,8 @@ package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.VarString;
+import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
 
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -9,6 +11,8 @@ import com.aurawin.core.rsr.Item;
 
 import com.aurawin.core.stored.Define;
 import com.aurawin.core.stream.MemoryStream;
+
+import java.util.EnumSet;
 
 public class Request implements QueryResolver {
     protected Item Owner;
@@ -24,8 +28,12 @@ public class Request implements QueryResolver {
     public volatile String URI;
     public volatile String Query;
     public volatile String ETag;
+    public volatile String NamespacePlugin;
+    public volatile String NamespaceMethod;
+    public volatile Plugin Plugin;
 
     public Request(Item owner) {
+        Plugin = null;
         Owner = owner;
         Version = new Version(1,1);
 
@@ -52,11 +60,14 @@ public class Request implements QueryResolver {
         Parameters.clear();
         Credentials.Empty();
         Content.Clear();
+        Plugin = null;
         Protocol="";
         Method="";
         URI="";
         Query="";
         ETag="";
+        NamespacePlugin="";
+        NamespaceMethod="";
     }
 
     public void Release(){
@@ -169,12 +180,29 @@ public class Request implements QueryResolver {
     @Override
     public ResolveResult Resolve() {
         // look at URI
-        String[] saPath=URI.split("/");
-        if (saPath.length>0) {
-            if (saPath[0].compareToIgnoreCase(Define.Path.Core)==0){
-                // todo we need to further examine path
-                // todo ensure core object / command exists
-                return ResolveResult.rrPlugin;
+        VarString saPath=new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim),"/");
+        int PathSize=saPath.size();
+        if (PathSize>0) {
+            if ((saPath.get(0).compareToIgnoreCase(Define.Path.Core)==0) && (PathSize>1)) {
+                NamespacePlugin=saPath.Extract(0,1,EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                Plugin = this.Owner.getPlugin(NamespacePlugin);
+                if (Plugin!=null) {
+                    NamespaceMethod = saPath.Extract(2,PathSize-1,EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                    java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
+                    if (m!=null) {
+                        return ResolveResult.rrPlugin;
+                    } else {
+                        NamespacePlugin="";
+                        NamespaceMethod="";
+                        Plugin=null;
+                        return ResolveResult.rrFile;
+                    }
+                } else {
+                    NamespacePlugin="";
+                    NamespaceMethod="";
+                    Plugin=null;
+                    return ResolveResult.rrFile;
+                }
             } else {
                 // todo prepend Define.Path.Web to URI
                 // todo it may be directory ? or file ?

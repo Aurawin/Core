@@ -2,22 +2,41 @@ package com.aurawin.core.array;
 
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 
 public class VarString extends ArrayList<String> {
     public String Delimiter = "\n";
-    public enum ExtractOption {eoSingleton,eoMultiple};
+    public enum ExtractOption {Singleton,Multiple,IncludeLeadingDelim};
+    public enum CreateOption  {StripLeadingDelim};
+
     public VarString(String[] args){
         for (int iLcv=0; iLcv<args.length; iLcv++){
             this.add(args[iLcv]);
         }
     }
-    public VarString(String args){
+    public VarString(String args, EnumSet<CreateOption> Options, String delimiter){
+        Delimiter=delimiter;
+        if (Options.contains(CreateOption.StripLeadingDelim))
+            if (args.indexOf(Delimiter)==0);
+                args=args.substring(Delimiter.length());
         String[] lst=args.split(Delimiter);
 
         for (int iLcv=0; iLcv<lst.length; iLcv++){
             this.add(lst[iLcv]);
         }
+    }
+    public String Extract(int Start, int End, EnumSet<ExtractOption> Options){
+        StringBuilder sb = new StringBuilder();
+        if (Options.contains(ExtractOption.IncludeLeadingDelim))
+            sb.append(Delimiter);
+        for (int iLcv=Start; iLcv<=End; iLcv++){
+            sb.append(get(iLcv)+Delimiter);
+        }
+        if (sb.length()>0)
+            sb.setLength(sb.length()-Delimiter.length());
+
+        return sb.toString();
     }
     public static int toInteger(String input, int Default){
         try {
@@ -33,16 +52,17 @@ public class VarString extends ArrayList<String> {
             return Default;
         }
     }
+
     public static String[] Extract(String sData, String Delimiter, ExtractOption Option){
         switch (Option){
-            case eoSingleton:
+            case Singleton:
                 int idx=sData.indexOf(Delimiter);
                 if (idx>-1) {
                     return new String [] { sData.substring(0,idx) ,sData.substring(idx+1) };
                 } else {
                     return new String [] {sData,""};
                 }
-            case eoMultiple:
+            case Multiple:
                 return sData.split(Delimiter);
 
         }

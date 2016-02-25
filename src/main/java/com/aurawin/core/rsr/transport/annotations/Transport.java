@@ -11,6 +11,4 @@ import java.lang.annotation.Target;
 public @interface Transport {
     String Name() default "";
     String Protocol() default "";
-    String[] Fields() default {};
-
 }

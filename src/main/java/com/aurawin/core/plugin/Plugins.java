@@ -26,12 +26,12 @@ public class Plugins {
         Plugin p = getPlugin(plugin.Header.Annotation.Namespace());
         if (p==null) {
             plugin.Setup(ssn);
-            Items.add(p);
+            Items.add(plugin);
         }
     }
     public Plugin getPlugin(String Namespace){
         for (Plugin p : Items) {
-            if (p.Header.Annotation.Namespace()==Namespace)
+            if (p.Header.Annotation.Namespace().compareTo(Namespace)==0)
                 return p;
         }
         return null;

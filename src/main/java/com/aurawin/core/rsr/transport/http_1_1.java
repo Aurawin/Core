@@ -3,6 +3,7 @@ package com.aurawin.core.rsr.transport;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.plugin.MethodState;
 import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.http.*;
 import static com.aurawin.core.rsr.def.http.Status.*;
@@ -17,8 +18,7 @@ import java.util.Date;
 
 @com.aurawin.core.rsr.transport.annotations.Transport(
         Name = "HTTP/1.1",
-        Protocol = "HTTP",
-        Fields = {"Buffers","Request","Response"}
+        Protocol = "HTTP"
 )
 public class http_1_1 extends Item implements Transport {
     public volatile Request Request;
@@ -45,32 +45,49 @@ public class http_1_1 extends Item implements Transport {
         return Request.Peek();
     }
     public rsrResult onProcess(Session ssn) {
+        rsrResult r = rSuccess;
         if (Request.Read()==rSuccess) {
             // todo process request
             Response.Headers.Update(Field.Connection,Request.Headers.ValueAsString(Field.Connection));
             Resolution = Request.Resolve();
             switch (Resolution) {
                 case rrPlugin :
-
-
-                    this.Response.Status = s501;
-
+                    Response.Status = s200;
+                    Response.Headers.Update(Field.CoreObjectNamespace,Request.NamespacePlugin);
+                    Response.Headers.Update(Field.CoreCommandNamespace,Request.NamespaceMethod);
+                    MethodState s =Request.Plugin.Execute(ssn,Request.NamespaceMethod,this);
+                    switch (s){
+                        case msFailure:
+                            Response.Status=s500;
+                            break;
+                        case msSuccess:
+                            Response.Status=s200;
+                            break;
+                        case msException:
+                            Response.Status=s501;
+                            break;
+                        case msNotFound:
+                            Response.Status=s404;
+                            break;
+                    }
+                    Respond();
                     break;
                 case rrFile :
-                    //todo find actual file in dbms
-                    this.Response.Status=s200;
+                    // Todo Get File from DBMS
+                    Response.Status=s200;
                     Respond();
                     break;
                 case rrNotFound:
-                    this.Response.Status=s404;
+                    Response.Status=s404;
                     Respond();
                     break;
 
             }
-            return rSuccess;
         } else {
-            return rFailure;
+            r = rFailure;
         }
+
+        return r;
     }
 
     public rsrResult onDisconnected() {

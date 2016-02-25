@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.rsr.transport.Transport;
@@ -122,6 +123,7 @@ public abstract class Item  implements Transport {
         }
         return iWritten;
     }
-
-
+    public Plugin getPlugin(String Namespace){
+        return Owner.Engine.Plugins.getPlugin(Namespace);
+    }
 }

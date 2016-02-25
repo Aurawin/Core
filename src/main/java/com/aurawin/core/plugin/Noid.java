@@ -1,9 +1,9 @@
 package com.aurawin.core.plugin;
 
+import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.http.Request;
+import com.aurawin.core.rsr.def.http.Response;
 import org.hibernate.Session;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 
 @com.aurawin.core.plugin.annotations.Plugin(
         Name = "Noid",
@@ -25,15 +25,7 @@ public class Noid extends Plugin {
     }
     @Override
     public MethodState Teardown(Session ssn){
-        return MethodState.msSuccess;
-    }
-    @Override
-    public MethodState BeforeExecute() {
-        return MethodState.msSuccess;
-    }
 
-    @Override
-    public MethodState AfterExecute() {
         return MethodState.msSuccess;
     }
 
@@ -43,9 +35,12 @@ public class Noid extends Plugin {
             Title = "Something",
             Prompt = "Enable this feature to do something.",
             Description = "The command \"Something\" does something!",
-            Format = FormatIO.JSON
+            Format = FormatIO.JSON,
+            Fields = {"Request","Response"}
     )
-    public MethodState DoSomething(){
+    public MethodState DoSomething(Session ssn, Item item, Object[] Fields){
+        Request Request = (Request) Fields[0];
+        Response Response = (Response) Fields[1];
         return MethodState.msSuccess;
     }
 
@@ -55,9 +50,13 @@ public class Noid extends Plugin {
             Title = "Another",
             Prompt = "Enable this feature to do another.",
             Description = "The command \"Another\" does another!",
-            Format = FormatIO.JSON
+            Format = FormatIO.JSON,
+            Fields = {"Request","Response"}
     )
-    public MethodState DoAnother(){
+    public MethodState DoAnother(Session ssn, Item item, Object[] Fields){
+        Request Request = (Request) Fields[0];
+        Response Response = (Response) Fields[1];
+
         return MethodState.msSuccess;
     }
 
