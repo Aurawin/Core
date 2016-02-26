@@ -10,7 +10,6 @@ public class SingletonTest {
 
     private String createJavaSource(){
         StringBuilder sb = new StringBuilder();
-        //sb.append("package test.com.aurawin.core.compiler;\n");
         sb.append("import javax.persistence.*;\n");
         sb.append("import com.aurawin.core.lang.Database;\n");
         sb.append("import com.aurawin.core.stored.Stored;\n");
