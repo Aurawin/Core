@@ -107,7 +107,7 @@ public class Singleton {
         private final ByteCode byteCode_;
     }
     /* Compiles the provided source code and returns the resulting Class object. */
-    private static Class compile(String source, String className) {
+    public static Class compile(String source, String className) {
 
         Class clazz = null; // default
 
