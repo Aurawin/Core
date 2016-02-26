@@ -88,13 +88,16 @@ public class SingletonTest {
 
         return sb.toString();
     }
-    @Test
-    public void testSingleton() throws Exception {
+
+    public void testSingletonClass() throws Exception {
         String src=createJavaSource();
         Class claz = Singleton.compile(src,"Noid");
         Object noid = claz.getConstructor().newInstance();
         Annotation[] as = noid.getClass().getAnnotations();
     }
-
-
+    @Test
+    public void testSingletonByteCode() throws Exception {
+        String src = createJavaSource();
+        byte[] ba = Singleton.compileByteCode(src,"Noid");
+    }
 }

@@ -513,6 +513,10 @@ public class Database {
         public static class Module{
             public static final String Id="itmid";
             public static final String Namespace="itmns";
+            public static final String Source = "itmsrc";
+            public static final String Revision = "itmrv";
+            public static final String Build = "itmbld";
+            public static final String Code = "itmcde";
         }
         public static class Plugin{
             public static final String Id="itmid";

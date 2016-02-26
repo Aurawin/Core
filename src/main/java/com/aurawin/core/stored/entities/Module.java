@@ -11,7 +11,6 @@ import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.json.JSONObject;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -48,27 +47,54 @@ public class Module extends Stored {
     @Column(name = Database.Field.Module.Namespace, unique = true)
     private String Namespace;
 
+    @Column(name = Database.Field.Module.Source)
+    private String Source;
+
+    @Column(name = Database.Field.Module.Revision)
+    private long Revision;
+
+    @Column(name = Database.Field.Module.Build)
+    private long Build;
+
+    @Column(name = Database.Field.Module.Code)
+    private byte[] Code;
+
     public Module() {
         Id=0;
+        Build=0;
+        Revision=0;
         Namespace="";
+        Source="";
+        Code=null;
     }
     public Module(String namespace){
         Id=0;
         Namespace=namespace;
+        Build=0;
+        Revision=0;
+        Source="";
+        Code=null;
     }
-
-
     public String getNamespace() {
         return Namespace;
     }
+    public String getSource(){ return Source; }
 
     public void Assign(Module src){
         Id = src.Id;
         Namespace = src.Namespace;
+        Build = src.Build;
+        Revision = src.Revision;
+        Source = src.Source;
+        Code =  src.Code;
     }
     public void Empty(){
         Id = 0;
         Namespace="";
+        Build=0;
+        Revision=0;
+        Source="";
+        Code = null;
     }
     @Override
     public boolean equals(Object u) {

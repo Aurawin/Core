@@ -144,4 +144,25 @@ public class Singleton {
 
         return clazz;
     }
+
+    public static byte[] compileByteCode(String source, String className){
+        List compilationUnits = Arrays.asList(new CompilationUnit(className, source));
+        DiagnosticCollector diagnosticListener = new DiagnosticCollector();
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        SingleFileManager singleFileManager = new SingleFileManager(compiler, new ByteCode(className));
+        JavaCompiler.CompilationTask compile = compiler.getTask(null, singleFileManager, diagnosticListener, null,
+                null, compilationUnits);
+
+        if (!compile.call()) {
+            /* Compilation failed: Output the compiler errors to stderr. */
+            List<Diagnostic> Diags = diagnosticListener.getDiagnostics();
+            for (Diagnostic diagnostic : Diags) {
+                System.err.println(diagnostic);
+            }
+            return null; // todo errors inside byte[]
+        } else {
+            return singleFileManager.singleClassLoader_.byteCode_.getByteCode();
+        }
+
+    }
 }
