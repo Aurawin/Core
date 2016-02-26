@@ -86,7 +86,7 @@ public class Module extends Stored {
                 Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
                 m = (Module) q.uniqueResult();
                 if (m == null) {
-                    m = new UniqueId(Namespace);
+                    m = new Module(Namespace);
                     ssn.save(m);
                 }
                 Assign(m);
