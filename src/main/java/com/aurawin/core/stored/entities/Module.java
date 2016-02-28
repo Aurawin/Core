@@ -5,6 +5,8 @@ import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.annotations.QueryById;
+import com.aurawin.core.stored.annotations.QueryByName;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -35,7 +37,14 @@ import javax.persistence.Table;
                 )
         }
 )
-
+@QueryById(
+        Name = Database.Query.Module.ById.name,
+        Fields = { "Id" }
+)
+@QueryByName(
+        Name = Database.Query.Module.ByNamespace.name,
+        Fields = {"Namespace"}
+)
 public class Module extends Stored {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +53,16 @@ public class Module extends Stored {
     @Override
     public long getId(){return Id;}
 
-    @Column(name = Database.Field.Module.Namespace, unique = true)
+    @Column(name = Database.Field.Module.Namespace, unique = true, nullable = false)
     private String Namespace;
 
-    @Column(name = Database.Field.Module.Source)
+    @Column(name = Database.Field.Module.Name, nullable = false)
+    private String Name;
+
+    @Column(name = Database.Field.Module.Locked)
+    private boolean Locked;
+
+    @Column(name = Database.Field.Module.Source,length = 1024*1024*10)
     private String Source;
 
     @Column(name = Database.Field.Module.Revision)
@@ -59,29 +74,85 @@ public class Module extends Stored {
     @Column(name = Database.Field.Module.Code)
     private byte[] Code;
 
+
     public Module() {
         Id=0;
         Build=0;
         Revision=0;
+        Name="";
         Namespace="";
         Source="";
         Code=null;
     }
-    public Module(String namespace){
+    public Module(String name, String namespace){
         Id=0;
+        Name=name;
         Namespace=namespace;
         Build=0;
         Revision=0;
         Source="";
         Code=null;
     }
+
     public String getNamespace() {
         return Namespace;
     }
-    public String getSource(){ return Source; }
+
+    public void setNamespace(String namespace) {
+        Namespace = namespace;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getSource() {
+        return Source;
+    }
+
+    public void setSource(String source) {
+        Source = source;
+    }
+
+    public long getRevision() {
+        return Revision;
+    }
+
+    public void setRevision(long revision) {
+        Revision = revision;
+    }
+
+    public long getBuild() {
+        return Build;
+    }
+
+    public void setBuild(long build) {
+        Build = build;
+    }
+
+    public byte[] getCode() {
+        return Code;
+    }
+
+    public void setCode(byte[] code) {
+        Code = code;
+    }
+
+    public boolean isLocked() {
+        return Locked;
+    }
+
+    public void setLocked(boolean locked) {
+        Locked = locked;
+    }
 
     public void Assign(Module src){
         Id = src.Id;
+        Name = src.Name;
         Namespace = src.Namespace;
         Build = src.Build;
         Revision = src.Revision;
@@ -90,6 +161,7 @@ public class Module extends Stored {
     }
     public void Empty(){
         Id = 0;
+        Name = "";
         Namespace="";
         Build=0;
         Revision=0;
@@ -101,10 +173,12 @@ public class Module extends Stored {
         return (
                 ( u instanceof Module) &&
                         (Id == ((Module) u).Id) &&
+                        (Name.compareTo( ((Module) u).Name)==0) &&
                         (Namespace.compareTo( ((Module) u).Namespace)==0)
         );
     }
-    public void Verify(Session ssn){
+    @Override
+    public void Identify(Session ssn){
         if (Id == 0) {
             Module m = null;
             Transaction tx = ssn.beginTransaction();
@@ -112,7 +186,7 @@ public class Module extends Stored {
                 Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
                 m = (Module) q.uniqueResult();
                 if (m == null) {
-                    m = new Module(Namespace);
+                    m = new Module(Name,Namespace);
                     ssn.save(m);
                 }
                 Assign(m);
@@ -123,6 +197,7 @@ public class Module extends Stored {
             }
         }
     }
+
 
     public static void entityCreated(Entities List, Stored Entity){}
     public static void entityDeleted(Entities List, Stored Entity, boolean Cascade){}

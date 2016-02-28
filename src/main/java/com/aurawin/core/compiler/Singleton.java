@@ -5,10 +5,11 @@ import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import com.aurawin.core.compiler.Result;
 
 public class Singleton {
     /* Container for a Java compilation unit (ie Java source) in memory. */
-    private static class CompilationUnit extends SimpleJavaFileObject {
+    private class CompilationUnit extends SimpleJavaFileObject {
 
         public CompilationUnit(String className, String source) {
             super(URI.create("file:///" + className + ".java"), Kind.SOURCE);
@@ -34,7 +35,7 @@ public class Singleton {
     }
 
     /* Container for Java byte code in memory. */
-    private static class ByteCode extends SimpleJavaFileObject {
+    private class ByteCode extends SimpleJavaFileObject {
 
         public ByteCode(String className) {
             super(URI.create("byte:///" + className + ".class"), Kind.CLASS);
@@ -63,7 +64,7 @@ public class Singleton {
         private ByteArrayOutputStream byteArrayOutputStream_;
     }
     /* A file manager for a single class. */
-    private static class SingleFileManager extends ForwardingJavaFileManager {
+    public class SingleFileManager extends ForwardingJavaFileManager {
 
         public SingleFileManager(JavaCompiler compiler, ByteCode byteCode) {
             super(compiler.getStandardFileManager(null, null, null));
@@ -89,14 +90,14 @@ public class Singleton {
     }
 
     /* A class loader for a single class. */
-    private static class SingleClassLoader extends ClassLoader {
+    public class SingleClassLoader extends ClassLoader {
 
         public SingleClassLoader(ByteCode byteCode) {
             byteCode_ = byteCode;
         }
 
         @Override
-        protected Class findClass(String className) throws ClassNotFoundException {
+        public Class findClass(String className) throws ClassNotFoundException {
             return defineClass(className, byteCode_.getByteCode(), 0, byteCode_.getByteCode().length);
         }
 
@@ -107,62 +108,39 @@ public class Singleton {
         private final ByteCode byteCode_;
     }
     /* Compiles the provided source code and returns the resulting Class object. */
-    public static Class compile(String source, String className) {
-
-        Class clazz = null; // default
-
-        /* Create a list of compilation units (ie Java sources) to compile. */
+    public  Result compile(String source, String className) {
+        Result r = new Result();
+        r.Status=Result.Kind.Failure;
         List compilationUnits = Arrays.asList(new CompilationUnit(className, source));
-
-        /* The diagnostic listener gives you a way of examining the source when
-         * the compile fails. You don't need it, but it makes debugging easier. */
         DiagnosticCollector diagnosticListener = new DiagnosticCollector();
-
-        /* Get a Java compiler to use. (If this returns null there is a good
-         * chance you're using a JRE instead of a JDK.) */
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
-        /* Set up the target file manager and call the compiler. */
         SingleFileManager singleFileManager = new SingleFileManager(compiler, new ByteCode(className));
-        JavaCompiler.CompilationTask compile = compiler.getTask(null, singleFileManager, diagnosticListener, null,
-                null, compilationUnits);
+        JavaCompiler.CompilationTask compile = compiler.getTask(null, singleFileManager, diagnosticListener, null, null, compilationUnits);
 
-        if (!compile.call()) {
-            /* Compilation failed: Output the compiler errors to stderr. */
-            List<Diagnostic> Diags = diagnosticListener.getDiagnostics();
-            for (Diagnostic diagnostic : Diags) {
-                System.err.println(diagnostic);
+        if (compile.call()) {
+            r.processDiagnostics(diagnosticListener.getDiagnostics());
+            r.Status=Result.Kind.Success;
+            r.Code=singleFileManager.singleClassLoader_.byteCode_.getByteCode();
+            try {
+                r.Class = singleFileManager.getClassLoader().findClass(className);
+            } catch (ClassNotFoundException e) {
+                r.Status=Result.Kind.Exception;
             }
         } else {
-            /* Compilation succeeded: Get the Class object. */
-            try {
-                clazz = singleFileManager.getClassLoader().findClass(className);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            r.processDiagnostics(diagnosticListener.getDiagnostics());
         }
-
-        return clazz;
+        return r;
     }
 
-    public static byte[] compileByteCode(String source, String className){
+    public byte[] compileByteCode(String source, String className){
         List compilationUnits = Arrays.asList(new CompilationUnit(className, source));
         DiagnosticCollector diagnosticListener = new DiagnosticCollector();
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         SingleFileManager singleFileManager = new SingleFileManager(compiler, new ByteCode(className));
-        JavaCompiler.CompilationTask compile = compiler.getTask(null, singleFileManager, diagnosticListener, null,
-                null, compilationUnits);
-
-        if (!compile.call()) {
-            /* Compilation failed: Output the compiler errors to stderr. */
-            List<Diagnostic> Diags = diagnosticListener.getDiagnostics();
-            for (Diagnostic diagnostic : Diags) {
-                System.err.println(diagnostic);
-            }
-            return null; // todo errors inside byte[]
-        } else {
+        JavaCompiler.CompilationTask compile = compiler.getTask(null, singleFileManager, diagnosticListener, null,null, compilationUnits);
+        if (compile.call()) {
             return singleFileManager.singleClassLoader_.byteCode_.getByteCode();
         }
-
+        return null;
     }
 }

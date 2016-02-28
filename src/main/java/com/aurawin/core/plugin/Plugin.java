@@ -21,7 +21,7 @@ public abstract class Plugin implements Method {
     }
 
     public MethodState Setup(Session ssn){
-        Header.Verify(ssn);
+        Header.Identify(ssn);
         Methods.Invalidate();
         MethodState r = MethodState.msSuccess;
         if (Header.Annotation!=null) {
@@ -35,7 +35,7 @@ public abstract class Plugin implements Method {
                             Header.Annotation.Namespace(),
                             ((Command) a).Namespace()
                     ));
-                    u.Verify(ssn);
+                    u.Identify(ssn);
                     Methods.Update( ((Command) a).Namespace(),f);
                 }
             }

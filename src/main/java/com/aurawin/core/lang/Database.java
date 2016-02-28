@@ -512,6 +512,8 @@ public class Database {
     public static class Field{
         public static class Module{
             public static final String Id="itmid";
+            public static final String Locked="itmlkd";
+            public static final String Name="itnme";
             public static final String Namespace="itmns";
             public static final String Source = "itmsrc";
             public static final String Revision = "itmrv";
@@ -736,6 +738,10 @@ public class Database {
     }
     public static class Config{
         public static class Automatic{
+            public static class Commit {
+                public static final Boolean On=true;
+                public static final Boolean Off=false;
+            }
             public static final String Create = "create";
             public static final String Update = "update";
             public static final String CreateDrop = "create-drop";

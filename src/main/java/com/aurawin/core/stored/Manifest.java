@@ -2,6 +2,7 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.Plugin;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Manifest {
     public String Username;
     public String Password;
     public String Host;
+    public boolean AutoCommit;
     public int Port;
     public int PoolsizeMin;
     public int PoolsizeMax;
@@ -33,6 +35,7 @@ public class Manifest {
             String password,
             String host,
             int port,
+            boolean autocommit,
             int poolsizeMin,
             int poolsizeMax,
             int poolAcrement,
@@ -46,6 +49,7 @@ public class Manifest {
     ) {
         Username = username;
         Password = password;
+        AutoCommit = autocommit;
         Host = host;
         Port = port;
         PoolsizeMin = poolsizeMin;
@@ -62,7 +66,10 @@ public class Manifest {
           Annotated.add(0,UniqueId.class);
 
         if (Annotated.contains(Plugin.class)==false)
-            Annotated.add(0,Plugin.class);
+            Annotated.add(1,Plugin.class);
+
+        if (Annotated.contains(Module.class)==false)
+            Annotated.add(2,Module.class);
 
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)
@@ -73,7 +80,7 @@ public class Manifest {
     }
     public void Verify(Session ssn){
         for (UniqueId uid : Namespaces){
-            uid.Verify(ssn);
+            uid.Identify(ssn);
         }
     }
     public String getConnectionURL(){

@@ -27,6 +27,7 @@ public class ServerTest {
                 "Test",                                 // password
                 "172.16.1.1",                           // host
                 5432,                                   // port
+                Database.Config.Automatic.Commit.On,    // autocommit
                 2,                                      // Min Poolsize
                 20,                                     // Max Poolsize
                 1,                                      // Pool Acquire Increment

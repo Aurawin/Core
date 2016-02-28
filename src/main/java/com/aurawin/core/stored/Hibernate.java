@@ -17,6 +17,7 @@ public class Hibernate{
                 "<property name=\"connection.username\">"+manifest.Username+"</property>"+Table.CRLF+
                 "<property name=\"connection.password\">"+manifest.Password+ "</property>"+Table.CRLF+
                 "<property name=\"connection.datasource\">"+manifest.Database+"</property>"+Table.CRLF+
+                "<property name=\"connection.autocommit\">"+Table.YesNo(manifest.AutoCommit)+"</property>"+Table.CRLF+
                 "<property name=\"connection.pool_size\">"+ manifest.PoolsizeMin+ "</property>"+Table.CRLF+
 
                 "<property name=\"hibernate.hbm2ddl.auto\">"+ manifest.Automation +"</property>"+ Table.CRLF+
@@ -36,6 +37,7 @@ public class Hibernate{
                 "<property name=\"hibernate.dialect\"></property>"+Table.CRLF+
                 "<property name=\"connection.driver_class\"></property>"+Table.CRLF+
                 "<property name=\"connection.url\"></property>"+Table.CRLF+
+                "<property name=\"connection.autocommit\"></property>"+Table.CRLF+
                 "<property name=\"connection.datasource\"></property>"+Table.CRLF+
                 "<property name=\"connection.username\"></property>"+Table.CRLF+
                 "<property name=\"connection.password\"></property>"+Table.CRLF+
@@ -60,6 +62,7 @@ public class Hibernate{
         cfg.setProperty("hibernate.connection.driver_class", manifest.Driver.getValue());
         cfg.setProperty("hibernate.connection.username", manifest.Username);
         cfg.setProperty("hibernate.connection.password", manifest.Password);
+        cfg.setProperty("hibernate.connection.autocommit",Table.YesNo(manifest.AutoCommit));
         cfg.setProperty("hibernate.connection.pool_size", Integer.toString(manifest.PoolsizeMin));
 
         cfg.setProperty("hibernate.hbm2ddl.auto", manifest.Automation);

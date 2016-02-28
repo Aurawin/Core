@@ -45,7 +45,7 @@ public class UniqueId extends Stored {
     @Override
     public long getId(){return Id;}
 
-    @Column(name = Database.Field.UniqueId.Namespace, unique = true)
+    @Column(name = Database.Field.UniqueId.Namespace, unique = true, nullable = false)
     private String Namespace;
 
     public UniqueId() {
@@ -56,7 +56,6 @@ public class UniqueId extends Stored {
 	    Id=0;
         Namespace=namespace;
     }
-
 
     public String getNamespace() {
             return Namespace;
@@ -78,7 +77,8 @@ public class UniqueId extends Stored {
                     (Namespace.compareTo( ((UniqueId) u).Namespace)==0)
         );
     }
-    public void Verify(Session ssn){
+    @Override
+    public void Identify(Session ssn){
         if (Id == 0) {
 	        UniqueId uid = null;
             Transaction tx = ssn.beginTransaction();

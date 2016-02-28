@@ -1,14 +1,33 @@
-package test.com.aurawin.core.compiler;
+package test.com.aurawin.core.stored.entities.loader;
 
-import static org.junit.Assert.*;
-import com.aurawin.core.compiler.*;
+import com.aurawin.core.compiler.Singleton;
+import com.aurawin.core.stored.entities.loader.Loader;
+import com.aurawin.core.lang.Database;
+import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.Dialect;
+import com.aurawin.core.stored.Driver;
+import com.aurawin.core.stored.Hibernate;
+import com.aurawin.core.stored.Manifest;
+import com.aurawin.core.stored.entities.Entities;
+import com.aurawin.core.stored.entities.Module;
+import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.entities.loader.Result;
+import com.aurawin.core.compiler.Result.Kind;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.annotation.Annotation;
-
-public class SingletonTest {
-
-    private String createJavaSource(){
+public class LoaderTest {
+    private SessionFactory sf;
+    private Session ssn;
+    private Entities Entities;
+    public Manifest Manifest;
+    public Singleton Compiler;
+    public Module Module;
+    private String createModuleSource(){
         StringBuilder sb = new StringBuilder();
         sb.append("import javax.persistence.*;\n");
         sb.append("import com.aurawin.core.lang.Database;\n");
@@ -61,7 +80,7 @@ public class SingletonTest {
         sb.append("    public boolean equals(Object u) {\n");
         sb.append("        return (( u instanceof Noid) && (Id == ((Noid) u).Id) );\n");
         sb.append("    }\n");
-        sb.append("    public void Verify(Session ssn){\n");
+        sb.append("    public void Identify(Session ssn){\n");
         sb.append("        if (Id == 0) {\n");
         sb.append("            Noid n = null;\n");
         sb.append("            Transaction tx = ssn.beginTransaction();\n");
@@ -89,19 +108,68 @@ public class SingletonTest {
         return sb.toString();
     }
 
-    public void testSingletonClass() throws Exception {
-        String src=createJavaSource();
-        Singleton compiler = new Singleton();
-        Result r = compiler.compile(src,"Noid");
-        Object noid = r.Class.getConstructor().newInstance();
-        Annotation[] as = noid.getClass().getAnnotations();
+    @Before
+    public void before() throws Exception {
+        Settings.Initialize("loader.Test");
+        Compiler=new Singleton();
 
+        StoredAnnotations annotations = new StoredAnnotations();
+        Manifest = new Manifest(
+                "Test",                                 // username
+                "Test",                                 // password
+                "172.16.1.1",                           // host
+                5432,                                   // port
+                true,
+                2,                                      // Min Poolsize
+                20,                                     // Max Poolsize
+                1,                                      // Pool Acquire Increment
+                50,                                     // Max statements
+                10,                                     // timeout
+                Database.Config.Automatic.Update,       //
+                "Test",                                 // database
+                Dialect.Postgresql.getValue(),          // Dialect
+                Driver.Postgresql.getValue(),           // Driver
+                annotations
+        );
+        Entities=new Entities(Manifest);
 
+        sf = Hibernate.openSession(Manifest);
+        ssn = sf.openSession();
     }
+    @After
+    public void after() throws Exception {
+        ssn.close();
+    }
+
     @Test
-    public void testSingletonByteCode() throws Exception {
-        String src = createJavaSource();
-        Singleton compiler = new Singleton();
-        byte[] ba = compiler.compileByteCode(src,"Noid");
+    public void Test() throws Exception{
+        Transaction tx =ssn.beginTransaction();
+        try {
+            Module = (Module) Entities.Lookup(Module.class, Entities, "com.aurawin.core.stored.entities.noid");
+            if (Module == null) {
+                if (Entities.Create(Entities, Module)) {
+                    Module.setSource(createModuleSource());
+                    Module.setRevision(1);
+                    ssn.update(Module);
+                }
+            } else {
+                Module.setSource(createModuleSource());
+                Module.setRevision(Module.getRevision() + 1);
+                ssn.update(Module);
+            }
+            com.aurawin.core.compiler.Result rC = Compiler.compile(Module.getSource(),Module.getName());
+            if (rC.Status==Kind.Success) {
+                Module.setCode(rC.Code);
+                Loader l = new Loader();
+                Result r = l.Check(Module);
+                if (r.State==Result.Kind.Found){
+                    Module.setBuild(Module.getBuild()+1);
+                    ssn.update(Module);
+                }
+            }
+            tx.commit();
+        } catch (Exception e){
+            tx.rollback();
+        }
     }
 }

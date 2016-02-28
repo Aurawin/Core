@@ -17,6 +17,12 @@ public class Table {
         Load();
     }
     public static final int MaxSize = 1024*1024;
+    public static final String TrueFalse(boolean val){
+        return (val==true) ? "true" : "false";
+    }
+    public static final String YesNo(boolean val){
+        return (val==true) ? "yes" : "no";
+    }
     public static final String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
     public static final String CRLF = "\r\n";

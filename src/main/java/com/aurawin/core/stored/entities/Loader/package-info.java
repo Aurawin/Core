@@ -1,1 +1,1 @@
-package com.aurawin.core.stored.entities.Loader;
+package com.aurawin.core.stored.entities.loader;

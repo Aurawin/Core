@@ -45,7 +45,7 @@ public class Plugin extends Stored {
     @Override
     public long getId(){return Id;}
 
-    @Column(name = Database.Field.Plugin.Namespace, unique = true)
+    @Column(name = Database.Field.Plugin.Namespace, unique = true, nullable = false)
     private String Namespace;
 
     public Plugin() {
@@ -78,7 +78,8 @@ public class Plugin extends Stored {
                         (Namespace.compareTo( ((Plugin) u).Namespace)==0)
         );
     }
-    public void Verify(Session ssn){
+    @Override
+    public void Identify(Session ssn){
         if (Id == 0) {
             Plugin p = null;
             Transaction tx = ssn.beginTransaction();
