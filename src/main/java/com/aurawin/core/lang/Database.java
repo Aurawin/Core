@@ -45,10 +45,11 @@ public class Database {
                 }
             }
         }
-        public static final String Module = "tbl_k_mle";
+        public static class Stored{
+            public static final String Module = "tbl_s_mle";
+        }
         public static final String Plugin = "tbl_k_pgn";
         public static final String UniqueId = "tbl_k_uid";
-        public static final String Noid = "tbl_k_noid";
     }
     public static class Query{
         public static class Cloud{
@@ -497,23 +498,13 @@ public class Database {
                 }
             }
         }
-        public static class Noid {
-            public static class ById {
-                public static final String name = "QueryNoidById";
-                public static final String value = "from Noid where Id=:Id";
-
-                public static org.hibernate.Query Create(Session ssn, long Id) {
-                    return ssn.getNamedQuery(name)
-                            .setLong("Id", Id);
-                }
-            }
-        }
     }
     public static class Field{
         public static class Module{
             public static final String Id="itmid";
             public static final String Locked="itmlkd";
             public static final String Name="itnme";
+            public static final String Package="itpkg";
             public static final String Namespace="itmns";
             public static final String Source = "itmsrc";
             public static final String Revision = "itmrv";
@@ -527,9 +518,6 @@ public class Database {
         public static class UniqueId{
             public static final String Id="itmid";
             public static final String Namespace="itmns";
-        }
-        public static class Noid{
-            public static final String Id="itmid";
         }
         public static class Cloud{
             public static class Location{

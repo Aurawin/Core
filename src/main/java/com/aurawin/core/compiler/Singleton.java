@@ -122,7 +122,7 @@ public class Singleton {
             r.Status=Result.Kind.Success;
             r.Code=singleFileManager.singleClassLoader_.byteCode_.getByteCode();
             try {
-                r.Class = singleFileManager.getClassLoader().findClass(className);
+                r.Class = singleFileManager.getClassLoader().findClass("com.aurawin.core.stored.entities."+className);
             } catch (ClassNotFoundException e) {
                 r.Status=Result.Kind.Exception;
             }

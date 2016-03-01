@@ -3,7 +3,7 @@ package test.com.aurawin.core.storage;
 import com.aurawin.core.lang.*;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
-import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.annotations.AnnotatedList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class HibernateTest {
 
     @Before
     public void before() throws Exception {
-        StoredAnnotations annotations = new StoredAnnotations();
+        AnnotatedList annotations = new AnnotatedList();
 
         Manifest = new Manifest(
                 "Test",                                 // username

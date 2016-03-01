@@ -3,16 +3,13 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
-import static com.aurawin.core.rsr.def.EngineState.*;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.InetSocketAddress;
 
 public abstract class Engine extends Thread {
     protected Manifest Manifest;
@@ -72,7 +69,7 @@ public abstract class Engine extends Thread {
             String driver
 
     ){
-        StoredAnnotations al = new StoredAnnotations();
+        AnnotatedList al = new AnnotatedList();
         Manifest m = new Manifest(
                 username,
                 password,

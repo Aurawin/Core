@@ -10,6 +10,8 @@ import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.*;
+import com.aurawin.core.stored.entities.loader.Loader;
+import com.aurawin.core.stored.entities.loader.Result;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,18 +20,31 @@ import org.hibernate.Transaction;
 public class Entities {
     public static final boolean CascadeOn = true;
     public static final boolean CascadeOff = false;
+
+    private Loader L;
+
     public Manifest Owner;
     public SessionFactory Sessions;
 
     public Entities(Manifest manifest) {
-	    Sessions= Hibernate.openSession(manifest);
+        L = new Loader();
         Owner=manifest;
-        Session ssn = Sessions.openSession();
-        try {
-            Owner.Verify(ssn);
-        } finally {
-            ssn.close();
+        Sessions=Hibernate.openSession(manifest);
+        RecreateFactory();
+    }
+
+    public void RecreateFactory(){
+        if ((Sessions!=null) && (Sessions.isClosed()==false))
+          Sessions.close();
+        if (L.Cache.size()>0) {
+            ClassLoader cL = L.Cache.get(0);
+            Thread.currentThread().setContextClassLoader(cL);
         }
+        Sessions = Hibernate.openSession(Owner);
+        L.Injected=false;
+    }
+    public boolean hasInjected(){
+        return (L.Injected==true);
     }
     private static void entityCreated(Entities entities,Stored obj) throws Exception{
         Iterator it = entities.Owner.Annotated.iterator();
@@ -206,6 +221,16 @@ public class Entities {
             ssn.close();
         }
 
+    }
+    public Result Load(String Namespace){
+        Result r = L.Check(this,Namespace);
+        if (Stored.class.isAssignableFrom(r.Class)){
+            // load into Annotated class
+            if (Owner.Annotated.indexOf(r.Class)==-1){
+                Owner.Annotated.add(r.Class);
+            }
+        }
+        return r;
     }
 }
 

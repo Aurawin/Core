@@ -1,7 +1,7 @@
 package com.aurawin.core.stored;
 
 
-import com.aurawin.core.stored.annotations.StoredAnnotations;
+import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.Plugin;
 import com.aurawin.core.stored.entities.UniqueId;
@@ -27,7 +27,7 @@ public class Manifest {
     public Dialect Dialect;
     public Driver Driver;
 
-    public StoredAnnotations Annotated= new StoredAnnotations();
+    public AnnotatedList Annotated= new AnnotatedList();
     public List<UniqueId> Namespaces = new ArrayList<UniqueId>();
 
     public Manifest(
@@ -45,7 +45,7 @@ public class Manifest {
             String database,
             String dialect,
             String driver,
-            StoredAnnotations annotations
+            AnnotatedList annotations
     ) {
         Username = username;
         Password = password;

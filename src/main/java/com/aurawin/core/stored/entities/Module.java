@@ -7,6 +7,7 @@ import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.stored.annotations.QueryByName;
+import com.aurawin.core.stored.entities.loader.Loader.ModuleLoader;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
-@Table(name = Database.Table.Module)
+@Table(name = Database.Table.Stored.Module)
 @NamedQueries(
         {
                 @NamedQuery(
@@ -59,6 +60,9 @@ public class Module extends Stored {
     @Column(name = Database.Field.Module.Name, nullable = false)
     private String Name;
 
+    @Column(name = Database.Field.Module.Package)
+    private String Package;
+
     @Column(name = Database.Field.Module.Locked)
     private boolean Locked;
 
@@ -74,6 +78,8 @@ public class Module extends Stored {
     @Column(name = Database.Field.Module.Code)
     private byte[] Code;
 
+    @Transient
+    public ModuleLoader Loader;
 
     public Module() {
         Id=0;
@@ -81,17 +87,21 @@ public class Module extends Stored {
         Revision=0;
         Name="";
         Namespace="";
+        Package="";
         Source="";
         Code=null;
+        Loader=null;
     }
-    public Module(String name, String namespace){
+    public Module(String name, String namespace, String pkg){
         Id=0;
         Name=name;
         Namespace=namespace;
+        Package=pkg;
         Build=0;
         Revision=0;
         Source="";
         Code=null;
+        Loader=null;
     }
 
     public String getNamespace() {
@@ -115,7 +125,7 @@ public class Module extends Stored {
     }
 
     public void setSource(String source) {
-        Source = source;
+        Source = source.replace("$Table$",getTable());
     }
 
     public long getRevision() {
@@ -150,6 +160,18 @@ public class Module extends Stored {
         Locked = locked;
     }
 
+    public String getTable(){
+        return Database.Table.Stored.Module+"_"+Id+"_";
+    }
+
+    public String getPackage() {
+        return Package;
+    }
+
+    public void setPackage(String pkg) {
+        Package = pkg;
+    }
+
     public void Assign(Module src){
         Id = src.Id;
         Name = src.Name;
@@ -158,6 +180,7 @@ public class Module extends Stored {
         Revision = src.Revision;
         Source = src.Source;
         Code =  src.Code;
+        Loader = src.Loader;
     }
     public void Empty(){
         Id = 0;
@@ -167,6 +190,7 @@ public class Module extends Stored {
         Revision=0;
         Source="";
         Code = null;
+        Loader=null;
     }
     @Override
     public boolean equals(Object u) {
@@ -186,7 +210,7 @@ public class Module extends Stored {
                 Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
                 m = (Module) q.uniqueResult();
                 if (m == null) {
-                    m = new Module(Name,Namespace);
+                    m = new Module(Name,Namespace,Package);
                     ssn.save(m);
                 }
                 Assign(m);
