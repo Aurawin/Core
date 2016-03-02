@@ -1,9 +1,11 @@
 package com.aurawin.core.stored.entities;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.stored.Hibernate;
@@ -32,7 +34,18 @@ public class Entities {
         Sessions=Hibernate.openSession(manifest);
         RecreateFactory();
     }
-
+    public Result Install(String Namespace){
+        Result r = L.Check(this,Namespace);
+        if (Stored.class.isAssignableFrom(r.Class)){
+            if (Owner.Annotated.indexOf(r.Class)==-1){
+                Owner.Annotated.add(r.Class);
+            }
+        }
+        return r;
+    }
+    public Loader getLoader(){
+        return L;
+    }
     public void RecreateFactory(){
         if ((Sessions!=null) && (Sessions.isClosed()==false))
           Sessions.close();
@@ -46,108 +59,113 @@ public class Entities {
     public boolean hasInjected(){
         return (L.Injected==true);
     }
-    private static void entityCreated(Entities entities,Stored obj) throws Exception{
-        Iterator it = entities.Owner.Annotated.iterator();
+    private void entityCreated(Stored obj)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+        Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
             Class<?> goe = (Class<?>) it.next();
             if (Stored.class.isAssignableFrom(goe)==true){
                 Method m = goe.getMethod("entityCreated",Entities.class,Stored.class);
-	            if (m!=null) m.invoke(obj, entities,obj);
+	            if (m!=null) m.invoke(obj,this,obj);
             }
         }
     }
-    private static void entityDeleted(Entities entities, Stored obj, boolean Cascade) throws Exception{
-        Iterator it = entities.Owner.Annotated.iterator();
+    private void entityDeleted(Stored obj, boolean Cascade)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+        Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
 	        Class<?> goe = (Class<?>) it.next();
 	        if (Stored.class.isAssignableFrom(goe)==true) {
 		        Method m = goe.getMethod("entityDeleted", Entities.class, Stored.class, boolean.class);
-		        if (m!=null) m.invoke(obj, entities, obj, Cascade);
+		        if (m!=null) m.invoke(obj, this, obj, Cascade);
 	        }
         }
 
     }
-    private static void entityUpdated(Entities entities, Stored obj, boolean Cascade) throws Exception{
-        Iterator it = entities.Owner.Annotated.iterator();
+    private void entityUpdated(Stored obj, boolean Cascade)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+
+        Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
             Class<?> goe = (Class<?>) it.next();
             if (Stored.class.isAssignableFrom(goe)==true) {
                 Method m = goe.getMethod("entityUpdated", Entities.class, Stored.class, boolean.class);
-                if (m!=null) m.invoke(obj, entities, obj, Cascade);
+                if (m!=null) m.invoke(obj, this, obj, Cascade);
             }
         }
 
     }
-    public static boolean Create(Entities entities, Stored e){
-        Session ssn = entities.Sessions.openSession();
-        Transaction tx = ssn.beginTransaction();
+    public boolean Save(Stored e)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+        Session ssn = Sessions.openSession();
         try {
-            ssn.save(e);
-            tx.commit();
-            ssn.close();
-
-            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
-            if ((ed!=null) && (ed.onCreated()==true)) {
-                entityCreated(entities, e);
+            Transaction tx = ssn.beginTransaction();
+            try {
+                ssn.save(e);
+                tx.commit();
+            } catch (Exception ex) {
+                tx.rollback();
+                return false;
             }
-
+            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
+            if ((ed != null) && (ed.onCreated() == true)) {
+                entityCreated( e);
+            }
             return true;
-        } catch (Exception ex){
-            tx.rollback();
+        } finally{
             ssn.close();
-            return false;
         }
     }
-    public static boolean  Update(
-            Entities entities,
-            Stored e,
-            boolean Cascade
-    ) {
-        Session ssn = entities.Sessions.openSession();
-        Transaction tx = ssn.beginTransaction();
+    public boolean  Update(Stored e,boolean Cascade)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+        Session ssn = Sessions.openSession();
         try {
-            ssn.update(e);
-            tx.commit();
-            ssn.close();
-
-            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
-            if ((ed!=null) && (ed.onUpdated()==true)) {
-                entityUpdated(entities, e, Cascade);
+            Transaction tx = ssn.beginTransaction();
+            try {
+                ssn.update(e);
+                tx.commit();
+            } catch (Exception ex) {
+                tx.rollback();
+                return false;
             }
-
+            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
+            if ((ed != null) && (ed.onUpdated() == true)) {
+                entityUpdated(e, Cascade);
+            }
             return true;
-        } catch (Exception ex) {
-            tx.rollback();
+        } finally{
             ssn.close();
-            return false;
         }
     }
-    public static boolean  Delete(
-            Entities entities,
-            Stored e,
-            boolean Cascade
-    ) {
-        Session ssn = entities.Sessions.openSession();
-        Transaction tx = ssn.beginTransaction();
+    public boolean  Delete(Stored e,boolean Cascade)
+            throws InvocationTargetException, NoSuchMethodException,IllegalAccessException
+    {
+        Session ssn = Sessions.openSession();
         try {
-            ssn.delete(e);
-            tx.commit();
-            ssn.close();
-
-            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
-            if ( (ed!=null) && (ed.onDeleted()==true)) {
-                entityDeleted(entities, e, Cascade);
+            Transaction tx = ssn.beginTransaction();
+            try {
+                ssn.delete(e);
+                tx.commit();
+            } catch (Exception ex) {
+                tx.rollback();
+                return false;
             }
-
+            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
+            if ((ed != null) && (ed.onDeleted() == true)) {
+                entityDeleted(e, Cascade);
+            }
             return true;
-        } catch (Exception ex) {
-            tx.rollback();
+        } finally{
             ssn.close();
-            return false;
         }
     }
-    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities, String Name) throws Exception{
-        Session ssn = entities.Sessions.openSession();
+    public Stored Lookup(Class<? extends Stored> CofE, String Name) {
+        Session ssn = Sessions.openSession();
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
             Query q = ssn.getNamedQuery(qc.Name());
@@ -159,8 +177,8 @@ public class Entities {
             ssn.close();
         }
     }
-    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities,long DomainId, long Id) throws Exception {
-        Session ssn = entities.Sessions.openSession();
+    public Stored Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
+        Session ssn = Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             Query q = ssn.getNamedQuery(qc.Name())
@@ -172,8 +190,8 @@ public class Entities {
             ssn.close();
         }
     }
-    public static Stored Lookup(Class<? extends Stored> CofE, Entities entities,long Id) throws Exception {
-        Session ssn = entities.Sessions.openSession();
+    public Stored Lookup(Class<? extends Stored> CofE,long Id) {
+        Session ssn = Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             if (qc!=null) {
@@ -187,8 +205,8 @@ public class Entities {
             ssn.close();
         }
     }
-    public static ArrayList<Stored> Lookup(QueryByDomainId aQuery, Entities entities, long Id) throws Exception{
-        Session ssn = entities.Sessions.openSession();
+    public List<Stored> Lookup(QueryByDomainId aQuery, long Id){
+        Session ssn = Sessions.openSession();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
                     .setLong("DomainId",Id);
@@ -201,8 +219,10 @@ public class Entities {
             ssn.close();
         }
     }
-    public static boolean Fetch(Entities entities, Stored e) throws Exception{
-        Session ssn = entities.Sessions.openSession();
+    public boolean Fetch(Stored e)
+            throws NoSuchFieldException,IllegalAccessException,Exception
+    {
+        Session ssn = Sessions.openSession();
         try {
             ssn.load(e,new Long(e.getId()));
             FetchFields fl = e.getClass().getAnnotation(FetchFields.class);
@@ -220,17 +240,7 @@ public class Entities {
         } finally{
             ssn.close();
         }
+    }
 
-    }
-    public Result Load(String Namespace){
-        Result r = L.Check(this,Namespace);
-        if (Stored.class.isAssignableFrom(r.Class)){
-            // load into Annotated class
-            if (Owner.Annotated.indexOf(r.Class)==-1){
-                Owner.Annotated.add(r.Class);
-            }
-        }
-        return r;
-    }
 }
 

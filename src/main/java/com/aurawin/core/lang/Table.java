@@ -307,5 +307,13 @@ public class Table {
         }
     }
 
-
+    public static class Stored{
+        public static class Path{
+            public static final String Core = "core";
+            public static final String Web = "http";
+        }
+        public static class File{
+            public static final String Index = "index.html";
+        }
+    }
 }

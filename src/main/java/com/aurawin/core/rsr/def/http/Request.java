@@ -3,13 +3,13 @@ package com.aurawin.core.rsr.def.http;
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.array.VarString;
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
 
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
-import com.aurawin.core.stored.Define;
 import com.aurawin.core.stream.MemoryStream;
 
 import java.util.EnumSet;
@@ -183,7 +183,7 @@ public class Request implements QueryResolver {
         VarString saPath=new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim),"/");
         int PathSize=saPath.size();
         if (PathSize>0) {
-            if ((saPath.get(0).compareToIgnoreCase(Define.Path.Core)==0) && (PathSize>1)) {
+            if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core)==0) && (PathSize>1)) {
                 NamespacePlugin=saPath.Extract(0,1,EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
                 Plugin = this.Owner.getPlugin(NamespacePlugin);
                 if (Plugin!=null) {
@@ -211,7 +211,7 @@ public class Request implements QueryResolver {
                 return ResolveResult.rrFile;
             }
         } else {
-            URI = "/"+Define.File.Index;
+            URI = "/"+ Table.Stored.File.Index;
             // todo we need to make sure file exists
             return ResolveResult.rrFile;
         }
