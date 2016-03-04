@@ -2,7 +2,6 @@ package com.aurawin.core.plugin;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
-import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stored.entities.UniqueId;
 import org.hibernate.Session;
@@ -26,17 +25,22 @@ public abstract class Plugin implements Method {
         MethodState r = MethodState.msSuccess;
         if (Header.Annotation!=null) {
             java.lang.reflect.Method[] fs = getClass().getDeclaredMethods();
+            Annotation aC = null;
+            Annotation aAC = null;
             for (java.lang.reflect.Method f : fs){
-                Annotation a = f.getAnnotation(Command.class);
-                if (a!=null) {
-                    UniqueId u = new UniqueId(com.aurawin.core.lang.Namespace.Entities.Plugin.getNamespace(
+                aC = f.getAnnotation(Command.class);
+
+                if (aC!=null) {
+                    UniqueId u = new UniqueId(com.aurawin.core.lang.Namespace.Entities.Plugin.getMethodNamespace(
                             Header.Annotation.Domain(),
                             Header.Annotation.ClassName(),
                             Header.Annotation.Namespace(),
-                            ((Command) a).Namespace()
+                            ((Command) aC).Namespace()
                     ));
                     u.Identify(ssn);
-                    Methods.Update( ((Command) a).Namespace(),f);
+                    KeyItem ki = Methods.Update( ((Command) aC).Namespace(),f);
+                    ki.Id=u.getId();
+                    ki.Restricted=!((Command) aC).Anonymous();
                 }
             }
         } else {

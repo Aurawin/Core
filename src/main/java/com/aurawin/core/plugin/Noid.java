@@ -25,11 +25,10 @@ public class Noid extends Plugin {
     }
     @Override
     public MethodState Teardown(Session ssn){
-
         return MethodState.msSuccess;
     }
-
     @com.aurawin.core.plugin.annotations.Command(
+            Anonymous=true,
             Name = "DoSomething",
             Namespace = "/ds",
             Title = "Something",
@@ -43,8 +42,8 @@ public class Noid extends Plugin {
         Response Response = (Response) Fields[1];
         return MethodState.msSuccess;
     }
-
     @com.aurawin.core.plugin.annotations.Command(
+            Anonymous=true,
             Name = "DoAnother",
             Namespace = "/da",
             Title = "Another",

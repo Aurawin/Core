@@ -1,8 +1,10 @@
 package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
+import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.array.VarString;
+import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
@@ -11,29 +13,36 @@ import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
 import com.aurawin.core.stream.MemoryStream;
+import org.hibernate.Session;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.EnumSet;
 
 public class Request implements QueryResolver {
     protected Item Owner;
 
-    public volatile Version Version;
-    public volatile KeyPair Headers;
-    public volatile KeyPair Cookies;
-    public volatile KeyPair Parameters;
-    public volatile Credentials Credentials;
-    public volatile MemoryStream Content;
-    public volatile String Protocol;
-    public volatile String Method;
-    public volatile String URI;
-    public volatile String Query;
-    public volatile String ETag;
-    public volatile String NamespacePlugin;
-    public volatile String NamespaceMethod;
-    public volatile Plugin Plugin;
+    public Version Version;
+    public KeyPair Headers;
+    public KeyPair Cookies;
+    public KeyPair Parameters;
+    public Credentials Credentials;
+    public MemoryStream Content;
+    public String Protocol;
+    public String Method;
+    public String URI;
+    public String Query;
+    public String ETag;
+    public String NamespacePlugin;
+    public String NamespaceMethod;
+    public Plugin Plugin;
+    public KeyItem PluginMethod;
 
     public Request(Item owner) {
         Plugin = null;
+        PluginMethod = null;
+
         Owner = owner;
         Version = new Version(1,1);
 
@@ -61,6 +70,7 @@ public class Request implements QueryResolver {
         Credentials.Empty();
         Content.Clear();
         Plugin = null;
+        PluginMethod=null;
         Protocol="";
         Method="";
         URI="";
@@ -90,6 +100,9 @@ public class Request implements QueryResolver {
         URI=null;
         Query=null;
         ETag=null;
+
+        Plugin = null;
+        PluginMethod=null;
     }
     public rsrResult Peek(){
         long iLoc=Owner.Buffers.Recv.Find(Payload.Separator);
@@ -176,44 +189,81 @@ public class Request implements QueryResolver {
             return rFailure;
         }
     }
+    public CredentialResult checkAuthorization(Session ssn){
+        CredentialResult r = CredentialResult.None;
+        KeyItem Authorization=Headers.Find(Field.Authorization);
+        if (Authorization!=null) {
+            // WWW Authorization is attached to the Headers
+            KeyPair auth = new KeyPair();
+            auth.DelimiterField=" ";
+            auth.DelimiterItem=";";
+            auth.Load(Authorization.Value);
 
+            if (auth.size()==1){
+                if (auth.get(0).Name.equalsIgnoreCase("basic")){
+                    byte[] ba = Base64.getMimeDecoder().decode(auth.get(0).Value);
+                    String p0 = new String(ba, StandardCharsets.UTF_8);
+                    String [] c = p0.split(":");
+                    if (c.length==2) {
+                        Credentials.Username = c[0];
+                        Credentials.Password = c[1];
+
+                        r=Owner.onCheckCredentials(ssn);
+                    }
+                } else {
+                    r=CredentialResult.UnknownMethod;
+                }
+            } else {
+                r=CredentialResult.UnknownMethod;
+            }
+
+        } else {
+            r=CredentialResult.None;
+        }
+        return r;
+    }
     @Override
-    public ResolveResult Resolve() {
-        // look at URI
-        VarString saPath=new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim),"/");
-        int PathSize=saPath.size();
-        if (PathSize>0) {
-            if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core)==0) && (PathSize>1)) {
-                NamespacePlugin=saPath.Extract(0,1,EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                Plugin = this.Owner.getPlugin(NamespacePlugin);
-                if (Plugin!=null) {
-                    NamespaceMethod = saPath.Extract(2,PathSize-1,EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                    java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
-                    if (m!=null) {
-                        return ResolveResult.rrPlugin;
+    public ResolveResult Resolve(Session ssn) {
+        CredentialResult cr = checkAuthorization(ssn);
+        if (CredentialResult.Stop.contains(cr)!=true) {
+            VarString saPath = new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim), "/");
+            int PathSize = saPath.size();
+            if (PathSize > 0) {
+                if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core) == 0) && (PathSize > 1)) {
+                    NamespacePlugin = saPath.Extract(0, 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                    Plugin = this.Owner.getPlugin(NamespacePlugin);
+                    if (Plugin != null) {
+                        NamespaceMethod = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                        PluginMethod = Plugin.Methods.Find(NamespaceMethod);
+                        java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
+                        if (m != null) {
+                            return ResolveResult.rrPlugin;
+                        } else {
+                            NamespacePlugin = "";
+                            NamespaceMethod = "";
+                            Plugin = null;
+                            return ResolveResult.rrFile;
+                        }
                     } else {
-                        NamespacePlugin="";
-                        NamespaceMethod="";
-                        Plugin=null;
+                        NamespacePlugin = "";
+                        NamespaceMethod = "";
+                        Plugin = null;
                         return ResolveResult.rrFile;
                     }
                 } else {
-                    NamespacePlugin="";
-                    NamespaceMethod="";
-                    Plugin=null;
+                    // todo prepend Define.Path.Web to URI
+                    // todo it may be directory ? or file ?
+                    // todo we need to make sure file exists
+                    // todo if directory append Define.File.Index to URI
                     return ResolveResult.rrFile;
                 }
             } else {
-                // todo prepend Define.Path.Web to URI
-                // todo it may be directory ? or file ?
+                URI = "/" + Table.Stored.File.Index;
                 // todo we need to make sure file exists
-                // todo if directory append Define.File.Index to URI
                 return ResolveResult.rrFile;
             }
         } else {
-            URI = "/"+ Table.Stored.File.Index;
-            // todo we need to make sure file exists
-            return ResolveResult.rrFile;
+            return ResolveResult.rrAccessDenied;
         }
     }
 }

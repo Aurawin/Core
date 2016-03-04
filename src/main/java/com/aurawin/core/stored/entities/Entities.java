@@ -190,6 +190,19 @@ public class Entities {
             ssn.close();
         }
     }
+    public Stored Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
+        Session ssn = Sessions.openSession();
+        try {
+            QueryById qc = CofE.getAnnotation(QueryById.class);
+            Query q = ssn.getNamedQuery(qc.Name())
+                    .setLong("DomainId", DomainId)
+                    .setString("Name", Name);
+
+            return CofE.cast(q.uniqueResult());
+        } finally{
+            ssn.close();
+        }
+    }
     public Stored Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = Sessions.openSession();
         try {

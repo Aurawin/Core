@@ -58,7 +58,7 @@ public class VarString extends ArrayList<String> {
             case Singleton:
                 int idx=sData.indexOf(Delimiter);
                 if (idx>-1) {
-                    return new String [] { sData.substring(0,idx) ,sData.substring(idx+1) };
+                    return new String [] { sData.substring(0,idx) ,sData.substring(idx+Delimiter.length()) };
                 } else {
                     return new String [] {sData,""};
                 }

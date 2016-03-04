@@ -1,9 +1,12 @@
 package test.com.aurawin.core.storage; 
 
 import com.aurawin.core.lang.*;
+import com.aurawin.core.rsr.def.Security;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.annotations.AnnotatedList;
+import com.aurawin.core.stored.entities.Certificate;
+import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -11,8 +14,7 @@ import org.junit.Before;
 import org.junit.After;
 
 public class HibernateTest {
-    private SessionFactory sf;
-    private Session ssn;
+    public Entities entities;
     public Manifest Manifest;
 
     @Before
@@ -36,23 +38,23 @@ public class HibernateTest {
                 Driver.Postgresql.getValue(),           // Driver
                 annotations
         );
-        sf = Hibernate.openSession(Manifest);
-        ssn = sf.openSession();
+        entities=new Entities(Manifest);
     }
 
     @After
     public void after() throws Exception {
     }
-    @Test
-    public void testUserAccount1and2() throws Exception{
-    }
-    @Test
-    public void testSaveUserAccount1() throws Exception {
-    }
-    @Test
-    public void testLookupUserAccount1ByAuth() throws Exception{
-    }
 
+    @Test
+    public void CertTest() throws Exception{
+        Certificate cert = new Certificate();
+        Security sec = new Security();
+
+
+        entities.Save(cert);
+
+
+    }
 
 }
 

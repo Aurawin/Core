@@ -9,7 +9,7 @@ public class Namespace {
     public static class Entities{
         public static class Plugin{
             public static final UniqueId Method = new UniqueId("com.aurawin.core.stored.plugin.method.$domain.$classname:$major$minor");
-            public static String getNamespace(String Domain, String ClassName, String Major, String Minor){
+            public static String getMethodNamespace(String Domain, String ClassName, String Major, String Minor){
                 return Method.getNamespace()
                         .replace("$domain",Domain)
                         .replace("$classname",ClassName)

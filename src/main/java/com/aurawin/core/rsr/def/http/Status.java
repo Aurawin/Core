@@ -4,6 +4,7 @@ public enum Status {
     // 1XX informational
     s100 ("100 Continue"),
     s101 ("101 Switching Protocols"),
+    s102 ("102 Processing"),
     // 2XX Successful
     s200 ("200 OK"),
     s201 ("201 Created"),
@@ -12,6 +13,9 @@ public enum Status {
     s204 ("204 No Content"),
     s205 ("205 Reset Content"),
     s206 ("206 Partial Content"),
+    s207 ("207 Multi-Status"),
+    s208 ("208 Already Reported"),
+    s226 ("226 IM Used"),
     // 3XX Redirection
     s300 ("300 Multiple Choices"),
     s301 ("301 Moved Permanently"),
@@ -21,6 +25,7 @@ public enum Status {
     s305 ("305 Use Proxy"),
     s306 ("306 (Unused)"),
     s307 ("307 Temporary Redirect"),
+    s308 ("308 Permanent Redirect"),
     // 4XX Client Error
     s400 ("400 Bad Request"),
     s401 ("401 Unauthorized"),
@@ -40,13 +45,29 @@ public enum Status {
     s415 ("415 Unsupported Media Type"),
     s416 ("416 Requested Range Not Satisfiable"),
     s417 ("417 Expectation Failed"),
+    s418 ("418 I\'m a teapot"),
+    s421 ("421 Misdirected Request"),
+    s422 ("422 Unprocessable Entity"),
+    s423 ("423 Locked"),
+    s424 ("424 Failed Dependency"),
+    s426 ("426 Upgrade Required"),
+    s428 ("428 Precondition Required"),
+    s429 ("429 Too Many Requests"),
+    s431 ("431 Request Header Fields Too Large"),
+    s451 ("451 Unavailable For Legal Reasons"),
     // 5XX Server Errror
     s500 ("500 Internal Server Error"),
     s501 ("501 Not Implemented"),
     s502 ("502 Bad Gateway"),
     s503 ("503 Service Unavailable"),
     s504 ("504 Gateway Timeout"),
-    s505 ("505 HTTP Version Not Supported");
+    s505 ("505 HTTP Version Not Supported"),
+    s506 ("506 Variant Also Negotiates"),
+    s507 ("507 Insufficient Storage"),
+    s508 ("508 Loop Detected"),
+    s510 ("510 Not Extended"),
+    s511 ("511 Network Authentication Required");
+
 
     private Status(String value){
         this.value = value;

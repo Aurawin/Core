@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr;
 
 
+import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.solution.Settings;
@@ -94,14 +95,18 @@ public abstract class Engine extends Thread {
         Manifest = m;
         Entities = new Entities(m);
         if (Plugins==null){
-            Session ssn = Entities.Sessions.openSession();
-            try {
-                Plugins = new Plugins(ssn);
-            } finally{
-                ssn.close();
-            }
+            Plugins = new Plugins();
         }
-
     }
+    public void installPlugin(Plugin plugin){
+        Session ssn = Entities.Sessions.openSession();
+        try{
+            Plugins.Uninstall(ssn,plugin.Header.getNamespace());
+            Plugins.Install(ssn,plugin);
+        } finally{
+            ssn.close();
+        }
+    }
+
 
 }

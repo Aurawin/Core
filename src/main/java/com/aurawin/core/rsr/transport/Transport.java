@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.transport;
 
+import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.rsrResult;
 import org.hibernate.Session;
 
@@ -12,4 +13,5 @@ public interface Transport {
     rsrResult onError();
     rsrResult onFinalize();
     rsrResult onInitialize();
+    CredentialResult onCheckCredentials(Session ssn);
 }

@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 
 public @interface Plugin {
+    boolean Anonymous() default false;
     String Name() default "";
     String Namespace() default "";
     String Transport() default "HTTP/1.1";

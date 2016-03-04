@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.security.KeyStore;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
@@ -12,18 +13,23 @@ import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.rsr.Item;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
+
+import com.aurawin.core.rsr.def.Security;
 import com.aurawin.core.solution.Settings;
 
 
 public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
+    private Security security;
+
 
     public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
         super (aRootItem,aInfinate,aHostName);
         State = esCreated;
         address = sa;
         cListen = ServerSocketChannel.open();
+        security = new Security();
     }
     @Override
     public void run(){
@@ -100,5 +106,8 @@ public class Server extends Engine {
 
     }
 
+    public synchronized void LoadPrivateKey(byte[] DerKey){
 
+
+    }
 }

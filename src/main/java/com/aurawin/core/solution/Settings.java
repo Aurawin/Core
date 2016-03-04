@@ -6,6 +6,13 @@ import java.io.File;
 
 public class Settings {
     public static String Language = "us";
+    public static class Security{
+        public static final int TextMaxLength = 1024*25;
+        public static final int DerMaxLength = 1024*10;
+        public static final String KeyAlgorithm="RSA";
+        public static final int KeySize = 2048;
+        public static final String SignatureAlgorithm="sha512";
+    }
     public static class RSR{
         public static boolean Finite = false;
         public static boolean Infinite = true;

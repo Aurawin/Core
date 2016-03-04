@@ -7,16 +7,13 @@ import org.hibernate.Session;
 import java.util.ArrayList;
 
 public class Plugins {
-    ArrayList<Plugin> Items;
+    volatile ArrayList<Plugin> Items;
 
-    public Plugins(Session ssn) {
+    public Plugins() {
         Items = new ArrayList<Plugin>();
-
-        Plugin p = new Noid();
-        Discover(ssn,p);
     }
 
-    public void Discover(Session ssn, Plugin plugin) {
+    public void Install(Session ssn, Plugin plugin) {
         if (plugin.Header.Annotation==null) {
             plugin.Header.Annotation = plugin.getClass().getAnnotation(com.aurawin.core.plugin.annotations.Plugin.class);
         }
@@ -29,11 +26,17 @@ public class Plugins {
             Items.add(plugin);
         }
     }
-    public Plugin getPlugin(String Namespace){
-        for (Plugin p : Items) {
-            if (p.Header.Annotation.Namespace().compareTo(Namespace)==0)
-                return p;
+    public void Uninstall(Session ssn, String Namespace){
+        Plugin p = getPlugin(Namespace);
+        if (p!=null){
+            Items.remove(p);
+            p.Teardown(ssn);
         }
-        return null;
+    }
+    public Plugin getPlugin(String Namespace){
+        return Items.stream()
+                .filter(p -> p.Header.getNamespace().equalsIgnoreCase(Namespace))
+                .findFirst()
+                .orElse(null);
     }
 }

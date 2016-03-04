@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Command {
+    boolean Anonymous() default false;
     String Name() default "";
     String Namespace() default "";
     String Title() default "";

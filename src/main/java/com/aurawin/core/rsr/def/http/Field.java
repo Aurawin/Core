@@ -55,7 +55,7 @@ public class Field {
     public static final String Server = "Server";
     public static final String SetCookie = "Set-Cookie";
     public static final String UserAgent = "User-Agent";
-    public static final String wwwAuthenticate = "WWW-Authenticate";
+    public static final String WWWAuthenticate = "WWW-Authenticate";
 
     public static final String SecWebSocketAccept= "Sec-WebSocket-Accept";
     public static final String SecWebSocketKey = "Sec-WebSocket-Key";
@@ -92,4 +92,13 @@ public class Field {
 
     public static final String GuidWebSocket = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
+    public static class Value{
+        public static class Authenticate{
+            public static class Basic{
+                public static final String Message(String Realm){
+                    return "Basic realm=\""+Realm+"\"";
+                }
+            }
+        }
+    }
 }

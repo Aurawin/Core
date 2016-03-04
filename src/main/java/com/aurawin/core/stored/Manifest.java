@@ -2,6 +2,7 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.annotations.AnnotatedList;
+import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.Plugin;
 import com.aurawin.core.stored.entities.UniqueId;
@@ -70,6 +71,9 @@ public class Manifest {
 
         if (Annotated.contains(Module.class)==false)
             Annotated.add(2,Module.class);
+
+        if (Annotated.contains(Certificate.class)==false)
+            Annotated.add(3, Certificate.class);
 
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)

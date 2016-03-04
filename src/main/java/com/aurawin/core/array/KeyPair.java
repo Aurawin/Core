@@ -59,6 +59,24 @@ public class KeyPair extends ArrayList<KeyItem> {
         this.add(itm);
         return itm;
     }
+    public KeyItem Update(String Name, long id){
+        for (KeyItem itm : this){
+            if (itm.Name.compareTo(Name)==0) {
+                itm.Id=id;
+                itm.Stale=false;
+                return itm;
+            }
+        }
+        KeyItem itm = new KeyItem(Name,id);
+        this.add(itm);
+        return itm;
+    }
+    public KeyItem Find(String Name){
+        return this.stream()
+                .filter(i -> i.Name.equalsIgnoreCase(Name))
+                .findFirst()
+                .orElse(null);
+    }
     public KeyItem Update(String Name, String Value){
         for (KeyItem itm : this){
             if (itm.Name.compareTo(Name)==0) {

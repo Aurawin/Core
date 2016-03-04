@@ -7,12 +7,14 @@ import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
+import com.aurawin.core.rsr.transport.http_1_1;
+import com.aurawin.core.plugin.Noid;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
 import java.net.InetSocketAddress;
-import com.aurawin.core.rsr.transport.http_1_1;
+
 
 public class ServerTest {
 
@@ -21,7 +23,6 @@ public class ServerTest {
     @Before
     public void before() throws Exception {
         Settings.Initialize("server.test");
-        serverHTTP = new Server(new InetSocketAddress("172.16.54.42", 80), new http_1_1(null), false, "inspiron.aurawin.com");
         Manifest mf = serverHTTP.createManifest(
                 "Test",                                 // username
                 "Test",                                 // password
@@ -38,7 +39,9 @@ public class ServerTest {
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue()            // Driver
         );
+        serverHTTP = new Server(new InetSocketAddress("172.16.54.42", 80), new http_1_1(null), false, "inspiron.aurawin.com");
         serverHTTP.setManifest(mf);
+        serverHTTP.installPlugin(new Noid());
     }
 
     @After
