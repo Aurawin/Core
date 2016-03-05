@@ -1,6 +1,7 @@
 package test.com.aurawin.core.storage; 
 
 import com.aurawin.core.lang.*;
+import com.aurawin.core.rsr.def.CertRequest;
 import com.aurawin.core.rsr.def.Security;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
@@ -49,7 +50,9 @@ public class HibernateTest {
     public void CertTest() throws Exception{
         Certificate cert = new Certificate();
         Security sec = new Security();
-
+        CertRequest req = new CertRequest("aurawin.com","NOC","Aurawin LLC","Pflugerville","TX","78660","US","support@aurawin.com");
+        cert.DerKey=req.Keys.getPrivate().getEncoded();
+        cert.Request = req.Print();
 
         entities.Save(cert);
 

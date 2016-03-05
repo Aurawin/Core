@@ -11,7 +11,7 @@ public class Settings {
         public static final int DerMaxLength = 1024*10;
         public static final String KeyAlgorithm="RSA";
         public static final int KeySize = 2048;
-        public static final String SignatureAlgorithm="sha512";
+        public static final String SignatureAlgorithm="MD5WithRSA";
     }
     public static class RSR{
         public static boolean Finite = false;

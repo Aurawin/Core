@@ -101,6 +101,9 @@
                             <showDeprecation>true</showDeprecation>
                             <showWarnings>true</showWarnings>
                             <fork>true</fork>
+                            <compilerArgs>
+                                <arg>-XDignore.symbol.file</arg>
+                            </compilerArgs>
                         </configuration>
                     </plugin>
                 </plugins>
