@@ -35,6 +35,29 @@ public class FileStream extends Channel {
     public long position(){
         return Position; // todo
     }
+    public int write(byte[] data){
+        FileChannel ch = Data.getChannel();
+        int iCount=0;
+        try {
+            ch.position(Position);
+            try {
+                ByteBuffer src = ByteBuffer.allocate(data.length);
+                src.put(data);
+                src.flip();
+                while (src.hasRemaining()) {
+                    iCount += ch.write(src);
+                }
+            } catch (IOException e) {
+                // todo
+                iCount = -1;
+            }
+            Size = ch.size();
+            Position = ch.position();
+            return iCount;
+        } catch (IOException e){
+            return 0;
+        }
+    }
     public int write(ByteBuffer src){
         // write entire to
         FileChannel ch = Data.getChannel();

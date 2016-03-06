@@ -27,7 +27,7 @@ public class CertRequest {
 
     public java.security.KeyPair Keys;
     public KeyPairGenerator KeyGenerator;
-    public CertRequest (String commonName,String organizationUnit,String organizationName,String locality,String state,String Postal, String country, String email) throws Exception{
+    public CertRequest (String commonName,String organizationUnit,String organizationName,String street,String locality,String state,String Postal, String country, String email) throws Exception{
         Fields= new KeyPair();
         Fields.DelimiterField="=";
         Fields.DelimiterItem=", ";
@@ -35,6 +35,7 @@ public class CertRequest {
         CommonName=Fields.Update("CN",commonName);
         OrganizationUnit=Fields.Update("OU",organizationUnit);
         OrganizationName=Fields.Update("O",organizationName);
+        Street = Fields.Update("STREET",street);
         Locality=Fields.Update("L",locality);
         State=Fields.Update("S",state);
         Email=Fields.Update("emailAddress",email);

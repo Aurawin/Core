@@ -25,6 +25,7 @@ public class Table {
     }
     public static final String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
+    public static final String LF="\n";
     public static final String CRLF = "\r\n";
     public static Boolean getLoaded(){
         return Loaded;
@@ -111,6 +112,22 @@ public class Table {
 
         }
 
+    }
+    public static class Security{
+        public static class Key {
+            public static class Private {
+                public static final String Begin = "-----BEGIN PRIVATE KEY-----";
+                public static final String End = "-----END PRIVATE KEY-----";
+            }
+        }
+        public static class Certificate{
+            public static class Request{
+                public static final String SelfSigned="Self signed certificate requires no request";
+            }
+            public static final String Begin="-----BEGIN CERTIFICATE-----";
+            public static final String End="-----END CERTIFICATE-----";
+
+        }
     }
     public static class Entities{
         public static class Domain{

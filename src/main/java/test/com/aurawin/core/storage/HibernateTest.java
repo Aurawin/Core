@@ -2,17 +2,21 @@ package test.com.aurawin.core.storage;
 
 import com.aurawin.core.lang.*;
 import com.aurawin.core.rsr.def.CertRequest;
+import com.aurawin.core.rsr.def.CertSelfSigned;
 import com.aurawin.core.rsr.def.Security;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Entities;
+import com.aurawin.core.stream.FileStream;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
+
+import java.nio.ByteBuffer;
 
 public class HibernateTest {
     public Entities entities;
@@ -47,18 +51,45 @@ public class HibernateTest {
     }
 
     @Test
-    public void CertTest() throws Exception{
+    public void SelfSignedCertCreate() throws Exception{
         Certificate cert = new Certificate();
-        Security sec = new Security();
-        CertRequest req = new CertRequest("aurawin.com","NOC","Aurawin LLC","Pflugerville","TX","78660","US","support@aurawin.com");
-        cert.DerKey=req.Keys.getPrivate().getEncoded();
-        cert.Request = req.Print();
+        CertSelfSigned ssc = new CertSelfSigned(
+                "aurawin.com",
+                "NOC",
+                "Aurawin LLC",
+                "19309 Stage Line Trail",
+                "Pflugerville",
+                "TX",
+                "78660",
+                "US",
+                "support@aurawin.com",
+                365
+        );
+        cert.Request=Table.Security.Certificate.Request.SelfSigned;
+        cert.DerKey=ssc.getPrivateKeyAsDER();
+        cert.TextKey=ssc.PrintPrivateKey();
 
+        cert.DerCert1=ssc.getCertificateAsDER();
+        cert.TextCert1 = ssc.PrintCertificate();
+
+        cert.ChainCount=1;
+        cert.Expires=ssc.ToDate.toInstant();
+
+        ssc.SaveToFile("/home/atbrunner/Desktop/test.key","/home/atbrunner/Desktop/test.crt");
         entities.Save(cert);
 
+        Security sec = new Security();
+        sec.Load(cert.DerKey,cert.DerCert1);
+    }
+    @Test
+    public void CertificateLoadTest() throws Exception{
+        Certificate cert = entities.Lookup(Certificate.class,39l);
+        if (cert!=null){
+            Security sec = new Security();
+            sec.Load(cert.DerKey,cert.DerCert1);
+        }
 
     }
-
 }
 
 

@@ -1,6 +1,7 @@
 package com.aurawin.core.solution;
 
 import com.aurawin.core.lang.Table;
+import sun.security.x509.AlgorithmId;
 
 import java.io.File;
 
@@ -12,6 +13,9 @@ public class Settings {
         public static final String KeyAlgorithm="RSA";
         public static final int KeySize = 2048;
         public static final String SignatureAlgorithm="MD5WithRSA";
+        public static class Certificate {
+            public static final AlgorithmId Algorithm = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
+        }
     }
     public static class RSR{
         public static boolean Finite = false;

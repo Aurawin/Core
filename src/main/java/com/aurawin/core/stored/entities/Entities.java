@@ -23,19 +23,19 @@ public class Entities {
     public static final boolean CascadeOn = true;
     public static final boolean CascadeOff = false;
 
-    private Loader L;
+    private Loader loader_;
 
     public Manifest Owner;
     public SessionFactory Sessions;
 
     public Entities(Manifest manifest) {
-        L = new Loader();
+        loader_ = new Loader();
         Owner=manifest;
         Sessions=Hibernate.openSession(manifest);
         RecreateFactory();
     }
     public Result Install(String Namespace){
-        Result r = L.Check(this,Namespace);
+        Result r = loader_.Check(this,Namespace);
         if (Stored.class.isAssignableFrom(r.Class)){
             if (Owner.Annotated.indexOf(r.Class)==-1){
                 Owner.Annotated.add(r.Class);
@@ -44,20 +44,20 @@ public class Entities {
         return r;
     }
     public Loader getLoader(){
-        return L;
+        return loader_;
     }
     public void RecreateFactory(){
         if ((Sessions!=null) && (Sessions.isClosed()==false))
           Sessions.close();
-        if (L.Cache.size()>0) {
-            ClassLoader cL = L.Cache.get(0);
+        if (loader_.Cache.size()>0) {
+            ClassLoader cL = loader_.Cache.get(0);
             Thread.currentThread().setContextClassLoader(cL);
         }
         Sessions = Hibernate.openSession(Owner);
-        L.Injected=false;
+        loader_.Injected=false;
     }
     public boolean hasInjected(){
-        return (L.Injected==true);
+        return (loader_.Injected==true);
     }
     private void entityCreated(Stored obj)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
@@ -120,7 +120,7 @@ public class Entities {
             ssn.close();
         }
     }
-    public boolean  Update(Stored e,boolean Cascade)
+    public boolean Update(Stored e,boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
         Session ssn = Sessions.openSession();
@@ -142,7 +142,7 @@ public class Entities {
             ssn.close();
         }
     }
-    public boolean  Delete(Stored e,boolean Cascade)
+    public boolean Delete(Stored e,boolean Cascade)
             throws InvocationTargetException, NoSuchMethodException,IllegalAccessException
     {
         Session ssn = Sessions.openSession();
@@ -164,7 +164,7 @@ public class Entities {
             ssn.close();
         }
     }
-    public Stored Lookup(Class<? extends Stored> CofE, String Name) {
+    public <T extends Stored>T Lookup(Class<? extends Stored> CofE, String Name) {
         Session ssn = Sessions.openSession();
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
@@ -172,12 +172,12 @@ public class Entities {
             for (String sF : qc.Fields()){
                 q.setString(sF, Name);
             }
-            return CofE.cast(q.uniqueResult());
+            return (T) CofE.cast(q.uniqueResult());
         } finally{
             ssn.close();
         }
     }
-    public Stored Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
+    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
         Session ssn = Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
@@ -185,12 +185,12 @@ public class Entities {
                     .setLong("DomainId", DomainId)
                     .setLong("Id", Id);
 
-            return CofE.cast(q.uniqueResult());
+            return (T) CofE.cast(q.uniqueResult());
         } finally{
             ssn.close();
         }
     }
-    public Stored Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
+    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
         Session ssn = Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
@@ -198,19 +198,19 @@ public class Entities {
                     .setLong("DomainId", DomainId)
                     .setString("Name", Name);
 
-            return CofE.cast(q.uniqueResult());
+            return (T) CofE.cast(q.uniqueResult());
         } finally{
             ssn.close();
         }
     }
-    public Stored Lookup(Class<? extends Stored> CofE,long Id) {
+    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = Sessions.openSession();
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             if (qc!=null) {
                 Query q = ssn.getNamedQuery(qc.Name())
                         .setLong("Id", Id);
-                return CofE.cast(q.uniqueResult());
+                return (T) CofE.cast(q.uniqueResult());
             } else {
                 return null;
             }

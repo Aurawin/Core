@@ -6,6 +6,7 @@ import javax.persistence.*;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.annotations.QueryById;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,6 +37,7 @@ import java.util.Date;
                 )
         }
 )
+@QueryById(Name = Database.Query.Certificate.ById.name,Fields = { "Id" })
 
 public class Certificate extends Stored {
     @javax.persistence.Id
