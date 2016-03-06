@@ -75,7 +75,6 @@ public class HibernateTest {
         cert.ChainCount=1;
         cert.Expires=ssc.ToDate.toInstant();
 
-        ssc.SaveToFile("/home/atbrunner/Desktop/test.key","/home/atbrunner/Desktop/test.crt");
         entities.Save(cert);
 
         Security sec = new Security();

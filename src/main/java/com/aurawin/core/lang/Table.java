@@ -126,6 +126,7 @@ public class Table {
             }
             public static final String Begin="-----BEGIN CERTIFICATE-----";
             public static final String End="-----END CERTIFICATE-----";
+            public static final String NoNameOnCertificateFound="This certificate has no name";
 
         }
     }
