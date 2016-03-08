@@ -32,6 +32,7 @@ import java.text.MessageFormat;
 
 public class Security {
     public char[] Password;
+    public boolean Enabled;
     public SSLContext Context;
     public KeyStore Store;
     public KeyFactory Keys;

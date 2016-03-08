@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.Commands;
+package com.aurawin.core.rsr.commands;
 
 import com.aurawin.core.log.Syslog;
 

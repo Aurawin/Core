@@ -4,6 +4,10 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
+import com.aurawin.core.rsr.def.Security;
+import com.aurawin.core.rsr.def.sockethandlers.Handler;
+import com.aurawin.core.rsr.def.sockethandlers.Plain;
+import com.aurawin.core.rsr.def.sockethandlers.Secure;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.annotations.AnnotatedList;
@@ -16,6 +20,7 @@ public abstract class Engine extends Thread {
     protected Manifest Manifest;
     protected Entities Entities;
     protected Plugins Plugins;
+    protected Security Security;
 
     public volatile EngineState State;
     public volatile String HostName;
@@ -33,8 +38,16 @@ public abstract class Engine extends Thread {
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Managers = new Managers(this);
-
+        Security = new Security();
     }
+    public synchronized Handler createSocketHandler(Item item){
+        if (Security.Enabled) {
+            return new com.aurawin.core.rsr.def.sockethandlers.Secure(item);
+        } else {
+            return new com.aurawin.core.rsr.def.sockethandlers.Plain(item);
+        }
+    }
+
     public synchronized void setReadBufferSize(int size){
         BufferSizeRead = size;
         Managers.adjustReadBufferSize();

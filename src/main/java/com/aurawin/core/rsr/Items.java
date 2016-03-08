@@ -3,7 +3,8 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.def.rsrResult;
-import com.aurawin.core.rsr.Commands.*;
+import com.aurawin.core.rsr.commands.*;
+import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
@@ -38,6 +39,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     protected Thread Thread;
     protected Engine Engine;
     protected Managers Owner;
+
     protected Selector csSelector;
     protected Commands Commands;
     protected ConcurrentLinkedQueue<Item> qAddItems;
@@ -56,7 +58,6 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         qRemoveItems = new ConcurrentLinkedQueue<Item>();
         BufferRead = ByteBuffer.allocate(Engine.BufferSizeRead);
         BufferWrite = ByteBuffer.allocate(Engine.BufferSizeWrite);
-
         try {
             csSelector = Selector.open();
         } catch (IOException ioe){

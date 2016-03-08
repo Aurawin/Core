@@ -15,6 +15,8 @@ import com.aurawin.core.rsr.Item;
 import static com.aurawin.core.rsr.def.EngineState.*;
 
 import com.aurawin.core.rsr.def.Security;
+import com.aurawin.core.rsr.def.sockethandlers.Handler;
+import com.aurawin.core.rsr.def.sockethandlers.Plain;
 import com.aurawin.core.solution.Settings;
 
 
@@ -22,7 +24,6 @@ public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel cListen;
 
-    private Security security;
 
 
     public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
@@ -30,7 +31,7 @@ public class Server extends Engine {
         State = esCreated;
         address = sa;
         cListen = ServerSocketChannel.open();
-        security = new Security();
+
     }
     @Override
     public void run(){

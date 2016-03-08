@@ -4,6 +4,7 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
+import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.rsr.def.ItemError;
@@ -15,6 +16,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.EnumSet;
 
+
 public abstract class Item  implements Transport {
     public String Protocol;
     public volatile Buffers Buffers;
@@ -25,12 +27,12 @@ public abstract class Item  implements Transport {
     protected Date TTL;
     protected int Timeout;
     protected ItemState State;
+    protected Handler SocketHandler;
     protected EnumSet<ItemError> Errors;
 
     public Item(Items aOwner){
         com.aurawin.core.rsr.transport.annotations.Transport TA = (com.aurawin.core.rsr.transport.annotations.Transport) getClass().getAnnotation(com.aurawin.core.rsr.transport.annotations.Transport.class);
         Protocol = (TA!=null) ? TA.Protocol() : Table.String(Table.Label.Null);
-
         if (aOwner!=null){
             Infinite = aOwner.Infinite;
             Owner = aOwner;
@@ -40,7 +42,7 @@ public abstract class Item  implements Transport {
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
-
+        SocketHandler = aOwner.Engine.createSocketHandler(this);
     }
     public abstract Item newInstance(Items aOwner);
 
