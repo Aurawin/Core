@@ -2,6 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
+import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
@@ -11,120 +12,89 @@ import com.aurawin.core.rsr.def.ItemError;
 import com.aurawin.core.time.Time;
 
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.time.Instant;
 import java.util.Date;
 import java.util.EnumSet;
 
 
 public abstract class Item  implements Transport {
     public String Protocol;
-    public volatile Buffers Buffers;
-    protected boolean Infinite;
-    protected Items Owner;
-    protected SocketChannel Channel;
-    protected SelectionKey Key;
-    protected Date TTL;
-    protected int Timeout;
-    protected ItemState State;
-    protected Handler SocketHandler;
-    protected EnumSet<ItemError> Errors;
 
-    public Item(Items aOwner){
+    public volatile Buffers Buffers;
+    public boolean Infinite;
+    public SelectionKey Key;
+    public int Timeout;
+    public ItemKind Kind;
+    public ItemState State;
+    public Instant TTL;
+    protected Handler SocketHandler;
+    public EnumSet<ItemError> Errors;
+    public Items Owner;
+
+    public Item(Items aOwner, ItemKind aKind){
         com.aurawin.core.rsr.transport.annotations.Transport TA = (com.aurawin.core.rsr.transport.annotations.Transport) getClass().getAnnotation(com.aurawin.core.rsr.transport.annotations.Transport.class);
         Protocol = (TA!=null) ? TA.Protocol() : Table.String(Table.Label.Null);
         if (aOwner!=null){
             Infinite = aOwner.Infinite;
+            SocketHandler = aOwner.Engine.createSocketHandler(this);
             Owner = aOwner;
         } else {
             Infinite = Settings.RSR.Finite;
         }
+        Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
-        SocketHandler = aOwner.Engine.createSocketHandler(this);
+
     }
-    public abstract Item newInstance(Items aOwner);
+    public abstract Item newInstance(Items aOwner, ItemKind aKind);
 
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }
-    protected void setChannel(SocketChannel ch){
-        Channel=ch;
-    }
+
     public void Release() throws Exception{
         if (Key!=null) Key.cancel();
-        if (Channel!=null) Channel.close();
+        SocketHandler.Release();
         Buffers.Release();
         Buffers=null;
-
-        Channel=null;
         Key=null;
     }
     public void renewTTL(){
-        TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Time.incMilliSeconds(new Date(),Timeout);
+        TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
     }
     public String getHostName(){
         return Owner.getHostName();
     }
-    public void Teardown(){
-        if (Channel.isConnected()==true) {
-            try{
-                Channel.close();
-            }catch (IOException ioe){
-                // do nothing
-            }
+
+    @Override
+    public void Setup(){
+        SocketHandler.Setup(Kind == ItemKind.Server);
+        Owner.add(this);
+        TTL=Instant.now().plusMillis(Timeout);
+        try {
+            Key = SocketHandler.Channel.register(Owner.csSelector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, this);
+        } catch (ClosedChannelException e){
+            Key = null;
         }
+    }
+    @Override
+    public void Teardown(){
+        SocketHandler.Teardown();
         Timeout=0;
         TTL=null; // we don't want any timeout errors
         Key.cancel();
+        Owner.remove(this);
         Owner.qRemoveItems.add(this);
         Owner.qWriteItems.remove(this);
     }
     public void queueSend(){
         Owner.qWriteItems.add(this);
     }
-    public int Read(){
-        if (Channel.isConnected()==true) {
-            Owner.BufferRead.clear();
-            try {
-                Channel.read(Owner.BufferRead);
-            } catch (IOException ioe){
-                return 0;
-            }
-            Owner.BufferRead.flip();
-            int iWrite = Buffers.Recv.write(Owner.BufferRead);
-            Owner.BufferRead.clear();
-            return iWrite;
-        } else {
-            return 0;
-        }
-    }
-    public int Write(){
-        int iWritten=0;
-        if (Buffers.Send.Size>0) {
 
-
-            Owner.BufferWrite.clear();
-
-            Buffers.Send.read(Owner.BufferWrite);
-            Owner.BufferWrite.flip();
-            while (Owner.BufferWrite.hasRemaining()) {
-                try {
-                    iWritten+=Channel.write(Owner.BufferWrite);
-                } catch (IOException ioe){
-                    return -1;
-                }
-
-            }
-            Owner.BufferWrite.clear();
-            Buffers.Send.sliceAtPosition();
-            if (Buffers.Send.Size==0) Owner.qWriteItems.remove(this);
-        } else {
-            if (Buffers.Send.Size == 0) Owner.qWriteItems.remove(this);
-        }
-        return iWritten;
-    }
     public Plugin getPlugin(String Namespace){
         return Owner.Engine.Plugins.getPlugin(Namespace);
     }

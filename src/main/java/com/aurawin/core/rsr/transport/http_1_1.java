@@ -5,6 +5,7 @@ import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.MethodState;
 import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.http.*;
 import static com.aurawin.core.rsr.def.http.Status.*;
@@ -26,8 +27,8 @@ public class http_1_1 extends Item implements Transport {
     public volatile Response Response;
     public ResolveResult Resolution;
 
-    public http_1_1(Items aOwner) {
-        super(aOwner);
+    public http_1_1(Items aOwner, ItemKind aKind) {
+        super(aOwner,aKind);
 
         Request=new Request(this);
         Request.Version.Major=1;
@@ -38,8 +39,8 @@ public class http_1_1 extends Item implements Transport {
         Response.Version.Minor=1;
     }
     @Override
-    public http_1_1 newInstance(Items aOwner){
-        return new http_1_1(aOwner);
+    public http_1_1 newInstance(Items aOwner,ItemKind aKind){
+        return new http_1_1(aOwner,aKind);
     }
 
     public CredentialResult onCheckCredentials(Session ssn){
@@ -110,16 +111,12 @@ public class http_1_1 extends Item implements Transport {
 
         return r;
     }
-
+    @Override
     public rsrResult onDisconnected() {
         return rSuccess;
     }
 
-    public rsrResult onAccepted() {
-        return rSuccess;
-    }
-
-    public rsrResult onRejected() {
+    public rsrResult onConnected() {
         return rSuccess;
     }
 

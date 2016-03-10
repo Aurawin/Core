@@ -316,6 +316,8 @@ public class Table {
             public static final String DisconnectFailure = "table.error.rsr.disconnect-failure";
             public static final String InitializeFailure = "table.error.rsr.initialize-failure";
             public static final String FinalizeFailure = "table.error.rsr.finalize-failure";
+            public static final String SetupSocketFailure = "table.error.rsr.setup-socket-failure";
+            public static final String TeardownSocketFailure = "table.error.rsr.teardown-socket-failure";
 
             public static final String Read="table.error.rsr.read";
             public static final String Reset="table.error.rsr.reset";

@@ -21,6 +21,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+import com.aurawin.core.stored.entities.Entities;
 import sun.security.pkcs10.PKCS10;
 import sun.security.x509.X500Name;
 
@@ -38,6 +39,7 @@ public class Security {
     public KeyFactory Keys;
     public CertificateFactory CertFactory;
     public TrustManagerFactory Trust;
+    public com.aurawin.core.stored.entities.Certificate Certs;
     public Security(){
         try {
             Password=new String("").toCharArray();
@@ -81,6 +83,17 @@ public class Security {
         Context = SSLContext.getInstance("TLS");
 
         return r;
+    }
+    public boolean Load(Entities entities,long id){
+        Certs=entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,id);
+        if (Certs!=null) {
+            try {
+                return Load(Certs.DerKey, Certs.DerCert1);
+            } catch (Exception e){
+                return false;
+            }
+        }
+        return false;
     }
     private static String extractSubjectValue(String s, String prefix)
     {

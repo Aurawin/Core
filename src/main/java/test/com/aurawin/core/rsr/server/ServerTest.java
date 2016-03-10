@@ -2,6 +2,7 @@ package test.com.aurawin.core.rsr.server;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.rsr.def.EngineState;
+import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.server.Server;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
@@ -39,7 +40,7 @@ public class ServerTest {
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue()            // Driver
         );
-        serverHTTP = new Server(new InetSocketAddress("172.16.54.42", 80), new http_1_1(null), false, "inspiron.aurawin.com");
+        serverHTTP = new Server(new InetSocketAddress("172.16.1.2", 1080), new http_1_1(null, ItemKind.Server), false, "datahouse.aurawin.com");
         serverHTTP.setManifest(mf);
         serverHTTP.installPlugin(new Noid());
     }
@@ -57,7 +58,7 @@ public class ServerTest {
         serverHTTP.Start();
         System.out.println("ServerTest.serverHTTP running");
         while (serverHTTP.State != EngineState.esFinalize) {
-
+            Thread.sleep(100);
         }
     }
 

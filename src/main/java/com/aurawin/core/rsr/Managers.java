@@ -2,6 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
+import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.solution.Settings;
 
 import java.nio.channels.SocketChannel;
@@ -57,12 +58,10 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         // we have a collection of threads
         // Have mechanism to grow/reuse thread
         Items itms = getManager();
-        Item itm = Owner.itmRoot.newInstance(itms);
-        itm.setChannel(ch);
-        if (itms != null) {
+        if (itms!=null) {
+            Item itm = Owner.itmRoot.newInstance(itms, ItemKind.Server);
+            itm.SocketHandler.Channel = ch;
             itms.qAddItems.add(itm);
-        } else {
-            itm.onRejected();
         }
     }
     public void adjustReadBufferSize(){

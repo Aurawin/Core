@@ -8,10 +8,11 @@ public interface Transport {
     rsrResult onPeek();
     rsrResult onProcess(Session ssn);
     rsrResult onDisconnected();
-    rsrResult onAccepted();
-    rsrResult onRejected();
+    rsrResult onConnected();
     rsrResult onError();
     rsrResult onFinalize();
     rsrResult onInitialize();
     CredentialResult onCheckCredentials(Session ssn);
+    void Teardown();
+    void Setup();
 }
