@@ -233,7 +233,7 @@ public class Entities {
         }
     }
     public boolean Fetch(Stored e)
-            throws NoSuchFieldException,IllegalAccessException,Exception
+            throws Exception
     {
         Session ssn = Sessions.openSession();
         try {

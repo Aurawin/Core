@@ -3,8 +3,12 @@ package com.aurawin.core.rsr.def;
 
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.solution.Settings;
+
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,24 +39,30 @@ public class Security {
     public char[] Password;
     public boolean Enabled;
     public SSLContext Context;
-    public KeyStore Store;
-    public KeyFactory Keys;
+    public KeyStore KeyStore;
+    public KeyManagerFactory KeyManagerFactory;
+    public KeyFactory KeyFactory;
     public CertificateFactory CertFactory;
     public TrustManagerFactory Trust;
-    public com.aurawin.core.stored.entities.Certificate Certs;
+    public com.aurawin.core.stored.entities.Certificate Certificate;
     public Security(){
         try {
             Password=new String("").toCharArray();
-            Store = KeyStore.getInstance(KeyStore.getDefaultType());
-            Keys = KeyFactory.getInstance(Settings.Security.KeyAlgorithm);
+            KeyStore = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType());
+            KeyFactory = java.security.KeyFactory.getInstance(Settings.Security.KeyAlgorithm);
+            KeyManagerFactory = javax.net.ssl.KeyManagerFactory.getInstance(javax.net.ssl.KeyManagerFactory.getDefaultAlgorithm());
             Trust = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             CertFactory = CertificateFactory.getInstance("X509");
-            Store.load(null);
+            KeyStore.load(null);
+            KeyManagerFactory.init(KeyStore,Password);
+            Certificate = null;
         } catch (Exception e) {
-            Store = null;
-            Keys = null;
+            KeyStore = null;
+            KeyFactory = null;
+            KeyManagerFactory=null;
             Trust = null;
             Password=null;
+            Certificate=null;
         }
     }
 
@@ -61,14 +71,17 @@ public class Security {
                     byte[] DerKey,
                     byte[] DerCert
             )
-            throws CertificateException,
+            throws
+            UnrecoverableKeyException,
+            KeyManagementException,
+            CertificateException,
             InvalidKeySpecException,
             KeyStoreException,
             NoSuchAlgorithmException
     {
         boolean r = false;
         KeySpec ks = new PKCS8EncodedKeySpec(DerKey);
-        PrivateKey pk = Keys.generatePrivate(ks);
+        PrivateKey pk = KeyFactory.generatePrivate(ks);
         InputStream isDerCert = new ByteArrayInputStream(DerCert);
 
         X509Certificate x509=(X509Certificate)CertFactory.generateCertificate(isDerCert);
@@ -77,23 +90,29 @@ public class Security {
         Certificate cert = x509;
         Certificate[] chain = {cert};
 
-        Store.setKeyEntry(sbj,pk,Password,chain);
+        KeyStore.setKeyEntry(sbj,pk,Password,chain);
+        Trust.init(KeyStore);
+        KeyManagerFactory.init(KeyStore,Password);
 
-        Trust.init(Store);
         Context = SSLContext.getInstance("TLS");
+        Context.init(KeyManagerFactory.getKeyManagers(),Trust.getTrustManagers(),new java.security.SecureRandom());
+
 
         return r;
     }
-    public boolean Load(Entities entities,long id){
-        Certs=entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,id);
-        if (Certs!=null) {
-            try {
-                return Load(Certs.DerKey, Certs.DerCert1);
-            } catch (Exception e){
-                return false;
-            }
-        }
-        return false;
+    public void setCertificate(
+            com.aurawin.core.stored.entities.Certificate Cert
+    ) throws
+            UnrecoverableKeyException,
+            CertificateException,
+            KeyManagementException,
+            InvalidKeySpecException,
+            KeyStoreException,
+            NoSuchAlgorithmException
+    {
+        Load(Cert.DerKey,Cert.DerCert1);
+        Certificate=Cert;
+        Enabled=true;
     }
     private static String extractSubjectValue(String s, String prefix)
     {

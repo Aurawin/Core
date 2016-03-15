@@ -16,6 +16,8 @@ import com.aurawin.core.rsr.Items;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
+import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.Date;
 
 @com.aurawin.core.rsr.transport.annotations.Transport(
@@ -41,6 +43,12 @@ public class http_1_1 extends Item implements Transport {
     @Override
     public http_1_1 newInstance(Items aOwner,ItemKind aKind){
         return new http_1_1(aOwner,aKind);
+    }
+    @Override
+    public http_1_1 newInstance(Items aOwner, SocketChannel aChannel){
+        http_1_1 itm = new http_1_1(aOwner,ItemKind.Server);
+        itm.SocketHandler.Channel=aChannel;
+        return itm;
     }
 
     public CredentialResult onCheckCredentials(Session ssn){
@@ -112,30 +120,30 @@ public class http_1_1 extends Item implements Transport {
         return r;
     }
     @Override
-    public rsrResult onDisconnected() {
-        return rSuccess;
+    public void Disconnected() {
+
     }
 
-    public rsrResult onConnected() {
-        return rSuccess;
+    public void Connected() {
+
+
     }
 
-    public  rsrResult onError() {
-        return rSuccess;
+    public  void Error() {
+
     }
 
-    public rsrResult onFinalize() {
+    public void Finalized() {
         Request.Release();
         Response.Release();
 
         Request=null;
         Response = null;
 
-        return rSuccess;
     }
 
-    public rsrResult onInitialize() {
-        return rSuccess;
+    public void Initialized() {
+
 
     }
     private void Prepare(){

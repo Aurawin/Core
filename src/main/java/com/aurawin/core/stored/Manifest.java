@@ -60,8 +60,8 @@ public class Manifest {
         Timeout  = timeout;
         Automation = automation;
         Database = database;
-        Dialect = Dialect.fromString(dialect);
-        Driver = Driver.fromString(driver);
+        Dialect = com.aurawin.core.stored.Dialect.fromString(dialect);
+        Driver = com.aurawin.core.stored.Driver.fromString(driver);
 
         if (Annotated.contains(UniqueId.class)==false)
           Annotated.add(0,UniqueId.class);

@@ -176,7 +176,7 @@ public class LoaderTest {
             try {
                 com.aurawin.core.compiler.Result rC = null;
                 String Namespace=Package.toLowerCase()+'.'+Name.toLowerCase();
-                Module = (Module) Entities.Lookup(Module.class, Namespace);
+                Module = Entities.Lookup(Module.class, Namespace);
                 if (Module == null) {
                     Module = new Module(Name,Namespace,Package);
                     if (Entities.Save(Module)) {

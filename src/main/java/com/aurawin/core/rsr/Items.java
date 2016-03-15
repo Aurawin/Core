@@ -9,6 +9,8 @@ import com.aurawin.core.rsr.commands.*;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.def.sockethandlers.HandlerResult;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.entities.Certificate;
+import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
@@ -23,6 +25,12 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,8 +48,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private Item itm;
     private Iterator<Item> it;
     private Iterator<SelectionKey> isk;
-
-    protected Selector csSelector;
+    public Security Security;
+    public Selector rwSelector;
     protected Commands Commands;
 
     protected ConcurrentLinkedQueue<Item> qAddItems;
@@ -54,7 +62,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     public Thread Thread;
     public Engine Engine;
     public Managers Owner;
-    public Security Security;
+
     public Items(Managers aOwner, Engine aEngine, boolean aInfinite){
         super ();
         Infinite = aInfinite;
@@ -65,56 +73,73 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         qRemoveItems = new ConcurrentLinkedQueue<Item>();
         BufferRead = ByteBuffer.allocate(Engine.BufferSizeRead);
         BufferWrite = ByteBuffer.allocate(Engine.BufferSizeWrite);
-        Security = new com.aurawin.core.rsr.def.Security();
+        Security = new Security();
     }
     @Override
     public void run() {
-        try {
-            csSelector = Selector.open();
-        } catch (IOException ioe){
-            Syslog.Append(getClass().getCanonicalName(),"Selector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
+        if (Engine.Security.Enabled){
+            try {
+                Security.setCertificate(Engine.Security.Certificate);
+            } catch (UnrecoverableKeyException uke){
+
+            } catch (CertificateException ce){
+
+            } catch (KeyManagementException kme){
+
+            } catch (InvalidKeySpecException ikse){
+
+            } catch (KeyStoreException kse){
+
+            } catch (NoSuchAlgorithmException nsae){
+
+            }
+
         }
+
+        try {
+            rwSelector = java.nio.channels.Selector.open();
+        } catch (IOException ioe){
+            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
+        }
+
+
         while (Engine.State!= esFinalize){
             Begin=Instant.now();
-            processItems();
-            End=Instant.now();
+            try {
+                processItems();
+            } catch (IOException e){
+
+            } finally {
+                End = Instant.now();
+            }
         }
     }
-    private void logEntry(Item itm,String Namespace, String Unit, String Method){
-        try {
-            Syslog.Append(
-                    Unit,
-                    Method,
-                    Table.Format(
-                            Namespace,
-                            itm.SocketHandler.Channel.getLocalAddress().toString(),
-                            itm.SocketHandler.Channel.getRemoteAddress().toString()
-                    )
-            );
-        } catch (IOException ioe){
-            // do nothing
-        }
+    private void logEntry(Item itm,String Namespace, String Unit, String Method) throws IOException {
+        Syslog.Append(
+                Unit,
+                Method,
+                Table.Format(
+                        Namespace,
+                        itm.SocketHandler.Channel.getLocalAddress().toString(),
+                        itm.SocketHandler.Channel.getRemoteAddress().toString()
+                )
+        );
+    }
+    public int getPort(){
+        return Engine.Port;
     }
     public String getHostName(){
         return Engine.HostName;
     }
-    private void processItems(){
+    private void processItems() throws IOException{
         // process add items
         itm = qAddItems.poll();
         while (itm!=null){
             try {
                 itm.Setup();
-                if (itm.onConnected() == rSuccess) {
-                    if (itm.onInitialize() == rSuccess) {
-                        itm.State = isEstablished;
-                    } else {
-                        qRemoveItems.add(itm);
-                        logEntry(itm, Table.Error.RSR.InitializeFailure, itm.getClass().getCanonicalName(), "processItems.onInitialize");
-                    }
-                } else {
-                    qRemoveItems.add(itm);
-                    logEntry(itm, Table.Error.RSR.AcceptFailure, itm.getClass().getCanonicalName(), "processItems.onAccepted");
-                }
+                itm.Connected();
+                itm.Initialized();
+                itm.State = isEstablished;
             } catch (Exception e){
                 // Discard connection
                 logEntry(itm, Table.Exception.RSR.UnableToRegisterItemChannel, itm.getClass().getCanonicalName(),"processItems - "+e.getMessage() );
@@ -125,55 +150,61 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         itm = qRemoveItems.poll();
         while (itm!=null){
             itm.Teardown();
+            try {
+                itm.Release();
+            } catch (Exception e) {
+
+            }
             itm=qRemoveItems.poll();
         }
-        // Find sockets to read
         try {
-            if (csSelector.selectNow() > 0) { // non blocking call
-                isk = csSelector.selectedKeys().iterator();
+            if (rwSelector.selectNow() > 0) { // non blocking call
+                isk = rwSelector.selectedKeys().iterator();
                 while (isk.hasNext()) {
                     SelectionKey k = isk.next();
                     try {
-                        itm = (Item) k.attachment();
-                        if (itm!=null){
-                            Read=itm.SocketHandler.Recv(); //<-- buffers read into memory
-                            if (Read==HandlerResult.Complete) {
-                                ioResult=itm.onPeek();
-                                switch (ioResult) {
-                                    case rPostpone :
-                                        itm.renewTTL();
-                                        break;
-                                    case rSuccess :
-                                        itm.renewTTL();
-                                        Session ssn = Engine.Entities.Sessions.openSession();
-                                        try {
-                                            evResult = itm.onProcess(ssn);
-                                            switch (evResult) {
-                                                case rPostpone:
-                                                    itm.renewTTL();
-                                                    break;
-                                                case rSuccess:
-                                                    itm.renewTTL();
-                                                    break;
-                                                case rFailure:
-                                                    logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
-                                                    qRemoveItems.add(itm);
-                                                    break;
+                        if (k.isReadable()) {
+                            itm = (Item) k.attachment();
+                            if (itm != null) {
+                                Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
+                                if (Read == HandlerResult.Complete) {
+                                    ioResult = itm.onPeek();
+                                    switch (ioResult) {
+                                        case rPostpone:
+                                            itm.renewTTL();
+                                            break;
+                                        case rSuccess:
+                                            itm.renewTTL();
+                                            Session ssn = Engine.Entities.Sessions.openSession();
+                                            try {
+                                                evResult = itm.onProcess(ssn);
+                                                switch (evResult) {
+                                                    case rPostpone:
+                                                        itm.renewTTL();
+                                                        break;
+                                                    case rSuccess:
+                                                        itm.renewTTL();
+                                                        break;
+                                                    case rFailure:
+                                                        logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
+                                                        qRemoveItems.add(itm);
+                                                        break;
+                                                }
+                                            } finally {
+                                                ssn.close();
                                             }
-                                        } finally {
-                                            ssn.close();
-                                        }
-                                        break;
-                                    case rFailure :
-                                        logEntry(itm,Table.Error.RSR.PeekFailure,getClass().getCanonicalName(), "processItems -> Read -> onPeek");
-                                        qRemoveItems.add(itm);
-                                        break;
-                                }
+                                            break;
+                                        case rFailure:
+                                            logEntry(itm, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");
+                                            qRemoveItems.add(itm);
+                                            break;
+                                    }
 
-                            } else if (itm.SocketHandler.Channel.isConnected()==false) {
-                                itm.Errors.add(eReset);
-                                evResult=itm.onError();
-                                qRemoveItems.add(itm);
+                                } else if (itm.SocketHandler.Channel.isOpen() == false) {
+                                    itm.Errors.add(eReset);
+                                    itm.Error();
+                                    qRemoveItems.add(itm);
+                                }
                             }
                         }
                     } finally {
@@ -191,20 +222,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             itm=it.next();
             if ( (itm.TTL!=null) && (itm.Timeout>0) && Begin.isAfter(itm.TTL)){
                 itm.Errors.add(eTimeout);
-                evResult=itm.onError();
-                switch (evResult){
-                    case rPostpone:
-                        itm.Errors.remove(eTimeout);
-                        itm.renewTTL();
-                        break;
-                    case rSuccess:
-                        qRemoveItems.add(itm);
-                        break;
-                    case rFailure:
-                        logEntry(itm,Table.Error.RSR.Timeout,getClass().getCanonicalName(), "processItems -> Timeout -> onError");
-                        qRemoveItems.add(itm);
-                        break;
-                }
+                itm.Error();
+                qRemoveItems.add(itm);
             }
         }
         it = qWriteItems.iterator();
@@ -221,29 +240,27 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                     itm.Errors.add(eWrite);
                     qRemoveItems.add(itm);
                     qWriteItems.remove(itm);
-                    evResult = itm.onError();
-                    if (evResult == rFailure)
-                        logEntry(itm, Table.Error.RSR.Write, getClass().getCanonicalName(), "processItems -> Write -> onError");
+                    itm.Error();
                     break;
-
             }
         }
         try {
-            Thread.sleep(Settings.RSR.Server.ManagerYield);
+            java.lang.Thread.sleep(Settings.RSR.Server.ManagerYield);
         } catch (InterruptedException ie){
             // do nothing
         }
     }
     public void adjustReadBufferSize() throws Exception{
-        if (Thread.currentThread().equals(this)==true){
+        if (java.lang.Thread.currentThread().equals(this)==true){
             BufferRead.clear();
             BufferRead=ByteBuffer.allocate(Engine.BufferSizeRead);
         } else {
             throw new Exception(Table.String(Table.Exception.RSR.UnableToAccessConncurrently));
         }
     }
+
     public void adjustWriteBufferSize() throws Exception{
-        if (Thread.currentThread().equals(this)==true){
+        if (java.lang.Thread.currentThread().equals(this)==true){
             BufferWrite.clear();
             BufferWrite=ByteBuffer.allocate(Engine.BufferSizeWrite);
         } else {
@@ -252,6 +269,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     }
     public void removeFromWriteQueue(Item item){
         qWriteItems.remove(item);
+    }
+    public void scheduleRemoval(Item item){
+        qRemoveItems.add(item);
     }
 
 }

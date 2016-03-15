@@ -5,6 +5,7 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.time.Time;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
@@ -16,35 +17,31 @@ import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
 
 public class Plain extends Handler {
     @Override
-    public HandlerResult Teardown(){
-        if (Channel.isConnected()==true) {
-            try{
+    public void Teardown(){
+        if (Key!=null){
+            Key.cancel();
+            Key=null;
+        }
+        if (Channel.isOpen()==true) {
+            try {
                 Channel.close();
-            }catch (IOException ioe){
+            } catch (IOException ioe) {
                 // do nothing.  already closed.
             }
-            if (Owner.onDisconnected() == rSuccess) {
-                Owner.State = isFinalize;
-            } else {
-                return HandlerResult.Failure;
-            }
-            if (Owner.onFinalize() == rSuccess) {
-                Owner.State = isNone;
-            } else {
-                return HandlerResult.Failure;
-            }
         }
-        return HandlerResult.Complete;
+        Owner.Disconnected();
+        Owner.Finalized();
+        Owner.State = isNone;
     }
 
     @Override
-    public HandlerResult Setup(boolean Accepted){
+    public void Setup(boolean accepted){
         try {
-            Channel.configureBlocking(false);
-        } catch (IOException e){
-            return HandlerResult.Failure;
+            //Channel.configureBlocking(false);
+            Key = Channel.register(Owner.Owner.rwSelector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+        } catch (IOException e) {
+
         }
-        return HandlerResult.Complete;
     }
 
     public Plain(Item owner){
@@ -79,6 +76,7 @@ public class Plain extends Handler {
             while (Owner.Owner.BufferWrite.hasRemaining()) {
                 try {
                     Channel.write(Owner.Owner.BufferWrite);
+                    Owner.Owner.BufferWrite.compact();
                 } catch (IOException ioe){
                     return HandlerResult.Failure;
                 }

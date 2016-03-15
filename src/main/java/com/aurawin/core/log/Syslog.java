@@ -37,7 +37,7 @@ public class Syslog {
     public static void main(String[] args) throws Exception {
 //        Settings.Initialize("com.aurawin.core");
         Syslog log = new Syslog();
-        log.Append("Syslog","main","test");
+        Append("Syslog","main","test");
         log.Release();
     }
     public static synchronized void Append(String unit, String entryPoint, String message){

@@ -31,7 +31,7 @@ public class Commands extends ConcurrentLinkedQueue<Command> {
     }
     public void Queue(Class<? extends Command> cCommand){
         try {
-            Command cmd = (Command) cCommand.newInstance();
+            Command cmd = cCommand.newInstance();
             cmd.Owner = this;
             cmd.Name = cCommand.getSimpleName();
             addList.add(cmd);

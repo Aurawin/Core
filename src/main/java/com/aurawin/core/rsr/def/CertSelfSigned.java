@@ -80,7 +80,7 @@ public class CertSelfSigned {
         KeyGenerator = KeyPairGenerator.getInstance(Settings.Security.KeyAlgorithm);
         KeyGenerator.initialize(Settings.Security.KeySize,new SecureRandom());
         Keys = KeyGenerator.generateKeyPair();
-        KeyFactory=KeyFactory.getInstance(Settings.Security.KeyAlgorithm);
+        KeyFactory= java.security.KeyFactory.getInstance(Settings.Security.KeyAlgorithm);
 
 
         PrivateKeySpec= KeyFactory.getKeySpec(Keys.getPrivate(),RSAPrivateKeySpec.class);

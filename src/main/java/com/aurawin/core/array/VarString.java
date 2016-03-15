@@ -7,8 +7,9 @@ import java.util.EnumSet;
 
 public class VarString extends ArrayList<String> {
     public String Delimiter = "\n";
-    public enum ExtractOption {Singleton,Multiple,IncludeLeadingDelim};
-    public enum CreateOption  {StripLeadingDelim};
+    public enum ExtractOption {Singleton,Multiple,IncludeLeadingDelim}
+
+    public enum CreateOption  {StripLeadingDelim}
 
     public VarString(String[] args){
         for (int iLcv=0; iLcv<args.length; iLcv++){

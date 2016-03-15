@@ -54,7 +54,7 @@ public class HibernateTest {
     public void SelfSignedCertCreate() throws Exception{
         Certificate cert = new Certificate();
         CertSelfSigned ssc = new CertSelfSigned(
-                "aurawin.com",
+                "datahouse.aurawin.com",
                 "NOC",
                 "Aurawin LLC",
                 "19309 Stage Line Trail",

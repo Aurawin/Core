@@ -1,9 +1,12 @@
 package com.aurawin.core.rsr.def.sockethandlers;
 
 
+import java.net.Socket;
+
 public interface Methods {
-    HandlerResult Setup(boolean Accepted);
     HandlerResult Send();
-    HandlerResult Teardown();
     HandlerResult Recv();
+    void Setup(boolean Accepted);
+    void Teardown();
+    void Shutdown();
 }

@@ -10,6 +10,7 @@ public class Settings {
     public static class Security{
         public static final int TextMaxLength = 1024*25;
         public static final int DerMaxLength = 1024*10;
+        public static final String KeyManagerStoreAlgorithm="X509";
         public static final String KeyAlgorithm="RSA";
         public static final int KeySize = 2048;
         public static final String SignatureAlgorithm="MD5WithRSA";
@@ -21,9 +22,15 @@ public class Settings {
         public static boolean Finite = false;
         public static boolean Infinite = true;
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
+        public static int SocketBufferRecvSize = 1024*512;
+        public static int SocketBufferSendSize = 1024*512;
+        public static class Security{
+            public static float BufferGrowFactor=1.2f;
+        }
         public static class Server{
             public static int AcceptYield = 25/*ms-sec*/;
             public static int AcceptPool = 10; // can adjust size later
+            public static int Backlog = 100;
             public static int ManagerYield = 25/*ms*/;
             public static int ManagerItemCascadeThreshold = 1;
             public static int ManagerItemCascadeLimit = 100;
@@ -33,6 +40,10 @@ public class Settings {
             public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
             public static int BufferSizeRead = 1024*1024*5; // 5MiB
             public static int BufferSizeWrite = 1024*1024; // 1MiB
+            public static int SSLEnginePeerAppDataBuffer = 1024*512;
+            public static int SSLEnginePeerNetDataBuffer = 1024*512;
+            public static int SSLEngineLocalAppDataBuffer = 1024*512;
+            public static int SSLEngineLocalNetDataBuffer = 1024*512;
         }
     }
     public static class File{

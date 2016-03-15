@@ -1,6 +1,7 @@
 package test.com.aurawin.core.rsr.server; 
 
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.server.Server;
@@ -10,6 +11,7 @@ import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.rsr.transport.http_1_1;
 import com.aurawin.core.plugin.Noid;
+import com.aurawin.core.stored.entities.Certificate;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
@@ -18,13 +20,12 @@ import java.net.InetSocketAddress;
 
 
 public class ServerTest {
-
     public Server serverHTTP;
 
     @Before
     public void before() throws Exception {
         Settings.Initialize("server.test");
-        Manifest mf = serverHTTP.createManifest(
+        Manifest mf = Engine.createManifest(
                 "Test",                                 // username
                 "Test",                                 // password
                 "172.16.1.1",                           // host
@@ -42,7 +43,9 @@ public class ServerTest {
         );
         serverHTTP = new Server(new InetSocketAddress("172.16.1.2", 1080), new http_1_1(null, ItemKind.Server), false, "datahouse.aurawin.com");
         serverHTTP.setManifest(mf);
+        serverHTTP.loadSecurity(65l);
         serverHTTP.installPlugin(new Noid());
+        serverHTTP.Configure();
     }
 
     @After

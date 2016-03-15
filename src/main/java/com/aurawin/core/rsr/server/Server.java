@@ -3,9 +3,15 @@ package com.aurawin.core.rsr.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.security.KeyStore;
+import java.util.List;
+
+import javax.net.ssl.*;
+
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
@@ -22,16 +28,12 @@ import com.aurawin.core.solution.Settings;
 
 public class Server extends Engine {
     private InetSocketAddress address;
-    private ServerSocketChannel cListen;
-
-
+    private ServerSocketChannel Channel;
 
     public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
-        super (aRootItem,aInfinate,aHostName);
+        super (aRootItem,aInfinate,aHostName,sa.getPort());
         State = esCreated;
         address = sa;
-        cListen = ServerSocketChannel.open();
-
     }
     @Override
     public void run(){
@@ -39,22 +41,31 @@ public class Server extends Engine {
             switch (State) {
                 case esRun:
                     try {
-                        SocketChannel chRemote = cListen.accept();
-                        if (chRemote!=null)
+                        SocketChannel chRemote = Channel.accept();
+                        if (chRemote != null) {
                             Managers.Accept(chRemote);
+                        }
                     } catch (IOException ioe) {
                         Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
-                        try{
+                        try {
                             sleep(Settings.RSR.Server.ListenWaitPause);
-                        } catch (InterruptedException ie){
+                        } catch (InterruptedException ie) {
 
                         }
                     }
                     break;
+                case esConfigure:
+                    try {
+                        Channel = ServerSocketChannel.open();
+                        State = esStart;
+                    } catch (IOException e) {
+                        Channel=null;
+                    }
+                    break;
                 case esStart:
                     try{
-                        cListen.socket().bind(address);
-                        cListen.configureBlocking(false);
+                        Channel.bind(address);
+                        Channel.configureBlocking(false);
                         State=esRun;
                     } catch (IOException ioe){
                         // network interface maybe swapping
@@ -68,8 +79,8 @@ public class Server extends Engine {
                     break;
                 case esStop:
                     try {
-                        cListen.close();
-                        cListen =null;
+                        Channel.close();
+                        Channel =null;
                     } catch  (IOException ioe){
                         // network interface maybe down
                         Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, address.toString()));
@@ -92,7 +103,12 @@ public class Server extends Engine {
             }
         }
     }
-
+    public synchronized void Configure(){
+        if (State==esCreated){
+            State=esConfigure;
+            start();
+        }
+    }
     public synchronized void Start(){
         if (State==esCreated){
             State=esStart;
@@ -108,8 +124,4 @@ public class Server extends Engine {
 
     }
 
-    public synchronized void LoadPrivateKey(byte[] DerKey){
-
-
-    }
 }

@@ -32,7 +32,7 @@ public void after() throws Exception {
 */ 
 @Test
 public void testAppend() throws Exception { 
-  Log.Append("SylogTest","testAppend","Test ok");
+  Syslog.Append("SylogTest","testAppend","Test ok");
 }
 
 

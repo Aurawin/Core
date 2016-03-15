@@ -13,7 +13,7 @@ public class ContentTypes extends LinkedList<ContentType> {
         for (ContentType ct : this ){
             ct.Verified=false;
         }
-    };
+    }
 
     public ContentType getItemById(long Id){
         Iterator<ContentType> it = iterator();

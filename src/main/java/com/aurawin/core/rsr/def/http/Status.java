@@ -69,7 +69,7 @@ public enum Status {
     s511 ("511 Network Authentication Required");
 
 
-    private Status(String value){
+    Status(String value){
         this.value = value;
     }
     private final String value;

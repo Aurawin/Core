@@ -4,14 +4,16 @@ import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.rsrResult;
 import org.hibernate.Session;
 
+import javax.net.ssl.SSLSocket;
+
 public interface Transport {
     rsrResult onPeek();
     rsrResult onProcess(Session ssn);
-    rsrResult onDisconnected();
-    rsrResult onConnected();
-    rsrResult onError();
-    rsrResult onFinalize();
-    rsrResult onInitialize();
+    void Disconnected();
+    void Connected();
+    void Error();
+    void Finalized();
+    void Initialized();
     CredentialResult onCheckCredentials(Session ssn);
     void Teardown();
     void Setup();

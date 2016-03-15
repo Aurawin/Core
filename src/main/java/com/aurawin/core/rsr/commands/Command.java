@@ -8,7 +8,7 @@ public abstract class Command {
     protected abstract void Execute();
     protected void logEntry(String Message){
         Syslog.Append( getClass().getCanonicalName(), getClass().getEnclosingMethod().getName(),Message);
-    };
+    }
 
     public Command(Commands aOwner, String aName){
         Name=aName;

@@ -11,6 +11,7 @@ import com.aurawin.core.rsr.def.sockethandlers.Secure;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.annotations.AnnotatedList;
+import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
@@ -20,10 +21,10 @@ public abstract class Engine extends Thread {
     protected Manifest Manifest;
     protected Entities Entities;
     protected Plugins Plugins;
-    protected Security Security;
-
+    public volatile Security Security;
     public volatile EngineState State;
     public volatile String HostName;
+    public volatile int Port;
     public Boolean Infinite = false;
     public Item itmRoot;
 
@@ -31,8 +32,9 @@ public abstract class Engine extends Thread {
     public volatile int BufferSizeWrite;
     public Managers Managers;
 
-    public Engine(Item aRootItem, boolean aInfinate, String hostName) throws IOException,NoSuchMethodException {
+    public Engine(Item aRootItem, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
         HostName = hostName;
+        Port = port;
         Infinite=aInfinate;
         itmRoot=aRootItem;
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
@@ -109,6 +111,18 @@ public abstract class Engine extends Thread {
         Entities = new Entities(m);
         if (Plugins==null){
             Plugins = new Plugins();
+        }
+    }
+    public void loadSecurity(long Id){
+        Certificate cert= Entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,Id);
+        if (cert!=null) {
+            try {
+                Security.setCertificate(cert);
+            } catch (Exception e){
+                if (e!=null) e.getMessage();
+            }
+        } else{
+            Security.Enabled=false;
         }
     }
     public void installPlugin(Plugin plugin){

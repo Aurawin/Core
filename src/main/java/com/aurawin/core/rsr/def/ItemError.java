@@ -10,7 +10,7 @@ public enum ItemError {
     eTimeout (Table.String(Table.Error.RSR.Timeout));
 
 
-    private ItemError(String value){
+    ItemError(String value){
         this.value = value;
     }
     private final String value;

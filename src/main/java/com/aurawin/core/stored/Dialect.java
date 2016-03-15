@@ -9,7 +9,7 @@ public enum Dialect {
 
 
     private final String value;
-    private Dialect(String value){
+    Dialect(String value){
         this.value = value;
     }
     public String getValue(){return value;}

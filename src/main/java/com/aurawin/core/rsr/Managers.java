@@ -5,6 +5,8 @@ import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.solution.Settings;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,7 +28,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         itms.Thread.start();
     }
 
-    private Items getManagerByLowestCount(int Threshold){
+    private Items getManagerByLowestItemCount(int Threshold){
         Iterator<Items> it = iterator();
         Items itms = null;
         Items result = null;
@@ -42,7 +44,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
     }
     private Items getManager(){
-        Items result = getManagerByLowestCount(Settings.RSR.Server.ManagerItemNewThreadThreshold);
+        Items result = getManagerByLowestItemCount(Settings.RSR.Server.ManagerItemNewThreadThreshold);
         if (result!=null) {
             if (result.size()>=Settings.RSR.Server.ManagerItemCascadeThreshold) result=null;
         }
@@ -54,13 +56,10 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
-    public void Accept(SocketChannel ch){
-        // we have a collection of threads
-        // Have mechanism to grow/reuse thread
+    public void Accept(SocketChannel aChannel){
         Items itms = getManager();
         if (itms!=null) {
-            Item itm = Owner.itmRoot.newInstance(itms, ItemKind.Server);
-            itm.SocketHandler.Channel = ch;
+            Item itm = Owner.itmRoot.newInstance(itms, aChannel);
             itms.qAddItems.add(itm);
         }
     }
