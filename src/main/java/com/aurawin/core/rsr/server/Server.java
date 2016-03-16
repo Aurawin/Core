@@ -37,70 +37,75 @@ public class Server extends Engine {
     }
     @Override
     public void run(){
-        while (State !=esFinalize) {
-            switch (State) {
-                case esRun:
-                    try {
-                        SocketChannel chRemote = Channel.accept();
-                        if (chRemote != null) {
-                            Managers.Accept(chRemote);
-                        }
-                    } catch (IOException ioe) {
-                        Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
+        try {
+            while (State != esFinalize) {
+                switch (State) {
+                    case esRun:
                         try {
-                            sleep(Settings.RSR.Server.ListenWaitPause);
-                        } catch (InterruptedException ie) {
+                            SocketChannel chRemote = Channel.accept();
+                            if (chRemote != null) {
+                                Managers.Accept(chRemote);
+                            }
+                            Managers.cleanupItemThreads();
+                        } catch (IOException ioe) {
+                            Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
+                            try {
+                                sleep(Settings.RSR.Server.ListenWaitPause);
+                            } catch (InterruptedException ie) {
 
+                            }
                         }
-                    }
-                    break;
-                case esConfigure:
-                    try {
-                        Channel = ServerSocketChannel.open();
-                        State = esStart;
-                    } catch (IOException e) {
-                        Channel=null;
-                    }
-                    break;
-                case esStart:
-                    try{
-                        Channel.bind(address);
-                        Channel.configureBlocking(false);
-                        State=esRun;
-                    } catch (IOException ioe){
-                        // network interface maybe swapping
-                        Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, address.toString()));
+                        break;
+                    case esConfigure:
                         try {
-                            sleep(Settings.RSR.Server.BindWaitPause);
-                        } catch (InterruptedException ie){
-
+                            Channel = ServerSocketChannel.open();
+                            State = esStart;
+                        } catch (IOException e) {
+                            Channel = null;
                         }
-                    }
-                    break;
-                case esStop:
-                    try {
-                        Channel.close();
-                        Channel =null;
-                    } catch  (IOException ioe){
-                        // network interface maybe down
-                        Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, address.toString()));
-                    }
-                    break;
-                case esUpgrade:
-                    State=esUpgrading;
-                    break;
-                case esUpgrading:
-                    //for (cls : ns[])
-                    //unload_old_class
-                    //load_class
-                    State=esRun;
-                    break;
+                        break;
+                    case esStart:
+                        try {
+                            Channel.bind(address);
+                            Channel.configureBlocking(false);
+                            State = esRun;
+                        } catch (IOException ioe) {
+                            // network interface maybe swapping
+                            Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, address.toString()));
+                            try {
+                                sleep(Settings.RSR.Server.BindWaitPause);
+                            } catch (InterruptedException ie) {
+
+                            }
+                        }
+                        break;
+                    case esStop:
+                        try {
+                            Channel.close();
+                            Channel = null;
+                        } catch (IOException ioe) {
+                            // network interface maybe down
+                            Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, address.toString()));
+                        }
+                        break;
+                    case esUpgrade:
+                        State = esUpgrading;
+                        break;
+                    case esUpgrading:
+                        //for (cls : ns[])
+                        //unload_old_class
+                        //load_class
+                        State = esRun;
+                        break;
+                }
+                try {
+                    sleep(Settings.RSR.Server.AcceptYield);
+                } catch (InterruptedException irqe) {
+                    Syslog.Append("Server", "monitor", "Interrupted");
+                }
             }
-            try {
-              sleep(Settings.RSR.Server.AcceptYield);
-            } catch (InterruptedException irqe) {
-                // release
-            }
+        } catch (Exception e){
+            Syslog.Append("Server", "monitor", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
         }
     }
     public synchronized void Configure(){

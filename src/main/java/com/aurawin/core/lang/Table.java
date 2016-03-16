@@ -286,7 +286,7 @@ public class Table {
             public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
             public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
             public static final String UnableToSelectItemKeys = "table.exception.rsr.unable-to-select-item-keys";
-
+            public static final String MonitorLoop = "table.exception.rsr.monitor-loop";
 
             public static class WebSocket {
                 public static class SecurityOption {

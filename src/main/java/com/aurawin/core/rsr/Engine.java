@@ -18,6 +18,7 @@ import org.hibernate.Session;
 import java.io.IOException;
 
 public abstract class Engine extends Thread {
+    public volatile static long nextId;
     protected Manifest Manifest;
     protected Entities Entities;
     protected Plugins Plugins;
@@ -33,6 +34,7 @@ public abstract class Engine extends Thread {
     public Managers Managers;
 
     public Engine(Item aRootItem, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
+        nextId=1;
         HostName = hostName;
         Port = port;
         Infinite=aInfinate;
@@ -41,6 +43,8 @@ public abstract class Engine extends Thread {
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Managers = new Managers(this);
         Security = new Security();
+        setName("Engine Thread "+nextId);
+        nextId++;
     }
     public synchronized Handler createSocketHandler(Item item){
         if (Security.Enabled) {

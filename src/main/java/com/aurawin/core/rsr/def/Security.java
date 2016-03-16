@@ -65,7 +65,15 @@ public class Security {
             Certificate=null;
         }
     }
-
+    public void Release(){
+        Password=null;
+        Certificate = null;
+        KeyManagerFactory=null;
+        KeyStore=null;
+        CertFactory=null;
+        Trust = null;
+        KeyFactory=null;
+    }
     public boolean Load
             (
                     byte[] DerKey,

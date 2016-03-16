@@ -8,14 +8,21 @@ import com.aurawin.core.solution.Settings;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadFactory;
 
 public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFactory {
+    private long nextId;
+    private Instant currentInstant;
+    private Instant lastCleanup;
+    private Instant Expired;
     private Engine Owner;
     public Managers(Engine aOwner){
+        nextId=1;
         Owner=aOwner;
+        lastCleanup=Instant.now();
     }
     @Override
     public Thread newThread(Runnable r){
@@ -24,8 +31,9 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     public void newThread(Items itms) {
         add(itms);
         itms.Thread=newThread((Runnable) itms);
-        itms.Thread.setName("Engine Thread " + size()+1);
+        itms.Thread.setName("Items Thread " + nextId);
         itms.Thread.start();
+        nextId++;
     }
 
     private Items getManagerByLowestItemCount(int Threshold){
@@ -77,6 +85,22 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         while (it.hasNext()) {
             itms=it.next();
             itms.Commands.Queue(cmdAdjustBufferSizeWrite.class);
+        }
+    }
+    public void cleanupItemThreads(){
+        currentInstant=Instant.now();
+        if (currentInstant.minusMillis(Settings.RSR.Items.AutoremoveCleanupInterval).isAfter(lastCleanup)) {
+            lastCleanup=currentInstant;
+            Expired = lastCleanup.minusMillis(Settings.RSR.Items.AutoremoveEmptyItemsDelay);
+            Iterator<Items> it = iterator();
+            Items itms = null;
+            while (it.hasNext()) {
+                itms = it.next();
+                if (Expired.isAfter(itms.LastUsed)) {
+                    remove(itms);
+                    itms.RemovalRequested = true;
+                }
+            }
         }
     }
 }

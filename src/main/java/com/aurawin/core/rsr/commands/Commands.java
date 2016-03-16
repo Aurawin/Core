@@ -43,6 +43,7 @@ public class Commands extends ConcurrentLinkedQueue<Command> {
 
     }
     public void Release(){
+        clear();
         addList.clear();
         addList=null;
         Owner=null;

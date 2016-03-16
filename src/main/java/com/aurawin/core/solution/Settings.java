@@ -27,6 +27,10 @@ public class Settings {
         public static class Security{
             public static float BufferGrowFactor=1.2f;
         }
+        public static class Items{
+            public static int AutoremoveEmptyItemsDelay = 1*20*1000;
+            public static int AutoremoveCleanupInterval = 10*1000;
+        }
         public static class Server{
             public static int AcceptYield = 25/*ms-sec*/;
             public static int AcceptPool = 10; // can adjust size later

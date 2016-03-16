@@ -224,8 +224,9 @@ public class Secure extends Handler {
                 localNetData.flip();
                 while (localNetData.hasRemaining()) {
                     iWrite=Channel.write(localNetData);
-                    if (iWrite< 0) {
+                    if (iWrite<= 0) {
                         // Handle closed channel
+                        Shutdown();
                     }
 
                 }
@@ -262,7 +263,7 @@ public class Secure extends Handler {
     private void processNeedTask() throws IOException{
         Runnable task;
         while ((task=Cryptor.getDelegatedTask()) != null) {
-            new Thread(task).start();
+            task.run();
         }
         processHandshakeStep();
     }
@@ -349,7 +350,10 @@ public class Secure extends Handler {
                     if (iRead>0) {
                         peerNetData.flip();
                         processHandshakeStep();
+                    } else if (iRead==-1){
+                        Shutdown();
                     }
+
                 } catch (IOException e){
                     iRead=0;
                 } finally{
@@ -388,7 +392,6 @@ public class Secure extends Handler {
             @Override
             public HandlerResult Perform() {
                 try {
-
                         iRead=Channel.read(peerNetData);
                         if (iRead>0) {
                             peerNetData.flip();

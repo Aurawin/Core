@@ -36,9 +36,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     protected Boolean Infinite;
+    public Instant Started;
+    public Instant LastUsed;
     private Instant Begin;
     private Instant End;
     private HandlerResult Read;
@@ -50,12 +54,13 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private Iterator<SelectionKey> isk;
     public Security Security;
     public Selector rwSelector;
+    protected boolean RemovalRequested;
     protected Commands Commands;
+    public Executor Background;
 
     protected ConcurrentLinkedQueue<Item> qAddItems;
     protected ConcurrentLinkedQueue<Item> qWriteItems;
     protected ConcurrentLinkedQueue<Item> qRemoveItems;
-    protected ConcurrentHashMap<SocketChannel,Item> ChannelMap;
 
     public ByteBuffer BufferRead;
     public ByteBuffer BufferWrite;
@@ -65,6 +70,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
     public Items(Managers aOwner, Engine aEngine, boolean aInfinite){
         super ();
+        RemovalRequested = false;
         Infinite = aInfinite;
         Owner = aOwner;
         Engine = aEngine;
@@ -74,9 +80,12 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         BufferRead = ByteBuffer.allocate(Engine.BufferSizeRead);
         BufferWrite = ByteBuffer.allocate(Engine.BufferSizeWrite);
         Security = new Security();
+        Commands  = new Commands(aEngine,this);
+        Background = Executors.newSingleThreadExecutor();
     }
     @Override
     public void run() {
+        Started = Instant.now();
         if (Engine.Security.Enabled){
             try {
                 Security.setCertificate(Engine.Security.Certificate);
@@ -101,17 +110,23 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         } catch (IOException ioe){
             Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
         }
+        try {
 
+            while ((Engine.State != esFinalize) && (RemovalRequested == false)) {
+                Begin = Instant.now();
+                try {
+                    if (this.size() > 0) {
+                        LastUsed = Instant.now();
+                    }
+                    processItems();
+                } catch (IOException e) {
 
-        while (Engine.State!= esFinalize){
-            Begin=Instant.now();
-            try {
-                processItems();
-            } catch (IOException e){
-
-            } finally {
-                End = Instant.now();
+                } finally {
+                    End = Instant.now();
+                }
             }
+        } finally {
+            Release();
         }
     }
     private void logEntry(Item itm,String Namespace, String Unit, String Method) throws IOException {
@@ -163,7 +178,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 while (isk.hasNext()) {
                     SelectionKey k = isk.next();
                     try {
-                        if (k.isReadable()) {
+                        if (k.isReadable() && k.isWritable() ) {
                             itm = (Item) k.attachment();
                             if (itm != null) {
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
@@ -272,6 +287,42 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     }
     public void scheduleRemoval(Item item){
         qRemoveItems.add(item);
+    }
+
+    public void Release(){
+        Owner.remove(this);
+        Started=null;
+        LastUsed=null;
+        Begin=null;
+        End=null;
+        Read=null;
+        Written=null;
+        ioResult=null;
+        evResult=null;
+        itm=null;
+        it=null;
+        isk=null;
+        Security.Release();
+        Security=null;
+        rwSelector=null;
+
+        Commands.Release();
+        Commands=null;
+
+        qAddItems.clear();
+        qAddItems=null;
+        qWriteItems.clear();
+        qWriteItems=null;
+        qRemoveItems.clear();
+        qRemoveItems=null;
+
+        BufferRead=null;
+        BufferWrite=null;
+        Thread=null;
+        Engine=null;
+        Owner=null;
+
+        Background=null;
     }
 
 }
