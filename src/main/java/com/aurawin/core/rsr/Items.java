@@ -107,7 +107,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
         try {
             rwSelector = java.nio.channels.Selector.open();
-        } catch (IOException ioe){
+        } catch (Exception e){
             Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
         }
         try {
@@ -119,8 +119,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                         LastUsed = Instant.now();
                     }
                     processItems();
-                } catch (IOException e) {
-
+                } catch (Exception e) {
+                    Syslog.Append(getClass().getCanonicalName(),"processItems",Table.Format(Table.Exception.RSR.ItemsLoop,e.getMessage()));
                 } finally {
                     End = Instant.now();
                 }

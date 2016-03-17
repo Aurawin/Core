@@ -287,7 +287,7 @@ public class Table {
             public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
             public static final String UnableToSelectItemKeys = "table.exception.rsr.unable-to-select-item-keys";
             public static final String MonitorLoop = "table.exception.rsr.monitor-loop";
-
+            public static final String ItemsLoop = "table.exception.rsr.items-loop";
             public static class WebSocket {
                 public static class SecurityOption {
                     public static final String Invalid = "table.exception.rsr.websocket.securityoption.invalid";
