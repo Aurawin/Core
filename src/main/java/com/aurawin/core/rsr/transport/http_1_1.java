@@ -25,6 +25,7 @@ import java.util.Date;
         Protocol = "HTTP"
 )
 public class http_1_1 extends Item implements Transport {
+    private MethodState methodState;
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
@@ -72,8 +73,8 @@ public class http_1_1 extends Item implements Transport {
                     if (Request.PluginMethod.Data!=null) {
                         if (Request.Credentials.AccessGranted(Request.PluginMethod.Restricted,Request.PluginMethod.Id)) {
                             Response.Status = s200;
-                            MethodState s = Request.Plugin.Execute(ssn, Request.NamespaceMethod, this);
-                            switch (s) {
+                            methodState = Request.Plugin.Execute(ssn, Request.NamespaceMethod, this);
+                            switch (methodState) {
                                 case msFailure:
                                     Response.Status = s500;
                                     break;
@@ -100,7 +101,6 @@ public class http_1_1 extends Item implements Transport {
                     Respond();
                     break;
                 case rrFile :
-                    // Todo Get File from DBMS
                     Response.Status=s200;
                     Respond();
                     break;
