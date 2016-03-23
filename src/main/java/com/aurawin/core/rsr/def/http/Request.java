@@ -9,9 +9,15 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
 
+import static com.aurawin.core.rsr.def.ResolveResult.rrAccessDenied;
+import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
+import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
+import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
 
@@ -19,16 +25,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.EnumSet;
+import java.util.HashMap;
 
-public class Request implements QueryResolver {
+public class Request implements QueryResolver,RequestHandler {
     protected Item Owner;
-
+    protected ResolveResult Result;
+    protected RequestHandler Handler;
     public Version Version;
     public KeyPair Headers;
     public KeyPair Cookies;
     public KeyPair Parameters;
     public Credentials Credentials;
-    public MemoryStream Content;
+    public MemoryStream Payload;
     public String Protocol;
     public String Method;
     public String URI;
@@ -59,16 +67,17 @@ public class Request implements QueryResolver {
         Parameters.DelimiterField="=";
 
         Credentials = new Credentials();
-        Content=new MemoryStream();
+        Payload=new MemoryStream();
 
         Reset();
     }
     public void Reset(){
+        Result=rrFile;
         Headers.clear();
         Cookies.clear();
         Parameters.clear();
         Credentials.Empty();
-        Content.Clear();
+        Payload.Clear();
         Plugin = null;
         PluginMethod=null;
         Protocol="";
@@ -81,7 +90,7 @@ public class Request implements QueryResolver {
     }
 
     public void Release(){
-        Content.Clear();
+        Payload.Clear();
 
         Version.Release();
         Headers.Release();
@@ -89,7 +98,7 @@ public class Request implements QueryResolver {
         Parameters.Release();
         Credentials.Release();
 
-        Content=null;
+        Payload=null;
         Version=null;
         Headers=null;
         Cookies=null;
@@ -105,15 +114,15 @@ public class Request implements QueryResolver {
         PluginMethod=null;
     }
     public rsrResult Peek(){
-        long iLoc=Owner.Buffers.Recv.Find(Payload.Separator);
+        long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Payload.Separator.length()),true ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Settings.RSR.Items.HTTP.Payload.Separator.length()),true ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
                 return ( (cLen==0) || ( (cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
             } else{
                 return rPostpone;
             }
-        } else if (Owner.Buffers.Recv.Size<Payload.MaxHeaderSize) {
+        } else if (Owner.Buffers.Recv.Size<Settings.RSR.Items.HTTP.Payload.MaxHeaderSize) {
             return rPostpone;
         } else {
             return rFailure;
@@ -121,13 +130,13 @@ public class Request implements QueryResolver {
     }
     public rsrResult Read(){
         Reset();
-        long iLoc=Owner.Buffers.Recv.Find(Payload.Separator);
+        long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Payload.Separator.length()),false ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Settings.RSR.Items.HTTP.Payload.Separator.length()),false ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
                 if ( (cLen==0) || ((cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) {
                     Owner.Buffers.Recv.Position=iLoc + 3;
-                    Content.Move(Owner.Buffers.Recv,cLen);
+                    Payload.Move(Owner.Buffers.Recv,cLen);
                     return rSuccess;
                 } else {
                     return rPostpone;
@@ -153,7 +162,7 @@ public class Request implements QueryResolver {
         // METHOD URI VERSION
 
         idxLineEnd=Bytes.indexOf(input,Bytes.CRLF,0);
-        idxHeadersEnd =Bytes.indexOf(input,Payload.Separator.getBytes(),0);
+        idxHeadersEnd =Bytes.indexOf(input,Settings.RSR.Items.HTTP.Payload.Separator.getBytes(),0);
         if ( (idxLineEnd>-1) && (idxHeadersEnd>-1)) {
             iChunk = iOffset + idxLineEnd;
             aLine = new byte[iChunk];
@@ -223,6 +232,11 @@ public class Request implements QueryResolver {
         return r;
     }
     @Override
+    public RequestHandlerState Process(Session ssn, Item item, String uri, KeyPair parameters){
+        Handler=Item.Handlers.Requests.get(Result);
+        return (Handler==null) ? RequestHandlerState.None : Handler.Process(ssn,item,uri,parameters);
+    }
+    @Override
     public ResolveResult Resolve(Session ssn) {
         CredentialResult cr = checkAuthorization(ssn);
         if (CredentialResult.Stop.contains(cr)!=true) {
@@ -237,33 +251,30 @@ public class Request implements QueryResolver {
                         PluginMethod = Plugin.Methods.Find(NamespaceMethod);
                         java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
                         if (m != null) {
-                            return ResolveResult.rrPlugin;
+                            Result=rrPlugin;
                         } else {
                             NamespacePlugin = "";
                             NamespaceMethod = "";
                             Plugin = null;
-                            return ResolveResult.rrFile;
+                            Result=rrFile;
                         }
                     } else {
                         NamespacePlugin = "";
                         NamespaceMethod = "";
                         Plugin = null;
-                        return ResolveResult.rrFile;
+                        Result=rrFile;
                     }
                 } else {
-                    // todo prepend Define.Path.Web to URI
-                    // todo it may be directory ? or file ?
-                    // todo we need to make sure file exists
-                    // todo if directory append Define.File.Index to URI
-                    return ResolveResult.rrFile;
+                    Result=rrFile;
                 }
             } else {
                 URI = "/" + Table.Stored.File.Index;
-                // todo we need to make sure file exists
-                return ResolveResult.rrFile;
+                Result=rrFile;
             }
         } else {
-            return ResolveResult.rrAccessDenied;
+            Result=rrAccessDenied;
         }
+        return Result;
     }
+
 }

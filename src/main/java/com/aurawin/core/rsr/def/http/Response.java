@@ -15,7 +15,7 @@ public class Response {
     public volatile Credentials Credentials;
     public volatile Status Status;
     public volatile Version Version;
-    private volatile MemoryStream Payload;
+    public volatile MemoryStream Payload;
     public Response(Item aOwner) {
         Owner = aOwner;
         Headers = new KeyPair();

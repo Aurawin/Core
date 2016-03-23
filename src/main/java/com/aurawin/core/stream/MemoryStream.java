@@ -11,7 +11,7 @@ import java.util.LinkedList;
 public class MemoryStream extends Channel {
     public static Integer MaxChunkSize = 1024*1024*512;
 
-    private LinkedList<byte[]> Collection = new LinkedList<byte[]>();
+    protected LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
     public MemoryStream(byte[] bytes){
         Size=0;
@@ -252,6 +252,17 @@ public class MemoryStream extends Channel {
         Collection.add(itm);
         Size+=itm.length;
         return itm.length;
+    }
+
+    public synchronized long Move(MemoryStream Value){
+        while (Value.Collection.size() >0 ) {
+            byte[] itm = Value.Collection.pop();
+            Collection.add(itm);
+            Size+=itm.length;
+        }
+        Value.Clear();
+
+        return Size;
     }
 
     public synchronized void Clear() {

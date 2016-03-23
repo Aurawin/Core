@@ -5,6 +5,7 @@ import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.solution.Settings;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
@@ -69,6 +70,13 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         if (itms!=null) {
             Item itm = Owner.itmRoot.newInstance(itms, aChannel);
             itms.qAddItems.add(itm);
+        } else {
+            try {
+                aChannel.close();
+                // todo log refusal to accept socket
+            } catch (IOException ioe){
+                // todo log close exception
+            }
         }
     }
     public void adjustReadBufferSize(){

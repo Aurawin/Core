@@ -1,14 +1,15 @@
 package com.aurawin.core.rsr;
 
+import com.aurawin.core.array.KeyItem;
+import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
-import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.ItemState;
-import com.aurawin.core.rsr.def.Buffers;
+import com.aurawin.core.rsr.def.*;
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.rsr.def.ItemError;
+import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
 
 import javax.net.ssl.SSLSocket;
@@ -20,9 +21,13 @@ import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 
 
 public abstract class Item  implements Transport {
+    public static class Handlers{
+        public static final HashMap<ResolveResult,RequestHandler> Requests= new HashMap<ResolveResult,RequestHandler>();
+    }
     public String Protocol;
 
     public volatile Buffers Buffers;
@@ -56,7 +61,12 @@ public abstract class Item  implements Transport {
     }
     public abstract Item newInstance(Items aOwner, ItemKind aKind);
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel);
-
+    public abstract MemoryStream getResponsePayload();
+    public abstract MemoryStream getRequestPayload();
+    public abstract KeyPair getResponseHeaders();
+    public abstract KeyPair getRequestHeaders();
+    public abstract Plugin getPlugin();
+    public abstract KeyItem getPluginMethod();
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }

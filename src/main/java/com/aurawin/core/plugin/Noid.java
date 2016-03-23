@@ -1,6 +1,7 @@
 package com.aurawin.core.plugin;
 
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Request;
 import com.aurawin.core.rsr.def.http.Response;
 import org.hibernate.Session;
@@ -40,6 +41,9 @@ public class Noid extends Plugin {
     public MethodState DoSomething(Session ssn, Item item, Object[] Fields){
         Request Request = (Request) Fields[0];
         Response Response = (Response) Fields[1];
+        Response.Headers.Update(Field.ContentType,"text/plain");
+        Response.Payload.Write("Plugin output - something was done.");
+
         return MethodState.msSuccess;
     }
     @com.aurawin.core.plugin.annotations.Command(
@@ -55,6 +59,8 @@ public class Noid extends Plugin {
     public MethodState DoAnother(Session ssn, Item item, Object[] Fields){
         Request Request = (Request) Fields[0];
         Response Response = (Response) Fields[1];
+        Response.Headers.Update(Field.ContentType,"text/plain");
+        Response.Payload.Write("Plugin output - another something was done.");
 
         return MethodState.msSuccess;
     }

@@ -4,7 +4,9 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
+import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.Security;
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.def.sockethandlers.Plain;
 import com.aurawin.core.rsr.def.sockethandlers.Secure;
@@ -16,6 +18,7 @@ import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public abstract class Engine extends Thread {
     public volatile static long nextId;
@@ -32,6 +35,7 @@ public abstract class Engine extends Thread {
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
     public Managers Managers;
+
 
     public Engine(Item aRootItem, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
         nextId=1;

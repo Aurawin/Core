@@ -30,6 +30,13 @@ public class Settings {
         public static class Items{
             public static int AutoremoveEmptyItemsDelay = 1*20*1000;
             public static int AutoremoveCleanupInterval = 10*1000;
+            public static class HTTP {
+                public static class Payload {
+                    public final static Integer MaxHeaderSize = 1024 * 1024;
+                    public final static String Separator = "\r\n\r\n";
+                }
+            }
+
         }
         public static class Server{
             public static int AcceptYield = 25/*ms-sec*/;
