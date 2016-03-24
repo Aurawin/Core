@@ -6,30 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/log/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities/Loader/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/package-info.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/compiler/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/log/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/rsr/server/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/Loader/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/com/package-info.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/test/package-info.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/compiler/SingletonTest.java" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/SingletonTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/log/SyslogTest.java" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/log/SyslogTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/rsr/server/ServerTest.java" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/ServerTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/storage/HibernateTest.java" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/Loader/LoaderTest.java" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities/Loader/LoaderTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core.iml" afterPath="$PROJECT_DIR$/core.iml" />
     </list>
     <ignored path="Core.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,7 +35,7 @@
     <favorites_list name="Core" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/test/com/package-info.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -78,11 +56,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SyslogTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SyslogTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/log/SyslogTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+            <state relative-caret-position="468">
+              <caret line="29" column="65" selection-start-line="29" selection-start-column="65" selection-end-line="29" selection-end-column="65" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Keywords.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/keywords/Keywords.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="0" selection-end-column="29" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#735#744#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeywordsTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -93,13 +94,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit4 Test Class" />
         <option value="AnnotationType" />
         <option value="Kotlin Enum" />
         <option value="Enum" />
         <option value="package-info" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JUnit4 Test Class" />
       </list>
     </option>
   </component>
@@ -114,7 +115,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandler/Plain.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandler/Secure.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/annotations/Transport.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/ItemKind.java" />
@@ -165,6 +165,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/CriticalBlock.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/keywords/Keywords.java" />
         <option value="$PROJECT_DIR$/src/main/test/package-info.java" />
+        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java" />
       </list>
     </option>
   </component>
@@ -196,6 +197,20 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="Core" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Core" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Plugins" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -264,6 +279,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -427,6 +443,44 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurawin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="keywords" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -454,9 +508,110 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurawin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurawin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurawin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="keywords" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Problems" />
         <subPane subId="Project Files" />
@@ -492,7 +647,6 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="636" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="true" />
     <property name="SearchEverywhereHistoryKey" value="ItemsLoop&#9;null&#9;null&#10;DerValue&#9;PSI&#9;JAVA://sun.security.util.DerValue&#10;NoSuchMethod&#9;PSI&#9;JAVA://java.lang.NoSuchMethodException&#10;URI&#9;PSI&#9;JAVA://com.aurawin.core.rsr.def.http.Request#URI&#10;try&#9;PSI&#9;JAVA://jdk.nashorn.internal.ir.TryNode" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
@@ -504,6 +658,7 @@
       <recent name="com.aurawin.core.rsr.def.sockethandler" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.aurawin.core.keywords" />
       <recent name="test.com.aurawin.core.stored.entities.Loader" />
       <recent name="test.com.aurawin.core.compiler" />
       <recent name="com.aurawin.core.compiler" />
@@ -512,6 +667,13 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/test" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandler" />
+      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\entities" />
+      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\modules" />
+      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.aurawin.core.rsr.def.sockethandler" />
     </key>
@@ -519,13 +681,6 @@
       <recent name="com.aurawin.core.stored.annotations" />
       <recent name="com.aurawin.core.storage.annotations" />
       <recent name="test.com.aurawin.core.storage.entities" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/test" />
-      <recent name="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandler" />
-      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\entities" />
-      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\modules" />
-      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.ServerTest">
@@ -930,13 +1085,6 @@
       <option name="presentableId" value="Default" />
       <updated>1441072894308</updated>
     </task>
-    <task id="LOCAL-00042" summary="Core -&gt; Entity framework with factory working">
-      <created>1442899282857</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1442899282857</updated>
-    </task>
     <task id="LOCAL-00043" summary="Removed UID class">
       <created>1442925675853</created>
       <option name="number" value="00043" />
@@ -1273,7 +1421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1458740393129</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Test">
+      <created>1458844878297</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1458844878298</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1326,7 +1481,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.27375972" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13543898" sideWeight="0.48776758" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13704497" sideWeight="0.48776758" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32342008" sideWeight="0.48475793" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1344,7 +1499,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3150384" sideWeight="0.6744186" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18551043" sideWeight="0.55813956" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32601535" sideWeight="0.7262403" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32527474" sideWeight="0.7262403" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.10394456" sideWeight="0.5122324" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.556266" sideWeight="0.49347702" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1387,7 +1542,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed Folders class" />
     <MESSAGE value="Tweaked Network Store" />
     <MESSAGE value="Added more entities for aurawin" />
     <MESSAGE value="Added acl entities for networks" />
@@ -1412,7 +1566,8 @@
     <MESSAGE value="SocketHandler" />
     <MESSAGE value="SSLSocketFactory Work" />
     <MESSAGE value="HTTPS 1.1 Server" />
-    <option name="LAST_COMMIT_MESSAGE" value="HTTPS 1.1 Server" />
+    <MESSAGE value="Test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1743,14 +1898,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Field.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="39" column="31" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/requesthandlers/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1762,6 +1909,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1845,6 +1993,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2028,26 +2177,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-762">
           <caret line="1696" column="15" selection-start-line="1696" selection-start-column="15" selection-end-line="1696" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/keywords/Keywords.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="90" column="21" selection-start-line="90" selection-start-column="21" selection-end-line="90" selection-end-column="21" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#735#744#0" expanded="true" />
-            <element signature="e#1714#1715#0" expanded="true" />
-            <element signature="e#1795#1796#0" expanded="true" />
-            <element signature="e#2849#2850#0" expanded="true" />
-            <element signature="e#2936#2937#0" expanded="true" />
-            <element signature="e#3374#3375#0" expanded="true" />
-            <element signature="e#3447#3448#0" expanded="true" />
-            <element signature="e#3850#3851#0" expanded="true" />
-            <element signature="e#3915#3916#0" expanded="true" />
-            <element signature="e#4848#4849#0" expanded="true" />
-            <element signature="e#4890#4891#0" expanded="true" />
+            <element signature="e#66457#66458#0" expanded="true" />
+            <element signature="e#66495#66496#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2056,7 +2188,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="4" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2112,14 +2243,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/test/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="12" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/test/package-info.java" />
     <entry file="file://$PROJECT_DIR$/src/main/test/com/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -2138,8 +2262,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/log/SyslogTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        <state relative-caret-position="468">
+          <caret line="29" column="65" selection-start-line="29" selection-start-column="65" selection-end-line="29" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/keywords/Keywords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="0" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#735#744#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
         </state>
       </provider>
