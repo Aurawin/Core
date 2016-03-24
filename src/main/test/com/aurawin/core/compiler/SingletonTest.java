@@ -1,4 +1,4 @@
-package test.com.aurawin.core.compiler;
+package com.aurawin.core.compiler;
 
 import static org.junit.Assert.*;
 import com.aurawin.core.compiler.*;

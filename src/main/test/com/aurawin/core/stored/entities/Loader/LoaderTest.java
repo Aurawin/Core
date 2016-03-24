@@ -1,4 +1,4 @@
-package test.com.aurawin.core.stored.entities.loader;
+package com.aurawin.core.stored.entities.Loader;
 
 import com.aurawin.core.compiler.Singleton;
 import com.aurawin.core.stored.*;

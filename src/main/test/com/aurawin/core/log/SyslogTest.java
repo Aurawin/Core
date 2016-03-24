@@ -1,4 +1,4 @@
-package test.com.aurawin.core.log; 
+package com.aurawin.core.log;
 
 import com.aurawin.core.log.Syslog;
 import org.junit.Test;

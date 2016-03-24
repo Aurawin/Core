@@ -1,4 +1,4 @@
-package test.com.aurawin.core.rsr.server; 
+package com.aurawin.core.rsr.server;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
