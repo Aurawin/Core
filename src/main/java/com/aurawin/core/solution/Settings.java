@@ -7,6 +7,19 @@ import java.io.File;
 
 public class Settings {
     public static String Language = "us";
+    public static class CriticalLock{
+        public static final int WaitingDelayMillis = 5;
+    }
+    public static class Keywords{
+        public static class Phrase{
+            public static final String Start = "{i ";
+            public static final int StartLength = Start.length();
+            public static final String End = "}";
+            public static final int EndLength = End.length();
+        }
+
+        public static final int InitialInstantReductionMillis = 60 * 60 * 1000; // 1 hour
+    }
     public static class Security{
         public static final int TextMaxLength = 1024*25;
         public static final int DerMaxLength = 1024*10;

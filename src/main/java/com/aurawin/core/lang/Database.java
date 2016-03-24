@@ -321,6 +321,15 @@ public class Database {
                                     .setLong("DomainId",DomainId);
                         }
                     }
+                    public static class ByDomainIdAndOwnerId {
+                        public static final String name = "QueryDomainUserAccountRosterByDomainIdAndOwnerId";
+                        public static final String value = "from Roster where DomainId=:DomainId and OwnerId=:OwnerId";
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId){
+                            return ssn.getNamedQuery(name)
+                                    .setLong("DomainId",DomainId)
+                                    .setLong("OwnerId",OwnerId);
+                        }
+                    }
                     public static class RosterField{
                         public static class ByDomainId {
                             public static final String name = "QueryDomainUserAccountRosterFieldByDomainId";
@@ -341,6 +350,16 @@ public class Database {
                         return ssn.getNamedQuery(name)
                                 .setLong("DomainId", DomainId)
                                 .setLong("OwnerId", OwnerId);
+                    }
+                }
+                public static class ByOwnerAndTitle{
+                    public static final String name = "QueryDomainNetworkByOwnerAndTitle";
+                    public static final String value = "from Network where DomainId=:DomainId and OwnerId=:OwnerId and Title=:Title";
+                    public static org.hibernate.Query Create(Session ssn, long DomainId, long OwnerId, String Title){
+                        return ssn.getNamedQuery(name)
+                                .setLong("DomainId", DomainId)
+                                .setLong("OwnerId", OwnerId)
+                                .setString("Title",Title);
                     }
                 }
                 public static class ByDomainId {
@@ -385,13 +404,14 @@ public class Database {
                 public static class File {
                     public static class ByName {
                         public static final String name = "QueryDomainNetworkFileByName";
-                        public static final String value = "from File where DomainId=:DomainId and NetworkId=:NetworkId and FolderId=:FolderId";
+                        public static final String value = "from File where DomainId=:DomainId and NetworkId=:NetworkId and FolderId=:FolderId and Name=:Name";
 
-                        public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, long FolderId) {
+                        public static org.hibernate.Query Create(Session ssn, long DomainId, long NetworkId, long FolderId, String Name) {
                             return ssn.getNamedQuery(name)
                                     .setLong("DomainId", DomainId)
                                     .setLong("NetworkId", NetworkId)
-                                    .setLong("FolderId", FolderId);
+                                    .setLong("FolderId", FolderId)
+                                    .setString("Name",Name);
                         }
                     }
 

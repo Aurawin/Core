@@ -218,7 +218,7 @@ public class Entities {
             ssn.close();
         }
     }
-    public List<Stored> Lookup(QueryByDomainId aQuery, long Id){
+    public ArrayList<Stored> Lookup(QueryByDomainId aQuery, long Id){
         Session ssn = Sessions.openSession();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
