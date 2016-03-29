@@ -13,6 +13,12 @@ public class Keyword {
     public String Name;
     public KeywordMethod Builder;
 
+    public Keyword(Keywords owner, String name){
+        Owner = owner;
+        Name = name;
+        Modified = Time.instantUTC();
+        LastBuild = Time.instantUTC().minusMillis(Settings.Keywords.InitialInstantReductionMillis);
+    }
     public Keyword(Keywords owner, String name, KeywordMethod builder){
         Owner = owner;
         Name = name;

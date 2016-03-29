@@ -12,7 +12,7 @@ public class Settings {
     }
     public static class Keywords{
         public static class Phrase{
-            public static final String Start = "{i ";
+            public static final String Start = "{$i ";
             public static final int StartLength = Start.length();
             public static final String End = "}";
             public static final int EndLength = End.length();

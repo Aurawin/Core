@@ -3,6 +3,9 @@ package com.aurawin.core.keywords;
 import com.aurawin.core.CriticalBlock;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.keywords.master.Date;
+import com.aurawin.core.keywords.master.Time;
+import com.aurawin.core.keywords.master.Year;
 import com.aurawin.core.solution.Settings;
 
 import java.util.ArrayList;
@@ -12,11 +15,19 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Keywords extends ConcurrentLinkedQueue<Keyword> {
-    public static class System {
+    public static class Default {
+        public static final Keywords System = createSystemKeywords();
         public static final KeyPair Master = new KeyPair();
     }
     private CriticalBlock Lock;
 
+    public static Keywords createSystemKeywords(){
+        Keywords items = new Keywords();
+        items.add(new Date(items,"date"));
+        items.add(new Time(items,"time"));
+        items.add(new Year(items,"year"));
+        return items;
+    }
     public ArrayList<Keyword>fromString(String Input) {
         // Keywords become manifest collection to stream output as String
         ArrayList<Keyword> Replacement = new ArrayList<Keyword>();
@@ -36,7 +47,7 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                     // we found a new keyword.
                     if (idxBefore<idxPhrase){
                         // we need to prepend a keyword to store data prior
-                        String preKeyword = Input.substring(idxBefore,idxPhrase-1);
+                        String preKeyword = Input.substring(idxBefore,idxPhrase);
                         KeywordMethod km = new KeywordMethod() {
                             @Override
                             public String Evaluate() {
@@ -49,24 +60,41 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                     idxInput = idxPhraseEnd+Settings.Keywords.Phrase.EndLength;
                     idxBefore=idxInput;
 
-                    name = Input.substring(idxPhrase,idxPhraseEnd-1).trim();
-                    KeyItem ki = System.Master.Find(name);
-                    if (ki!=null) {
-                        idxSubPhrase=ki.Value.indexOf(Settings.Keywords.Phrase.Start);
-                        idxSubPhraseEnd = ki.Value.indexOf(Settings.Keywords.Phrase.End,idxSubPhrase);
+                    name = Input.substring(idxPhrase+Settings.Keywords.Phrase.StartLength,idxPhraseEnd).trim();
+                    Keyword kw = Default.System.Find(name);
 
-                        if ((idxSubPhrase>-1) && (idxSubPhraseEnd>-1)) {
-                            ArrayList<Keyword> subKeys = fromString(ki.Value);
-                            Replacement.addAll(subKeys);
+                    if (kw!=null) {
+                        Replacement.add(kw);
+                    } else {
+                        KeyItem ki = Default.Master.Find(name);
+                        if (ki!=null) {
+                            idxSubPhrase=ki.Value.indexOf(Settings.Keywords.Phrase.Start);
+                            idxSubPhraseEnd = ki.Value.indexOf(Settings.Keywords.Phrase.End,idxSubPhrase);
+
+                            if ((idxSubPhrase>-1) && (idxSubPhraseEnd>-1)) {
+                                ArrayList<Keyword> subKeys = fromString(ki.Value);
+                                Replacement.addAll(subKeys);
+                            } else {
+                                KeywordMethod km = new KeywordMethod() {
+                                    @Override
+                                    public String Evaluate() {
+                                        return ki.Value;
+                                    }
+                                };
+                                Keyword subK = new Keyword(this, name, km);
+                                Replacement.add(subK);
+                            }
                         } else {
+                            String preKeyword = name;
                             KeywordMethod km = new KeywordMethod() {
                                 @Override
                                 public String Evaluate() {
-                                    return ki.Value;
+                                    return Settings.Keywords.Phrase.Start+ preKeyword+ Settings.Keywords.Phrase.End;
+
                                 }
                             };
-                            Keyword kw = new Keyword(this, name, km);
-                            Replacement.add(kw);
+                            Keyword subK = new Keyword(this, name, km);
+                            Replacement.add(subK);
                         }
                     }
 
@@ -124,6 +152,13 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
         } finally{
             Lock.Leave();
         }
+    }
+    public Keyword Find(String name){
+        return this.stream()
+                .filter(a -> a.Name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
+
     }
     public Keywords(){
         Lock = new CriticalBlock();
