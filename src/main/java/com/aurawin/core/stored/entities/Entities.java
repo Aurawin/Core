@@ -232,6 +232,48 @@ public class Entities {
             ssn.close();
         }
     }
+    public ArrayList<Stored> Lookup(QueryByNetworkId aQuery, long Id){
+        Session ssn = Sessions.openSession();
+        try {
+            Query q = ssn.getNamedQuery(aQuery.Name())
+                    .setLong("NetworkId",Id);
+            if (q!=null){
+                return new ArrayList(q.list());
+            } else {
+                return null;
+            }
+        } finally{
+            ssn.close();
+        }
+    }
+    public ArrayList<Stored> Lookup(QueryByFileId aQuery, long Id){
+        Session ssn = Sessions.openSession();
+        try {
+            Query q = ssn.getNamedQuery(aQuery.Name())
+                    .setLong("FileId",Id);
+            if (q!=null){
+                return new ArrayList(q.list());
+            } else {
+                return null;
+            }
+        } finally{
+            ssn.close();
+        }
+    }
+    public ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
+        Session ssn = Sessions.openSession();
+        try {
+            Query q = ssn.getNamedQuery(aQuery.Name())
+                    .setLong("FolderId",Id);
+            if (q!=null){
+                return new ArrayList(q.list());
+            } else {
+                return null;
+            }
+        } finally{
+            ssn.close();
+        }
+    }
     public boolean Fetch(Stored e)
             throws Exception
     {
