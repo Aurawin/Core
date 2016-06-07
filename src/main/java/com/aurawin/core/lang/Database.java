@@ -1,7 +1,5 @@
 package com.aurawin.core.lang;
 
-import com.aurawin.core.array.KeyItem;
-import org.hibernate.Query;
 import org.hibernate.Session;
 
 public class Database {
