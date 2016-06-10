@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="org.hibernate.common:hibernate-commons-annotations:5.0.1.Final" type="repository">
+    <properties maven-id="org.hibernate.common:hibernate-commons-annotations:5.0.1.Final" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/5.0.1.Final/hibernate-commons-annotations-5.0.1.Final.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jboss/logging/jboss-logging/3.3.0.Final/jboss-logging-3.3.0.Final.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/5.0.1.Final/hibernate-commons-annotations-5.0.1.Final-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

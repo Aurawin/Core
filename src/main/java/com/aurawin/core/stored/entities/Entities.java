@@ -14,10 +14,14 @@ import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.*;
 import com.aurawin.core.stored.entities.loader.Loader;
 import com.aurawin.core.stored.entities.loader.Result;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
+
+
 
 public class Entities {
     public static final boolean CascadeOn = true;
@@ -168,9 +172,10 @@ public class Entities {
         Session ssn = Sessions.openSession();
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
+
             Query q = ssn.getNamedQuery(qc.Name());
             for (String sF : qc.Fields()){
-                q.setString(sF, Name);
+                q.setParameter(sF, Name);
             }
             return (T) CofE.cast(q.uniqueResult());
         } finally{
@@ -263,13 +268,10 @@ public class Entities {
     public ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
         Session ssn = Sessions.openSession();
         try {
-            Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setLong("FolderId",Id);
-            if (q!=null){
-                return new ArrayList(q.list());
-            } else {
-                return null;
-            }
+            return new ArrayList(ssn.getNamedQuery(aQuery.Name())
+                    .setParameter("FolderId",Id)
+                    .list()
+            );
         } finally{
             ssn.close();
         }

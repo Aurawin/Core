@@ -6,7 +6,7 @@ import javax.persistence.*;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -85,8 +85,7 @@ public class Plugin extends Stored {
             Plugin p = null;
             Transaction tx = ssn.beginTransaction();
             try {
-                Query q = Database.Query.Plugin.ByNamespace.Create(ssn, Namespace);
-                p = (Plugin) q.uniqueResult();
+                p = (Plugin) ssn.getNamedQuery(Database.Query.Plugin.ByNamespace.name).uniqueResult();
                 if (p == null) {
                     p = new Plugin(Namespace);
                     ssn.save(p);
