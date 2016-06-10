@@ -134,4 +134,10 @@ public class Database {
             public static final String Validate = "validate";
         }
     }
+    public static class Test{
+        public static class Entities{
+
+        }
+    }
+
 }
