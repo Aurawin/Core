@@ -85,7 +85,7 @@ public class Plugin extends Stored {
             Plugin p = null;
             Transaction tx = ssn.beginTransaction();
             try {
-                p = (Plugin) ssn.getNamedQuery(Database.Query.Plugin.ByNamespace.name).uniqueResult();
+                p = (Plugin) Database.Query.Plugin.ByNamespace.Create(ssn,Namespace).uniqueResult();
                 if (p == null) {
                     p = new Plugin(Namespace);
                     ssn.save(p);

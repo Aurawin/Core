@@ -21,13 +21,11 @@ import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public abstract class Item  implements Transport {
-    public static class Handlers{
-        public static final HashMap<ResolveResult,RequestHandler> Requests= new HashMap<ResolveResult,RequestHandler>();
-    }
+
     public String Protocol;
 
     public volatile Buffers Buffers;
@@ -87,8 +85,8 @@ public abstract class Item  implements Transport {
     }
     @Override
     public void Setup(){
-        SocketHandler.Setup(Kind == ItemKind.Server);
         Owner.add(this);
+        SocketHandler.Setup(Kind == ItemKind.Server);
         TTL=Instant.now().plusMillis(Timeout);
     }
     @Override

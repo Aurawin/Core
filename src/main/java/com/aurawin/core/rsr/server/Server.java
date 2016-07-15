@@ -97,6 +97,8 @@ public class Server extends Engine {
                         //load_class
                         State = esRun;
                         break;
+                    case esException:
+                        break;
                 }
                 try {
                     sleep(Settings.RSR.Server.AcceptYield);
@@ -105,7 +107,8 @@ public class Server extends Engine {
                 }
             }
         } catch (Exception e){
-            Syslog.Append("Server", "monitor", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
+            State = esException;
+            Syslog.Append("Server", "run", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
         }
     }
     public synchronized void Configure(){

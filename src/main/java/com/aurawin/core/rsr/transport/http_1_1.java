@@ -218,7 +218,9 @@ public class http_1_1 extends Item implements Transport {
         this.Buffers.Send.Write(this.getHeaders());
         this.Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
 
-        this.Buffers.Send.Move(Response.Payload);
+        if (Response.Payload.size()>0) {
+            this.Buffers.Send.Move(Response.Payload);
+        }
 
         queueSend();
     }

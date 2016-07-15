@@ -3,6 +3,8 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.ResolveResult;
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadFactory;
 
@@ -20,10 +23,13 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant lastCleanup;
     private Instant Expired;
     private Engine Owner;
+    public ConcurrentHashMap<ResolveResult,RequestHandler> Requests;
+
     public Managers(Engine aOwner){
         nextId=1;
         Owner=aOwner;
         lastCleanup=Instant.now();
+        Requests = new ConcurrentHashMap<ResolveResult,RequestHandler>();
     }
     @Override
     public Thread newThread(Runnable r){
@@ -97,18 +103,20 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     }
     public void cleanupItemThreads(){
         currentInstant=Instant.now();
-        if (currentInstant.minusMillis(Settings.RSR.Items.AutoremoveCleanupInterval).isAfter(lastCleanup)) {
-            lastCleanup=currentInstant;
-            Expired = lastCleanup.minusMillis(Settings.RSR.Items.AutoremoveEmptyItemsDelay);
-            Iterator<Items> it = iterator();
-            Items itms = null;
-            while (it.hasNext()) {
-                itms = it.next();
-                if (Expired.isAfter(itms.LastUsed)) {
-                    remove(itms);
-                    itms.RemovalRequested = true;
+        try {
+            if (currentInstant.minusMillis(Settings.RSR.Items.AutoremoveCleanupInterval).isAfter(lastCleanup)) {
+                lastCleanup = currentInstant;
+                Expired = lastCleanup.minusMillis(Settings.RSR.Items.AutoremoveEmptyItemsDelay);
+                Iterator<Items> it = iterator();
+                Items itms = null;
+                while (it.hasNext()) {
+                    itms = it.next();
+                    if ( (itms!=null) && (itms.RemovalRequested==false) && (Expired.isAfter(itms.LastUsed)) ) {
+                        itms.RemovalRequested = true;
+                    }
                 }
             }
+        } catch (Exception e){
         }
     }
 }

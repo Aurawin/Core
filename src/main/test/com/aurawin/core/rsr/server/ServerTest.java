@@ -57,8 +57,8 @@ public class ServerTest {
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue()            // Driver
         );
-        serverHTTP = new Server(new InetSocketAddress("172.16.1.2", 1080), new http_1_1(null, ItemKind.Server), false, "datahouse.aurawin.com");
-        Item.Handlers.Requests.put(rrFile, new RequestHandler() {
+        serverHTTP = new Server(new InetSocketAddress("172.16.1.2", 1080), new http_1_1(null, ItemKind.Server), false, "chump.aurawin.com");
+        serverHTTP.Managers.Requests.put(rrFile, new RequestHandler() {
             @Override
             public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
                 MemoryStream payload = item.getResponsePayload();
@@ -68,7 +68,7 @@ public class ServerTest {
                 return RequestHandlerState.Ok;
             }
         });
-        Item.Handlers.Requests.put(rrPlugin, new RequestHandler() {
+        serverHTTP.Managers.Requests.put(rrPlugin, new RequestHandler() {
             @Override
             public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
                 Plugin Plugin = item.getPlugin();

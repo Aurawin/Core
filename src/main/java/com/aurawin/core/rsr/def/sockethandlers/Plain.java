@@ -7,6 +7,8 @@ import com.aurawin.core.time.Time;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
 import java.util.Date;
@@ -37,10 +39,19 @@ public class Plain extends Handler {
     @Override
     public void Setup(boolean accepted){
         try {
-            //Channel.configureBlocking(false);
+            Channel.configureBlocking(false);
+        } catch (IOException ioe) {
+            Shutdown();
+            return;
+        }
+        try {
             Key = Channel.register(Owner.Owner.rwSelector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
-        } catch (IOException e) {
-
+        } catch (IllegalBlockingModeException ibme){
+            Shutdown();
+            return;
+        } catch (ClosedChannelException cce) {
+            Shutdown();
+            return;
         }
     }
 

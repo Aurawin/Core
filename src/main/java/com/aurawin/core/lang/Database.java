@@ -45,7 +45,7 @@ public class Database {
             public static class ByNamespace {
                 public static final String name = "QueryPluginByNamspace";
                 public static final String value = "from Plugin where Namespace=:Namespace";
-                @Deprecated
+
                 public static org.hibernate.Query Create(Session ssn, String Namespace){
                     return ssn.getNamedQuery(name)
                             .setString("Namespace", Namespace);
