@@ -4,6 +4,7 @@ import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
+import com.aurawin.core.stored.entities.loader.Result;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

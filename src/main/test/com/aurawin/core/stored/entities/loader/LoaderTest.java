@@ -1,20 +1,16 @@
-package com.aurawin.core.stored.entities.Loader;
+package com.aurawin.core.stored.entities.loader;
 
 import com.aurawin.core.Environment;
 import com.aurawin.core.compiler.Singleton;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.stored.*;
-import com.aurawin.core.stored.annotations.EntityDispatch;
-import com.aurawin.core.stored.entities.loader.Loader;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.annotations.AnnotatedList;
-import com.aurawin.core.stored.entities.loader.Result;
 import com.aurawin.core.compiler.Result.Kind;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
