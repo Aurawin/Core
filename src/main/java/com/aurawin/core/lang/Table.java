@@ -336,4 +336,10 @@ public class Table {
             public static final String Index = "index.html";
         }
     }
+    public static class DBMS{
+        public static final String Username = "COM_AURAWIN_CORE_DBMS_USERNAME";
+        public static final String Password = "COM_AURAWIN_CORE_DBMS_PASSWORD";
+        public static final String Host = "COM_AURAWIN_CORE_DBMS_HOST";
+        public static final String Port = "COM_AURAWIN_CORE_DBMS_PORT";
+    }
 }

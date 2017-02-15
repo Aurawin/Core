@@ -30,8 +30,8 @@ public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel Channel;
 
-    public Server(InetSocketAddress sa, Item aRootItem, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
-        super (aRootItem,aInfinate,aHostName,sa.getPort());
+    public Server(InetSocketAddress sa, Item aTransport, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
+        super (aTransport,aInfinate,aHostName,sa.getPort());
         State = esCreated;
         address = sa;
     }

@@ -1,5 +1,6 @@
 package com.aurawin.core.storage;
 
+import com.aurawin.core.Environment;
 import com.aurawin.core.lang.*;
 import com.aurawin.core.rsr.def.CertRequest;
 import com.aurawin.core.rsr.def.CertSelfSigned;
@@ -27,10 +28,10 @@ public class HibernateTest {
         AnnotatedList annotations = new AnnotatedList();
 
         Manifest = new Manifest(
-                "Test",                                 // username
-                "Test",                                 // password
-                "172.16.1.1",                           // host
-                5432,                                   // port
+                Environment.getString(Table.DBMS.Username), // username
+                Environment.getString(Table.DBMS.Password),  // password
+                Environment.getString(Table.DBMS.Host),     // host
+                Environment.getInteger(Table.DBMS.Port),     // port
                 Database.Config.Automatic.Commit.On,    // autocommit
                 2,                                      // Min Poolsize
                 20,                                     // Max Poolsize
@@ -54,7 +55,7 @@ public class HibernateTest {
     public void SelfSignedCertCreate() throws Exception{
         Certificate cert = new Certificate();
         CertSelfSigned ssc = new CertSelfSigned(
-                "datahouse.aurawin.com",
+                "chump.aurawin.com",
                 "NOC",
                 "Aurawin LLC",
                 "19309 Stage Line Trail",
@@ -82,7 +83,7 @@ public class HibernateTest {
     }
     @Test
     public void CertificateLoadTest() throws Exception{
-        Certificate cert = entities.Lookup(Certificate.class,39l);
+        Certificate cert = entities.Lookup(Certificate.class,1l);
         if (cert!=null){
             Security sec = new Security();
             sec.Load(cert.DerKey,cert.DerCert1);

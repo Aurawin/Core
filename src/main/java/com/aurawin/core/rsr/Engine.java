@@ -30,19 +30,19 @@ public abstract class Engine extends Thread {
     public volatile String HostName;
     public volatile int Port;
     public Boolean Infinite = false;
-    public Item itmRoot;
+    public Item Transport;
 
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
     public Managers Managers;
 
 
-    public Engine(Item aRootItem, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
+    public Engine(Item aTransport, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
         nextId=1;
         HostName = hostName;
         Port = port;
         Infinite=aInfinate;
-        itmRoot=aRootItem;
+        Transport=aTransport;
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Managers = new Managers(this);

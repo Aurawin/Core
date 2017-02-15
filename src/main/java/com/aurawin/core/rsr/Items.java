@@ -112,7 +112,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         try {
             rwSelector = java.nio.channels.Selector.open();
         } catch (Exception e){
-            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.itmRoot.getClass().getName()));
+            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.Transport.getClass().getName()));
         }
         try {
 

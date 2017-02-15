@@ -74,7 +74,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     public void Accept(SocketChannel aChannel){
         Items itms = getManager();
         if (itms!=null) {
-            Item itm = Owner.itmRoot.newInstance(itms, aChannel);
+            Item itm = Owner.Transport.newInstance(itms, aChannel);
             itms.qAddItems.add(itm);
         } else {
             try {

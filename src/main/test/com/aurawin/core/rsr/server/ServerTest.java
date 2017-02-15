@@ -1,8 +1,10 @@
 package com.aurawin.core.rsr.server;
 
+import com.aurawin.core.Environment;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.MethodState;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.Engine;
@@ -42,10 +44,10 @@ public class ServerTest {
     public void before() throws Exception {
         Settings.Initialize("server.test");
         Manifest mf = Engine.createManifest(
-                "Test",                                 // username
-                "Test",                                 // password
-                "172.16.1.1",                           // host
-                5432,                                   // port
+                Environment.getString(Table.DBMS.Username), // username
+                Environment.getString(Table.DBMS.Password),  // password
+                Environment.getString(Table.DBMS.Host),     // host
+                Environment.getInteger(Table.DBMS.Port),     // port
                 Database.Config.Automatic.Commit.On,    // autocommit
                 2,                                      // Min Poolsize
                 20,                                     // Max Poolsize
@@ -57,7 +59,12 @@ public class ServerTest {
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue()            // Driver
         );
-        serverHTTP = new Server(new InetSocketAddress("172.16.1.2", 1080), new http_1_1(null, ItemKind.Server), false, "chump.aurawin.com");
+        serverHTTP = new Server(
+                new InetSocketAddress("172.16.1.2", 1080),
+                new http_1_1(null, ItemKind.Server),
+                false,
+                "chump.aurawin.com"
+        );
         serverHTTP.Managers.Requests.put(rrFile, new RequestHandler() {
             @Override
             public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
@@ -88,7 +95,7 @@ public class ServerTest {
             }
         });
         serverHTTP.setManifest(mf);
-        serverHTTP.loadSecurity(65l);
+        serverHTTP.loadSecurity(1l);
         serverHTTP.installPlugin(new Noid());
         serverHTTP.Configure();
     }
