@@ -8,7 +8,7 @@ import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.time.Time;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;

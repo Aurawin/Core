@@ -6,7 +6,7 @@ import javax.persistence.*;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
-import org.hibernate.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -86,7 +86,7 @@ public class UniqueId extends Stored {
             Transaction tx = ssn.beginTransaction();
             try {
                     Query q = Database.Query.UniqueId.ByNamespace.Create(ssn, Namespace);
-                    uid = (UniqueId) q.uniqueResult();
+                    uid = (UniqueId) q.getSingleResult();
                     if (uid == null) {
                             uid = new UniqueId(Namespace);
                             ssn.save(uid);

@@ -65,7 +65,7 @@ public class ServerTest {
                 false,
                 "chump.aurawin.com"
         );
-        serverHTTP.Managers.Requests.put(rrFile, new RequestHandler() {
+        serverHTTP.Managers.addRequestHandler(rrFile, new RequestHandler() {
             @Override
             public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
                 MemoryStream payload = item.getResponsePayload();
@@ -75,7 +75,7 @@ public class ServerTest {
                 return RequestHandlerState.Ok;
             }
         });
-        serverHTTP.Managers.Requests.put(rrPlugin, new RequestHandler() {
+        serverHTTP.Managers.addRequestHandler(rrPlugin, new RequestHandler() {
             @Override
             public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
                 Plugin Plugin = item.getPlugin();

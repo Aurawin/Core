@@ -23,7 +23,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant lastCleanup;
     private Instant Expired;
     private Engine Owner;
-    public ConcurrentHashMap<ResolveResult,RequestHandler> Requests;
+    private ConcurrentHashMap<ResolveResult,RequestHandler> Requests;
 
     public Managers(Engine aOwner){
         nextId=1;
@@ -42,7 +42,12 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         itms.Thread.start();
         nextId++;
     }
-
+    public void addRequestHandler(ResolveResult rr, RequestHandler rh){
+        Requests.put(rr,rh);
+    }
+    public RequestHandler getRequestHandler(ResolveResult rr){
+        return Requests.get(rr);
+    }
     private Items getManagerByLowestItemCount(int Threshold){
         Iterator<Items> it = iterator();
         Items itms = null;

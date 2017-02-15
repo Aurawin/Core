@@ -1,6 +1,8 @@
 package com.aurawin.core.stored.entities.Loader;
 
+import com.aurawin.core.Environment;
 import com.aurawin.core.compiler.Singleton;
+import com.aurawin.core.lang.Table;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.annotations.EntityDispatch;
 import com.aurawin.core.stored.entities.loader.Loader;
@@ -124,10 +126,10 @@ public class LoaderTest {
 
         AnnotatedList annotations = new AnnotatedList();
         Manifest = new Manifest(
-                "Test",                                 // username
-                "Test",                                 // password
-                "172.16.1.1",                           // host
-                5432,                                   // port
+                Environment.getString(Table.DBMS.Username), // username
+                Environment.getString(Table.DBMS.Password),  // password
+                Environment.getString(Table.DBMS.Host),     // host
+                Environment.getInteger(Table.DBMS.Port),     // port
                 true,
                 2,                                      // Min Poolsize
                 20,                                     // Max Poolsize

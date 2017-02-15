@@ -7,8 +7,8 @@ import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.stored.annotations.QueryByName;
-import com.aurawin.core.stored.entities.loader.Loader.ModuleLoader;
-import org.hibernate.Query;
+
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -79,7 +79,7 @@ public class Module extends Stored {
     private byte[] Code;
 
     @Transient
-    public ModuleLoader Loader;
+    public com.aurawin.core.stored.entities.loader.Loader.ModuleLoader Loader;
 
     public Module() {
         Id=0;
@@ -208,7 +208,7 @@ public class Module extends Stored {
             Transaction tx = ssn.beginTransaction();
             try {
                 Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
-                m = (Module) q.uniqueResult();
+                m = (Module) q.getSingleResult();
                 if (m == null) {
                     m = new Module(Name,Namespace,Package);
                     ssn.save(m);

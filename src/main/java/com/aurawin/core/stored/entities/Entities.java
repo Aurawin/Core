@@ -16,11 +16,10 @@ import com.aurawin.core.stored.entities.loader.Loader;
 import com.aurawin.core.stored.entities.loader.Result;
 
 import org.hibernate.Session;
-import org.hibernate.Query;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
-
+import org.hibernate.query.Query;
 
 
 public class Entities {
@@ -173,6 +172,7 @@ public class Entities {
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
 
+
             Query q = ssn.getNamedQuery(qc.Name());
             for (String sF : qc.Fields()){
                 q.setParameter(sF, Name);
@@ -187,8 +187,8 @@ public class Entities {
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             Query q = ssn.getNamedQuery(qc.Name())
-                    .setLong("DomainId", DomainId)
-                    .setLong("Id", Id);
+                    .setParameter("DomainId", DomainId)
+                    .setParameter("Id", Id);
 
             return (T) CofE.cast(q.uniqueResult());
         } finally{
@@ -200,8 +200,8 @@ public class Entities {
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             Query q = ssn.getNamedQuery(qc.Name())
-                    .setLong("DomainId", DomainId)
-                    .setString("Name", Name);
+                    .setParameter("DomainId", DomainId)
+                    .setParameter("Name", Name);
 
             return (T) CofE.cast(q.uniqueResult());
         } finally{
@@ -214,8 +214,9 @@ public class Entities {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             if (qc!=null) {
                 Query q = ssn.getNamedQuery(qc.Name())
-                        .setLong("Id", Id);
-                return (T) CofE.cast(q.uniqueResult());
+                        .setParameter("Id", Id);
+                Object o = q.uniqueResult();
+                return (o==null) ? null : (T) CofE.cast(o);
             } else {
                 return null;
             }
@@ -227,7 +228,7 @@ public class Entities {
         Session ssn = Sessions.openSession();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setLong("DomainId",Id);
+                    .setParameter("DomainId",Id);
             if (q!=null){
                 return new ArrayList(q.list());
             } else {
@@ -241,7 +242,7 @@ public class Entities {
         Session ssn = Sessions.openSession();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setLong("NetworkId",Id);
+                    .setParameter("NetworkId",Id);
             if (q!=null){
                 return new ArrayList(q.list());
             } else {
@@ -255,7 +256,7 @@ public class Entities {
         Session ssn = Sessions.openSession();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setLong("FileId",Id);
+                    .setParameter("FileId",Id);
             if (q!=null){
                 return new ArrayList(q.list());
             } else {

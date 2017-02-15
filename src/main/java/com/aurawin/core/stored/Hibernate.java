@@ -3,6 +3,7 @@ package com.aurawin.core.stored;
 import com.aurawin.core.lang.Table;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 
 import java.util.Iterator;
 

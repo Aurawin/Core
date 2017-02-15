@@ -233,7 +233,7 @@ public class Request implements QueryResolver,RequestHandler {
     }
     @Override
     public RequestHandlerState Process(Session ssn, Item item, String uri, KeyPair parameters){
-        Handler=item.Owner.Owner.Requests.get(Result);
+        Handler=item.Owner.Owner.getRequestHandler(Result);
         return (Handler==null) ? RequestHandlerState.None : Handler.Process(ssn,item,uri,parameters);
     }
     @Override
