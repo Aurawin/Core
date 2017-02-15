@@ -1791,13 +1791,6 @@
       <option name="presentableId" value="Default" />
       <updated>1441072894308</updated>
     </task>
-    <task id="LOCAL-00053" summary="Stored Entity for Cloud -&gt; Node">
-      <created>1443460114887</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1443460114887</updated>
-    </task>
     <task id="LOCAL-00054" summary="Broke out Stored entities for auscs package">
       <created>1443472406571</created>
       <option name="number" value="00054" />
@@ -2134,7 +2127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1487174672326</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="Changed to environment variables for sql auth data">
+      <created>1487174691495</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1487174691495</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TestHistory">
