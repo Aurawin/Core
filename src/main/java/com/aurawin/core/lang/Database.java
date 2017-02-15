@@ -16,7 +16,7 @@ public class Database {
             public static class ById {
                 public static final String name = "QueryModuleById";
                 public static final String value = "from Module where Id=:Id";
-                @Deprecated
+
                 public static org.hibernate.query.Query Create(Session ssn, long Id){
                     return ssn.getNamedQuery(name)
                             .setParameter("Id", Id);
@@ -36,7 +36,7 @@ public class Database {
             public static class ById {
                 public static final String name = "QueryPluginById";
                 public static final String value = "from Plugin where Id=:Id";
-                @Deprecated
+
                 public static org.hibernate.query.Query Create(Session ssn, long Id){
                     return ssn.getNamedQuery(name)
                             .setParameter("Id", Id);
@@ -56,7 +56,7 @@ public class Database {
             public static class ById {
                 public static final String name = "QueryUniqueIdById";
                 public static final String value = "from UniqueId where Id=:Id";
-                @Deprecated
+
                 public static org.hibernate.query.Query Create(Session ssn, long Id){
                     return ssn.getNamedQuery(name)
                             .setParameter("Id", Id);
@@ -76,7 +76,7 @@ public class Database {
             public static class ById {
                 public static final String name = "QueryCertificateById";
                 public static final String value = "from Certificate where Id=:Id";
-                @Deprecated
+
                 public static org.hibernate.query.Query Create(Session ssn, long Id){
                     return ssn.getNamedQuery(name)
                             .setParameter("Id", Id);
