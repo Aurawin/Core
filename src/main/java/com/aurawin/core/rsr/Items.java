@@ -194,7 +194,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                             break;
                                         case rSuccess:
                                             itm.renewTTL();
-                                            Session ssn = Engine.Entities.Sessions.openSession();
+                                            Session ssn = Engine.Entities.Factory.openSession();
                                             try {
                                                 evResult = itm.onProcess(ssn);
                                                 switch (evResult) {

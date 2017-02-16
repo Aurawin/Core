@@ -168,7 +168,7 @@ public class LoaderTest {
 
     }
     public void testModule(String Name, String Package){
-        Session ssn = Entities.Sessions.openSession();
+        Session ssn = Entities.Factory.openSession();
         try{
             Transaction tx =ssn.beginTransaction();
             try {

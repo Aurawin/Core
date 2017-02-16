@@ -134,7 +134,7 @@ public abstract class Engine extends Thread {
         }
     }
     public void installPlugin(Plugin plugin){
-        Session ssn = Entities.Sessions.openSession();
+        Session ssn = Entities.Factory.openSession();
         try{
             Plugins.Uninstall(ssn,plugin.Header.getNamespace());
             Plugins.Install(ssn,plugin);
