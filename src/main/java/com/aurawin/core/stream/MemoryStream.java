@@ -70,9 +70,6 @@ public class MemoryStream extends Channel {
 
                 Collection.add(baComb);
             }
-
-
-
             Size+=iWrite;
             return iWrite;
         } else {

@@ -4,13 +4,16 @@ package com.aurawin.core.array;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-
 public class VarString extends ArrayList<String> {
     public String Delimiter = "\n";
-    public enum ExtractOption {Singleton,Multiple,IncludeLeadingDelim}
+    public enum ExtractOption {None,Singleton,Multiple,IncludeLeadingDelim}
+    public enum CreateOption  {None,StripLeadingDelim}
+    public static EnumSet<CreateOption> CreateOptionsOff = EnumSet.of(CreateOption.None);
+    public static EnumSet<ExtractOption> ExtractOptionsOff = EnumSet.of(ExtractOption.None);
 
-    public enum CreateOption  {StripLeadingDelim}
+    public VarString(){
 
+    }
     public VarString(String[] args){
         for (int iLcv=0; iLcv<args.length; iLcv++){
             this.add(args[iLcv]);
@@ -18,10 +21,12 @@ public class VarString extends ArrayList<String> {
     }
     public VarString(String args, EnumSet<CreateOption> Options, String delimiter){
         Delimiter=delimiter;
-        if (Options.contains(CreateOption.StripLeadingDelim))
-            if (args.indexOf(Delimiter)==0);
-                args=args.substring(Delimiter.length());
-        String[] lst=args.split(Delimiter);
+        if (Options.contains(CreateOption.StripLeadingDelim)) {
+            if (args.indexOf(Delimiter) == 0)
+                args = args.substring(Delimiter.length());
+        }
+
+        String[] lst=(args.length()>0) ? args.split(Delimiter) : new String[0];
 
         for (int iLcv=0; iLcv<lst.length; iLcv++){
             this.add(lst[iLcv]);
@@ -32,6 +37,18 @@ public class VarString extends ArrayList<String> {
         if (Options.contains(ExtractOption.IncludeLeadingDelim))
             sb.append(Delimiter);
         for (int iLcv=Start; iLcv<=End; iLcv++){
+            sb.append(get(iLcv)+Delimiter);
+        }
+        if (sb.length()>0)
+            sb.setLength(sb.length()-Delimiter.length());
+
+        return sb.toString();
+    }
+    public String Extract(EnumSet<ExtractOption> Options){
+        StringBuilder sb = new StringBuilder();
+        if (Options.contains(ExtractOption.IncludeLeadingDelim))
+            sb.append(Delimiter);
+        for (int iLcv=0; iLcv<size(); iLcv++){
             sb.append(get(iLcv)+Delimiter);
         }
         if (sb.length()>0)

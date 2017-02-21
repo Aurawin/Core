@@ -1,10 +1,9 @@
-package com.aurawin.core.rsr.transport;
+package com.aurawin.core.rsr.protocol.http;
 
 
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.MethodState;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
@@ -12,25 +11,24 @@ import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.http.*;
 
 
-import static com.aurawin.core.rsr.def.http.Status.*;
-
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
 import com.aurawin.core.rsr.def.rsrResult;
 
-import static com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState.None;
+import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
+import com.aurawin.core.rsr.transport.Transport;
+
+import com.aurawin.core.rsr.transport.methods.Result;
+import com.aurawin.core.rsr.transport.methods.http.GET;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
-import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
-import java.util.HashMap;
 
 @com.aurawin.core.rsr.transport.annotations.Transport(
         Name = "HTTP/1.1",
@@ -38,14 +36,14 @@ import java.util.HashMap;
 )
 public class http_1_1 extends Item implements Transport {
 
-    private RequestHandlerState handlerState;
-
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
 
     public http_1_1(Items aOwner, ItemKind aKind) {
         super(aOwner,aKind);
+
+        Methods.registerMethod(new GET());
 
         Request=new Request(this);
         Request.Version.Major=1;
@@ -66,6 +64,7 @@ public class http_1_1 extends Item implements Transport {
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
+
 
     public CredentialResult onCheckCredentials(Session ssn)
     {
@@ -95,65 +94,22 @@ public class http_1_1 extends Item implements Transport {
     public rsrResult onProcess(Session ssn) {
         rsrResult r = rSuccess;
         if (Request.Read()==rSuccess) {
-            // todo process request
-            Response.Headers.Update(Field.Connection,Request.Headers.ValueAsString(Field.Connection));
-            Resolution = Request.Resolve(ssn);
-            switch (Resolution) {
-                case rrPlugin :
-                    Response.Headers.Update(Field.CoreObjectNamespace,Request.NamespacePlugin);
-                    Response.Headers.Update(Field.CoreCommandNamespace,Request.NamespaceMethod);
-                    if (Request.PluginMethod.Data!=null) {
-                        if (Request.Credentials.AccessGranted(Request.PluginMethod.Restricted,Request.PluginMethod.Id)) {
-                            handlerState = Request.Process(ssn,this,Request.URI,Request.Parameters);
-                            switch (handlerState) {
-                                case Ok:
-                                    Response.Status=s200;
-                                    break;
-                                case Missing:
-                                    Response.Status=s404;
-                                    break;
-                                case Failed:
-                                    Response.Status=s503;
-                                    break;
-                                case None:
-                                    Response.Status=s510;
-                                    break;
-                            }
-                        } else{
-                            Response.Status = s401;
-                            Response.Headers.Update(
-                                    Field.WWWAuthenticate,
-                                    Field.Value.Authenticate.Basic.Message(
-                                            Owner.getHostName()
-                                    )
-                            );
-                        }
-                    }
+            Result mr = Methods.Process(Request.Method,ssn,this);
+            switch (mr){
+                case Ok:
                     Respond();
                     break;
-                case rrFile :
-                    handlerState = Request.Process(ssn,this,Request.URI,Request.Parameters);
-                    switch (handlerState) {
-                        case Ok:
-                            Response.Status=s200;
-                            Respond();
-                            break;
-                        case Missing:
-                            Response.Status=s404;
-                            Respond();
-                            break;
-                        case Failed:
-                            Response.Status=s503;
-                            Respond();
-                            break;
-                        case None:
-                            Response.Status=s510;
-                            Respond();
-                            break;
-                    }
+                case NotFound:
+                    Response.Status=s405;
+                    Response.Headers.Update(Field.Allow,Methods.getAllMethods());
+                    Respond();
                     break;
-                case rrAccessDenied:
-                    Response.Status=s403;
+                case Exception :
+                    Response.Status = s500;
+                    Respond();
+                    break;
+                case Failure:
+                    Response.Status = s503;
                     Respond();
                     break;
             }
@@ -172,7 +128,10 @@ public class http_1_1 extends Item implements Transport {
 
 
     }
-
+    public void Reset(){
+        Request.Reset();
+        Response.Reset();
+    }
     public  void Error() {
 
     }
@@ -208,18 +167,19 @@ public class http_1_1 extends Item implements Transport {
         return Response.Headers.Stream();
     }
     private String getCommandLine(){
-        return this.Protocol+"/"+this.Response.Version.Major+"."+this.Response.Version.Minor+ " " +Response.Status.getValue()+Table.CRLF;
+        return Protocol+"/"+Response.Version.Major+"."+Response.Version.Minor+ " " +Response.Status.getValue()+Table.CRLF;
     }
-    protected void Respond() {
 
-        this.Buffers.Send.position(this.Buffers.Send.size());
-        this.Buffers.Send.Write(this.getCommandLine());
+    private void Respond() {
 
-        this.Buffers.Send.Write(this.getHeaders());
-        this.Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
+        Buffers.Send.position(Buffers.Send.size());
+        Buffers.Send.Write(getCommandLine());
+
+        Buffers.Send.Write(getHeaders());
+        Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
 
         if (Response.Payload.size()>0) {
-            this.Buffers.Send.Move(Response.Payload);
+            Buffers.Send.Move(Response.Payload);
         }
 
         queueSend();

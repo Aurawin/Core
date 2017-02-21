@@ -6,8 +6,10 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
+import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.transport.Transport;
+import com.aurawin.core.rsr.transport.methods.Factory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
@@ -36,9 +38,12 @@ public abstract class Item  implements Transport {
     public ItemState State;
     public Instant TTL;
     protected Handler SocketHandler;
+    protected RequestHandlerState handlerState;
+
     public EnumSet<ItemError> Errors;
 
     public Items Owner;
+    public Factory Methods;
 
     public Item(Items aOwner, ItemKind aKind){
         com.aurawin.core.rsr.transport.annotations.Transport TA = getClass().getAnnotation(com.aurawin.core.rsr.transport.annotations.Transport.class);
@@ -47,6 +52,8 @@ public abstract class Item  implements Transport {
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
+        Methods = new Factory();
+
         if (aOwner!=null){
             Owner = aOwner;
             Infinite = aOwner.Infinite;
@@ -68,7 +75,12 @@ public abstract class Item  implements Transport {
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }
-
+    public void  setRequestHandlerState(RequestHandlerState state){
+        handlerState=state;
+    }
+    public RequestHandlerState getRequestHandlerState(){
+        return handlerState;
+    }
     public void Release() throws Exception{
         SocketHandler.Release();
         Buffers.Release();

@@ -87,7 +87,7 @@ public class Plain extends Handler {
             while (Owner.Owner.BufferWrite.hasRemaining()) {
                 try {
                     Channel.write(Owner.Owner.BufferWrite);
-                    Owner.Owner.BufferWrite.compact();
+
                 } catch (IOException ioe){
                     return HandlerResult.Failure;
                 }

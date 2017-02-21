@@ -17,4 +17,5 @@ public interface Transport {
     CredentialResult onCheckCredentials(Session ssn);
     void Teardown();
     void Setup();
+    void Reset();
 }

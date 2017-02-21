@@ -12,17 +12,14 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
-import com.aurawin.core.rsr.server.Server;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.rsr.transport.http_1_1;
+import com.aurawin.core.rsr.protocol.http.http_1_1;
 import com.aurawin.core.plugin.Noid;
-import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
 import org.junit.Test;
@@ -33,8 +30,6 @@ import java.net.InetSocketAddress;
 
 import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
 import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
-import static com.aurawin.core.rsr.def.http.Field.ContentLength;
-import static com.aurawin.core.rsr.def.http.Status.*;
 
 
 public class ServerTest {
@@ -95,7 +90,7 @@ public class ServerTest {
             }
         });
         serverHTTP.setManifest(mf);
-        serverHTTP.loadSecurity(1l);
+        //serverHTTP.loadSecurity(1l);
         serverHTTP.installPlugin(new Noid());
         serverHTTP.Configure();
     }

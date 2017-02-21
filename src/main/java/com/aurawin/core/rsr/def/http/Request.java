@@ -19,8 +19,9 @@ import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
+import com.aurawin.core.stream.parser.XML;
 import org.hibernate.Session;
-
+import org.w3c.dom.Document;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
@@ -234,7 +235,11 @@ public class Request implements QueryResolver,RequestHandler {
     @Override
     public RequestHandlerState Process(Session ssn, Item item, String uri, KeyPair parameters){
         Handler=item.Owner.Owner.getRequestHandler(Result);
-        return (Handler==null) ? RequestHandlerState.None : Handler.Process(ssn,item,uri,parameters);
+        RequestHandlerState r = RequestHandlerState.None;
+        if (Handler!=null)
+            r = Handler.Process(ssn,item,uri,parameters);
+        item.setRequestHandlerState(r);
+        return r;
     }
     @Override
     public ResolveResult Resolve(Session ssn) {
@@ -276,5 +281,7 @@ public class Request implements QueryResolver,RequestHandler {
         }
         return Result;
     }
-
+    public Document parseXML(){
+        return XML.parseXML(Payload);
+    }
 }

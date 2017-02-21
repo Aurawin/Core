@@ -86,13 +86,18 @@ public class UniqueId extends Stored {
             Transaction tx = ssn.beginTransaction();
             try {
                     Query q = Database.Query.UniqueId.ByNamespace.Create(ssn, Namespace);
-                    uid = (UniqueId) q.getSingleResult();
+                    try {
+                        uid = (UniqueId) q.getSingleResult();
+                    } catch (NoResultException nre) {
+                        uid = null;
+                    }
                     if (uid == null) {
-                            uid = new UniqueId(Namespace);
-                            ssn.save(uid);
+                        uid = new UniqueId(Namespace);
+                        ssn.save(uid);
                     }
                     Assign(uid);
                     tx.commit();
+
             } catch (Exception e){
                     tx.rollback();
                     throw e;

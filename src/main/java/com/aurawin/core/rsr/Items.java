@@ -209,6 +209,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                                         qRemoveItems.add(itm);
                                                         break;
                                                 }
+                                                itm.Reset();
                                             } finally {
                                                 ssn.close();
                                             }
