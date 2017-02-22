@@ -89,6 +89,18 @@ public class KeyPair extends ArrayList<KeyItem> {
         this.add(itm);
         return itm;
     }
+    public KeyItem setStreams(String Name, boolean streams){
+        for (KeyItem itm : this){
+            if (itm.Name.compareTo(Name)==0) {
+                itm.Streams=streams;
+                return itm;
+            }
+        }
+        KeyItem itm = new KeyItem(Name,"");
+        this.add(itm);
+        itm.Streams=streams;
+        return null;
+    }
     public void Assign(KeyPair value){
         DelimiterField=value.DelimiterField;
         DelimiterItem=value.DelimiterItem;

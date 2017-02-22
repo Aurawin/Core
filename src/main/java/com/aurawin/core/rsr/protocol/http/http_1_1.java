@@ -21,7 +21,7 @@ import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.transport.Transport;
 
 import com.aurawin.core.rsr.transport.methods.Result;
-import com.aurawin.core.rsr.transport.methods.http.GET;
+import com.aurawin.core.rsr.transport.methods.http.*;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
@@ -44,6 +44,10 @@ public class http_1_1 extends Item implements Transport {
         super(aOwner,aKind);
 
         Methods.registerMethod(new GET());
+        Methods.registerMethod(new POST());
+        Methods.registerMethod(new OPTIONS());
+        Methods.registerMethod(new HEAD());
+        Methods.registerMethod(new TRACE());
 
         Request=new Request(this);
         Request.Version.Major=1;
@@ -115,6 +119,8 @@ public class http_1_1 extends Item implements Transport {
             }
         } else {
             r = rFailure;
+            Response.Status = s500;
+            Respond();
         }
 
         return r;
@@ -153,9 +159,9 @@ public class http_1_1 extends Item implements Transport {
         Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.getHostName());
-
+        Response.Headers.Update(Field.Server,Owner.Engine.Stamp);
         for (KeyItem itm:Response.Headers){
-            if (itm.Name==Field.Connection){
+            if (itm.Name.equalsIgnoreCase(Field.Connection)){
                 itm.Streams = (itm.Value.length()==0) ? false : true;
                 break;
             }
@@ -179,9 +185,11 @@ public class http_1_1 extends Item implements Transport {
         Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
 
         if (Response.Payload.size()>0) {
-            Buffers.Send.Move(Response.Payload);
+            Response.Payload.Move(Buffers.Send);
         }
-
         queueSend();
+
+        if (Response.Headers.ValueAsString(Field.Connection).equalsIgnoreCase("close"))
+           this.queueClose();
     }
 }

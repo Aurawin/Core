@@ -113,6 +113,9 @@ public abstract class Item  implements Transport {
     public void queueSend(){
         Owner.qWriteItems.add(this);
     }
+    public void queueClose(){
+        Owner.qRemoveItems.add(this);
+    }
 
     public Plugin getPlugin(String Namespace){
         return Owner.Engine.Plugins.getPlugin(Namespace);

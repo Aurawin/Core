@@ -220,7 +220,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                             break;
                                     }
 
-                                } else if (itm.SocketHandler.Channel.isOpen() == false) {
+                                } else if (Read == HandlerResult.Failure) {
                                     itm.Errors.add(eReset);
                                     itm.Error();
                                     qRemoveItems.add(itm);

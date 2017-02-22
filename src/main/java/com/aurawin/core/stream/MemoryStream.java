@@ -197,21 +197,21 @@ public class MemoryStream extends Channel {
         return Read(iOffset,iCount,false);
     }
 
-    public synchronized byte[] Read(int Offset,int Count, boolean Peak){
+    public synchronized byte[] Read(long Offset,long Count, boolean Peak){
         long OldPosition=Position;
         Position=Offset;
 
         long iPreSeek=0;
         int iOffset=0;
-        int iChunk=0;
+        long iChunk=0;
         int iTotal=0;
         int iColSize=0;
-        int iRead=Count;
+        long iRead=Count;
         int iLcv =0;
 
 
 
-        byte[] Result = new byte[(int) (Size-Position)];
+        byte[] Result = new byte[(int) (Position+Count)];
 
         // seek to Collection with position
 
@@ -223,7 +223,7 @@ public class MemoryStream extends Channel {
                 iChunk=iColSize-iOffset;
                 if (iChunk>iRead)
                     iChunk=iRead;
-                System.arraycopy(Collection.get(iLcv), iOffset, Result, iTotal, iChunk);
+                System.arraycopy(Collection.get(iLcv), iOffset, Result, iTotal, (int) iChunk);
 
                 Position+=iChunk;
 
@@ -249,17 +249,6 @@ public class MemoryStream extends Channel {
         Collection.add(itm);
         Size+=itm.length;
         return itm.length;
-    }
-
-    public synchronized long Move(MemoryStream Value){
-        while (Value.Collection.size() >0 ) {
-            byte[] itm = Value.Collection.pop();
-            Collection.add(itm);
-            Size+=itm.length;
-        }
-        Value.Clear();
-
-        return Size;
     }
 
     public synchronized void Clear() {
@@ -330,6 +319,16 @@ public class MemoryStream extends Channel {
             sliceAtPosition();
         }
     }
+    public synchronized long Move(MemoryStream Dest){
+        sliceAtPosition();
+        while (Collection.size() >0 ) {
+            byte[] itm = Collection.pop();
+            Dest.Collection.add(itm);
+            Dest.Size+=itm.length;
+        }
+        return Size;
+    }
+
     public synchronized long Find(String Term){
         long iPreSeek=0;
         int iOffset=0;

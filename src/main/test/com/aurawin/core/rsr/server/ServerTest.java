@@ -37,7 +37,7 @@ public class ServerTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("server.test");
+        Settings.Initialize("server.test","Aurawin ServerTest","Universal","1","1","0");
         Manifest mf = Engine.createManifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password

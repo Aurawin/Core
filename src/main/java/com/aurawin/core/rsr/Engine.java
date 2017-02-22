@@ -35,6 +35,7 @@ public abstract class Engine extends Thread {
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
     public Managers Managers;
+    public String Stamp;
 
 
     public Engine(Item aTransport, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
@@ -49,6 +50,18 @@ public abstract class Engine extends Thread {
         Security = new Security();
         setName("Engine Thread "+nextId);
         nextId++;
+        Stamp = (
+            System.getProperty(Settings.Properties.Title)+" Version "+
+            System.getProperty(Settings.Properties.Version.Major)+"."+
+            System.getProperty(Settings.Properties.Version.Middle)+"."+
+            System.getProperty(Settings.Properties.Version.Minor)+" for Java ("+
+            System.getProperty(Settings.Properties.Java.Version)+") on "+
+            System.getProperty(Settings.Properties.OS.Name)+" "+
+            System.getProperty(Settings.Properties.OS.Architecture)+" ("+
+            System.getProperty(Settings.Properties.OS.Version)+") "+
+            System.getProperty(Settings.Properties.Edition)+ " Edition"
+        );
+
     }
     public synchronized Handler createSocketHandler(Item item){
         if (Security.Enabled) {

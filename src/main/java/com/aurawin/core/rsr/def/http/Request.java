@@ -115,34 +115,32 @@ public class Request implements QueryResolver,RequestHandler {
         PluginMethod=null;
     }
     public rsrResult Peek(){
+        rsrResult r = rSuccess;
         long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Settings.RSR.Items.HTTP.Payload.Separator.length()),true ))==rSuccess){
+            r = Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength,true ));
+            if (r==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                return ( (cLen==0) || ( (cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
+                r =  ( (cLen==0) || ( (cLen+iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
             } else{
-                return rPostpone;
+                r = rPostpone;
             }
         } else if (Owner.Buffers.Recv.Size<Settings.RSR.Items.HTTP.Payload.MaxHeaderSize) {
-            return rPostpone;
+            r  =  rPostpone;
         } else {
-            return rFailure;
+            r = rFailure;
         }
+        return r;
     }
     public rsrResult Read(){
         Reset();
         long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Recv.Read(0,(int) (iLoc+Settings.RSR.Items.HTTP.Payload.Separator.length()),false ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength,false ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                if ( (cLen==0) || ((cLen+iLoc+3)<=Owner.Buffers.Recv.Size) ) {
-                    Owner.Buffers.Recv.Position=iLoc + 3;
-                    Payload.Move(Owner.Buffers.Recv,cLen);
-                    return rSuccess;
-                } else {
-                    return rPostpone;
-                }
-            } else{
+                Owner.Buffers.Recv.Move(Payload,cLen);
+                return rSuccess;
+            } else {
                 return rPostpone;
             }
         } else {
@@ -196,7 +194,7 @@ public class Request implements QueryResolver,RequestHandler {
                 return rFailure;
             }
         } else {
-            return rFailure;
+            return rPostpone;
         }
     }
     public CredentialResult checkAuthorization(Session ssn){

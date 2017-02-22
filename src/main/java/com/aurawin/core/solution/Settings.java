@@ -6,10 +6,29 @@ import sun.security.x509.AlgorithmId;
 import java.io.File;
 
 public class Settings {
+    public static class Properties{
+        public static final String Program = "program.name";
+        public static final String Title = "program.title";
+        public static final String Edition = "program.edition";
+        public static class Java{
+            public static final String Version = "java.version";
+        }
+        public static class OS{
+            public static final String Architecture = "os.arch";
+            public static final String Name = "os.name";
+            public static final String Version = "os.version";
+        }
+        public static class Version {
+            public static final String Major = "program.version.major";
+            public static final String Middle = "program.version.middle";
+            public static final String Minor = "program.version.minor";
+        }
+    }
     public static String Language = "us";
-    public static class CriticalLock{
+    public static class CriticalLock {
         public static final int WaitingDelayMillis = 5;
     }
+
     public static class Keywords{
         public static class Phrase{
             public static final String Start = "{$i ";
@@ -47,6 +66,7 @@ public class Settings {
                 public static class Payload {
                     public final static Integer MaxHeaderSize = 1024 * 1024;
                     public final static String Separator = "\r\n\r\n";
+                    public final static Integer SeperatorLength = Separator.length();
                 }
             }
 
@@ -77,15 +97,21 @@ public class Settings {
                 if (System.getProperty("program.name")==null) {
                     throw new Exception(Table.String(Table.Exception.Settings.NoProgramName));
                 }
-                return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty("program.name");
+                return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty(Properties.Program);
             }
             public static String Path() throws Exception{
-                return Base()+ java.io.File.separator+System.getProperty("program.name")+"."+Ext;
+                return Base()+ java.io.File.separator+System.getProperty(Properties.Program)+"."+Ext;
             }
         }
     }
-    public static void Initialize(String name){
-        System.setProperty("program.name",name);
+    public static void Initialize(String program, String title, String edition, String major, String middle, String minor){
+        System.setProperty(Properties.Program,program);
+        System.setProperty(Properties.Title,title);
+        System.setProperty(Properties.Edition,edition);
+        System.setProperty(Properties.Version.Major,major);
+        System.setProperty(Properties.Version.Middle,middle);
+        System.setProperty(Properties.Version.Minor,minor);
+
         Table.Load();
     }
 }

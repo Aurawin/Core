@@ -1,26 +1,21 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
-
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.protocol.http.http_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
-import javassist.bytecode.stackmap.TypeData;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
+import static com.aurawin.core.rsr.def.http.Status.s403;
+import static com.aurawin.core.rsr.def.http.Status.s510;
 
-public class GET extends Item implements Method {
-
-    public GET() {
-        super("GET");
+public class HEAD extends Item implements Method {
+    public HEAD() {
+        super("HEAD");
     }
-    public GET(String key) {
-        super(key);
-    }
-
     public Result onProcess(Session ssn, Transport transport){
         Result r = Result.Ok;
         http_1_1 h = (http_1_1) transport;
@@ -37,6 +32,8 @@ public class GET extends Item implements Method {
                         switch (h.getRequestHandlerState()) {
                             case Ok:
                                 h.Response.Status=s200;
+                                h.Response.Payload.Clear();
+                                h.Response.Headers.setStreams(Field.ContentLength,false);
                                 break;
                             case Missing:
                                 h.Response.Status=s404;
@@ -64,6 +61,8 @@ public class GET extends Item implements Method {
                 switch (h.getRequestHandlerState()) {
                     case Ok:
                         h.Response.Status=s200;
+                        h.Response.Payload.Clear();
+                        h.Response.Headers.setStreams(Field.ContentLength,false);
                         break;
                     case Missing:
                         h.Response.Status=s404;

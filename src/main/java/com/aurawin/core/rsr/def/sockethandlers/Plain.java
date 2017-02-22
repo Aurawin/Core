@@ -64,7 +64,9 @@ public class Plain extends Handler {
         if (Channel.isConnected()==true) {
             Owner.Owner.BufferRead.clear();
             try {
-                Channel.read(Owner.Owner.BufferRead);
+                int i = Channel.read(Owner.Owner.BufferRead);
+                if (i <= 0 )
+                    return HandlerResult.Failure;
             } catch (IOException ioe){
                 return HandlerResult.Failure;
             }
