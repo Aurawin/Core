@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Item  implements Transport {
 
     public String Protocol;
+    public String Version;
+    public String Delimitor;
 
     public volatile Buffers Buffers;
     public boolean Infinite;
@@ -116,7 +118,9 @@ public abstract class Item  implements Transport {
     public void queueClose(){
         Owner.qRemoveItems.add(this);
     }
-
+    public String getProtocol(){
+        return Protocol+Delimitor+Version;
+    }
     public Plugin getPlugin(String Namespace){
         return Owner.Engine.Plugins.getPlugin(Namespace);
     }

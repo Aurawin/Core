@@ -4,6 +4,7 @@ import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.rsr.def.Credentials;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stream.MemoryStream;
+import static com.aurawin.core.rsr.def.http.Status.s500;
 
 public class Response {
 
@@ -43,6 +44,7 @@ public class Response {
         Payload.Clear();
         Version.Major=1;
         Version.Minor=1;
+        Status = s500;
     }
 
     public void Release(){

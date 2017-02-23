@@ -119,7 +119,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             while ((Engine.State != esFinalize) && (RemovalRequested == false)) {
                 Begin = Instant.now();
                 try {
-                    if (this.size() > 0) {
+                    if (size() > 0) {
                         LastUsed = Instant.now();
                     }
                     processItems();
@@ -267,7 +267,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         try {
             java.lang.Thread.sleep(Settings.RSR.Server.ManagerYield);
         } catch (InterruptedException ie){
-            // do nothing
+            it =null;
+
         }
     }
     public void adjustReadBufferSize() throws Exception{

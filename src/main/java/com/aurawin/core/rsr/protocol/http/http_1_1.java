@@ -42,12 +42,16 @@ public class http_1_1 extends Item implements Transport {
 
     public http_1_1(Items aOwner, ItemKind aKind) {
         super(aOwner,aKind);
+        Protocol = "HTTP";
+        Version = "1.1";
+        Delimitor = "/";
 
         Methods.registerMethod(new GET());
         Methods.registerMethod(new POST());
         Methods.registerMethod(new OPTIONS());
         Methods.registerMethod(new HEAD());
         Methods.registerMethod(new TRACE());
+        Methods.registerMethod(new PROPFIND());
 
         Request=new Request(this);
         Request.Version.Major=1;

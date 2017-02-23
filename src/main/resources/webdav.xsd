@@ -19,9 +19,9 @@
 -->
 
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="dav"
+        targetNamespace="DAV"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:dav="dav"
+        xmlns:dav="DAV"
         elementFormDefault="qualified">
 
     <element name="activelock">
