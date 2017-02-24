@@ -6,6 +6,7 @@ import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
+import com.aurawin.core.solution.Settings;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
@@ -19,7 +20,6 @@ public class HEAD extends Item implements Method {
     public Result onProcess(Session ssn, Transport transport){
         Result r = Result.Ok;
         http_1_1 h = (http_1_1) transport;
-
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
         switch (h.Resolution) {

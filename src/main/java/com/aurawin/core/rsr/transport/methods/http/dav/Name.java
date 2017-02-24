@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -27,8 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{DAV:}src" maxOccurs="unbounded"/>
- *         &lt;element ref="{DAV:}dst" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -39,30 +37,27 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "src",
-    "dst"
+    "content"
 })
-@XmlRootElement(name = "link")
-public class Link {
+@XmlRootElement(name = "name")
+public class Name {
 
-    @XmlElement(required = true)
-    protected List<String> src;
-    @XmlElement(required = true)
-    protected List<String> dst;
+    @XmlMixed
+    protected List<String> content;
 
     /**
-     * Gets the value of the src property.
+     * Gets the value of the content property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the src property.
+     * This is why there is not a <CODE>set</CODE> method for the content property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getSrc().add(newItem);
+     *    getContent().add(newItem);
      * </pre>
      * 
      * 
@@ -72,40 +67,11 @@ public class Link {
      * 
      * 
      */
-    public List<String> getSrc() {
-        if (src == null) {
-            src = new ArrayList<String>();
+    public List<String> getContent() {
+        if (content == null) {
+            content = new ArrayList<String>();
         }
-        return this.src;
-    }
-
-    /**
-     * Gets the value of the dst property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the dst property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getDst().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
-     */
-    public List<String> getDst() {
-        if (dst == null) {
-            dst = new ArrayList<String>();
-        }
-        return this.dst;
+        return this.content;
     }
 
 }

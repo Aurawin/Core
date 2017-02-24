@@ -68,6 +68,9 @@ public class Settings {
                     public final static String Separator = "\r\n\r\n";
                     public final static Integer SeperatorLength = Separator.length();
                 }
+                public static class DAV{
+                    public static final String Compliance = "1, 2";
+                }
             }
 
         }

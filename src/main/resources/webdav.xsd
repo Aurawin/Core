@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-
+        <!--
+            Licensed to the Apache Software Foundation (ASF) under one
+            or more contributor license agreements.  See the NOTICE file
+            distributed with this work for additional information
+            regarding copyright ownership.  The ASF licenses this file
+            to you under the Apache License, Version 2.0 (the
+            "License"); you may not use this file except in compliance
+            with the License.  You may obtain a copy of the License at
+             http://www.apache.org/licenses/LICENSE-2.0
+            Unless required by applicable law or agreed to in writing,
+            software distributed under the License is distributed on an
+            "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+            KIND, either express or implied.  See the License for the
+            specific language governing permissions and limitations
+            under the License.
+        -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="DAV"
+        targetNamespace="DAV:"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:dav="DAV"
+        xmlns:dav="DAV:"
         elementFormDefault="qualified">
 
     <element name="activelock">
@@ -161,8 +158,8 @@
     <element name="propstat">
         <complexType>
             <sequence>
-                <element ref="dav:prop"/>
                 <element ref="dav:status"/>
+                <element ref="dav:prop"/>
                 <element ref="dav:error" minOccurs="0" maxOccurs="1"/>
                 <element ref="dav:responsedescription" minOccurs="0" maxOccurs="1"/>
             </sequence>
@@ -173,7 +170,7 @@
 
     <element name="prop">
         <complexType>
-            <sequence>
+            <all>
                 <element ref="dav:creationdate" minOccurs="0"/>
                 <element ref="dav:displayname" minOccurs="0"/>
                 <element ref="dav:getcontentlanguage" minOccurs="0"/>
@@ -187,6 +184,10 @@
                 <element ref="dav:supported-report-set" minOccurs="0"/>
                 <element ref="dav:quota-available-bytes" minOccurs="0"/>
                 <element ref="dav:quota-used-bytes" minOccurs="0"/>
+
+                <element ref="dav:name" minOccurs="0"/>
+
+                <!-- Microsoft has some own elements in DAV namespace - don't use it for now -->
                 <!--
                 <element ref="dav:contentclass" minOccurs="0"/>
                 <element ref="dav:defaultdocument" minOccurs="0"/>
@@ -197,11 +198,11 @@
                 <element ref="dav:isroot" minOccurs="0"/>
                 <element ref="dav:isstructureddocument" minOccurs="0"/>
                 <element ref="dav:lastaccessed" minOccurs="0"/>
-                <element ref="dav:name" minOccurs="0"/>
+
                 <element ref="dav:parentname" minOccurs="0"/>
                 -->
                 <any processContents="skip" namespace="##other" maxOccurs="unbounded" />
-            </sequence>
+            </all>
         </complexType>
     </element>
 
@@ -280,6 +281,12 @@
     </element>
 
     <element name="displayname">
+        <complexType mixed="true">
+            <sequence/>
+        </complexType>
+    </element>
+
+    <element name="name">
         <complexType mixed="true">
             <sequence/>
         </complexType>
@@ -405,7 +412,7 @@
 
     <element name="sync-token" type="anyURI"/>
 
-    <element name="sync-level">
+    <element name="sync-level" type="string">
         <simpleType>
             <restriction base="string">
                 <enumeration value="0"/>
@@ -431,4 +438,3 @@
     <element name="parentname" type="xsd:string"/>
     -->
 </schema>
-

@@ -52,6 +52,15 @@ public class http_1_1 extends Item implements Transport {
         Methods.registerMethod(new HEAD());
         Methods.registerMethod(new TRACE());
         Methods.registerMethod(new PROPFIND());
+        Methods.registerMethod(new PROPPATCH());
+        Methods.registerMethod(new MKCOL());
+        Methods.registerMethod(new DELETE());
+        Methods.registerMethod(new PUT());
+        Methods.registerMethod(new COPY());
+        Methods.registerMethod(new MOVE());
+        Methods.registerMethod(new LOCK());
+        Methods.registerMethod(new UNLOCK());
+        Methods.registerMethod(new SEARCH());
 
         Request=new Request(this);
         Request.Version.Major=1;

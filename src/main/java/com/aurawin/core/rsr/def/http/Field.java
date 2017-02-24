@@ -23,6 +23,7 @@ public class Field {
 
     public static final String Cookie= "Cookie";
     public static final String Date = "Date";
+    public static final String DAV = "DAV";
     public static final String Expires = "Expires";
     public static final String From = "From";
     public static final String Vary = "Vary";
