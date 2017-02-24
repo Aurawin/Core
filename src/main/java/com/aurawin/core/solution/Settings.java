@@ -56,6 +56,7 @@ public class Settings {
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
+        public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static class Security{
             public static float BufferGrowFactor=1.2f;
         }

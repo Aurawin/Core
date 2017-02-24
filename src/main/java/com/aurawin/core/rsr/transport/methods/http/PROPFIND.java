@@ -1,10 +1,9 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.http_1_1;
+import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
-import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.dav.*;
 import com.aurawin.core.solution.Settings;
@@ -13,18 +12,16 @@ import org.hibernate.Session;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static com.aurawin.core.rsr.def.http.Status.s200;
 import static com.aurawin.core.rsr.def.http.Status.s207;
+import static com.aurawin.core.rsr.def.http.Status.s404;
 import static java.time.Instant.now;
 
-public class PROPFIND extends Item implements Method {
+public class PROPFIND extends Item {
+    public static boolean dummyFile = false;
 
     public PROPFIND() {
         super("PROPFIND");
@@ -33,8 +30,14 @@ public class PROPFIND extends Item implements Method {
         super(key);
     }
 
-    private void pushAddFolder(http_1_1 h, Multistatus ms, String path, String folder){
-        // Append Dummy Folder
+    private void pushAddFolder(protocol_http_1_1 h, Multistatus ms, String path, String folder){
+
+        Resourcetype rt = new Resourcetype();
+        Propstat ps = new Propstat();
+        Collection col = new Collection();
+        Response rsp = new Response();
+        Displayname n = new Displayname();
+        Prop p = new Prop();
         String sPath = null;
 
         if (path.length()>0) {
@@ -43,16 +46,9 @@ public class PROPFIND extends Item implements Method {
             sPath = (folder.length() > 0) ? "/" + folder : "/";
         }
 
-
-        Response rsp = new Response();
-
         rsp.getHref().add(sPath);
-        //for (String ch:children){
-        //    rsp.getHref().add("http://chump:1080"+sPath+ch);
-        //}
-        Propstat ps = new Propstat();
-        ps.setStatus(h.getProtocol()+" "+s200.getValue());
-        Prop p = new Prop();
+
+        ps.setStatus(h.Version.toString()+" "+s200.getValue());
 
         Creationdate dt = new Creationdate();
         dt.getContent().add(Time.getInternet(now()));
@@ -62,21 +58,9 @@ public class PROPFIND extends Item implements Method {
         m.getContent().add(Time.getInternet(now()));
         p.setGetlastmodified(m);
 
-        Displayname n = new Displayname();
         n.getContent().add(folder); // todo get actual folder name not fqdn
         p.setDisplayname(n);
 
-        Name name = new Name();
-        name.getContent().add(folder);
-        p.setName(name);
-
-
-        Getcontentlength cl = new Getcontentlength();
-        cl.getContent().add("0");
-        p.setGetcontentlength(cl);
-
-        Resourcetype rt = new Resourcetype();
-        Collection col = new Collection();
         rt.setCollection(col);
         p.setResourcetype(rt);
 
@@ -85,11 +69,62 @@ public class PROPFIND extends Item implements Method {
 
         ms.getResponse().add(rsp);
     }
-    public void pushAddFile(http_1_1 h, Multistatus ms, String path, String file){
+    public void pushFolderNotFound(protocol_http_1_1 h, Multistatus ms, String path, String folder){
+        Resourcetype rt = new Resourcetype();
+        Propstat ps = new Propstat();
+        Collection col = new Collection();
+        Response rsp = new Response();
+        Displayname n = new Displayname();
+        Prop p = new Prop();
+        String sPath = null;
+
+        if (path.length()>0) {
+            sPath = (folder.length() > 0) ? path + "/" + folder+"/" : path +"/";
+        } else {
+            sPath = (folder.length() > 0) ? "/" + folder : "/";
+        }
+
+        rsp.getHref().add(sPath);
+
+        ps.setStatus(h.Version.toString()+" "+s404.getValue());
+
+        n.getContent().add(folder);
+        p.setDisplayname(n);
+
+        rt.setCollection(col);
+        p.setResourcetype(rt);
+
+        ps.setProp(p);
+        rsp.getPropstat().add(ps);
+        ms.getResponse().add(rsp);
+    }
+    public void pushFileNotFound(protocol_http_1_1 h, Multistatus ms, String path, String file){
         Response rsp = new Response();
         rsp.getHref().add(path+"/"+file);
         Propstat ps = new Propstat();
-        ps.setStatus(h.getProtocol()+" "+s200.getValue());
+
+        ps.setStatus(h.Version.toString()+" "+s404.getValue());
+
+        Prop p = new Prop();
+
+        Displayname n = new Displayname();
+        n.getContent().add(file); // todo get actual folder name not fqdn
+        p.setDisplayname(n);
+
+        Resourcetype rt = new Resourcetype();
+        p.setResourcetype(rt);
+
+        ps.setProp(p);
+        rsp.getPropstat().add(ps);
+
+        ms.getResponse().add(rsp);
+
+    }
+    public void pushAddFile(protocol_http_1_1 h, Multistatus ms, String path, String file){
+        Response rsp = new Response();
+        rsp.getHref().add(path+"/"+file);
+        Propstat ps = new Propstat();
+        ps.setStatus(h.Version.toString()+" "+s200.getValue());
 
         Prop p = new Prop();
 
@@ -127,12 +162,12 @@ public class PROPFIND extends Item implements Method {
     }
     public Result onProcess(Session ssn, Transport transport) {
         Result r = Result.Ok;
-        http_1_1 h = (http_1_1) transport;
+        protocol_http_1_1 h = (protocol_http_1_1) transport;
         String uri = h.Request.URI;
         if (uri.endsWith("/")) uri = uri.substring(0,uri.length()-1);
         int depth = h.Request.Headers.ValueAsInteger(Field.Depth);
 
-        h.Response.Headers.Update(Field.ContentType,"text/xml; charset=\"utf-8\"");
+        h.Response.Headers.Update(Field.ContentType,Settings.RSR.contentTypeXML);
         h.Response.Headers.Update(Field.Depth,"1");
         Multistatus ms = new Multistatus();
         ArrayList<String> children = new ArrayList<String>();
@@ -155,6 +190,12 @@ public class PROPFIND extends Item implements Method {
             }
         } else if (uri.equalsIgnoreCase("/desktop.ini")){
             pushAddFile(h,ms,"","desktop.ini");
+        } else if (uri.equalsIgnoreCase("/atbrunner/Dummy/dummy.jpg")){
+            if (dummyFile==false) {
+                pushFileNotFound(h,ms,"/atbrunner/Dummy","dummy.jpg");
+            } else {
+                pushAddFile(h, ms, "/atbrunner/Dummy", "dummy.jpg");
+            }
         }
 
 

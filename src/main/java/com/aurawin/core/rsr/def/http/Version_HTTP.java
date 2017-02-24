@@ -1,30 +1,27 @@
 package com.aurawin.core.rsr.def.http;
 
+
 import com.aurawin.core.array.VarString;
+import com.aurawin.core.rsr.def.Version;
+import com.aurawin.core.rsr.def.VersionMethods;
 
 import java.util.regex.Pattern;
 
-public class Version {
-    public volatile String Protocol;
-    public volatile int Major;
-    public volatile int Minor;
-
-    public Version(int Major, int Minor){
-        Major=Major;
-        Minor=Minor;
-        Protocol="HTTP";
+public class Version_HTTP extends Version {
+    public Version_HTTP(int major, int minor) {
+        super(major, minor, "HTTP","%s/%d.%d");
     }
-    public String toString(){
-        return String.format("%s/%d.%d",Protocol,Major,Minor);
+    @Override
+    public void Reset(){
+        super.Reset();
     }
+    @Override
     public void Release(){
-        Protocol = null;
-        Major = 0;
-        Minor = 0;
+        super.Release();
     }
-    public Boolean Load(String Data){
-        // HTTP/1.1
-        String[] aData = Data.split("/");
+    @Override
+    public boolean Load(String input) {
+        String[] aData = input.split("/");
         if (aData.length==2){
             Protocol=aData[0];
             String[] aVersion=aData[1].split(Pattern.quote("."));
@@ -39,8 +36,6 @@ public class Version {
         } else {
             return false;
         }
-
     }
-
 
 }

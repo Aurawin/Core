@@ -14,11 +14,11 @@ import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
+import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.rsr.protocol.http.http_1_1;
 import com.aurawin.core.plugin.Noid;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
@@ -56,7 +56,7 @@ public class ServerTest {
         );
         serverHTTP = new Server(
                 new InetSocketAddress("172.16.1.2", 1080),
-                new http_1_1(null, ItemKind.Server),
+                new protocol_http_1_1(null, ItemKind.Server),
                 false,
                 "chump.aurawin.com"
         );

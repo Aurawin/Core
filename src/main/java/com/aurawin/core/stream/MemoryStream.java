@@ -21,6 +21,10 @@ public class MemoryStream extends Channel {
         Size=0;
         Position=0;
     }
+    public void Release(){
+        Clear();
+        Collection=null;
+    }
     @Override
     public SeekableByteChannel truncate(long size){
         /*

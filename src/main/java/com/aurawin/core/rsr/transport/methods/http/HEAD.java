@@ -1,25 +1,22 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.http_1_1;
+import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
-import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
-import com.aurawin.core.solution.Settings;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
-import static com.aurawin.core.rsr.def.http.Status.s403;
 import static com.aurawin.core.rsr.def.http.Status.s510;
 
-public class HEAD extends Item implements Method {
+public class HEAD extends Item {
     public HEAD() {
         super("HEAD");
     }
     public Result onProcess(Session ssn, Transport transport){
         Result r = Result.Ok;
-        http_1_1 h = (http_1_1) transport;
+        protocol_http_1_1 h = (protocol_http_1_1) transport;
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
         switch (h.Resolution) {
@@ -27,7 +24,7 @@ public class HEAD extends Item implements Method {
                 h.Response.Headers.Update(Field.CoreObjectNamespace,h.Request.NamespacePlugin);
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.PluginMethod.Data!=null) {
-                    if (h.Request.Credentials.AccessGranted(h.Request.PluginMethod.Restricted,h.Request.PluginMethod.Id)) {
+                    if (h.Request.Credentials.aclCoreGranted(h.Request.PluginMethod.Restricted,h.Request.PluginMethod.Id)) {
                         h.Request.Process(ssn,h,h.Request.URI,h.Request.Parameters);
                         switch (h.getRequestHandlerState()) {
                             case Ok:
@@ -75,9 +72,7 @@ public class HEAD extends Item implements Method {
                         break;
                 }
                 break;
-            case rrAccessDenied:
-                h.Response.Status=s403;
-                break;
+
         }
 
         return r;

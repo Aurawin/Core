@@ -1,15 +1,12 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
-import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.http_1_1;
+import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
-import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
-import com.aurawin.core.solution.Settings;
 import org.hibernate.Session;
 
-public class LOCK extends Item implements Method {
+public class LOCK extends Item {
     public LOCK() {
         super("LOCK");
     }
@@ -19,7 +16,7 @@ public class LOCK extends Item implements Method {
 
     public Result onProcess(Session ssn, Transport transport) {
         Result r = Result.Ok;
-        http_1_1 h = (http_1_1) transport;
+        protocol_http_1_1 h = (protocol_http_1_1) transport;
         return r;
     }
 }

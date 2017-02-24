@@ -2,35 +2,24 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
-import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
 import com.aurawin.core.rsr.def.sockethandlers.Handler;
 import com.aurawin.core.rsr.transport.Transport;
+import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Factory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
-import com.aurawin.core.time.Time;
 
-import javax.net.ssl.SSLSocket;
-import java.io.IOException;
-import java.net.Socket;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
-import java.util.Date;
 import java.util.EnumSet;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public abstract class Item  implements Transport {
 
-    public String Protocol;
-    public String Version;
-    public String Delimitor;
+    public volatile Version Version;
 
     public volatile Buffers Buffers;
     public boolean Infinite;
@@ -47,9 +36,10 @@ public abstract class Item  implements Transport {
     public Items Owner;
     public Factory Methods;
 
-    public Item(Items aOwner, ItemKind aKind){
-        com.aurawin.core.rsr.transport.annotations.Transport TA = getClass().getAnnotation(com.aurawin.core.rsr.transport.annotations.Transport.class);
-        Protocol = (TA!=null) ? TA.Protocol() : Table.String(Table.Label.Null);
+    public Item(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
+        Protocol TA = getClass().getAnnotation(Protocol.class);
+        Version = TA.Version().newInstance();
+
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
@@ -66,8 +56,8 @@ public abstract class Item  implements Transport {
 
 
     }
-    public abstract Item newInstance(Items aOwner, ItemKind aKind);
-    public abstract Item newInstance(Items aOwner, SocketChannel aChannel);
+    public abstract Item newInstance(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException;
+    public abstract Item newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException;
     public abstract MemoryStream getResponsePayload();
     public abstract MemoryStream getRequestPayload();
     public abstract KeyPair getResponseHeaders();
@@ -118,9 +108,7 @@ public abstract class Item  implements Transport {
     public void queueClose(){
         Owner.qRemoveItems.add(this);
     }
-    public String getProtocol(){
-        return Protocol+Delimitor+Version;
-    }
+
     public Plugin getPlugin(String Namespace){
         return Owner.Engine.Plugins.getPlugin(Namespace);
     }

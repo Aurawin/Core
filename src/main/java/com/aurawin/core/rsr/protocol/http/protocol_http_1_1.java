@@ -11,7 +11,6 @@ import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.http.*;
 
 
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
 import com.aurawin.core.rsr.def.rsrResult;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
@@ -20,6 +19,7 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.transport.Transport;
 
+import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.*;
 import com.aurawin.core.solution.Settings;
@@ -30,21 +30,18 @@ import org.hibernate.Session;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 
-@com.aurawin.core.rsr.transport.annotations.Transport(
-        Name = "HTTP/1.1",
-        Protocol = "HTTP"
+@Protocol(
+        className = "protocol_http_1_1",
+        Version = Version_HTTP.class
 )
-public class http_1_1 extends Item implements Transport {
+public class protocol_http_1_1 extends Item implements Transport {
 
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
 
-    public http_1_1(Items aOwner, ItemKind aKind) {
+    public protocol_http_1_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
-        Protocol = "HTTP";
-        Version = "1.1";
-        Delimitor = "/";
 
         Methods.registerMethod(new GET());
         Methods.registerMethod(new POST());
@@ -63,21 +60,15 @@ public class http_1_1 extends Item implements Transport {
         Methods.registerMethod(new SEARCH());
 
         Request=new Request(this);
-        Request.Version.Major=1;
-        Request.Version.Minor=1;
-
         Response=new Response(this);
-        Response.Version.Major=1;
-        Response.Version.Minor=1;
     }
     @Override
-    public http_1_1 newInstance(Items aOwner,ItemKind aKind){
-
-        return new http_1_1(aOwner,aKind);
+    public protocol_http_1_1 newInstance(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
+        return new protocol_http_1_1(aOwner,aKind);
     }
     @Override
-    public http_1_1 newInstance(Items aOwner, SocketChannel aChannel){
-        http_1_1 itm = new http_1_1(aOwner,ItemKind.Server);
+    public protocol_http_1_1 newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
+        protocol_http_1_1 itm = new protocol_http_1_1(aOwner,ItemKind.Server);
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
@@ -86,6 +77,9 @@ public class http_1_1 extends Item implements Transport {
     public CredentialResult onCheckCredentials(Session ssn)
     {
         return CredentialResult.Failed;
+    }
+    public rsrResult onFileUploaded(Session ssn){
+        return rsrResult.rFailure;
     }
     public rsrResult onPeek() {
         return Request.Peek();
@@ -186,7 +180,7 @@ public class http_1_1 extends Item implements Transport {
         return Response.Headers.Stream();
     }
     private String getCommandLine(){
-        return Protocol+"/"+Response.Version.Major+"."+Response.Version.Minor+ " " +Response.Status.getValue()+Table.CRLF;
+        return Version.toString()+ " " +Response.Status.getValue()+Table.CRLF;
     }
 
     private void Respond() {

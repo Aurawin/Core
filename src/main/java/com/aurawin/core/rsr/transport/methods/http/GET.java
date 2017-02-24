@@ -2,17 +2,15 @@ package com.aurawin.core.rsr.transport.methods.http;
 
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.http_1_1;
+import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
-import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
-import javassist.bytecode.stackmap.TypeData;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
 
-public class GET extends Item implements Method {
+public class GET extends Item {
 
     public GET() {
         super("GET");
@@ -23,7 +21,7 @@ public class GET extends Item implements Method {
 
     public Result onProcess(Session ssn, Transport transport){
         Result r = Result.Ok;
-        http_1_1 h = (http_1_1) transport;
+        protocol_http_1_1 h = (protocol_http_1_1) transport;
 
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
@@ -32,11 +30,11 @@ public class GET extends Item implements Method {
                 h.Response.Headers.Update(Field.CoreObjectNamespace,h.Request.NamespacePlugin);
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.PluginMethod.Data!=null) {
-                    if (h.Request.Credentials.AccessGranted(h.Request.PluginMethod.Restricted,h.Request.PluginMethod.Id)) {
+                    if (h.Request.Credentials.aclCoreGranted(h.Request.PluginMethod.Restricted,h.Request.PluginMethod.Id)) {
                         h.Request.Process(ssn,h,h.Request.URI,h.Request.Parameters);
                         switch (h.getRequestHandlerState()) {
                             case Ok:
-                                h.Response.Status=s200;
+                                h.Response.Status = s200;
                                 break;
                             case Missing:
                                 h.Response.Status=s404;
@@ -63,7 +61,14 @@ public class GET extends Item implements Method {
                 h.Request.Process(ssn,h,h.Request.URI,h.Request.Parameters);
                 switch (h.getRequestHandlerState()) {
                     case Ok:
-                        h.Response.Status=s200;
+                        if (h.Request.URI.equalsIgnoreCase("/atbrunner/Dummy/dummy.jpg")){
+                            h.Response.Status = (PROPFIND.dummyFile) ? s200 : s404;
+                            if (!PROPFIND.dummyFile){
+                                h.Response.Payload.Clear();
+                            }
+                        } else {
+                            h.Response.Status = s200;
+                        }
                         break;
                     case Missing:
                         h.Response.Status=s404;
@@ -76,9 +81,7 @@ public class GET extends Item implements Method {
                         break;
                 }
                 break;
-            case rrAccessDenied:
-                h.Response.Status=s403;
-                break;
+
         }
 
         return r;

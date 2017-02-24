@@ -76,7 +76,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
-    public void Accept(SocketChannel aChannel){
+    public void Accept(SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
         Items itms = getManager();
         if (itms!=null) {
             Item itm = Owner.Transport.newInstance(itms, aChannel);

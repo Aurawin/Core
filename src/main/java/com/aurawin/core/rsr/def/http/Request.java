@@ -4,12 +4,10 @@ import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.array.VarString;
-import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
 
-import static com.aurawin.core.rsr.def.ResolveResult.rrAccessDenied;
 import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
 import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -22,11 +20,8 @@ import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.stream.parser.XML;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
+
 import java.util.EnumSet;
-import java.util.HashMap;
 
 public class Request implements QueryResolver,RequestHandler {
     protected Item Owner;
@@ -53,7 +48,7 @@ public class Request implements QueryResolver,RequestHandler {
         PluginMethod = null;
 
         Owner = owner;
-        Version = new Version(1,1);
+        Version = new Version_HTTP(1,1);
 
         Headers = new KeyPair();
         Headers.DelimiterItem="\r\n";
@@ -86,6 +81,7 @@ public class Request implements QueryResolver,RequestHandler {
         URI="";
         Query="";
         ETag="";
+        Version.Reset();
         NamespacePlugin="";
         NamespaceMethod="";
     }
@@ -197,39 +193,6 @@ public class Request implements QueryResolver,RequestHandler {
             return rPostpone;
         }
     }
-    public CredentialResult checkAuthorization(Session ssn){
-        CredentialResult r = CredentialResult.None;
-        KeyItem Authorization=Headers.Find(Field.Authorization);
-        if (Authorization!=null) {
-            // WWW Authorization is attached to the Headers
-            KeyPair auth = new KeyPair();
-            auth.DelimiterField=" ";
-            auth.DelimiterItem=";";
-            auth.Load(Authorization.Value);
-
-            if (auth.size()==1){
-                if (auth.get(0).Name.equalsIgnoreCase("basic")){
-                    byte[] ba = Base64.getMimeDecoder().decode(auth.get(0).Value);
-                    String p0 = new String(ba, StandardCharsets.UTF_8);
-                    String [] c = p0.split(":");
-                    if (c.length==2) {
-                        Credentials.Username = c[0];
-                        Credentials.Password = c[1];
-
-                        r=Owner.onCheckCredentials(ssn);
-                    }
-                } else {
-                    r=CredentialResult.UnknownMethod;
-                }
-            } else {
-                r=CredentialResult.UnknownMethod;
-            }
-
-        } else {
-            r=CredentialResult.None;
-        }
-        return r;
-    }
     @Override
     public RequestHandlerState Process(Session ssn, Item item, String uri, KeyPair parameters){
         Handler=item.Owner.Owner.getRequestHandler(Result);
@@ -241,26 +204,18 @@ public class Request implements QueryResolver,RequestHandler {
     }
     @Override
     public ResolveResult Resolve(Session ssn) {
-        CredentialResult cr = checkAuthorization(ssn);
-        if (CredentialResult.Stop.contains(cr)!=true) {
-            VarString saPath = new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim), "/");
-            int PathSize = saPath.size();
-            if (PathSize > 0) {
-                if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core) == 0) && (PathSize > 1)) {
-                    NamespacePlugin = saPath.Extract(0, 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                    Plugin = this.Owner.getPlugin(NamespacePlugin);
-                    if (Plugin != null) {
-                        NamespaceMethod = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                        PluginMethod = Plugin.Methods.Find(NamespaceMethod);
-                        java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
-                        if (m != null) {
-                            Result=rrPlugin;
-                        } else {
-                            NamespacePlugin = "";
-                            NamespaceMethod = "";
-                            Plugin = null;
-                            Result=rrFile;
-                        }
+        VarString saPath = new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim), "/");
+        int PathSize = saPath.size();
+        if (PathSize > 0) {
+            if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core) == 0) && (PathSize > 1)) {
+                NamespacePlugin = saPath.Extract(0, 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                Plugin = this.Owner.getPlugin(NamespacePlugin);
+                if (Plugin != null) {
+                    NamespaceMethod = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                    PluginMethod = Plugin.Methods.Find(NamespaceMethod);
+                    java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
+                    if (m != null) {
+                        Result=rrPlugin;
                     } else {
                         NamespacePlugin = "";
                         NamespaceMethod = "";
@@ -268,14 +223,17 @@ public class Request implements QueryResolver,RequestHandler {
                         Result=rrFile;
                     }
                 } else {
+                    NamespacePlugin = "";
+                    NamespaceMethod = "";
+                    Plugin = null;
                     Result=rrFile;
                 }
             } else {
-                URI = "/" + Table.Stored.File.Index;
                 Result=rrFile;
             }
         } else {
-            Result=rrAccessDenied;
+            URI = "/" + Table.Stored.File.Index;
+            Result=rrFile;
         }
         return Result;
     }

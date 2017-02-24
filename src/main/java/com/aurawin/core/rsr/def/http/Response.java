@@ -3,11 +3,11 @@ package com.aurawin.core.rsr.def.http;
 import com.aurawin.core.array.KeyPair;
 import com.aurawin.core.rsr.def.Credentials;
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.Version;
 import com.aurawin.core.stream.MemoryStream;
 import static com.aurawin.core.rsr.def.http.Status.s500;
 
 public class Response {
-
     private Item Owner;
 
     public volatile KeyPair Headers;
@@ -34,7 +34,7 @@ public class Response {
         Credentials = new Credentials();
 
         Payload=new MemoryStream();
-        Version = new Version(1,1);
+        Version = new Version_HTTP(1,1);
     }
     public void Reset(){
         Headers.Empty();
@@ -42,14 +42,16 @@ public class Response {
         Parameters.Empty();
         Credentials.Empty();
         Payload.Clear();
-        Version.Major=1;
-        Version.Minor=1;
+        Version.Reset();
+
         Status = s500;
     }
 
     public void Release(){
-        Payload.Clear();
-        Payload=null;
+        Version.Release();
+        Payload.Release();
+        Credentials.Release();
+
     }
 
 

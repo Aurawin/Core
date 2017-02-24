@@ -33,7 +33,7 @@ public class Credentials {
         Id=0;
         ACLUIds.clear();
     }
-    public boolean AccessGranted(boolean Restricted, long UID){
+    public boolean aclCoreGranted(boolean Restricted, long UID){
         return (Restricted==false) || ACLUIds.contains(UID);
     }
     public boolean isEmpty(){
