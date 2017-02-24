@@ -5,71 +5,8 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandlers/Secure.java" line="357" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="WebDAV testing">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/COPY.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/DELETE.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/LOCK.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/MKCOL.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/MOVE.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/PROPPATCH.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/PUT.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/SEARCH.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/UNLOCK.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Name.java" />
+    <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Field.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Field.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/http_1_1.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/http_1_1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/HEAD.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/HEAD.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/OPTIONS.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/OPTIONS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/PROPFIND.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/PROPFIND.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Activelock.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Activelock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Allprop.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Allprop.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Collection.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Collection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Creationdate.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Creationdate.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Displayname.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Displayname.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Error.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Error.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Exclusive.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Exclusive.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontentlanguage.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontentlanguage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontentlength.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontentlength.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontenttype.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getcontenttype.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getetag.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getetag.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getlastmodified.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Getlastmodified.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Keepalive.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Keepalive.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Link.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Link.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockdiscovery.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockdiscovery.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockentry.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockentry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockinfo.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockinfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockscope.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Lockscope.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Locktoken.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Locktoken.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Locktype.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Locktype.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Multistatus.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Multistatus.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/ObjectFactory.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/ObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Omit.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Omit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Owner.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Owner.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Prop.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Prop.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propertybehavior.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propertybehavior.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propertyupdate.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propertyupdate.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propfind.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propfind.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propname.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propname.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propstat.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Propstat.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/QuotaAvailableBytes.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/QuotaAvailableBytes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/QuotaUsedBytes.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/QuotaUsedBytes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Remove.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Remove.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Report.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Report.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Resourcetype.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Resourcetype.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Response.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Response.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Searchrequest.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Searchrequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Set.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Set.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Shared.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Shared.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Source.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Source.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SupportedReport.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SupportedReport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SupportedReportSet.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SupportedReportSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Supportedlock.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Supportedlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SyncCollection.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/SyncCollection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Write.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/Write.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/package-info.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/dav/package-info.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Settings.java" afterPath="$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Settings.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/webdav.xsd" afterPath="$PROJECT_DIR$/src/main/resources/webdav.xsd" />
     </list>
     <ignored path="Core.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1335,13 +1272,6 @@
       <option name="presentableId" value="Default" />
       <updated>1441072894308</updated>
     </task>
-    <task id="LOCAL-00063" summary="HTTP 1.1 work">
-      <created>1456154432178</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1456154432179</updated>
-    </task>
     <task id="LOCAL-00064" summary="HTTP 1.1 work">
       <created>1456154476639</created>
       <option name="number" value="00064" />
@@ -1678,7 +1608,14 @@
       <option name="project" value="LOCAL" />
       <updated>1487811721897</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="WebDAV testing">
+      <created>1487906610815</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1487906610815</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="TestHistory">
