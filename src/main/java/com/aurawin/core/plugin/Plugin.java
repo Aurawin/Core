@@ -1,7 +1,7 @@
 package com.aurawin.core.plugin;
 
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.stored.entities.UniqueId;
 import org.hibernate.Session;
@@ -13,10 +13,10 @@ import com.aurawin.core.plugin.annotations.Command;
 
 public abstract class Plugin implements Method {
     public Info Header;
-    public KeyPair Methods;
+    public KeyPairs Methods;
     public Plugin() {
         Header = new Info();
-        Methods = new KeyPair();
+        Methods = new KeyPairs();
     }
 
     public MethodState Setup(Session ssn){

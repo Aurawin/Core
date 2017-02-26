@@ -2,22 +2,20 @@ package com.aurawin.core.keywords;
 
 import com.aurawin.core.CriticalBlock;
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.keywords.master.Date;
 import com.aurawin.core.keywords.master.Time;
 import com.aurawin.core.keywords.master.Year;
 import com.aurawin.core.solution.Settings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Keywords extends ConcurrentLinkedQueue<Keyword> {
     public static class Default {
         public static final Keywords System = createSystemKeywords();
-        public static final KeyPair Master = new KeyPair();
+        public static final KeyPairs Master = new KeyPairs();
     }
     private CriticalBlock Lock;
 

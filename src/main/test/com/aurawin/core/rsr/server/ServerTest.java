@@ -2,18 +2,20 @@ package com.aurawin.core.rsr.server;
 
 import com.aurawin.core.Environment;
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.MethodState;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
+import com.aurawin.core.rsr.def.handlers.RequestHandler;
+import com.aurawin.core.rsr.def.handlers.RequestHandlerState;
 import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
@@ -38,6 +40,7 @@ public class ServerTest {
     @Before
     public void before() throws Exception {
         Settings.Initialize("server.test","Aurawin ServerTest","Universal","1","1","0");
+
         Manifest mf = Engine.createManifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password
@@ -56,15 +59,15 @@ public class ServerTest {
         );
         serverHTTP = new Server(
                 new InetSocketAddress("172.16.1.2", 1080),
-                new protocol_http_1_1(null, ItemKind.Server),
+                protocol_http_1_1.class,
                 false,
                 "chump.aurawin.com"
         );
         serverHTTP.Managers.addRequestHandler(rrFile, new RequestHandler() {
             @Override
-            public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
+            public RequestHandlerState Process(Session ssn, Item item) {
                 MemoryStream payload = item.getResponsePayload();
-                KeyPair Headers = item.getResponseHeaders();
+                KeyPairs Headers = item.getResponseHeaders();
                 Headers.Update(Field.ContentType,"text/plain");
                 payload.Write("File output");
                 return RequestHandlerState.Ok;
@@ -72,7 +75,7 @@ public class ServerTest {
         });
         serverHTTP.Managers.addRequestHandler(rrPlugin, new RequestHandler() {
             @Override
-            public RequestHandlerState Process(Session ssn, Item item, String Query, KeyPair Parameters) {
+            public RequestHandlerState Process(Session ssn, Item item) {
                 Plugin Plugin = item.getPlugin();
                 KeyItem PluginMethod = item.getPluginMethod();
                 MethodState methodState = Plugin.Execute(ssn, PluginMethod.Name, item);

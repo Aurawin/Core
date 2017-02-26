@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.VarString;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
@@ -13,8 +13,8 @@ import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
+import com.aurawin.core.rsr.def.handlers.RequestHandler;
+import com.aurawin.core.rsr.def.handlers.RequestHandlerState;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.stream.parser.XML;
@@ -28,10 +28,11 @@ public class Request implements QueryResolver,RequestHandler {
     protected ResolveResult Result;
     protected RequestHandler Handler;
     public Version Version;
-    public KeyPair Headers;
-    public KeyPair Cookies;
-    public KeyPair Parameters;
+    public KeyPairs Headers;
+    public KeyPairs Cookies;
+    public KeyPairs Parameters;
     public Credentials Credentials;
+    public Authenticate Authentication;
     public MemoryStream Payload;
     public String Protocol;
     public String Method;
@@ -49,16 +50,17 @@ public class Request implements QueryResolver,RequestHandler {
 
         Owner = owner;
         Version = new Version_HTTP(1,1);
+        Authentication = new Authenticate(owner.getHostName());
 
-        Headers = new KeyPair();
+        Headers = new KeyPairs();
         Headers.DelimiterItem="\r\n";
         Headers.DelimiterField=": ";
 
-        Cookies = new KeyPair();
+        Cookies = new KeyPairs();
         Cookies.DelimiterItem="; ";
         Cookies.DelimiterField="=";
 
-        Parameters = new KeyPair();
+        Parameters = new KeyPairs();
         Parameters.DelimiterItem="&";
         Parameters.DelimiterField="=";
 
@@ -194,11 +196,11 @@ public class Request implements QueryResolver,RequestHandler {
         }
     }
     @Override
-    public RequestHandlerState Process(Session ssn, Item item, String uri, KeyPair parameters){
+    public RequestHandlerState Process(Session ssn, Item item) {
         Handler=item.Owner.Owner.getRequestHandler(Result);
         RequestHandlerState r = RequestHandlerState.None;
         if (Handler!=null)
-            r = Handler.Process(ssn,item,uri,parameters);
+            r = Handler.Process(ssn,item);
         item.setRequestHandlerState(r);
         return r;
     }

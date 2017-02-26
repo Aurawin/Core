@@ -1,27 +1,19 @@
-package com.aurawin.core.rsr.def.sockethandlers;
+package com.aurawin.core.rsr.def.handlers;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stream.MemoryStream;
 
 import javax.net.ssl.*;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 
-import static com.aurawin.core.rsr.def.ItemState.isFinalize;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
-import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
 
 
-public class Secure extends Handler {
+public class SocketHandlerSecure extends SocketHandler {
     public SSLEngine Cryptor;
     private ByteBuffer peerAppData;
     private ByteBuffer peerNetData;
@@ -33,12 +25,12 @@ public class Secure extends Handler {
     private int iWrite;
     private SSLEngineResult CryptResult;
     private SSLEngineResult.HandshakeStatus handshakeStatus;
-    private SendReceiveCallback Send;
-    private SendReceiveCallback Recv;
-    private SendReceiveCallback SendPreHandshake;
-    private SendReceiveCallback SendPostHandshake;
-    private SendReceiveCallback RecvPreHandshake;
-    private SendReceiveCallback RecvPostHandshake;
+    private SocketSendReceiveCallback Send;
+    private SocketSendReceiveCallback Recv;
+    private SocketSendReceiveCallback SendPreHandshake;
+    private SocketSendReceiveCallback SendPostHandshake;
+    private SocketSendReceiveCallback RecvPreHandshake;
+    private SocketSendReceiveCallback RecvPostHandshake;
 
     @Override
     public void Release(){
@@ -118,11 +110,11 @@ public class Secure extends Handler {
 
     }
     @Override
-    public HandlerResult Send() {
+    public SocketHandlerResult Send() {
         return Send.Perform();
     }
     @Override
-    public HandlerResult Recv() {
+    public SocketHandlerResult Recv() {
         return Recv.Perform();
     }
     private void processHandshakeStep() throws IOException{
@@ -326,7 +318,7 @@ public class Secure extends Handler {
             if (Owner.Buffers.Send.Size == 0) Owner.Owner.removeFromWriteQueue(Owner);
         }
     }
-    public Secure(Item owner){
+    public SocketHandlerSecure(Item owner){
         super(owner);
         issuedHandshake=false;
 
@@ -335,15 +327,15 @@ public class Secure extends Handler {
         localAppData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalAppDataBuffer);
         localNetData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalNetDataBuffer);
 
-        SendPreHandshake=new SendReceiveCallback() {
+        SendPreHandshake=new SocketSendReceiveCallback() {
             @Override
-            public HandlerResult Perform() {
-                return HandlerResult.Pending;
+            public SocketHandlerResult Perform() {
+                return SocketHandlerResult.Pending;
             }
         };
-        RecvPreHandshake=new SendReceiveCallback() {
+        RecvPreHandshake=new SocketSendReceiveCallback() {
             @Override
-            public HandlerResult Perform() {
+            public SocketHandlerResult Perform() {
                 try {
                     peerNetData.compact();
                     iRead=Channel.read(peerNetData);
@@ -365,32 +357,32 @@ public class Secure extends Handler {
                             try {
                                 processRecv();
                             } catch (IOException e) {
-                                return HandlerResult.Failure;
+                                return SocketHandlerResult.Failure;
                             }
                         }
                         peerNetData.clear();
                     }
-                    return HandlerResult.Pending;
+                    return SocketHandlerResult.Pending;
                 }
 
 
             }
         };
-        SendPostHandshake=new SendReceiveCallback() {
+        SendPostHandshake=new SocketSendReceiveCallback() {
             @Override
-            public HandlerResult Perform() {
+            public SocketHandlerResult Perform() {
                 try {
                     processSend();
                     Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
-                    return HandlerResult.Complete;
+                    return SocketHandlerResult.Complete;
                 } catch (Exception e){
-                    return HandlerResult.Failure;
+                    return SocketHandlerResult.Failure;
                 }
             }
         };
-        RecvPostHandshake=new SendReceiveCallback() {
+        RecvPostHandshake=new SocketSendReceiveCallback() {
             @Override
-            public HandlerResult Perform() {
+            public SocketHandlerResult Perform() {
                 try {
                         iRead=Channel.read(peerNetData);
                         if (iRead>0) {
@@ -398,13 +390,13 @@ public class Secure extends Handler {
                             processRecv();
                         } else if (iRead==-1){
                             Shutdown();
-                            return HandlerResult.Failure;
+                            return SocketHandlerResult.Failure;
                         }
 
                 } catch (Exception e){
-                    return HandlerResult.Failure;
+                    return SocketHandlerResult.Failure;
                 }
-                return HandlerResult.Complete;
+                return SocketHandlerResult.Complete;
             }
         };
         Send=SendPreHandshake;

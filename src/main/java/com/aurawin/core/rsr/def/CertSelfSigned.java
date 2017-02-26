@@ -2,26 +2,18 @@ package com.aurawin.core.rsr.def;
 
 
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.FileStream;
-import com.sun.org.apache.xml.internal.security.keys.content.DEREncodedKeyValue;
-import sun.misc.BASE64Encoder;
-import sun.security.pkcs.PKCS8Key;
-import sun.security.pkcs10.PKCS10;
-import sun.security.util.DerEncoder;
-import sun.security.util.DerValue;
 import sun.security.x509.*;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.*;
@@ -50,7 +42,7 @@ public class CertSelfSigned {
     public RSAPrivateKeySpec PrivateKeySpec;
     private CertificateVersion Version;
     public X509CertImpl Implement;
-    public KeyPair Distinguished;
+    public KeyPairs Distinguished;
     public java.security.KeyPair Keys;
     public KeyItem CommonName;
     public KeyItem OrganizationUnit;
@@ -64,7 +56,7 @@ public class CertSelfSigned {
 
     public CertSelfSigned(String commonName,String organizationUnit,String organizationName,String street, String locality,String state,String Postal, String country, String email,int days) throws Exception{
 
-        Distinguished= new KeyPair();
+        Distinguished= new KeyPairs();
         Distinguished.DelimiterField="=";
         Distinguished.DelimiterItem=", ";
         CommonName=Distinguished.Update("CN",commonName);

@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.def.sockethandlers;
+package com.aurawin.core.rsr.def.handlers;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
@@ -7,8 +7,10 @@ import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
-public abstract class Handler implements Methods {
-    public Handler(Item owner) {
+import static java.net.StandardSocketOptions.TCP_NODELAY;
+
+public abstract class SocketHandler implements SocketMethods {
+    public SocketHandler(Item owner) {
         Owner = owner;
     }
     protected Item Owner;
@@ -17,6 +19,7 @@ public abstract class Handler implements Methods {
 
     public void Setup(boolean accepted) {
         try {
+            Channel.setOption(TCP_NODELAY,true);
             Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
             Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
 

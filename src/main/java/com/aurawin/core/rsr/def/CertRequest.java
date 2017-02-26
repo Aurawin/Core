@@ -1,7 +1,7 @@
 package com.aurawin.core.rsr.def;
 
 import com.aurawin.core.array.*;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.solution.Settings;
 import sun.security.pkcs10.PKCS10;
 import sun.security.x509.X500Name;
@@ -13,7 +13,7 @@ import java.security.*;
 
 public class CertRequest {
     public PKCS10 pkcs10;
-    public KeyPair Fields;
+    public KeyPairs Fields;
 
     public KeyItem CommonName;
     public KeyItem OrganizationUnit;
@@ -28,7 +28,7 @@ public class CertRequest {
     public java.security.KeyPair Keys;
     public KeyPairGenerator KeyGenerator;
     public CertRequest (String commonName,String organizationUnit,String organizationName,String street,String locality,String state,String Postal, String country, String email) throws Exception{
-        Fields= new KeyPair();
+        Fields= new KeyPairs();
         Fields.DelimiterField="=";
         Fields.DelimiterItem=", ";
 

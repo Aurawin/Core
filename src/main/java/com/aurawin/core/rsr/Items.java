@@ -2,30 +2,21 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.Security;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
 import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.commands.*;
-import com.aurawin.core.rsr.def.sockethandlers.Handler;
-import com.aurawin.core.rsr.def.sockethandlers.HandlerResult;
+import com.aurawin.core.rsr.def.handlers.SocketHandlerResult;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stored.entities.Certificate;
-import com.aurawin.core.stored.entities.Entities;
-import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
 import static com.aurawin.core.rsr.def.ItemState.*;
 import static com.aurawin.core.rsr.def.ItemError.*;
-import static com.aurawin.core.rsr.def.rsrResult.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -34,9 +25,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -48,8 +37,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     public Instant LastUsed;
     private Instant Begin;
     private Instant End;
-    private HandlerResult Read;
-    private HandlerResult Written;
+    private SocketHandlerResult Read;
+    private SocketHandlerResult Written;
     private rsrResult ioResult;
     private rsrResult evResult;
     private Item itm;
@@ -112,7 +101,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         try {
             rwSelector = java.nio.channels.Selector.open();
         } catch (Exception e){
-            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.Transport.getClass().getName()));
+            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.transportClass.getName()));
         }
         try {
 
@@ -186,7 +175,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                             itm = (Item) k.attachment();
                             if (itm != null) {
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
-                                if (Read == HandlerResult.Complete) {
+                                if (Read == SocketHandlerResult.Complete) {
                                     ioResult = itm.onPeek();
                                     switch (ioResult) {
                                         case rPostpone:
@@ -220,7 +209,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                             break;
                                     }
 
-                                } else if (Read == HandlerResult.Failure) {
+                                } else if (Read == SocketHandlerResult.Failure) {
                                     itm.Errors.add(eReset);
                                     itm.Error();
                                     qRemoveItems.add(itm);

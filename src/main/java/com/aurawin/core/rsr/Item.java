@@ -1,11 +1,12 @@
 package com.aurawin.core.rsr;
 
 import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.rsr.def.*;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandlerState;
-import com.aurawin.core.rsr.def.sockethandlers.Handler;
+import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
+import com.aurawin.core.rsr.def.handlers.SocketHandler;
+import com.aurawin.core.rsr.def.handlers.RequestHandlerState;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Factory;
@@ -17,10 +18,8 @@ import java.time.Instant;
 import java.util.EnumSet;
 
 
-public abstract class Item  implements Transport {
-
+public abstract class Item  extends AuthenticateHandler implements Transport {
     public volatile Version Version;
-
     public volatile Buffers Buffers;
     public boolean Infinite;
 
@@ -28,7 +27,8 @@ public abstract class Item  implements Transport {
     public ItemKind Kind;
     public ItemState State;
     public Instant TTL;
-    protected Handler SocketHandler;
+
+    protected SocketHandler SocketHandler;
     protected RequestHandlerState handlerState;
 
     public EnumSet<ItemError> Errors;
@@ -50,18 +50,17 @@ public abstract class Item  implements Transport {
             Owner = aOwner;
             Infinite = aOwner.Infinite;
             SocketHandler = aOwner.Engine.createSocketHandler(this);
+
         } else {
             Infinite = Settings.RSR.Finite;
         }
-
-
     }
-    public abstract Item newInstance(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException;
+    public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException;
     public abstract MemoryStream getResponsePayload();
     public abstract MemoryStream getRequestPayload();
-    public abstract KeyPair getResponseHeaders();
-    public abstract KeyPair getRequestHeaders();
+    public abstract KeyPairs getResponseHeaders();
+    public abstract KeyPairs getRequestHeaders();
     public abstract Plugin getPlugin();
     public abstract KeyItem getPluginMethod();
     protected void setOwner(Items aOwner){

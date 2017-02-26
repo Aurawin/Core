@@ -1,3 +1,3 @@
-package com.aurawin.core.rsr.def.requesthandlers;
+package com.aurawin.core.rsr.def.handlers;
 
 public enum RequestHandlerState {None, Ok, Missing, Failed, Exception}

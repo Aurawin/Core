@@ -1,11 +1,10 @@
 package com.aurawin.core.array;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class KeyPair extends ArrayList<KeyItem> {
+public class KeyPairs extends ArrayList<KeyItem> {
     public String DelimiterField = "\\=";
     public String DelimiterItem = "\r\n";
 
@@ -30,17 +29,17 @@ public class KeyPair extends ArrayList<KeyItem> {
         return ki;
     }
 
-    public KeyPair(String args){
+    public KeyPairs(String args){
         String[] saItems = args.split(DelimiterItem);
         for (String sItem : saItems) {
             Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.Singleton));
         }
     }
-    public KeyPair(KeyPair value){
+    public KeyPairs(KeyPairs value){
         Assign(value);
     }
 
-    public KeyPair(){
+    public KeyPairs(){
 
     }
     public void Empty(){
@@ -101,7 +100,7 @@ public class KeyPair extends ArrayList<KeyItem> {
         itm.Streams=streams;
         return null;
     }
-    public void Assign(KeyPair value){
+    public void Assign(KeyPairs value){
         DelimiterField=value.DelimiterField;
         DelimiterItem=value.DelimiterItem;
         clear();

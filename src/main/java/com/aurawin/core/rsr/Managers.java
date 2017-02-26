@@ -4,12 +4,12 @@ import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
+import com.aurawin.core.rsr.def.handlers.RequestHandler;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.Iterator;
@@ -24,12 +24,23 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant Expired;
     private Engine Owner;
     private ConcurrentHashMap<ResolveResult,RequestHandler> Requests;
+    private Class[] itemConstructorParamsServer;
+    private Class[] itemConstructorParamsClient;
 
     public Managers(Engine aOwner){
         nextId=1;
         Owner=aOwner;
         lastCleanup=Instant.now();
         Requests = new ConcurrentHashMap<ResolveResult,RequestHandler>();
+
+        itemConstructorParamsServer = new Class[2];
+        itemConstructorParamsServer[0] = Items.class;
+        itemConstructorParamsServer[1] = SocketChannel.class;
+
+        itemConstructorParamsClient=new Class[2];
+        itemConstructorParamsClient[0] = Items.class;
+        itemConstructorParamsClient[1] = ItemKind.class;
+
     }
     @Override
     public Thread newThread(Runnable r){
@@ -76,10 +87,15 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
-    public void Accept(SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
+    public void Accept(SocketChannel aChannel)throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, InvocationTargetException
+    {
         Items itms = getManager();
         if (itms!=null) {
-            Item itm = Owner.Transport.newInstance(itms, aChannel);
+            Method m = Owner.transportClass.getDeclaredMethod("newInstance",itemConstructorParamsServer);
+            Object o = Owner.transportObject;
+            m.setAccessible(true);
+            Item itm = (Item) m.invoke(o,itms,aChannel);
             itms.qAddItems.add(itm);
         } else {
             try {

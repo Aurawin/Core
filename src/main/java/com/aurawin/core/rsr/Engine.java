@@ -4,12 +4,13 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.plugin.Plugin;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
-import com.aurawin.core.rsr.def.ResolveResult;
+import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.Security;
-import com.aurawin.core.rsr.def.requesthandlers.RequestHandler;
-import com.aurawin.core.rsr.def.sockethandlers.Handler;
-import com.aurawin.core.rsr.def.sockethandlers.Plain;
-import com.aurawin.core.rsr.def.sockethandlers.Secure;
+import com.aurawin.core.rsr.def.Version;
+import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
+import com.aurawin.core.rsr.def.handlers.SocketHandler;
+import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
+import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.annotations.AnnotatedList;
@@ -18,7 +19,6 @@ import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public abstract class Engine extends Thread {
     public volatile static long nextId;
@@ -30,7 +30,9 @@ public abstract class Engine extends Thread {
     public volatile String HostName;
     public volatile int Port;
     public Boolean Infinite = false;
-    public Item Transport;
+    protected Class<? extends Item>  transportClass;
+    protected ItemKind transportKind;
+    protected Item transportObject;
 
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
@@ -38,12 +40,18 @@ public abstract class Engine extends Thread {
     public String Stamp;
 
 
-    public Engine(Item aTransport, boolean aInfinate, String hostName, int port) throws IOException,NoSuchMethodException {
+    public Engine(Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate, String hostName, int port) throws
+            IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
+    {
         nextId=1;
         HostName = hostName;
         Port = port;
         Infinite=aInfinate;
-        Transport=aTransport;
+
+        transportClass = aTransport;
+        transportObject = aTransport.newInstance();
+        transportKind = aKind;
+
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Managers = new Managers(this);
@@ -63,11 +71,12 @@ public abstract class Engine extends Thread {
         );
 
     }
-    public synchronized Handler createSocketHandler(Item item){
+
+    public synchronized SocketHandler createSocketHandler(Item item){
         if (Security.Enabled) {
-            return new com.aurawin.core.rsr.def.sockethandlers.Secure(item);
+            return new SocketHandlerSecure(item);
         } else {
-            return new com.aurawin.core.rsr.def.sockethandlers.Plain(item);
+            return new SocketHandlerPlain(item);
         }
     }
 

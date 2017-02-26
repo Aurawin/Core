@@ -12,7 +12,6 @@ public interface Transport {
     void Error();
     void Finalized();
     void Initialized();
-    CredentialResult onCheckCredentials(Session ssn);
     void Teardown();
     void Setup();
     void Reset();

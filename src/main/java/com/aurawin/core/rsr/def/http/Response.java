@@ -1,6 +1,6 @@
 package com.aurawin.core.rsr.def.http;
 
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.rsr.def.Credentials;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.Version;
@@ -10,24 +10,24 @@ import static com.aurawin.core.rsr.def.http.Status.s500;
 public class Response {
     private Item Owner;
 
-    public volatile KeyPair Headers;
-    public volatile KeyPair Cookies;
-    public volatile KeyPair Parameters;
+    public volatile KeyPairs Headers;
+    public volatile KeyPairs Cookies;
+    public volatile KeyPairs Parameters;
     public volatile Credentials Credentials;
     public volatile Status Status;
     public volatile Version Version;
     public volatile MemoryStream Payload;
     public Response(Item aOwner) {
         Owner = aOwner;
-        Headers = new KeyPair();
+        Headers = new KeyPairs();
         Headers.DelimiterItem="\r\n";
         Headers.DelimiterField=": ";
 
-        Cookies = new KeyPair();
+        Cookies = new KeyPairs();
         Cookies.DelimiterItem="; ";
         Cookies.DelimiterField="=";
 
-        Parameters = new KeyPair();
+        Parameters = new KeyPairs();
         Parameters.DelimiterItem="&";
         Parameters.DelimiterField="=";
 

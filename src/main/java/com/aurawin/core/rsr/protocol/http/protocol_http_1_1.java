@@ -1,7 +1,7 @@
 package com.aurawin.core.rsr.protocol.http;
 
 
-import com.aurawin.core.array.KeyPair;
+import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.Plugin;
@@ -34,12 +34,15 @@ import java.util.Date;
         className = "protocol_http_1_1",
         Version = Version_HTTP.class
 )
-public class protocol_http_1_1 extends Item implements Transport {
 
+public class protocol_http_1_1 extends Item implements Transport {
+    public volatile Authenticate Authenticate;
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
-
+    public protocol_http_1_1() throws InstantiationException, IllegalAccessException{
+        super(null,ItemKind.None);
+    }
     public protocol_http_1_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
 
@@ -58,13 +61,13 @@ public class protocol_http_1_1 extends Item implements Transport {
         Methods.registerMethod(new LOCK());
         Methods.registerMethod(new UNLOCK());
         Methods.registerMethod(new SEARCH());
-
+        Authenticate = new Authenticate(this.Owner.getHostName());
         Request=new Request(this);
         Response=new Response(this);
     }
     @Override
-    public protocol_http_1_1 newInstance(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
-        return new protocol_http_1_1(aOwner,aKind);
+    public protocol_http_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
+        return new protocol_http_1_1(aOwner,ItemKind.Client);
     }
     @Override
     public protocol_http_1_1 newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
@@ -72,11 +75,9 @@ public class protocol_http_1_1 extends Item implements Transport {
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
-
-
-    public CredentialResult onCheckCredentials(Session ssn)
-    {
-        return CredentialResult.Failed;
+    @Override
+    public CredentialResult validateCredentials(Session ssn){
+        return CredentialResult.None;
     }
     public rsrResult onFileUploaded(Session ssn){
         return rsrResult.rFailure;
@@ -90,10 +91,10 @@ public class protocol_http_1_1 extends Item implements Transport {
     public MemoryStream getResponsePayload(){
         return Response.Payload;
     }
-    public KeyPair getRequestHeaders(){
+    public KeyPairs getRequestHeaders(){
         return Request.Headers;
     }
-    public KeyPair getResponseHeaders(){
+    public KeyPairs getResponseHeaders(){
         return Response.Headers;
     }
     public Plugin getPlugin(){

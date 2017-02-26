@@ -1,23 +1,18 @@
-package com.aurawin.core.rsr.def.sockethandlers;
+package com.aurawin.core.rsr.def.handlers;
 
-import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.time.Time;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
-import java.util.Date;
 
-import static com.aurawin.core.rsr.def.ItemState.isFinalize;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
-import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
+import static java.net.StandardSocketOptions.TCP_NODELAY;
 
-public class Plain extends Handler {
+public class SocketHandlerPlain extends SocketHandler {
     @Override
     public void Teardown(){
         if (Key!=null){
@@ -55,20 +50,20 @@ public class Plain extends Handler {
         }
     }
 
-    public Plain(Item owner){
+    public SocketHandlerPlain(Item owner){
         super(owner);
     }
 
     @Override
-    public HandlerResult Recv(){
+    public SocketHandlerResult Recv(){
         if (Channel.isConnected()==true) {
             Owner.Owner.BufferRead.clear();
             try {
                 int i = Channel.read(Owner.Owner.BufferRead);
                 if (i <= 0 )
-                    return HandlerResult.Failure;
+                    return SocketHandlerResult.Failure;
             } catch (IOException ioe){
-                return HandlerResult.Failure;
+                return SocketHandlerResult.Failure;
             }
             Owner.Owner.BufferRead.flip();
             Owner.Buffers.Recv.write(Owner.Owner.BufferRead);
@@ -76,12 +71,12 @@ public class Plain extends Handler {
 
             Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
 
-            return HandlerResult.Complete;
+            return SocketHandlerResult.Complete;
         } else {
-            return HandlerResult.Failure;
+            return SocketHandlerResult.Failure;
         }
     }
-    public HandlerResult Send(){
+    public SocketHandlerResult Send(){
         if (Owner.Buffers.Send.Size>0) {
             Owner.Owner.BufferWrite.clear();
             Owner.Buffers.Send.read(Owner.Owner.BufferWrite);
@@ -91,7 +86,7 @@ public class Plain extends Handler {
                     Channel.write(Owner.Owner.BufferWrite);
 
                 } catch (IOException ioe){
-                    return HandlerResult.Failure;
+                    return SocketHandlerResult.Failure;
                 }
             }
             Owner.Owner.BufferWrite.clear();
@@ -100,7 +95,7 @@ public class Plain extends Handler {
         } else {
             if (Owner.Buffers.Send.Size == 0) Owner.Owner.removeFromWriteQueue(Owner);
         }
-        return HandlerResult.Complete;
+        return SocketHandlerResult.Complete;
     }
 
 }

@@ -25,7 +25,7 @@ public class HEAD extends Item {
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.PluginMethod.Data!=null) {
                     if (h.Request.Credentials.aclCoreGranted(h.Request.PluginMethod.Restricted,h.Request.PluginMethod.Id)) {
-                        h.Request.Process(ssn,h,h.Request.URI,h.Request.Parameters);
+                        h.Request.Process(ssn,h);
                         switch (h.getRequestHandlerState()) {
                             case Ok:
                                 h.Response.Status=s200;
@@ -54,7 +54,7 @@ public class HEAD extends Item {
                 }
                 break;
             case rrFile :
-                h.Request.Process(ssn,h,h.Request.URI,h.Request.Parameters);
+                h.Request.Process(ssn,h);
                 switch (h.getRequestHandlerState()) {
                     case Ok:
                         h.Response.Status=s200;

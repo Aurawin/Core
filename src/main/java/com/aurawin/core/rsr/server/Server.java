@@ -3,14 +3,8 @@ package com.aurawin.core.rsr.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.security.KeyStore;
-import java.util.List;
-
-import javax.net.ssl.*;
 
 
 import com.aurawin.core.lang.Table;
@@ -20,9 +14,9 @@ import com.aurawin.core.rsr.Item;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
 
-import com.aurawin.core.rsr.def.Security;
-import com.aurawin.core.rsr.def.sockethandlers.Handler;
-import com.aurawin.core.rsr.def.sockethandlers.Plain;
+import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.Version;
+import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
 import com.aurawin.core.solution.Settings;
 
 
@@ -30,8 +24,10 @@ public class Server extends Engine {
     private InetSocketAddress address;
     private ServerSocketChannel Channel;
 
-    public Server(InetSocketAddress sa, Item aTransport, boolean aInfinate, String aHostName) throws IOException,NoSuchMethodException {
-        super (aTransport,aInfinate,aHostName,sa.getPort());
+    public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName) throws
+            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
+    {
+        super (aTransport,ItemKind.Server,aInfinate,aHostName,sa.getPort());
         State = esCreated;
         address = sa;
     }

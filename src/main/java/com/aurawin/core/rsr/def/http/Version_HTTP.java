@@ -8,9 +8,13 @@ import com.aurawin.core.rsr.def.VersionMethods;
 import java.util.regex.Pattern;
 
 public class Version_HTTP extends Version {
+    public Version_HTTP(){
+        super (1,1,"HTTP","%s/%d.%d");
+    }
     public Version_HTTP(int major, int minor) {
         super(major, minor, "HTTP","%s/%d.%d");
     }
+
     @Override
     public void Reset(){
         super.Reset();
