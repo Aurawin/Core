@@ -4,29 +4,30 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Request;
 import com.aurawin.core.rsr.def.http.Response;
+import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
 import org.hibernate.Session;
 
 @com.aurawin.core.plugin.annotations.Plugin(
         Name = "Noid",
         Namespace = "/core/noid",
-        Title = "Empty Plugin",
+        Title = "Empty Plug",
         Prompt = "Cannot count of this plugin.",
-        Description = "Plugin does nothing",
+        Description = "Plug does nothing",
         Vendor = "Aurawin LLC",
         ClassName = "Noid",
-        Transport = "HTTP/1.1",
+        Transport = HTTP_1_1.class,
         Domain = "com.aurawin",
         Version = 1
 )
 
-public class Noid extends Plugin {
+public class Noid extends Plug {
     @Override
-    public MethodState Setup(Session ssn){
+    public PluginState Setup(Session ssn){
         return super.Setup(ssn);
     }
     @Override
-    public MethodState Teardown(Session ssn){
-        return MethodState.msSuccess;
+    public PluginState Teardown(Session ssn){
+        return PluginState.PluginSuccess;
     }
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
@@ -35,16 +36,13 @@ public class Noid extends Plugin {
             Title = "Something",
             Prompt = "Enable this feature to do something.",
             Description = "The command \"Something\" does something!",
-            Format = FormatIO.JSON,
-            Fields = {"Request","Response"}
+            Format = FormatIO.JSON
     )
-    public MethodState DoSomething(Session ssn, Item item, Object[] Fields){
-        Request Request = (Request) Fields[0];
-        Response Response = (Response) Fields[1];
-        Response.Headers.Update(Field.ContentType,"text/plain");
-        Response.Payload.Write("Plugin output - something was done.");
-
-        return MethodState.msSuccess;
+    public PluginState DoSomething(Session ssn, Item Transport){
+        HTTP_1_1 h = (HTTP_1_1) Transport;
+        h.Response.Headers.Update(Field.ContentType,"text/plain");
+        h.Response.Payload.Write("Plug output - something was done.");
+        return PluginState.PluginSuccess;
     }
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
@@ -53,16 +51,14 @@ public class Noid extends Plugin {
             Title = "Another",
             Prompt = "Enable this feature to do another.",
             Description = "The command \"Another\" does another!",
-            Format = FormatIO.JSON,
-            Fields = {"Request","Response"}
+            Format = FormatIO.JSON
     )
-    public MethodState DoAnother(Session ssn, Item item, Object[] Fields){
-        Request Request = (Request) Fields[0];
-        Response Response = (Response) Fields[1];
-        Response.Headers.Update(Field.ContentType,"text/plain");
-        Response.Payload.Write("Plugin output - another something was done.");
+    public PluginState DoAnother(Session ssn, Item Transport){
+        HTTP_1_1 h = (HTTP_1_1) Transport;
+        h.Response.Headers.Update(Field.ContentType,"text/plain");
+        h.Response.Payload.Write("Plug output - another something was done.");
 
-        return MethodState.msSuccess;
+        return PluginState.PluginSuccess;
     }
 
 }

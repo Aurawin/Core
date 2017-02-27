@@ -6,6 +6,8 @@ import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
 import org.hibernate.Session;
 
+import static com.aurawin.core.rsr.transport.methods.Result.Ok;
+
 public class UNLOCK extends Item {
     public UNLOCK() {
         super("UNLOCK");
@@ -15,10 +17,9 @@ public class UNLOCK extends Item {
     }
 
     public Result onProcess(Session ssn, Transport transport) {
-        Result r = Result.Ok;
         protocol_http_1_1 h = (protocol_http_1_1) transport;
 
-
-        return r;
+        //todo
+        return Ok;
     }
 }

@@ -44,7 +44,7 @@ public class Response {
         Payload.Clear();
         Version.Reset();
 
-        Status = s500;
+        Status = null;
     }
 
     public void Release(){

@@ -4,7 +4,6 @@ import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
-import com.aurawin.core.rsr.def.handlers.RequestHandler;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
@@ -23,7 +22,8 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant lastCleanup;
     private Instant Expired;
     private Engine Owner;
-    private ConcurrentHashMap<ResolveResult,RequestHandler> Requests;
+
+
     private Class[] itemConstructorParamsServer;
     private Class[] itemConstructorParamsClient;
 
@@ -31,7 +31,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         nextId=1;
         Owner=aOwner;
         lastCleanup=Instant.now();
-        Requests = new ConcurrentHashMap<ResolveResult,RequestHandler>();
+
 
         itemConstructorParamsServer = new Class[2];
         itemConstructorParamsServer[0] = Items.class;
@@ -52,12 +52,6 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         itms.Thread.setName("Items Thread " + nextId);
         itms.Thread.start();
         nextId++;
-    }
-    public void addRequestHandler(ResolveResult rr, RequestHandler rh){
-        Requests.put(rr,rh);
-    }
-    public RequestHandler getRequestHandler(ResolveResult rr){
-        return Requests.get(rr);
     }
     private Items getManagerByLowestItemCount(int Threshold){
         Iterator<Items> it = iterator();
@@ -92,7 +86,8 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     {
         Items itms = getManager();
         if (itms!=null) {
-            Method m = Owner.transportClass.getDeclaredMethod("newInstance",itemConstructorParamsServer);
+            Class c = Owner.transportClass;
+            Method m = c.getDeclaredMethod("newInstance", itemConstructorParamsServer);
             Object o = Owner.transportObject;
             m.setAccessible(true);
             Item itm = (Item) m.invoke(o,itms,aChannel);

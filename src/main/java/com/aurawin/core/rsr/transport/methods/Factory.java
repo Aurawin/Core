@@ -11,7 +11,6 @@ import java.util.HashMap;
 public class Factory {
     private HashMap<String, Item> Methods;
     protected String Error;
-
     public Factory() {
         Methods = new HashMap<>();
     }

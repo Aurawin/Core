@@ -3,10 +3,11 @@ package com.aurawin.core.rsr.transport.methods;
 
 public enum Result {
     Ok ("Ok"),
-    Failure("Method Failure"),
-    NotFound("Method Not Found"),
-    AlreadyRegistered("Method Already Registered"),
-    Exception("Method Exception");
+    Failure("Methods Failure"),
+    NotFound("Methods Not Found"),
+    NotAuthorizied("Methods Not Authorized"),
+    AlreadyRegistered("Methods Already Registered"),
+    Exception("Methods Exception");
 
     Result(String value){
         this.value = value;

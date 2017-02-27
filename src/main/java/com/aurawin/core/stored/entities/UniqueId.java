@@ -62,6 +62,10 @@ public class UniqueId extends Stored {
     public String getNamespace() {
             return Namespace;
     }
+    public void setNamespace(String namespace){
+        Id = 0;
+        Namespace = namespace;
+    }
 
     public void Assign(UniqueId src){
         Id = src.Id;

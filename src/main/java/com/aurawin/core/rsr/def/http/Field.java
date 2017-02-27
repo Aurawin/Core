@@ -11,11 +11,11 @@ public class Field {
     public static final String AccessControlAllowOrigin = "Access-Control-Allow-Origin";
     public static final String AccessControlAllowHeaders = "Access-Control-Allow-Headers";
     public static final String AccessControlAllowMethods = "Access-Control-Allow-SocketMethods";
-    public static final String AccessControlAllowMethod = "Access-Control-Allow-Method";
+    public static final String AccessControlAllowMethod = "Access-Control-Allow-Methods";
     public static final String AccessControlExposeHeaders = "Access-Control-Expose-Headers";
     public static final String AccessControlMaxAge= "Access-Control-Max-Age";
     public static final String AccessControlRequestHeaders= "Access-Control-Request-Headers";
-    public static final String AccessControlRequestMethod="Access-Control-Request-Method";
+    public static final String AccessControlRequestMethod="Access-Control-Request-Methods";
     public static final String AccessControlAllowCredentials="Access-Control-Allow-Manifest";
 
     public static final String Allow = "Allow";

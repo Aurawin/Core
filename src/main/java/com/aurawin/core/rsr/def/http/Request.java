@@ -1,11 +1,12 @@
 package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.Bytes;
-import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.VarString;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.Plugin;
+import com.aurawin.core.plugin.CommandInfo;
+import com.aurawin.core.plugin.PluginState;
+import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.rsr.def.*;
 
 import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
@@ -13,8 +14,6 @@ import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
-import com.aurawin.core.rsr.def.handlers.RequestHandler;
-import com.aurawin.core.rsr.def.handlers.RequestHandlerState;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.stream.parser.XML;
@@ -23,10 +22,9 @@ import org.w3c.dom.Document;
 
 import java.util.EnumSet;
 
-public class Request implements QueryResolver,RequestHandler {
+public class Request implements QueryResolver {
     protected Item Owner;
     protected ResolveResult Result;
-    protected RequestHandler Handler;
     public Version Version;
     public KeyPairs Headers;
     public KeyPairs Cookies;
@@ -41,12 +39,13 @@ public class Request implements QueryResolver,RequestHandler {
     public String ETag;
     public String NamespacePlugin;
     public String NamespaceMethod;
-    public Plugin Plugin;
-    public KeyItem PluginMethod;
+    public Plug Plugin;
+    public CommandInfo pluginCommandInfo;
+    public PluginState pluginState;
 
     public Request(Item owner) {
         Plugin = null;
-        PluginMethod = null;
+
 
         Owner = owner;
         Version = new Version_HTTP(1,1);
@@ -77,7 +76,8 @@ public class Request implements QueryResolver,RequestHandler {
         Credentials.Empty();
         Payload.Clear();
         Plugin = null;
-        PluginMethod=null;
+        pluginCommandInfo=null;
+
         Protocol="";
         Method="";
         URI="";
@@ -86,6 +86,7 @@ public class Request implements QueryResolver,RequestHandler {
         Version.Reset();
         NamespacePlugin="";
         NamespaceMethod="";
+        pluginState= PluginState.PluginIdle;
     }
 
     public void Release(){
@@ -110,7 +111,7 @@ public class Request implements QueryResolver,RequestHandler {
         ETag=null;
 
         Plugin = null;
-        PluginMethod=null;
+
     }
     public rsrResult Peek(){
         rsrResult r = rSuccess;
@@ -196,38 +197,30 @@ public class Request implements QueryResolver,RequestHandler {
         }
     }
     @Override
-    public RequestHandlerState Process(Session ssn, Item item) {
-        Handler=item.Owner.Owner.getRequestHandler(Result);
-        RequestHandlerState r = RequestHandlerState.None;
-        if (Handler!=null)
-            r = Handler.Process(ssn,item);
-        item.setRequestHandlerState(r);
-        return r;
-    }
-    @Override
     public ResolveResult Resolve(Session ssn) {
         VarString saPath = new VarString(URI, EnumSet.of(VarString.CreateOption.StripLeadingDelim), "/");
         int PathSize = saPath.size();
         if (PathSize > 0) {
             if ((saPath.get(0).compareToIgnoreCase(Table.Stored.Path.Core) == 0) && (PathSize > 1)) {
                 NamespacePlugin = saPath.Extract(0, 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                Plugin = this.Owner.getPlugin(NamespacePlugin);
+                Plugin = this.Owner.Owner.Engine.Plugins.getPlugin(NamespacePlugin);
                 if (Plugin != null) {
                     NamespaceMethod = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                    PluginMethod = Plugin.Methods.Find(NamespaceMethod);
-                    java.lang.reflect.Method m = Plugin.getMethod(NamespaceMethod);
-                    if (m != null) {
+                    pluginCommandInfo=Plugin.Commands.get(NamespaceMethod);
+                    if (pluginCommandInfo != null) {
                         Result=rrPlugin;
                     } else {
                         NamespacePlugin = "";
                         NamespaceMethod = "";
                         Plugin = null;
+                        pluginCommandInfo=null;
                         Result=rrFile;
                     }
                 } else {
                     NamespacePlugin = "";
                     NamespaceMethod = "";
                     Plugin = null;
+                    pluginCommandInfo=null;
                     Result=rrFile;
                 }
             } else {

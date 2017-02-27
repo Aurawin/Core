@@ -4,10 +4,11 @@ package com.aurawin.core.rsr.protocol.http;
 import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.Plugin;
+import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
+import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.def.http.*;
 
 
@@ -31,15 +32,17 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 
 @Protocol(
-        className = "protocol_http_1_1",
         Version = Version_HTTP.class
 )
-
-public class protocol_http_1_1 extends Item implements Transport {
+public class protocol_http_1_1 extends Item implements Transport,ResourceUploadHandler,ResourceDeleteHandler,
+        ResourceCopyHandler,ResourceMoveHandler,ResourceLockHandler,ResourceCollectionHandler,ResourcePropertyHandler,
+        ResourceRequestedHandler
+{
     public volatile Authenticate Authenticate;
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
+    public com.aurawin.core.rsr.transport.methods.Result methodState;
     public protocol_http_1_1() throws InstantiationException, IllegalAccessException{
         super(null,ItemKind.None);
     }
@@ -75,34 +78,24 @@ public class protocol_http_1_1 extends Item implements Transport {
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
-    @Override
-    public CredentialResult validateCredentials(Session ssn){
+    @Override public CredentialResult validateCredentials(Session ssn){
         return CredentialResult.None;
     }
-    public rsrResult onFileUploaded(Session ssn){
-        return rsrResult.rFailure;
-    }
+
+    @Override public Result resourceUploaded(Session ssn){ return Result.Failure;}
+    @Override public Result resourceDeleted(Session ssn){ return Result.Failure;}
+    @Override public Result resourceRequested(Session ssn){ return Result.Failure;}
+    @Override public Result resourceCopied(Session ssn){ return Result.Failure;}
+    @Override public Result resourceMoved(Session ssn){ return Result.Failure;}
+    @Override public Result resourceLocked(Session ssn){ return Result.Failure;}
+    @Override public Result resourceUnlocked(Session ssn){ return Result.Failure;}
+    @Override public Result resourceMakeCollection(Session ssn){ return Result.Failure;}
+    @Override public Result resourceFindProperties(Session ssn){ return Result.Failure;}
+
     public rsrResult onPeek() {
         return Request.Peek();
     }
-    public MemoryStream getRequestPayload(){
-        return Request.Payload;
-    }
-    public MemoryStream getResponsePayload(){
-        return Response.Payload;
-    }
-    public KeyPairs getRequestHeaders(){
-        return Request.Headers;
-    }
-    public KeyPairs getResponseHeaders(){
-        return Response.Headers;
-    }
-    public Plugin getPlugin(){
-        return Request.Plugin;
-    }
-    public KeyItem getPluginMethod(){
-        return Request.PluginMethod;
-    }
+
     public rsrResult onProcess(Session ssn) {
         rsrResult r = rSuccess;
         if (Request.Read()==rSuccess) {

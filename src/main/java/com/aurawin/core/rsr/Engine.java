@@ -1,13 +1,11 @@
 package com.aurawin.core.rsr;
 
 
-import com.aurawin.core.plugin.Plugin;
+import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.Security;
-import com.aurawin.core.rsr.def.Version;
-import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
@@ -24,7 +22,7 @@ public abstract class Engine extends Thread {
     public volatile static long nextId;
     protected Manifest Manifest;
     protected Entities Entities;
-    protected Plugins Plugins;
+    public Plugins Plugins;
     public volatile Security Security;
     public volatile EngineState State;
     public volatile String HostName;
@@ -155,7 +153,7 @@ public abstract class Engine extends Thread {
             Security.Enabled=false;
         }
     }
-    public void installPlugin(Plugin plugin){
+    public void installPlugin(Plug plugin){
         Session ssn = Entities.Factory.openSession();
         try{
             Plugins.Uninstall(ssn,plugin.Header.getNamespace());

@@ -27,7 +27,7 @@ public void after() throws Exception {
 
 /** 
 * 
-* Method: Append(String unit, String entryPoint, String message) 
+* Methods: Append(String unit, String entryPoint, String message)
 * 
 */ 
 @Test

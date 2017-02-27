@@ -2,14 +2,13 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPairs;
-import com.aurawin.core.plugin.Plugin;
+import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.rsr.def.*;
-import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
-import com.aurawin.core.rsr.def.handlers.SocketHandler;
-import com.aurawin.core.rsr.def.handlers.RequestHandlerState;
+import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Factory;
+import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 
@@ -18,7 +17,7 @@ import java.time.Instant;
 import java.util.EnumSet;
 
 
-public abstract class Item  extends AuthenticateHandler implements Transport {
+public abstract class Item  implements Transport,AuthenticateHandler{
     public volatile Version Version;
     public volatile Buffers Buffers;
     public boolean Infinite;
@@ -26,10 +25,10 @@ public abstract class Item  extends AuthenticateHandler implements Transport {
     public int Timeout;
     public ItemKind Kind;
     public ItemState State;
+
     public Instant TTL;
 
     protected SocketHandler SocketHandler;
-    protected RequestHandlerState handlerState;
 
     public EnumSet<ItemError> Errors;
 
@@ -38,7 +37,8 @@ public abstract class Item  extends AuthenticateHandler implements Transport {
 
     public Item(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
         Protocol TA = getClass().getAnnotation(Protocol.class);
-        Version = TA.Version().newInstance();
+        Class v = TA.Version();
+        Version = (Version) v.newInstance();
 
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
@@ -55,23 +55,14 @@ public abstract class Item  extends AuthenticateHandler implements Transport {
             Infinite = Settings.RSR.Finite;
         }
     }
+
     public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException;
-    public abstract MemoryStream getResponsePayload();
-    public abstract MemoryStream getRequestPayload();
-    public abstract KeyPairs getResponseHeaders();
-    public abstract KeyPairs getRequestHeaders();
-    public abstract Plugin getPlugin();
-    public abstract KeyItem getPluginMethod();
+
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }
-    public void  setRequestHandlerState(RequestHandlerState state){
-        handlerState=state;
-    }
-    public RequestHandlerState getRequestHandlerState(){
-        return handlerState;
-    }
+
     public void Release() throws Exception{
         SocketHandler.Release();
         Buffers.Release();
@@ -106,9 +97,5 @@ public abstract class Item  extends AuthenticateHandler implements Transport {
     }
     public void queueClose(){
         Owner.qRemoveItems.add(this);
-    }
-
-    public Plugin getPlugin(String Namespace){
-        return Owner.Engine.Plugins.getPlugin(Namespace);
     }
 }

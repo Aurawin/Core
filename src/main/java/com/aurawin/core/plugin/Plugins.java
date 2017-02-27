@@ -1,39 +1,37 @@
 package com.aurawin.core.plugin;
 
-import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.plugin.Plugin;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
 
 public class Plugins {
-    volatile ArrayList<Plugin> Items;
+    volatile ArrayList<Plug> Items;
 
     public Plugins() {
-        Items = new ArrayList<Plugin>();
+        Items = new ArrayList<Plug>();
     }
 
-    public void Install(Session ssn, Plugin plugin) {
-        if (plugin.Header.Annotation==null) {
-            plugin.Header.Annotation = plugin.getClass().getAnnotation(com.aurawin.core.plugin.annotations.Plugin.class);
+    public void Install(Session ssn, Plug plugin) {
+        if (plugin.Header.Plugin==null) {
+            plugin.Header.Plugin = plugin.getClass().getAnnotation(com.aurawin.core.plugin.annotations.Plugin.class);
         }
         if (plugin.Header.getId() == 0){
-            plugin.Header.setNamespace(plugin.Header.Annotation.Namespace());
+            plugin.Header.setNamespace(plugin.Header.Plugin.Namespace());
         }
-        Plugin p = getPlugin(plugin.Header.Annotation.Namespace());
+        Plug p = getPlugin(plugin.Header.Plugin.Namespace());
         if (p==null) {
             plugin.Setup(ssn);
             Items.add(plugin);
         }
     }
     public void Uninstall(Session ssn, String Namespace){
-        Plugin p = getPlugin(Namespace);
+        Plug p = getPlugin(Namespace);
         if (p!=null){
             Items.remove(p);
             p.Teardown(ssn);
         }
     }
-    public Plugin getPlugin(String Namespace){
+    public Plug getPlugin(String Namespace){
         return Items.stream()
                 .filter(p -> p.Header.getNamespace().equalsIgnoreCase(Namespace))
                 .findFirst()

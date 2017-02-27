@@ -15,9 +15,9 @@ public class PROPPATCH extends Item {
     }
 
     public Result onProcess(Session ssn, Transport transport) {
-        Result r = Result.Ok;
         protocol_http_1_1 h = (protocol_http_1_1) transport;
+        //todo
 
-        return r;
+        return h.methodState;
     }
 }

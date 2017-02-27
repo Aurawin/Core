@@ -32,7 +32,7 @@ public enum Status {
     s402 ("402 Payment Required"),
     s403 ("403 Forbidden"),
     s404 ("404 Not Found"),
-    s405 ("405 Method Not Allowed"),
+    s405 ("405 Methods Not Allowed"),
     s406 ("406 Not Acceptable"),
     s407 ("407 Proxy Authentication Required"),
     s408 ("408 Request Timeout"),
