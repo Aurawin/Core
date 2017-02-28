@@ -55,7 +55,7 @@ public class Hibernate{
         );
 
     }
-
+    @SuppressWarnings("unchecked")
     public static SessionFactory openSession(Manifest manifest){
         Configuration cfg = new Configuration();
 

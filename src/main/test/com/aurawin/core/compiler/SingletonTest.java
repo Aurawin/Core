@@ -88,15 +88,13 @@ public class SingletonTest {
 
         return sb.toString();
     }
-
+    @SuppressWarnings("unchecked")
     public void testSingletonClass() throws Exception {
         String src=createJavaSource();
         Singleton compiler = new Singleton();
         Result r = compiler.compile(src,"Noid");
         Object noid = r.Class.getConstructor().newInstance();
         Annotation[] as = noid.getClass().getAnnotations();
-
-
     }
     @Test
     public void testSingletonByteCode() throws Exception {

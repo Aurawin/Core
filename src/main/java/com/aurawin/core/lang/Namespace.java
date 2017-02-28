@@ -43,6 +43,7 @@ public class Namespace {
             }
         }
     }
+    @SuppressWarnings("unchecked")
     public static void Register(Collection List ){
 
         List.add(Entities.Cloud.Service.HTTP);

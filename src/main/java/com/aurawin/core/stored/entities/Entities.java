@@ -38,6 +38,7 @@ public class Entities {
         Factory=Hibernate.openSession(manifest);
         RecreateFactory();
     }
+    @SuppressWarnings("unchecked")
     public Result Install(String Namespace){
         Result r = loader_.Check(this,Namespace);
         if (Stored.class.isAssignableFrom(r.Class)){
@@ -175,12 +176,11 @@ public class Entities {
         return false;
 
     }
+    @SuppressWarnings("unchecked")
     public <T extends Stored>T Lookup(Class<? extends Stored> CofE, String Name) {
         Session ssn = acquireSession();
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
-
-
             Query q = ssn.getNamedQuery(qc.Name());
             for (String sF : qc.Fields()) {
                 q.setParameter(sF, Name);
@@ -190,6 +190,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
         Session ssn = acquireSession();
         try {
@@ -203,6 +204,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
         Session ssn = acquireSession();
         try {
@@ -216,6 +218,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = acquireSession();
         try {
@@ -232,7 +235,7 @@ public class Entities {
             ssn.close();
         }
     }
-
+    @SuppressWarnings("unchecked")
     public ArrayList<Stored> Lookup(QueryByDomainId aQuery, long Id){
         Session ssn = acquireSession();
         try {
@@ -247,6 +250,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public ArrayList<Stored> Lookup(QueryByOwnerId aQuery, long Id){
         Session ssn = acquireSession();
         try {
@@ -261,6 +265,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public ArrayList<Stored> Lookup(QueryByNetworkId aQuery, long Id){
         Session ssn = acquireSession();
         try {
@@ -275,6 +280,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public ArrayList<Stored> Lookup(QueryByFileId aQuery, long Id){
         Session ssn = acquireSession();
         try {
@@ -289,6 +295,7 @@ public class Entities {
             ssn.close();
         }
     }
+    @SuppressWarnings("unchecked")
     public ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
         Session ssn = acquireSession();
         try {

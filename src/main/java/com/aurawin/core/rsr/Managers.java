@@ -81,17 +81,22 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
+    @SuppressWarnings("unchecked")
     public void Accept(SocketChannel aChannel)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
     {
         Items itms = getManager();
         if (itms!=null) {
             Class c = Owner.transportClass;
-            Method m = c.getDeclaredMethod("newInstance", itemConstructorParamsServer);
             Object o = Owner.transportObject;
-            m.setAccessible(true);
-            Item itm = (Item) m.invoke(o,itms,aChannel);
-            itms.qAddItems.add(itm);
+            if ((c!=null) && (o !=null)) {
+                Method m = c.getMethod("newInstance", itemConstructorParamsServer);
+                m.setAccessible(true);
+                Item itm = (Item) m.invoke(o, itms, aChannel);
+                itms.qAddItems.add(itm);
+            } else {
+                // todo log exception
+            }
         } else {
             try {
                 aChannel.close();

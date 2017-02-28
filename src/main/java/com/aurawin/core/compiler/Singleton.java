@@ -64,6 +64,7 @@ public class Singleton {
         private ByteArrayOutputStream byteArrayOutputStream_;
     }
     /* A file manager for a single class. */
+    @SuppressWarnings("unchecked")
     public class SingleFileManager extends ForwardingJavaFileManager {
 
         public SingleFileManager(JavaCompiler compiler, ByteCode byteCode) {
@@ -108,6 +109,7 @@ public class Singleton {
         private final ByteCode byteCode_;
     }
     /* Compiles the provided source code and returns the resulting Class object. */
+    @SuppressWarnings("unchecked")
     public  Result compile(String source, String className) {
         Result r = new Result();
         r.Status=Result.Kind.Failure;
@@ -131,7 +133,7 @@ public class Singleton {
         }
         return r;
     }
-
+    @SuppressWarnings("unchecked")
     public byte[] compileByteCode(String source, String className){
         List compilationUnits = Arrays.asList(new CompilationUnit(className, source));
         DiagnosticCollector diagnosticListener = new DiagnosticCollector();
