@@ -21,7 +21,7 @@ import java.io.IOException;
 public abstract class Engine extends Thread {
     public volatile static long nextId;
     protected Manifest Manifest;
-    protected Entities Entities;
+    public Entities Entities;
     public Plugins Plugins;
     public volatile Security Security;
     public volatile EngineState State;

@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.entities.loader.Loader.*;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.stored.annotations.QueryByName;
 
@@ -79,7 +80,7 @@ public class Module extends Stored {
     private byte[] Code;
 
     @Transient
-    public com.aurawin.core.stored.entities.loader.Loader.ModuleLoader Loader;
+    public ModuleLoader Loader;
 
     public Module() {
         Id=0;
@@ -205,7 +206,7 @@ public class Module extends Stored {
     public void Identify(Session ssn){
         if (Id == 0) {
             Module m = null;
-            Transaction tx = ssn.beginTransaction();
+            Transaction tx = (ssn.isJoinedToTransaction())? ssn.getTransaction() : ssn.beginTransaction();
             try {
                 Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
                 m = (Module) q.getSingleResult();

@@ -15,15 +15,13 @@ import java.lang.annotation.Target;
 
 public @interface Plugin {
     boolean Anonymous() default false;
-    String Name() default "";
-    String Namespace() default "";
+    String Name();
+    String Package();
+    String Namespace();
     String Title() default "";
     String Prompt() default "";
     String Description() default "";
     String Vendor() default "";
-    String ClassName() default "";
-    String Domain() default "";
-    int Version() default 0;
     Class<? extends Item> Transport() default Item.class;
     Class<? extends Method> Method() default GET.class;
 }

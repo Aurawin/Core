@@ -48,25 +48,33 @@ public class KeyPairs extends ArrayList<KeyItem> {
     public KeyItem Update(String Name, Object Value){
         for (KeyItem itm : this){
             if (itm.Name.compareTo(Name)==0) {
-                itm.Data=Value;
+                if (Value instanceof Enum){
+                    itm.Value=Integer.toString(((Enum) Value).ordinal());
+                } else {
+                    itm.Data = Value;
+                }
                 itm.Stale=false;
                 return itm;
             }
         }
         KeyItem itm = new KeyItem(Name,Value);
-        itm.Data=Value;
+        if (Value instanceof Enum){
+            itm.Value=Integer.toString(((Enum) Value).ordinal());
+        }
         this.add(itm);
         return itm;
     }
-    public KeyItem Update(String Name, long id){
+    public KeyItem Update(String Name, long value){
         for (KeyItem itm : this){
             if (itm.Name.compareTo(Name)==0) {
-                itm.Id=id;
+                itm.Value=Long.toString(value);
                 itm.Stale=false;
                 return itm;
             }
         }
-        KeyItem itm = new KeyItem(Name,id);
+        KeyItem itm = new KeyItem(Name,0);
+        itm.Value=Long.toString(value);
+        itm.Stale=false;
         this.add(itm);
         return itm;
     }

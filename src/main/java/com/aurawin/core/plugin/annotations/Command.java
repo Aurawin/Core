@@ -11,8 +11,8 @@ import java.lang.annotation.*;
 public @interface Command {
     boolean Anonymous() default false;
     boolean Enabled() default true;
-    String Name() default "";
-    String Namespace() default "";
+    String Name();
+    String Namespace();
     String Title() default "";
     String Prompt() default "";
     String Description() default "";

@@ -18,6 +18,7 @@ import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.Version;
 import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
 import com.aurawin.core.solution.Settings;
+import org.hibernate.Session;
 
 
 public class Server extends Engine {
@@ -55,6 +56,12 @@ public class Server extends Engine {
                     case esConfigure:
                         try {
                             Channel = ServerSocketChannel.open();
+                            Session ssn = Entities.acquireSession();
+                            try {
+                                Manifest.Verify(ssn);
+                            }finally {
+                                ssn.close();
+                            }
                             State = esStart;
                         } catch (IOException e) {
                             Channel = null;

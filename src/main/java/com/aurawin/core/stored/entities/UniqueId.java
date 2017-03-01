@@ -87,7 +87,7 @@ public class UniqueId extends Stored {
     public void Identify(Session ssn){
         if (Id == 0) {
 	        UniqueId uid = null;
-            Transaction tx = ssn.beginTransaction();
+            Transaction tx = (ssn.isJoinedToTransaction()) ? ssn.getTransaction() : ssn.beginTransaction();
             try {
                     Query q = Database.Query.UniqueId.ByNamespace.Create(ssn, Namespace);
                     try {

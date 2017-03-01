@@ -1,15 +1,14 @@
-package com.aurawin.core.plugin;
+package com.aurawin.core.stored.entities;
 
 import com.aurawin.core.plugin.*;
 import com.aurawin.core.plugin.annotations.*;
+
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.def.http.Request;
-import com.aurawin.core.rsr.def.http.Response;
 import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
 import org.hibernate.Session;
 
-@com.aurawin.core.plugin.annotations.Plugin(
+@Plugin(
         Name = "Noid",
         Namespace = "/core/noid",
         Package = "com.aurawin.core.plugin",

@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LoaderTest {
+    public static final String defaultResource = "/test/keywords.text";
     private Entities Entities;
     public Manifest Manifest;
     public Singleton Compiler;

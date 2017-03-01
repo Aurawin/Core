@@ -4,10 +4,8 @@ package com.aurawin.core.stored;
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Module;
-import com.aurawin.core.stored.entities.Plugin;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
-import java.util.List;
 import com.aurawin.core.lang.Namespace;
 
 import org.hibernate.Session;
@@ -29,7 +27,7 @@ public class Manifest {
     public Driver Driver;
 
     public AnnotatedList Annotated= new AnnotatedList();
-    public List<UniqueId> Namespaces = new ArrayList<UniqueId>();
+    public ArrayList<UniqueId> Namespaces = new ArrayList<UniqueId>();
 
     public Manifest(
             String username,
@@ -66,21 +64,21 @@ public class Manifest {
         if (Annotated.contains(UniqueId.class)==false)
           Annotated.add(0,UniqueId.class);
 
-        if (Annotated.contains(Plugin.class)==false)
-            Annotated.add(1,Plugin.class);
-
         if (Annotated.contains(Module.class)==false)
-            Annotated.add(2,Module.class);
+            Annotated.add(1,Module.class);
 
         if (Annotated.contains(Certificate.class)==false)
-            Annotated.add(3, Certificate.class);
+            Annotated.add(2, Certificate.class);
 
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)
               Annotated.add(ac);
         }
-
-        Namespace.Register(Namespaces);
+        Namespaces.clear();
+        ArrayList<UniqueId> l = Namespace.Discover();
+        for (UniqueId u: l){
+            Namespaces.add(u);
+        }
     }
     public void Verify(Session ssn){
         for (UniqueId uid : Namespaces){
