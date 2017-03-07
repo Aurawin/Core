@@ -15,8 +15,8 @@ public class Plugins {
         if (plugin.Annotation==null) {
             plugin.Annotation = plugin.getClass().getAnnotation(Plugin.class);
         }
-        if (plugin.Header.getId() == 0){
-            plugin.Header.setNamespace(
+        if (plugin.getId() == 0){
+            plugin.setNamespace(
                     Namespace.Entities.Plugin.getNamespace(
                             plugin.Annotation.Package(),
                             plugin.Annotation.Name()

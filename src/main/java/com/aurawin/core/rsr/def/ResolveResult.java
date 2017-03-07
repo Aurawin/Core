@@ -1,3 +1,3 @@
 package com.aurawin.core.rsr.def;
 
-public enum ResolveResult {rrPlugin,rrFile}
+public enum ResolveResult {rrNone,rrPlugin,rrFile}

@@ -16,8 +16,10 @@ import com.aurawin.core.stored.entities.loader.Result;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.collection.internal.PersistentBag;
 import org.hibernate.query.Query;
 
 
@@ -25,22 +27,30 @@ public class Entities {
     public static final boolean CascadeOn = true;
     public static final boolean CascadeOff = false;
 
-    private Loader loader_;
+    private static Loader Loader;
+    private static Manifest Owner;
+    private static SessionFactory Factory;
 
-
-    public Manifest Owner;
-    public SessionFactory Factory;
-
-    public Entities(Manifest manifest) {
-        loader_ = new Loader();
-
+    public static void Initialize(Manifest manifest){
+        Loader = new Loader();
         Owner=manifest;
-        Factory=Hibernate.openSession(manifest);
-        RecreateFactory();
+        if (Factory==null) {
+            Factory = Hibernate.openSession(manifest);
+            if (Loader.Cache.size()>0) {
+                ClassLoader cL = Loader.Cache.get(0);
+                Thread.currentThread().setContextClassLoader(cL);
+            }
+        } else {
+            RecreateFactory();
+        }
+        Owner.Verify();
+    }
+    public static Session openSession(){
+        return Factory.openSession();
     }
     @SuppressWarnings("unchecked")
-    public Result Install(String Namespace){
-        Result r = loader_.Check(this,Namespace);
+    public static Result Install(String Namespace){
+        Result r = Loader.Check(Namespace);
         if (Stored.class.isAssignableFrom(r.Class)){
             if (Owner.Annotated.indexOf(r.Class)==-1){
                 Owner.Annotated.add(r.Class);
@@ -48,25 +58,28 @@ public class Entities {
         }
         return r;
     }
-    public Loader getLoader(){
-        return loader_;
+    public static Loader getLoader(){
+        return Loader;
     }
-    public void RecreateFactory(){
+    public static void RecreateFactory(){
         if ((Factory!=null) && (Factory.isClosed()==false)) {
             Factory.close();
         }
-        if (loader_.Cache.size()>0) {
-            ClassLoader cL = loader_.Cache.get(0);
+        if (Loader.Cache.size()>0) {
+            ClassLoader cL = Loader.Cache.get(0);
             Thread.currentThread().setContextClassLoader(cL);
         }
         Factory = Hibernate.openSession(Owner);
-        loader_.Injected=false;
+        Loader.Injected=false;
     }
-    public boolean hasInjected(){
-        return (loader_.Injected==true);
+    public static boolean hasInjected(){
+        return (Loader.Injected==true);
     }
-
-    public Session acquireSession(){
+    public static void removeAnnotatedClass(Class claz){
+        Owner.Annotated.remove(claz);
+    }
+    public static Session acquireSession(){
+        if (Factory==null) return null;
         Session s = null;
         try {
             s = Factory.getCurrentSession();
@@ -76,109 +89,153 @@ public class Entities {
         }
         return s;
     }
-    private void entityCreated(Stored obj)
+    private static void entityCreated(Stored obj, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
+        Method[] methods = null;
         Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
             Class<?> goe = (Class<?>) it.next();
             if (Stored.class.isAssignableFrom(goe)==true){
-                Method m = goe.getMethod("entityCreated",Entities.class,Stored.class);
-	            if (m!=null) m.invoke(obj,this,obj);
+                methods = goe.getMethods();
+                for (Method m : methods){
+                    if (m.getName()=="entityCreated") {
+                        if (m!=null) m.invoke(obj, obj, Cascade);
+                        break;
+                    }
+                }
             }
         }
     }
-    private void entityDeleted(Stored obj, boolean Cascade)
+    private static void entityDeleted(Stored obj, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
+        Method[] methods = null;
         Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
 	        Class<?> goe = (Class<?>) it.next();
 	        if (Stored.class.isAssignableFrom(goe)==true) {
-		        Method m = goe.getMethod("entityDeleted", Entities.class, Stored.class, boolean.class);
-		        if (m!=null) m.invoke(obj, this, obj, Cascade);
+                methods = goe.getMethods();
+                for (Method m : methods){
+                    if (m.getName()=="entityDeleted") {
+                        if (m!=null) m.invoke(obj, obj, Cascade);
+                        break;
+                    }
+                }
 	        }
         }
 
     }
-    private void entityUpdated(Stored obj, boolean Cascade)
+    private static void entityUpdated(Stored obj, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
-
+        Method[] methods = null;
         Iterator it = Owner.Annotated.iterator();
         while (it.hasNext()){
             Class<?> goe = (Class<?>) it.next();
             if (Stored.class.isAssignableFrom(goe)==true) {
-                Method m = goe.getMethod("entityUpdated", Entities.class, Stored.class, boolean.class);
-                if (m!=null) m.invoke(obj, this, obj, Cascade);
+                methods = goe.getMethods();
+                for (Method m : methods){
+                    if (m.getName()=="entityUpdated") {
+                        if (m!=null) m.invoke(obj, obj, Cascade);
+                        break;
+                    }
+                }
             }
         }
 
     }
-    public boolean Save(Stored e)
+    public static boolean Save(Stored e, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
-        Session s = acquireSession();
+        Session s = openSession();
+        Transaction tx = s.beginTransaction();
         try {
             s.save(e);
-            s.getTransaction().commit();
+            tx.commit();
             s.close();
-
+        } catch (Exception err) {
+            tx.rollback();
+            s.close();
+            return false;
+        }
+        if (Cascade==true) {
             EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
             if ((ed != null) && (ed.onCreated() == true)) {
-                entityCreated(e);
-            }
-            return true;
-        } catch (Exception err) {
-            s.getTransaction().rollback();
-        }
+                try {
+                    entityCreated(e, Cascade);
+                } catch (Exception err) {
 
-        return false;
+                }
+            }
+        }
+        return true;
+
     }
-    public boolean Update(Stored e,boolean Cascade)
+    public static boolean Update(Stored e,boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
-        Session s = acquireSession();
+        Session s = openSession();
+        Transaction tx = s.beginTransaction();
         try {
             s.update(e);
-            s.getTransaction().commit();
+            tx.commit();
             s.close();
+        } catch (Exception err) {
+            tx.rollback();
+            s.close();
+            return false;
+        }
+        if (Cascade==true) {
             EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
             if ((ed != null) && (ed.onUpdated() == true)) {
-                entityUpdated(e, Cascade);
+                try {
+                    entityUpdated(e, Cascade);
+                } catch (Exception err) {
+
+                }
             }
-
-            return true;
-
-        } catch (Exception err) {
-            s.getTransaction().rollback();
         }
-        return false;
+        return true;
     }
-    public boolean Delete(Stored e,boolean Cascade)
+    public static boolean Delete(Stored e,boolean Cascade)
             throws InvocationTargetException, NoSuchMethodException,IllegalAccessException
     {
-        Session s = acquireSession();
+        Session s = openSession();
+        Transaction tx = s.beginTransaction();
         try{
             s.delete(e);
-            s.getTransaction().commit();
+            tx.commit();
             s.close();
-
-            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
-            if ((ed != null) && (ed.onDeleted() == true)) {
-                entityDeleted(e, Cascade);
-            }
-            return true;
-
         } catch (Exception err) {
-            s.getTransaction().rollback();
+            tx.rollback();
+            s.close();
+            return false;
         }
-        return false;
+        if (Cascade==true) {
+            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
+            try {
+                if ((ed != null) && (ed.onDeleted() == true)) {
+                    entityDeleted(e, Cascade);
+                }
+            } catch (Exception err) {
 
+            }
+        }
+        return true;
+    }
+    public static void Identify(Stored e){
+        Session s = openSession();
+        try{
+            e.Identify(s);
+        } finally {
+            s.close();
+        }
     }
     @SuppressWarnings("unchecked")
-    public <T extends Stored>T Lookup(Class<? extends Stored> CofE, String Name) {
+    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE, String Name) {
         Session ssn = acquireSession();
+        if (ssn==null) return null;
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
             Query q = ssn.getNamedQuery(qc.Name());
@@ -191,10 +248,11 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
+    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return null;
         try {
-            QueryById qc = CofE.getAnnotation(QueryById.class);
+            QueryByDomainIdAndId qc = CofE.getAnnotation(QueryByDomainIdAndId.class);
             Query q = ssn.getNamedQuery(qc.Name())
                     .setParameter("DomainId", DomainId)
                     .setParameter("Id", Id);
@@ -205,22 +263,25 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
+    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
         Session ssn = acquireSession();
+        if (ssn==null) return null;
         try {
-            QueryById qc = CofE.getAnnotation(QueryById.class);
+            QueryByDomainIdAndName qc = CofE.getAnnotation(QueryByDomainIdAndName.class);
             Query q = ssn.getNamedQuery(qc.Name())
                     .setParameter("DomainId", DomainId)
                     .setParameter("Name", Name);
 
-            return (T) CofE.cast(q.uniqueResult());
+            Stored r = (Stored) q.uniqueResult();
+            return (T) CofE.cast(r);
         } finally {
             ssn.close();
         }
     }
     @SuppressWarnings("unchecked")
-    public <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
+    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = acquireSession();
+        if (ssn==null) return null;
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             if (qc != null) {
@@ -236,8 +297,9 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public ArrayList<Stored> Lookup(QueryByDomainId aQuery, long Id){
+    public static ArrayList<Stored> Lookup(QueryByDomainId aQuery, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
                     .setParameter("DomainId", Id);
@@ -251,8 +313,9 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public ArrayList<Stored> Lookup(QueryByOwnerId aQuery, long Id){
+    public static ArrayList<Stored> Lookup(QueryByOwnerId aQuery, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
                     .setParameter("OwnerId", Id);
@@ -266,8 +329,9 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public ArrayList<Stored> Lookup(QueryByNetworkId aQuery, long Id){
+    public static ArrayList<Stored> Lookup(QueryByNetworkId aQuery, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
                     .setParameter("NetworkId", Id);
@@ -281,8 +345,9 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public ArrayList<Stored> Lookup(QueryByFileId aQuery, long Id){
+    public static ArrayList<Stored> Lookup(QueryByFileId aQuery, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
             Query q = ssn.getNamedQuery(aQuery.Name())
                     .setParameter("FileId", Id);
@@ -296,8 +361,9 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
+    public static ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
             return new ArrayList(ssn.getNamedQuery(aQuery.Name())
                     .setParameter("FolderId", Id)
@@ -307,24 +373,71 @@ public class Entities {
             ssn.close();
         }
     }
-    public boolean Fetch(Stored e)
-            throws Exception
-    {
+    @SuppressWarnings("unchecked")
+    public static ArrayList<Stored> Lookup(QueryAll aQuery){
         Session ssn = acquireSession();
+        if (ssn==null) return new ArrayList<Stored>();
         try {
-            ssn.load(e, new Long(e.getId()));
-            FetchFields fl = e.getClass().getAnnotation(FetchFields.class);
+            return new ArrayList(ssn.getNamedQuery(aQuery.Name()).list());
+        } finally {
+            ssn.close();
+        }
+    }
+    private static void initializeFetchField(Session ssn,Stored item, Field field, FetchKind Kind, int Depth) throws
+            IllegalAccessException,NoSuchFieldException
+    {
+        field.setAccessible(true);
+        Object val = field.get(item);
+
+        if (val instanceof PersistentBag) {
+            PersistentBag pb = (PersistentBag) val;
+            for (Object o: pb) {
+                if (o instanceof Stored) {
+                    Stored so = (Stored) o;
+                    initializeFetchFields(ssn,so,Kind,Depth);
+                } else {
+                    org.hibernate.Hibernate.initialize(o);
+                }
+            }
+        } else {
+            if (val instanceof Stored){
+                Stored so = (Stored) val;
+                initializeFetchFields(ssn,so,Kind,Depth);
+            } else {
+                org.hibernate.Hibernate.initialize(val);
+            }
+        }
+    }
+    private static void initializeFetchFields(Session ssn, Stored item, FetchKind Kind, int Depth) throws
+            NoSuchFieldException, IllegalAccessException
+    {
+        try {
+            ssn.load(item, new Long(item.getId()));
+        } catch (Exception e){
+
+        }
+        org.hibernate.Hibernate.initialize(item);
+        Depth++;
+        if ( (Kind==FetchKind.Infinite) ||  (Depth<=Kind.getValue()) ) {
+            FetchFields fl = item.getClass().getAnnotation(FetchFields.class);
             if (fl != null) {
                 for (FetchField fld : fl.value()) {
-                    Field f = e.getClass().getDeclaredField(fld.Target());
-                    f.setAccessible(true);
-                    Object val = f.get(e);
-                    org.hibernate.Hibernate.initialize(val);
+                    Field f = item.getClass().getDeclaredField(fld.Target());
+                    if (f != null) initializeFetchField(ssn, item, f, Kind, Depth);
                 }
-                return true;
-            } else {
-                throw new Exception(Table.Format(Table.Exception.Entities.EntityAnnotationForFetchNotDefined, e.getClass().getCanonicalName()));
+
             }
+        }
+    }
+    public static boolean Fetch(Stored e, FetchKind Kind)
+            throws Exception
+    {
+        int Depth = 0;
+        Session ssn = acquireSession();
+        if (ssn==null) return false;
+        try {
+            initializeFetchFields(ssn,e,Kind,Depth);
+            return true;
         } finally {
             ssn.close();
         }

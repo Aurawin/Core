@@ -149,7 +149,7 @@ public class Certificate extends Stored {
         }
     }
 
-    public static void entityCreated(Entities List, Stored Entity){}
-    public static void entityDeleted(Entities List, Stored Entity, boolean Cascade){}
-    public static void entityUpdated(Entities List, Stored Entity, boolean Cascade){}
+    public static void entityCreated(Stored Entity, boolean Cascade){}
+    public static void entityDeleted(Stored Entity, boolean Cascade){}
+    public static void entityUpdated(Stored Entity, boolean Cascade){}
 }

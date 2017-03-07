@@ -7,6 +7,7 @@ import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.commands.*;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerResult;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
@@ -47,7 +48,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     public Security Security;
     public Selector rwSelector;
     protected boolean RemovalRequested;
-    protected Commands Commands;
+
     public Executor Background;
 
     protected ConcurrentLinkedQueue<Item> qAddItems;
@@ -73,7 +74,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         BufferRead = ByteBuffer.allocate(Engine.BufferSizeRead);
         BufferWrite = ByteBuffer.allocate(Engine.BufferSizeWrite);
         Security = new Security();
-        Commands  = new Commands(aEngine,this);
+
         Background = Executors.newSingleThreadExecutor();
     }
     @Override
@@ -183,7 +184,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                             break;
                                         case rSuccess:
                                             itm.renewTTL();
-                                            Session ssn = Engine.Entities.Factory.openSession();
+                                            Session ssn = Entities.openSession();
                                             try {
                                                 evResult = itm.onProcess(ssn);
                                                 switch (evResult) {
@@ -262,8 +263,10 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     }
     public void adjustReadBufferSize() throws Exception{
         if (java.lang.Thread.currentThread().equals(this)==true){
-            BufferRead.clear();
-            BufferRead=ByteBuffer.allocate(Engine.BufferSizeRead);
+            ByteBuffer BufferNew = ByteBuffer.allocate(Engine.BufferSizeRead);
+            BufferNew.put(BufferRead);
+            BufferRead = BufferNew;
+
         } else {
             throw new Exception(Table.String(Table.Exception.RSR.UnableToAccessConncurrently));
         }
@@ -271,8 +274,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
     public void adjustWriteBufferSize() throws Exception{
         if (java.lang.Thread.currentThread().equals(this)==true){
-            BufferWrite.clear();
-            BufferWrite=ByteBuffer.allocate(Engine.BufferSizeWrite);
+            ByteBuffer BufferNew = ByteBuffer.allocate(Engine.BufferSizeWrite);
+            BufferNew.put(BufferWrite);
+            BufferWrite=BufferNew;
         } else {
             throw new Exception(Table.String(Table.Exception.RSR.UnableToAccessConncurrently));
         }
@@ -285,6 +289,14 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     }
 
     public void Release(){
+        for (Item itm:this) {
+            try {
+                itm.Teardown();
+                itm.Release();
+            } catch (Exception e){
+
+            }
+        }
         Owner.remove(this);
         Started=null;
         LastUsed=null;
@@ -300,9 +312,6 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         Security.Release();
         Security=null;
         rwSelector=null;
-
-        Commands.Release();
-        Commands=null;
 
         qAddItems.clear();
         qAddItems=null;

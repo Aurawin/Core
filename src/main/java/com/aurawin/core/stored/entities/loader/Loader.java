@@ -151,7 +151,7 @@ public class Loader {
         }
         return r;
     }
-    public void Uninstall(Entities entities, String namespace){
+    public void Uninstall(String namespace){
         Iterator<ModuleLoader> it = Cache.stream()
                 .filter(c -> c.module_.getNamespace().equalsIgnoreCase(namespace))
                 .iterator();
@@ -162,7 +162,7 @@ public class Loader {
         while (it.hasNext()){
             ModuleLoader ml = it.next();
             Cache.remove(ml);
-            entities.Owner.Annotated.remove(ml.class_);
+            Entities.removeAnnotatedClass(ml.class_);
             ml.Release();
         }
     }
@@ -183,14 +183,14 @@ public class Loader {
         }
 
     }
-    public Result Check(Entities entities,String namespace){
+    public Result Check(String namespace){
         Result r = new Result();
         try {
-            r.Module = (Module) entities.Lookup(Module.class, namespace);
+            r.Module = (Module) Entities.Lookup(Module.class, namespace);
             if (r.Module!=null){
                 r.State=Result.Kind.Found;
 
-                Uninstall(entities,namespace);
+                Uninstall(namespace);
 
                 if (r.Module.Loader==null){
                     r.Module.Loader=Cache.stream()

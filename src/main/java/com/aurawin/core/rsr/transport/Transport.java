@@ -15,4 +15,5 @@ public interface Transport {
     void Teardown();
     void Setup();
     void Reset();
+    void Release() throws Exception;
 }

@@ -17,6 +17,7 @@ import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.plugin.Noid;
+import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class ServerTest {
     public void before() throws Exception {
         Settings.Initialize("server.test","Aurawin ServerTest","Universal","1","1","0");
 
-        Manifest mf = Engine.createManifest(
+        Manifest mf = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password
                 Environment.getString(Table.DBMS.Host),     // host
@@ -50,7 +51,8 @@ public class ServerTest {
                 Database.Config.Automatic.Update,       //
                 "Test",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
-                Driver.Postgresql.getValue()            // Driver
+                Driver.Postgresql.getValue(),            // Driver
+                new AnnotatedList()
         );
         serverHTTP = new Server(
                 new InetSocketAddress("172.16.1.2", 1080),
@@ -59,7 +61,7 @@ public class ServerTest {
                 "chump.aurawin.com"
         );
 
-        serverHTTP.setManifest(mf);
+
         //serverHTTP.loadSecurity(1l);
         serverHTTP.installPlugin(new Noid());
         serverHTTP.Configure();

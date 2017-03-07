@@ -1,23 +1,31 @@
 package com.aurawin.core.rsr.commands;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.Items;
 
 public class cmdAdjustBufferSizeWrite extends Command {
-    public cmdAdjustBufferSizeWrite(Commands aOwner, String aName) {
-        super(aOwner, aName);
+    public int Size;
+    public cmdAdjustBufferSizeWrite(Commands aOwner, int size) {
+        super(aOwner);
+        Size = size;
     }
 
     @Override
-    protected void Execute() {
-        try {
-            Owner.Owner.adjustWriteBufferSize();
-        } catch (Exception e){
-            logEntry(
-                    Table.Format(
-                            Table.Exception.RSR.UnableToSetWriteBuffer,
-                            Table.Print(Owner.Engine.getWriteBufferSize())
-                    )
-            );
-        }
+    protected void Execute(){
+        Owner.Owner.BufferSizeWrite=Size;
+        Owner.Owner.Managers.stream().forEach((itms) -> {
+            try {
+
+                itms.adjustWriteBufferSize();
+            } catch (Exception e){
+                logEntry(
+                        Table.Format(
+                                Table.Exception.RSR.UnableToSetWriteBuffer,
+                                Table.Print(Owner.Owner.getWriteBufferSize())
+                        )
+                );
+            }
+        });
+
     }
 }

@@ -16,9 +16,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.aurawin.core.stored.entities.Entities.CascadeOff;
+
 public class LoaderTest {
     public static final String defaultResource = "/test/keywords.text";
-    private Entities Entities;
     public Manifest Manifest;
     public Singleton Compiler;
     public Module Module;
@@ -139,7 +140,7 @@ public class LoaderTest {
                 Driver.Postgresql.getValue(),           // Driver
                 annotations
         );
-        Entities=new Entities(Manifest);
+        Entities.Initialize(Manifest);
     }
     @After
     public void after() throws Exception {
@@ -169,7 +170,7 @@ public class LoaderTest {
 
     }
     public void testModule(String Name, String Package){
-        Session ssn = Entities.Factory.openSession();
+        Session ssn = Entities.openSession();
         try{
             Transaction tx =ssn.beginTransaction();
             try {
@@ -178,7 +179,7 @@ public class LoaderTest {
                 Module = Entities.Lookup(Module.class, Namespace);
                 if (Module == null) {
                     Module = new Module(Name,Namespace,Package);
-                    if (Entities.Save(Module)) {
+                    if (Entities.Save(Module,CascadeOff)) {
                         Module.setSource(createModuleSource(Module));
                         Module.setRevision(1);
                         ssn.update(Module);

@@ -74,6 +74,17 @@ public class Security {
         Trust = null;
         KeyFactory=null;
     }
+    public boolean Load(com.aurawin.core.stored.entities.Certificate Cert)throws
+            UnrecoverableKeyException,
+            KeyManagementException,
+            CertificateException,
+            InvalidKeySpecException,
+            KeyStoreException,
+            NoSuchAlgorithmException
+    {
+        Certificate = Cert;
+        return Load(Cert.DerKey,Cert.DerCert1);
+    }
     public boolean Load
             (
                     byte[] DerKey,

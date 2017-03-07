@@ -9,26 +9,24 @@ import java.util.HashMap;
 import com.aurawin.core.plugin.annotations.Plugin;
 import com.aurawin.core.plugin.annotations.Command;
 
-public abstract class Plug implements Methods {
-    public UniqueId Header;
+public abstract class Plug extends UniqueId implements Methods {
     public String Namespace;
     public Plugin Annotation;
     public HashMap<String,CommandInfo>Commands;
     public Plug() {
-        Header = new UniqueId();
         Commands = new HashMap<>();
     }
     public PluginState Setup(Session ssn){
         PluginState r = PluginState.PluginFailure;
         Annotation=getClass().getAnnotation(Plugin.class);
         if (Annotation!=null) {
-            Header.setNamespace(
+            setNamespace(
                     com.aurawin.core.lang.Namespace.Entities.Plugin.getNamespace(
                             Annotation.Package(),
                             Annotation.Name()
                     )
             );
-            Header.Identify(ssn);
+            Identify(ssn);
             HashMap<String, CommandInfo> ms = new HashMap<>();
             java.lang.reflect.Method[] fs = getClass().getMethods();
             Command aC = null;

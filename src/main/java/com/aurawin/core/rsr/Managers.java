@@ -1,7 +1,10 @@
 package com.aurawin.core.rsr;
 
+import com.aurawin.core.lang.Table;
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
 import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
+import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.solution.Settings;
@@ -90,10 +93,14 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
             Class c = Owner.transportClass;
             Object o = Owner.transportObject;
             if ((c!=null) && (o !=null)) {
-                Method m = c.getMethod("newInstance", itemConstructorParamsServer);
-                m.setAccessible(true);
-                Item itm = (Item) m.invoke(o, itms, aChannel);
-                itms.qAddItems.add(itm);
+                try {
+                    Method m = c.getMethod("newInstance", itemConstructorParamsServer);
+                    m.setAccessible(true);
+                    Item itm = (Item) m.invoke(o, itms, aChannel);
+                    itms.qAddItems.add(itm);
+                } catch (Exception e){
+                    Syslog.Append(getClass().getCanonicalName(),"Accept", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
+                }
             } else {
                 // todo log exception
             }
@@ -106,22 +113,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
             }
         }
     }
-    public void adjustReadBufferSize(){
-        Iterator<Items> it = iterator();
-        Items itms = null;
-        while (it.hasNext()) {
-            itms=it.next();
-            itms.Commands.Queue(cmdAdjustBufferSizeRead.class);
-        }
-    }
-    public void adjustWriteBufferSize(){
-        Iterator<Items> it = iterator();
-        Items itms = null;
-        while (it.hasNext()) {
-            itms=it.next();
-            itms.Commands.Queue(cmdAdjustBufferSizeWrite.class);
-        }
-    }
+
     public void cleanupItemThreads(){
         currentInstant=Instant.now();
         try {
@@ -138,6 +130,14 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 }
             }
         } catch (Exception e){
+        }
+    }
+    public void Reset(){
+        Iterator<Items> it = iterator();
+        Items itms = null;
+        while (it.hasNext()){
+            itms = it.next();
+            itms.RemovalRequested=true;
         }
     }
 }

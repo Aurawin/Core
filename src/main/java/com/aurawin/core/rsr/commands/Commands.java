@@ -8,15 +8,13 @@ import com.aurawin.core.rsr.Items;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Commands extends ConcurrentLinkedQueue<Command> {
-    public Items Owner;
-    public Engine Engine;
+    protected Engine Owner;
     protected ConcurrentLinkedQueue<Command> addList;
-    public Commands(Engine aEngine, Items aOwner){
+    public Commands(Engine aOwner){
         Owner=aOwner;
-        Engine=aEngine;
         addList= new ConcurrentLinkedQueue<Command>();
     }
-    protected void Execute(){
+    protected void Execute() throws Exception{
         Command cmd=null;
         cmd=addList.poll();
         while (cmd!=null){
@@ -29,24 +27,14 @@ public class Commands extends ConcurrentLinkedQueue<Command> {
         }
 
     }
-    public void Queue(Class<? extends Command> cCommand){
-        try {
-            Command cmd = cCommand.newInstance();
-            cmd.Owner = this;
-            cmd.Name = cCommand.getSimpleName();
-            addList.add(cmd);
-        } catch (InstantiationException ie){
-            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.UnableToCreateCommandInstance, cCommand.getName()));
-        } catch (IllegalAccessException ile){
-            Syslog.Append("Commands", "newInstance", Table.Format(Table.Exception.RSR.UnableToAccessCommandInstance, cCommand.getName()));
-        }
-
+    public void Queue(Command cmd){
+        cmd.Owner=this;
+        addList.add(cmd);
     }
     public void Release(){
         clear();
         addList.clear();
         addList=null;
         Owner=null;
-        Engine=null;
     }
 }

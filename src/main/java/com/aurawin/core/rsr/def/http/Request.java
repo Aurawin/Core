@@ -117,10 +117,10 @@ public class Request implements QueryResolver {
         rsrResult r = rSuccess;
         long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            r = Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength,true ));
+            r = Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength,true ));
             if (r==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                r =  ( (cLen==0) || ( (cLen+iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
+                r =  ( (cLen==0) || ( (cLen+iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
             } else{
                 r = rPostpone;
             }
@@ -135,7 +135,7 @@ public class Request implements QueryResolver {
         Reset();
         long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {
-            if (Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeperatorLength,false ))==rSuccess){
+            if (Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength,false ))==rSuccess){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
                 Owner.Buffers.Recv.Move(Payload,cLen);
                 return rSuccess;

@@ -2,6 +2,7 @@ package com.aurawin.core.rsr.transport.methods;
 
 
 public enum Result {
+    None("None"),
     Ok ("Ok"),
     Failure("Methods Failure"),
     NotFound("Methods Not Found"),

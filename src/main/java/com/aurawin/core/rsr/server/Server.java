@@ -18,19 +18,23 @@ import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.Version;
 import com.aurawin.core.rsr.def.handlers.AuthenticateHandler;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 
 public class Server extends Engine {
-    private InetSocketAddress address;
-    private ServerSocketChannel Channel;
 
-    public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName) throws
+    public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName)throws
             IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
         super (aTransport,ItemKind.Server,aInfinate,aHostName,sa.getPort());
         State = esCreated;
-        address = sa;
+        Address = sa;
+    }
+    public Server(Class<? extends Item> aTransport, boolean aInfinate)throws
+            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
+    {
+        super (aTransport,ItemKind.Server,aInfinate,"",0);
     }
     @Override
     public void run(){
@@ -45,7 +49,7 @@ public class Server extends Engine {
                             }
                             Managers.cleanupItemThreads();
                         } catch (IOException ioe) {
-                            Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, address.toString()));
+                            Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, Address.toString()));
                             try {
                                 sleep(Settings.RSR.Server.ListenWaitPause);
                             } catch (InterruptedException ie) {
@@ -55,13 +59,13 @@ public class Server extends Engine {
                         break;
                     case esConfigure:
                         try {
-                            Channel = ServerSocketChannel.open();
-                            Session ssn = Entities.acquireSession();
-                            try {
-                                Manifest.Verify(ssn);
-                            }finally {
-                                ssn.close();
+                            if (Channel!=null) {
+                                if (Channel.isOpen())
+                                  Channel.close();
+                                Managers.Reset();
                             }
+                            Channel = ServerSocketChannel.open();
+                            Manifest.Verify();
                             State = esStart;
                         } catch (IOException e) {
                             Channel = null;
@@ -69,12 +73,12 @@ public class Server extends Engine {
                         break;
                     case esStart:
                         try {
-                            Channel.bind(address);
+                            Channel.bind(Address);
                             Channel.configureBlocking(false);
                             State = esRun;
                         } catch (IOException ioe) {
                             // network interface maybe swapping
-                            Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, address.toString()));
+                            Syslog.Append("Engine", "bind", Table.Format(Table.Exception.RSR.UnableToBindAddress, Address.toString()));
                             try {
                                 sleep(Settings.RSR.Server.BindWaitPause);
                             } catch (InterruptedException ie) {
@@ -88,7 +92,7 @@ public class Server extends Engine {
                             Channel = null;
                         } catch (IOException ioe) {
                             // network interface maybe down
-                            Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, address.toString()));
+                            Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, Address.toString()));
                         }
                         break;
                     case esUpgrade:

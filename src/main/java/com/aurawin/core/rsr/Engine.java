@@ -3,6 +3,10 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.plugin.Plugins;
+import com.aurawin.core.rsr.commands.Commands;
+import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
+import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
+import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.Security;
@@ -17,12 +21,15 @@ import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
 
 public abstract class Engine extends Thread {
     public volatile static long nextId;
     protected Manifest Manifest;
-    public Entities Entities;
     public Plugins Plugins;
+    public InetSocketAddress Address;
+    protected ServerSocketChannel Channel;
     public volatile Security Security;
     public volatile EngineState State;
     public volatile String HostName;
@@ -36,6 +43,7 @@ public abstract class Engine extends Thread {
     public volatile int BufferSizeWrite;
     public Managers Managers;
     public String Stamp;
+    protected Commands Commands;
 
 
     public Engine(Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate, String hostName, int port) throws
@@ -52,8 +60,10 @@ public abstract class Engine extends Thread {
 
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
+        Commands  = new Commands(this);
         Managers = new Managers(this);
         Security = new Security();
+        Plugins = new Plugins();
         setName("Engine Thread "+nextId);
         nextId++;
         Stamp = (
@@ -77,15 +87,11 @@ public abstract class Engine extends Thread {
             return new SocketHandlerPlain(item);
         }
     }
+    public void Release(){
+        Commands.Release();
+        Commands=null;
+    }
 
-    public synchronized void setReadBufferSize(int size){
-        BufferSizeRead = size;
-        Managers.adjustReadBufferSize();
-    }
-    public synchronized void setWriteBufferSize(int size){
-        BufferSizeWrite = size;
-        Managers.adjustWriteBufferSize();
-    }
     public int getReadBufferSize(){
         return BufferSizeRead;
     }
@@ -96,51 +102,17 @@ public abstract class Engine extends Thread {
         State = aState;
     }
 
-    public static Manifest createManifest(
-            String username,
-            String password,
-            String host,
-            int port,
-            boolean autocommit,
-            int poolsizeMin,
-            int poolsizeMax,
-            int poolAcrement,
-            int statementsMax,
-            int timeout,
-            String automation,
-            String database,
-            String dialect,
-            String driver
-
-    ){
-        AnnotatedList al = new AnnotatedList();
-        Manifest m = new Manifest(
-                username,
-                password,
-                host,
-                port,
-                autocommit,
-                poolsizeMin,
-                poolsizeMax,
-                poolAcrement,
-                statementsMax,
-                timeout,
-                automation,
-                database,
-                dialect,
-                driver,
-                al
-        );
-
-        return m;
+    public void adjustReadBufferSize(int size){
+        Commands.Queue(new cmdAdjustBufferSizeRead(Commands,size));
     }
-    public void setManifest(Manifest m){
-        Manifest = m;
-        Entities = new Entities(m);
-        if (Plugins==null){
-            Plugins = new Plugins();
-        }
+    public void adjustWriteBufferSize(int size){
+        Commands.Queue(new cmdAdjustBufferSizeWrite(Commands,size));
     }
+    public void adjustIPandPort(String ip, int port){
+        Commands.Queue(new cmdSetBindIPandPort(Commands,ip,port));
+    }
+
+
     public void loadSecurity(long Id){
         Certificate cert= Entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,Id);
         if (cert!=null) {
@@ -154,9 +126,9 @@ public abstract class Engine extends Thread {
         }
     }
     public void installPlugin(Plug plugin){
-        Session ssn = Entities.Factory.openSession();
+        Session ssn = Entities.openSession();
         try{
-            Plugins.Uninstall(ssn,plugin.Header.getNamespace());
+            Plugins.Uninstall(ssn,plugin.getNamespace());
             Plugins.Install(ssn,plugin);
         } finally{
             ssn.close();

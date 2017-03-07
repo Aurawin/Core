@@ -4,12 +4,18 @@ import java.util.List;
 import java.util.ArrayList;
 import com.aurawin.core.enryption.md5;
 import com.aurawin.core.stream.MemoryStream;
+import com.google.gson.annotations.Expose;
 
 public class Credentials {
+    @Expose(serialize = false, deserialize = false)
     public volatile String Username;
+    @Expose(serialize = false, deserialize = false)
     public volatile String Password;
+    @Expose(serialize = false, deserialize = false)
     public volatile String Digest;
+    @Expose(serialize = false, deserialize = false)
     public volatile long Id;
+    @Expose(serialize = false, deserialize = false)
     public volatile List<Long> ACLUIds;
 
     public Credentials(){

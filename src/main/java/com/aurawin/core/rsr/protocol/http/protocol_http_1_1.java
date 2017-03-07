@@ -1,32 +1,30 @@
 package com.aurawin.core.rsr.protocol.http;
 
 
-import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.def.http.*;
-
-
 import com.aurawin.core.rsr.def.rsrResult;
-
-import static com.aurawin.core.rsr.def.http.Status.*;
-import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.transport.Transport;
-
-import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.*;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
+import com.aurawin.core.rsr.transport.annotations.Protocol;
+
+import static com.aurawin.core.rsr.def.ResolveResult.rrNone;
+import static com.aurawin.core.rsr.def.http.Status.*;
+import static com.aurawin.core.rsr.def.rsrResult.*;
+import static com.aurawin.core.rsr.transport.methods.Result.None;
+import static com.aurawin.core.rsr.transport.methods.Result.Ok;
+
 
 import java.nio.channels.SocketChannel;
 import java.util.Date;
@@ -42,7 +40,7 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
-    public com.aurawin.core.rsr.transport.methods.Result methodState;
+    public Result methodState;
     public protocol_http_1_1() throws InstantiationException, IllegalAccessException{
         super(null,ItemKind.None);
     }
@@ -127,34 +125,44 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
         return r;
     }
     @Override
-    public void Disconnected() {
+    public void Disconnected() {}
+    @Override
+    public void Connected() {}
 
-    }
-
-    public void Connected() {
-
-
-    }
+    @Override
     public void Reset(){
+        Authenticate.Reset();
         Request.Reset();
         Response.Reset();
+        Resolution=rrNone;
+        methodState=None;
     }
-    public  void Error() {
-
+    @Override
+    public void Error() {
+        queueClose();
     }
-
-    public void Finalized() {
+    @Override
+    public void Release() throws Exception{
+        super.Release();
         Request.Release();
         Response.Release();
-
+        Authenticate.Release();
+    }
+    @Override
+    public void Finalized() {
         Request=null;
         Response = null;
-
+        Authenticate=null;
+        Resolution=null;
+        methodState=null;
     }
 
     public void Initialized() {
-
-
+        Authenticate.Reset();
+        Request.Reset();
+        Response.Reset();
+        Resolution=rrNone;
+        methodState=None;
     }
     private void Prepare(){
         Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));

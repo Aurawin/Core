@@ -8,17 +8,17 @@ import org.hibernate.Session;
 public abstract class Stored {
     public abstract long getId();
     public abstract void Identify(Session ssn);
-    public static void entityCreated(Entities List, Stored Entity) throws Exception{
+    public static void entityCreated(Stored Entity, boolean Cascade) throws Exception{
         throw new Exception(
                 Table.Format(Table.Exception.Entities.EntityCreatedMethodNotDefined,Entity.getClass().getCanonicalName())
         );
     }
-    public static void entityDeleted(Entities List, Stored Entity, boolean Cascade) throws Exception{
+    public static void entityDeleted(Stored Entity, boolean Cascade) throws Exception{
         throw new Exception(
                 Table.Format(Table.Exception.Entities.EntityDeletedMethodNotDefined,Entity.getClass().getCanonicalName())
         );
     }
-    public static void entityUpdated(Entities List, Stored Entity, boolean Cascade) throws Exception{
+    public static void entityUpdated(Stored Entity, boolean Cascade) throws Exception{
         throw new Exception(
                 Table.Format(Table.Exception.Entities.EntityUpdatedMethodNotDefined,Entity.getClass().getCanonicalName())
         );

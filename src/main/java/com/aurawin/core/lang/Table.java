@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import com.aurawin.core.VarString;
@@ -288,6 +291,7 @@ public class Table {
             public static final String UnableToSelectItemKeys = "table.exception.rsr.unable-to-select-item-keys";
             public static final String MonitorLoop = "table.exception.rsr.monitor-loop";
             public static final String ItemsLoop = "table.exception.rsr.items-loop";
+            public static final String ManagerAccept = "table.exception.rsr.manager-accept";
             public static class WebSocket {
                 public static class SecurityOption {
                     public static final String Invalid = "table.exception.rsr.websocket.securityoption.invalid";
@@ -313,6 +317,7 @@ public class Table {
             public static final String AcceptFailure = "table.error.rsr.accept-failure";
             public static final String PeekFailure = "table.error.rsr.peek-failure";
             public static final String ProcessFailure = "table.error.rsr.process-failure";
+            public static final String MethodFailure = "table.error.rsr.method-failure";
             public static final String DisconnectFailure = "table.error.rsr.disconnect-failure";
             public static final String InitializeFailure = "table.error.rsr.initialize-failure";
             public static final String FinalizeFailure = "table.error.rsr.finalize-failure";
@@ -329,8 +334,18 @@ public class Table {
 
     public static class Stored{
         public static class Path{
+            public static class Default{
+                public static final List<String> Root = Arrays.asList("www");
+                public static final List<String> Userland = Arrays.asList(
+                        "Documents",
+                        "Mail","Mail/Archive","Mail/Inbox", "Mail/Outbox", "Mail/Sent","Mail/Spam",
+                        "Media","Media/Music","Media/Pictures","Media/Videos",
+                        "Trash"
+                );
+                public static final List<String> Basic = Arrays.asList("Trash");
+            }
             public static final String Core = "core";
-            public static final String Web = "http";
+            public static final String Web = "www";
         }
         public static class File{
             public static final String Index = "index.html";

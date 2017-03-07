@@ -63,11 +63,16 @@ public class Settings {
         public static class Items{
             public static int AutoremoveEmptyItemsDelay = 1*20*1000;
             public static int AutoremoveCleanupInterval = 10*1000;
+            public static class Header {
+                public final static String Separator = "\r\n";
+                public final static Integer SeparatorLength = Separator.length();
+                public final static Integer MaxSize=1024*1024;
+            }
             public static class HTTP {
                 public static class Payload {
                     public final static Integer MaxHeaderSize = 1024 * 1024;
                     public final static String Separator = "\r\n\r\n";
-                    public final static Integer SeperatorLength = Separator.length();
+                    public final static Integer SeparatorLength = Separator.length();
                 }
                 public static class DAV{
                     public static final String Compliance = "1, 2";

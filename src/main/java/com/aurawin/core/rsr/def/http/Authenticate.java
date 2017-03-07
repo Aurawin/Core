@@ -39,4 +39,12 @@ public class Authenticate {
     public String buildChallenge(){
         return Method+ " realm=\""+Realm+"\"";
     }
+    public void Reset(){
+        Realm = "";
+        Method ="Basic";
+    }
+    public void Release(){
+        Realm = null;
+        Method = null;
+    }
 }

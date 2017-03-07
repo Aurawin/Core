@@ -19,14 +19,12 @@ import org.junit.After;
 
 import java.nio.ByteBuffer;
 
-public class HibernateTest {
-    public Entities entities;
-    public Manifest Manifest;
+import static com.aurawin.core.stored.entities.Entities.CascadeOff;
 
+public class HibernateTest {
+    public Manifest Manifest;
     @Before
     public void before() throws Exception {
-        AnnotatedList annotations = new AnnotatedList();
-
         Manifest = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password
@@ -42,9 +40,9 @@ public class HibernateTest {
                 "Test",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),           // Driver
-                annotations
+                new AnnotatedList()
         );
-        entities=new Entities(Manifest);
+        Entities.Initialize(Manifest);
     }
 
     @After
@@ -76,14 +74,14 @@ public class HibernateTest {
         cert.ChainCount=1;
         cert.Expires=ssc.ToDate.toInstant();
 
-        entities.Save(cert);
+        Entities.Save(cert,Entities.CascadeOn);
 
         Security sec = new Security();
-        sec.Load(cert.DerKey,cert.DerCert1);
+        sec.Load(cert);
     }
     @Test
     public void CertificateLoadTest() throws Exception{
-        Certificate cert = entities.Lookup(Certificate.class,1l);
+        Certificate cert = Entities.Lookup(Certificate.class,1l);
         if (cert!=null){
             Security sec = new Security();
             sec.Load(cert.DerKey,cert.DerCert1);
