@@ -14,15 +14,12 @@ import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.json.JSONObject;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.crypto.Data;
 import java.time.Instant;
-import java.util.Date;
 
 
 @Entity
@@ -38,7 +35,9 @@ import java.util.Date;
                 )
         }
 )
-@QueryById(Name = Database.Query.Certificate.ById.name,Fields = { "Id" })
+@QueryById(
+        Name = Database.Query.Certificate.ById.name,Fields = { "Id" }
+)
 
 public class Certificate extends Stored {
     @javax.persistence.Id

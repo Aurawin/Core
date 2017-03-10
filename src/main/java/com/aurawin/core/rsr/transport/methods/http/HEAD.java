@@ -58,7 +58,7 @@ public class HEAD extends Item {
                         h.Response.Headers.Update(
                                 Field.WWWAuthenticate,
                                 Field.Value.Authenticate.Basic.Message(
-                                        h.Owner.getHostName()
+                                        h.Owner.Engine.Realm
                                 )
                         );
                     }

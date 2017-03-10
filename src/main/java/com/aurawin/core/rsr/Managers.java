@@ -2,20 +2,16 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
-import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
-import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.ResolveResult;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadFactory;
 
@@ -84,6 +80,34 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
+    @SuppressWarnings("unchecked")
+    public Item Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, InvocationTargetException
+    {
+        Items itms = getManager();
+        if (itms!=null) {
+            Class c = Owner.transportClass;
+            Object o = Owner.transportObject;
+            if ((c!=null) && (o !=null)) {
+                try {
+                    SocketChannel aChannel = SocketChannel.open();
+                    aChannel.configureBlocking(false);
+                    aChannel.connect(address);
+                    Method m = c.getMethod("newInstance", itemConstructorParamsServer);
+                    m.setAccessible(true);
+                    Item itm = (Item) m.invoke(o, itms, aChannel);
+                    itms.qAddItems.add(itm);
+                    return itm;
+                } catch (Exception e){
+                    Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
+                }
+            } else {
+                // todo log exception
+            }
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     public void Accept(SocketChannel aChannel)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException

@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr.commands;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.server.Server;
 
 import java.net.InetSocketAddress;
 
@@ -17,16 +18,19 @@ public class cmdSetBindIPandPort extends Command {
     }
     @Override
     protected void Execute() {
-        try {
-            Owner.Owner.Address=new InetSocketAddress(Host,Port);
-            Owner.Owner.State = esConfigure;
-        } catch (Exception e){
-            logEntry(
-                    Table.Format(
-                            Table.Exception.RSR.UnableToBindAddress,
-                            Owner.Owner.Address.toString()
-                    )
-            );
+        if ((Owner!=null) && (Owner.Owner!=null) && (Owner.Owner instanceof Server) ) {
+            Server server = (Server) Owner.Owner;
+            try {
+                server.Address = new InetSocketAddress(Host, Port);
+                server.State = esConfigure;
+            } catch (Exception e) {
+                logEntry(
+                        Table.Format(
+                                Table.Exception.RSR.UnableToBindAddress,
+                                server.Address.toString()
+                        )
+                );
+            }
         }
     }
 }

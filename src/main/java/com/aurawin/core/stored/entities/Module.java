@@ -208,7 +208,8 @@ public class Module extends Stored {
             Module m = null;
             Transaction tx = (ssn.isJoinedToTransaction())? ssn.getTransaction() : ssn.beginTransaction();
             try {
-                Query q = Database.Query.Module.ByNamespace.Create(ssn, Namespace);
+                Query q = ssn.getNamedQuery(Database.Query.Module.ByNamespace.name)
+                        .setParameter("Namespace", Namespace);
                 m = (Module) q.getSingleResult();
                 if (m == null) {
                     m = new Module(Name,Namespace,Package);

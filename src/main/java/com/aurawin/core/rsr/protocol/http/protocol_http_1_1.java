@@ -62,7 +62,7 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
         Methods.registerMethod(new LOCK());
         Methods.registerMethod(new UNLOCK());
         Methods.registerMethod(new SEARCH());
-        Authenticate = new Authenticate(this.Owner.getHostName());
+        Authenticate = new Authenticate(this.Owner.Engine.Realm);
         Request=new Request(this);
         Response=new Response(this);
     }
@@ -167,7 +167,7 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
     private void Prepare(){
         Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
-        Response.Headers.Update(Field.Host,Owner.getHostName());
+        Response.Headers.Update(Field.Host,Owner.Engine.Realm);
         Response.Headers.Update(Field.Server,Owner.Engine.Stamp);
         for (KeyItem itm:Response.Headers){
             if (itm.Name.equalsIgnoreCase(Field.Connection)){

@@ -26,6 +26,7 @@ public class GET extends Item {
 
     public Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,InvocationTargetException{
         protocol_http_1_1 h = (protocol_http_1_1) transport;
+
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
         switch (h.Resolution) {
@@ -71,7 +72,7 @@ public class GET extends Item {
                         h.Response.Headers.Update(
                                 Field.WWWAuthenticate,
                                 Field.Value.Authenticate.Basic.Message(
-                                        h.Owner.getHostName()
+                                        h.Owner.Engine.Realm
                                 )
                         );
                     }

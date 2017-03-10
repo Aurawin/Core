@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.def;
 
 import java.util.List;
 import java.util.ArrayList;
-import com.aurawin.core.enryption.md5;
+import com.aurawin.core.enryption.MD5;
 import com.aurawin.core.stream.MemoryStream;
 import com.google.gson.annotations.Expose;
 
@@ -51,7 +51,7 @@ public class Credentials {
         ms.Write(Username);
         ms.Write(Password);
 
-        Digest=md5.Print(ms);
+        Digest= MD5.Print(ms);
     }
 
     public void Release(){

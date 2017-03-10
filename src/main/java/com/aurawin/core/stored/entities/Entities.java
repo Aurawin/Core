@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.stored.Hibernate;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.Stored;
@@ -43,6 +44,9 @@ public class Entities {
         } else {
             RecreateFactory();
         }
+        Owner.Verify();
+    }
+    public static void Verify(){
         Owner.Verify();
     }
     public static Session openSession(){
@@ -99,8 +103,12 @@ public class Entities {
             if (Stored.class.isAssignableFrom(goe)==true){
                 methods = goe.getMethods();
                 for (Method m : methods){
-                    if (m.getName()=="entityCreated") {
-                        if (m!=null) m.invoke(obj, obj, Cascade);
+                    if ((m!=null)  && (m.getName())=="entityCreated") {
+                        try {
+                            m.invoke(obj, obj, Cascade);
+                        } catch (Exception err){
+                            Syslog.Append(goe.getCanonicalName(),m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                        }
                         break;
                     }
                 }
@@ -117,8 +125,12 @@ public class Entities {
 	        if (Stored.class.isAssignableFrom(goe)==true) {
                 methods = goe.getMethods();
                 for (Method m : methods){
-                    if (m.getName()=="entityDeleted") {
-                        if (m!=null) m.invoke(obj, obj, Cascade);
+                    if ((m!=null)  && (m.getName()=="entityDeleted")) {
+                        try {
+                            m.invoke(obj, obj, Cascade);
+                        } catch (Exception err){
+                            Syslog.Append(goe.getCanonicalName(),m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                        }
                         break;
                     }
                 }
@@ -136,8 +148,12 @@ public class Entities {
             if (Stored.class.isAssignableFrom(goe)==true) {
                 methods = goe.getMethods();
                 for (Method m : methods){
-                    if (m.getName()=="entityUpdated") {
-                        if (m!=null) m.invoke(obj, obj, Cascade);
+                    if ((m!=null) && (m.getName()=="entityUpdated")) {
+                        try {
+                            m.invoke(obj, obj, Cascade);
+                        } catch (Exception err){
+                            Syslog.Append(goe.getCanonicalName(),m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                        }
                         break;
                     }
                 }
@@ -165,7 +181,7 @@ public class Entities {
                 try {
                     entityCreated(e, Cascade);
                 } catch (Exception err) {
-
+                    Syslog.Append(Entities.class.getCanonicalName(),"Save.entityCreated", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
                 }
             }
         }
@@ -192,7 +208,7 @@ public class Entities {
                 try {
                     entityUpdated(e, Cascade);
                 } catch (Exception err) {
-
+                    Syslog.Append(Entities.class.getCanonicalName(),"Update.entityUpdated", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
                 }
             }
         }
@@ -219,7 +235,7 @@ public class Entities {
                     entityDeleted(e, Cascade);
                 }
             } catch (Exception err) {
-
+                Syslog.Append(Entities.class.getCanonicalName(),"Delete.entityDeleted", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
             }
         }
         return true;
@@ -247,37 +263,7 @@ public class Entities {
             ssn.close();
         }
     }
-    @SuppressWarnings("unchecked")
-    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, long Id){
-        Session ssn = acquireSession();
-        if (ssn==null) return null;
-        try {
-            QueryByDomainIdAndId qc = CofE.getAnnotation(QueryByDomainIdAndId.class);
-            Query q = ssn.getNamedQuery(qc.Name())
-                    .setParameter("DomainId", DomainId)
-                    .setParameter("Id", Id);
 
-            return (T) CofE.cast(q.uniqueResult());
-        } finally {
-            ssn.close();
-        }
-    }
-    @SuppressWarnings("unchecked")
-    public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long DomainId, String Name){
-        Session ssn = acquireSession();
-        if (ssn==null) return null;
-        try {
-            QueryByDomainIdAndName qc = CofE.getAnnotation(QueryByDomainIdAndName.class);
-            Query q = ssn.getNamedQuery(qc.Name())
-                    .setParameter("DomainId", DomainId)
-                    .setParameter("Name", Name);
-
-            Stored r = (Stored) q.uniqueResult();
-            return (T) CofE.cast(r);
-        } finally {
-            ssn.close();
-        }
-    }
     @SuppressWarnings("unchecked")
     public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = acquireSession();
@@ -297,22 +283,6 @@ public class Entities {
         }
     }
     @SuppressWarnings("unchecked")
-    public static ArrayList<Stored> Lookup(QueryByDomainId aQuery, long Id){
-        Session ssn = acquireSession();
-        if (ssn==null) return new ArrayList<Stored>();
-        try {
-            Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setParameter("DomainId", Id);
-            if (q != null) {
-                return new ArrayList(q.list());
-            } else {
-                return null;
-            }
-        } finally{
-            ssn.close();
-        }
-    }
-    @SuppressWarnings("unchecked")
     public static ArrayList<Stored> Lookup(QueryByOwnerId aQuery, long Id){
         Session ssn = acquireSession();
         if (ssn==null) return new ArrayList<Stored>();
@@ -328,51 +298,7 @@ public class Entities {
             ssn.close();
         }
     }
-    @SuppressWarnings("unchecked")
-    public static ArrayList<Stored> Lookup(QueryByNetworkId aQuery, long Id){
-        Session ssn = acquireSession();
-        if (ssn==null) return new ArrayList<Stored>();
-        try {
-            Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setParameter("NetworkId", Id);
-            if (q != null) {
-                return new ArrayList(q.list());
-            } else {
-                return null;
-            }
-        } finally {
-            ssn.close();
-        }
-    }
-    @SuppressWarnings("unchecked")
-    public static ArrayList<Stored> Lookup(QueryByFileId aQuery, long Id){
-        Session ssn = acquireSession();
-        if (ssn==null) return new ArrayList<Stored>();
-        try {
-            Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setParameter("FileId", Id);
-            if (q != null) {
-                return new ArrayList(q.list());
-            } else {
-                return null;
-            }
-        } finally {
-            ssn.close();
-        }
-    }
-    @SuppressWarnings("unchecked")
-    public static ArrayList<Stored> Lookup(QueryByFolderId aQuery, long Id){
-        Session ssn = acquireSession();
-        if (ssn==null) return new ArrayList<Stored>();
-        try {
-            return new ArrayList(ssn.getNamedQuery(aQuery.Name())
-                    .setParameter("FolderId", Id)
-                    .list()
-            );
-        } finally {
-            ssn.close();
-        }
-    }
+
     @SuppressWarnings("unchecked")
     public static ArrayList<Stored> Lookup(QueryAll aQuery){
         Session ssn = acquireSession();

@@ -71,12 +71,8 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
     }
-    public String getHostName(){
-        return Owner.getHostName();
-    }
-    public int getPort(){
-        return Owner.getPort();
-    }
+
+
     @Override
     public void Setup(){
         Owner.add(this);

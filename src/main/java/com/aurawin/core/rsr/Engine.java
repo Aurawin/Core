@@ -4,8 +4,6 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.commands.Commands;
-import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeRead;
-import com.aurawin.core.rsr.commands.cmdAdjustBufferSizeWrite;
 import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
@@ -15,25 +13,21 @@ import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
 
 public abstract class Engine extends Thread {
     public volatile static long nextId;
-    protected Manifest Manifest;
+
     public Plugins Plugins;
-    public InetSocketAddress Address;
-    protected ServerSocketChannel Channel;
     public volatile Security Security;
     public volatile EngineState State;
-    public volatile String HostName;
-    public volatile int Port;
+    public volatile String Realm;
+
     public Boolean Infinite = false;
     protected Class<? extends Item>  transportClass;
     protected ItemKind transportKind;
@@ -41,17 +35,16 @@ public abstract class Engine extends Thread {
 
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
-    public Managers Managers;
+    protected Managers Managers;
     public String Stamp;
     protected Commands Commands;
 
 
-    public Engine(Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate, String hostName, int port) throws
+    public Engine(Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate) throws
             IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
     {
         nextId=1;
-        HostName = hostName;
-        Port = port;
+
         Infinite=aInfinate;
 
         transportClass = aTransport;
@@ -102,12 +95,6 @@ public abstract class Engine extends Thread {
         State = aState;
     }
 
-    public void adjustReadBufferSize(int size){
-        Commands.Queue(new cmdAdjustBufferSizeRead(Commands,size));
-    }
-    public void adjustWriteBufferSize(int size){
-        Commands.Queue(new cmdAdjustBufferSizeWrite(Commands,size));
-    }
     public void adjustIPandPort(String ip, int port){
         Commands.Queue(new cmdSetBindIPandPort(Commands,ip,port));
     }
@@ -135,5 +122,7 @@ public abstract class Engine extends Thread {
         }
     }
 
-
+    public Item Connect(InetSocketAddress a) throws Exception{
+        return Managers.Connect(a);
+    }
 }

@@ -1,11 +1,6 @@
 package com.aurawin.core.lang;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -134,17 +129,10 @@ public class Table {
         }
     }
     public static class Entities{
-        public static class Domain{
-            public static final String Root = "table.entities.domain.root";
-            public static class Roster{
-                public static final String Me = "table.entities.domain.roster.me";
-            }
-            public static class Network{
-                public static class Default {
-                    public static final String Title = "table.entities.domain.network.title";
-                    public static final String Description = "table.entities.domain.network.description";
-                }
-            }
+        public static class UniqueId{
+
+        }
+        public static class Module{
 
         }
     }
@@ -242,6 +230,7 @@ public class Table {
             public static final String EntityCreatedMethodNotDefined = "table.exception.entities.entity-created-method-not-defined";
             public static final String EntityDeletedMethodNotDefined = "table.exception.entities.entity-deleted-method-not-defined";
             public static final String EntityUpdatedMethodNotDefined = "table.exception.entities.entity-updated-method-not-defined";
+            public static final String EntityNotifyExecution= "table.exception.entities.entity-notify-execution";
 
             public static final String EntityAnnotationForFetchNotDefined = "table.exception.entities.entity-annotation-for-fetch-not-defined";
             public static class UniqueId {
@@ -255,22 +244,6 @@ public class Table {
                 }
 
             }
-            public static class Domain{
-                public static String UnableToCreateExists = "table.exception.entities.domain.unable-to-create-domain-exists";
-                public static class Network{
-                }
-                public static class Folder{
-                    public static String UnableToCreateExists = "table.exception.entities.domain.folder.unable-to-create-exists";
-                }
-                public static class UserAccount{
-                    public static String UnableToCreateExists = "table.exception.entities.domain.useraccount.unable-to-create-user-exists";
-
-                }
-                public static class Avatar{
-                    public static final String UnableToCreateExists = "table.exception.entities.domain.avatar.unable-to-create-avatar-exists";
-                }
-            }
-
         }
 
         public static class RSR {

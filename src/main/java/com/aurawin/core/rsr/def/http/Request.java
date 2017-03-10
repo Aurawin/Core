@@ -49,7 +49,7 @@ public class Request implements QueryResolver {
 
         Owner = owner;
         Version = new Version_HTTP(1,1);
-        Authentication = new Authenticate(owner.getHostName());
+        Authentication = new Authenticate(owner.Owner.Engine.Realm);
 
         Headers = new KeyPairs();
         Headers.DelimiterItem="\r\n";
@@ -183,6 +183,7 @@ public class Request implements QueryResolver {
                     aHeaders = new byte[iChunk];
                     System.arraycopy(input, iOffset, aHeaders, 0, iChunk);
                     Headers.Load(aHeaders);
+                    Cookies.Load(Headers.ValueAsString(Field.Cookie));
                     return rSuccess;
 
                 } else {

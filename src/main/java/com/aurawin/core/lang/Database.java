@@ -1,6 +1,7 @@
 package com.aurawin.core.lang;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class Database {
     public static class Table{
@@ -16,71 +17,36 @@ public class Database {
             public static class ById {
                 public static final String name = "QueryModuleById";
                 public static final String value = "from Module where Id=:Id";
-
-                public static org.hibernate.query.Query Create(Session ssn, long Id){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Id", Id);
-                }
             }
             public static class ByNamespace {
                 public static final String name = "QueryModule";
                 public static final String value = "from Module where Namespace=:Namespace";
-
-                public static org.hibernate.query.Query Create(Session ssn, String Namespace){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Namespace", Namespace);
-                }
             }
         }
         public static class Plugin{
             public static class ById {
                 public static final String name = "QueryPluginById";
                 public static final String value = "from Plugin where Id=:Id";
-
-                public static org.hibernate.query.Query Create(Session ssn, long Id){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Id", Id);
-                }
             }
             public static class ByNamespace {
                 public static final String name = "QueryPluginByNamspace";
                 public static final String value = "from Plugin where Namespace=:Namespace";
-
-                public static org.hibernate.query.Query Create(Session ssn, String Namespace){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Namespace", Namespace);
-                }
             }
         }
         public static class UniqueId{
             public static class ById {
                 public static final String name = "QueryUniqueIdById";
                 public static final String value = "from UniqueId where Id=:Id";
-
-                public static org.hibernate.query.Query Create(Session ssn, long Id){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Id", Id);
-                }
             }
             public static class ByNamespace {
                 public static final String name = "QueryUniqueIdByNamspace";
                 public static final String value = "from UniqueId where Namespace=:Namespace";
-
-                public static org.hibernate.query.Query Create(Session ssn, String Namespace){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Namespace", Namespace);
-                }
             }
         }
         public static class Certificate{
             public static class ById {
                 public static final String name = "QueryCertificateById";
                 public static final String value = "from Certificate where Id=:Id";
-
-                public static org.hibernate.query.Query Create(Session ssn, long Id){
-                    return ssn.getNamedQuery(name)
-                            .setParameter("Id", Id);
-                }
             }
         }
     }

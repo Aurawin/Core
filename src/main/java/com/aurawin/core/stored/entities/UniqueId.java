@@ -12,7 +12,6 @@ import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.json.JSONObject;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -89,7 +88,8 @@ public class UniqueId extends Stored {
 	        UniqueId uid = null;
             Transaction tx = (ssn.isJoinedToTransaction()) ? ssn.getTransaction() : ssn.beginTransaction();
             try {
-                    Query q = Database.Query.UniqueId.ByNamespace.Create(ssn, Namespace);
+                    Query q = ssn.getNamedQuery(Database.Query.UniqueId.ByNamespace.name)
+                            .setParameter("Namespace",Namespace);
                     try {
                         uid = (UniqueId) q.getSingleResult();
                     } catch (NoResultException nre) {

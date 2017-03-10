@@ -134,12 +134,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 )
         );
     }
-    public int getPort(){
-        return Engine.Port;
-    }
-    public String getHostName(){
-        return Engine.HostName;
-    }
+
     private void processItems() throws IOException{
         // process add items
         itm = qAddItems.poll();
@@ -261,7 +256,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
         }
     }
-    public void adjustReadBufferSize() throws Exception{
+    protected void adjustReadBufferSize() throws Exception{
         if (java.lang.Thread.currentThread().equals(this)==true){
             ByteBuffer BufferNew = ByteBuffer.allocate(Engine.BufferSizeRead);
             BufferNew.put(BufferRead);
@@ -272,7 +267,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         }
     }
 
-    public void adjustWriteBufferSize() throws Exception{
+    protected void adjustWriteBufferSize() throws Exception{
         if (java.lang.Thread.currentThread().equals(this)==true){
             ByteBuffer BufferNew = ByteBuffer.allocate(Engine.BufferSizeWrite);
             BufferNew.put(BufferWrite);

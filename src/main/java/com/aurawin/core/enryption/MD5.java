@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 
-public class md5 {
+public class MD5 {
     private final static char[] charMAP = "0123456789ABCDEF".toCharArray();
 
     public static String Digest(MessageDigest Digest){
@@ -19,6 +19,17 @@ public class md5 {
             hex[(i*2)+1] = charMAP[b & 0x0F];
         }
         return new String(hex);
+    }
+    public static String Encode(String... Args) {
+        try {
+            MessageDigest dg = MessageDigest.getInstance("MD5");
+            for (String s:Args) {
+                dg.update(s.getBytes());
+            }
+            return Digest(dg);
+        } catch (Exception ex){
+            return "";
+        }
     }
     public static String Print(MemoryStream Stream){
         try {
