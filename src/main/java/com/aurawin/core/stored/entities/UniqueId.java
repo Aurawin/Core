@@ -7,6 +7,7 @@ import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.QueryById;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.DynamicInsert;
@@ -42,12 +43,14 @@ public class UniqueId extends Stored {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Database.Field.UniqueId.Id)
+    @Expose(serialize = true, deserialize = true)
     private long Id;
     @Override
     public long getId(){return Id;}
 
     @Column(name = Database.Field.UniqueId.Namespace, unique = true, nullable = false)
-    private String Namespace;
+    @Expose(serialize = true, deserialize = true)
+    public String Namespace;
 
     public UniqueId() {
         Id=0;

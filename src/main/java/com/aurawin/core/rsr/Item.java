@@ -20,6 +20,7 @@ import java.util.EnumSet;
 public abstract class Item  implements Transport,AuthenticateHandler{
     public volatile Version Version;
     public volatile Buffers Buffers;
+    public volatile Credentials Credentials;
     public boolean Infinite;
 
     public int Timeout;
@@ -39,6 +40,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Protocol TA = getClass().getAnnotation(Protocol.class);
         Class v = TA.Version();
         Version = (Version) v.newInstance();
+        Credentials = new Credentials();
 
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
@@ -64,9 +66,11 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
     @Override
     public void Release() throws Exception{
+        Credentials.Release();
         SocketHandler.Release();
         Buffers.Release();
         Buffers=null;
+        Credentials=null;
     }
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);

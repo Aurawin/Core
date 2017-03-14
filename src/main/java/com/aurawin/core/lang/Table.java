@@ -205,6 +205,9 @@ public class Table {
         public static class Strings {
             final String InvalidEncoding = "table.exception.string.invalid-encoding";
         }
+        public static class Plugin{
+            public static final String Instantiation = "table.exception.plugin.instantiation";
+        }
         public static class Syslog {
             public static final String UnableToWriteEntries = "table.exception.syslog.unable-to-write-entries";
             public static final String UnableToWriteEntry = "table.exception.syslog.unable-to-write-entry";

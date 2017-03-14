@@ -1,20 +1,25 @@
 package com.aurawin.core.plugin;
 
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.UniqueId;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aurawin.core.plugin.annotations.Plugin;
 import com.aurawin.core.plugin.annotations.Command;
 
 public abstract class Plug extends UniqueId implements Methods {
-    public String Namespace;
     public Plugin Annotation;
-    public HashMap<String,CommandInfo>Commands;
-    public Plug() {
-        Commands = new HashMap<>();
+    public ConcurrentHashMap<String,CommandInfo>Commands;
+
+    @SuppressWarnings("unchecked")
+    public ArrayList<CommandInfo>discoverCommands(){
+        return new ArrayList<CommandInfo>(Commands.values());
     }
     public PluginState Setup(Session ssn){
         PluginState r = PluginState.PluginFailure;
@@ -27,7 +32,7 @@ public abstract class Plug extends UniqueId implements Methods {
                     )
             );
             Identify(ssn);
-            HashMap<String, CommandInfo> ms = new HashMap<>();
+            ConcurrentHashMap<String, CommandInfo> ms = new ConcurrentHashMap<>();
             java.lang.reflect.Method[] fs = getClass().getMethods();
             Command aC = null;
             for (java.lang.reflect.Method f : fs) {
@@ -49,6 +54,7 @@ public abstract class Plug extends UniqueId implements Methods {
                 }
             }
             Commands = ms;
+            Plugins.Register(this);
             r =  PluginState.PluginSuccess;
         } else {
             r = PluginState.PluginAnnotationError;
@@ -66,5 +72,16 @@ public abstract class Plug extends UniqueId implements Methods {
             }
         }
         return PluginState.PluginMethodNotFound;
+    }
+
+    public void discoverRole(String role, ArrayList<UniqueId> manifest){
+        if (Arrays.asList(Annotation.Roles()).contains(role) ){
+            manifest.add(this);
+            for (CommandInfo ci : Commands.values()){
+                if (Arrays.asList(ci.annotationCommand.Roles()).contains(role)){
+                    manifest.add(ci);
+                }
+            }
+        }
     }
 }

@@ -161,6 +161,16 @@ public class Entities {
         }
 
     }
+    public static ArrayList<Stored> toArrayList(List Items){
+        ArrayList<Stored> al = new ArrayList<>();
+        for (Object o : Items){
+            if (o instanceof Stored){
+                Stored s = (Stored) o;
+                al.add(s);
+            }
+        }
+        return al;
+    }
     public static boolean Save(Stored e, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
@@ -255,10 +265,14 @@ public class Entities {
         try {
             QueryByName qc = CofE.getAnnotation(QueryByName.class);
             Query q = ssn.getNamedQuery(qc.Name());
-            for (String sF : qc.Fields()) {
-                q.setParameter(sF, Name);
+            if (q!=null) {
+                for (String sF : qc.Fields()) {
+                    q.setParameter(sF, Name);
+                }
+                return (T) CofE.cast(q.uniqueResult());
+            } else {
+                return null;
             }
-            return (T) CofE.cast(q.uniqueResult());
         } finally {
             ssn.close();
         }
@@ -271,10 +285,14 @@ public class Entities {
         try {
             QueryById qc = CofE.getAnnotation(QueryById.class);
             if (qc != null) {
-                Query q = ssn.getNamedQuery(qc.Name())
-                        .setParameter("Id", Id);
-                Object o = q.uniqueResult();
-                return (o == null) ? null : (T) CofE.cast(o);
+                Query q = ssn.getNamedQuery(qc.Name());
+                if (q!=null) {
+                    q.setParameter("Id", Id);
+                    Object o = q.uniqueResult();
+                    return (o == null) ? null : (T) CofE.cast(o);
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
@@ -282,29 +300,27 @@ public class Entities {
             ssn.close();
         }
     }
-    @SuppressWarnings("unchecked")
+
     public static ArrayList<Stored> Lookup(QueryByOwnerId aQuery, long Id){
         Session ssn = acquireSession();
         if (ssn==null) return new ArrayList<Stored>();
         try {
-            Query q = ssn.getNamedQuery(aQuery.Name())
-                    .setParameter("OwnerId", Id);
+            Query q = ssn.getNamedQuery(aQuery.Name());
             if (q != null) {
-                return new ArrayList(q.list());
+                q.setParameter("OwnerId", Id);
+                return toArrayList(q.list());
             } else {
-                return null;
+                return new ArrayList<Stored>();
             }
         } finally{
             ssn.close();
         }
     }
-
-    @SuppressWarnings("unchecked")
     public static ArrayList<Stored> Lookup(QueryAll aQuery){
         Session ssn = acquireSession();
         if (ssn==null) return new ArrayList<Stored>();
         try {
-            return new ArrayList(ssn.getNamedQuery(aQuery.Name()).list());
+            return toArrayList(ssn.getNamedQuery(aQuery.Name()).list());
         } finally {
             ssn.close();
         }

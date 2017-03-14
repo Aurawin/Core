@@ -9,6 +9,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -22,6 +25,7 @@ public @interface Plugin {
     String Prompt() default "";
     String Description() default "";
     String Vendor() default "";
+    String[] Roles() default {};
     Class<? extends Item> Transport() default Item.class;
     Class<? extends Method> Method() default GET.class;
 }

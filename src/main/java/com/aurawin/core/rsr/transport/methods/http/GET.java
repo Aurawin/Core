@@ -35,7 +35,7 @@ public class GET extends Item {
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.pluginCommandInfo!=null) {
                     // check to see if access is granted in method
-                    if ( h.Request.Credentials.aclCoreGranted(
+                    if ( h.Credentials.aclCoreGranted(
                            !h.Request.pluginCommandInfo.annotationCommand.Anonymous(),
                            h.Request.pluginCommandInfo.getId()
                          )

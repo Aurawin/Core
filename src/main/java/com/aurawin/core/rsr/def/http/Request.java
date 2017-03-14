@@ -29,7 +29,7 @@ public class Request implements QueryResolver {
     public KeyPairs Headers;
     public KeyPairs Cookies;
     public KeyPairs Parameters;
-    public Credentials Credentials;
+
     public Authenticate Authentication;
     public MemoryStream Payload;
     public String Protocol;
@@ -63,7 +63,7 @@ public class Request implements QueryResolver {
         Parameters.DelimiterItem="&";
         Parameters.DelimiterField="=";
 
-        Credentials = new Credentials();
+
         Payload=new MemoryStream();
 
         Reset();
@@ -73,7 +73,7 @@ public class Request implements QueryResolver {
         Headers.clear();
         Cookies.clear();
         Parameters.clear();
-        Credentials.Empty();
+
         Payload.Clear();
         Plugin = null;
         pluginCommandInfo=null;
@@ -96,14 +96,14 @@ public class Request implements QueryResolver {
         Headers.Release();
         Cookies.Release();
         Parameters.Release();
-        Credentials.Release();
+
 
         Payload=null;
         Version=null;
         Headers=null;
         Cookies=null;
         Parameters=null;
-        Credentials=null;
+
 
         Method=null;
         URI=null;

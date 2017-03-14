@@ -9,11 +9,10 @@ import static com.aurawin.core.rsr.def.http.Status.s500;
 
 public class Response {
     private Item Owner;
-
     public volatile KeyPairs Headers;
     public volatile KeyPairs Cookies;
     public volatile KeyPairs Parameters;
-    public volatile Credentials Credentials;
+
     public volatile Status Status;
     public volatile Version Version;
     public volatile MemoryStream Payload;
@@ -31,8 +30,6 @@ public class Response {
         Parameters.DelimiterItem="&";
         Parameters.DelimiterField="=";
 
-        Credentials = new Credentials();
-
         Payload=new MemoryStream();
         Version = new Version_HTTP(1,1);
     }
@@ -40,7 +37,6 @@ public class Response {
         Headers.Empty();
         Cookies.Empty();
         Parameters.Empty();
-        Credentials.Empty();
         Payload.Clear();
         Version.Reset();
 
@@ -48,10 +44,11 @@ public class Response {
     }
 
     public void Release(){
-        Version.Release();
+        Headers.Release();
+        Cookies.Release();
+        Parameters.Release();
         Payload.Release();
-        Credentials.Release();
-
+        Version.Release();
     }
 
 

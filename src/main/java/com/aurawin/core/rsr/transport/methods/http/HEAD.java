@@ -27,7 +27,7 @@ public class HEAD extends Item {
                 h.Response.Headers.Update(Field.CoreObjectNamespace,h.Request.NamespacePlugin);
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.pluginCommandInfo!=null) {
-                    if (h.Request.Credentials.aclCoreGranted(
+                    if (h.Credentials.aclCoreGranted(
                             !h.Request.pluginCommandInfo.annotationCommand.Anonymous(),
                             h.Request.pluginCommandInfo.getId()
                         )
