@@ -6,6 +6,7 @@ import com.aurawin.core.array.Bytes;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class MemoryStream extends Channel {
@@ -133,6 +134,16 @@ public class MemoryStream extends Channel {
         Size+=itm.length;
 
         return itm.length;
+    }
+    public synchronized void SaveToFile(File File) throws IOException{
+
+        Iterator<byte[]> it = Collection.iterator();
+        FileStream fs = new FileStream(File,"w");
+        fs.truncate(0);
+        while (it.hasNext()==true) {
+            fs.write(it.next());
+        }
+
     }
     public synchronized int Write (InputStream Value) throws IOException{
         byte[] baBuffer=new byte[1024*1024];
