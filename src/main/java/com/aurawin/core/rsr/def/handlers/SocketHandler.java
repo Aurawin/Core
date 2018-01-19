@@ -17,7 +17,7 @@ public abstract class SocketHandler implements SocketMethods {
     public SocketChannel Channel;
     public SelectionKey Key;
 
-    public void Setup(boolean accepted) {
+    public void Setup() {
         try {
             Channel.setOption(TCP_NODELAY,true);
             Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);

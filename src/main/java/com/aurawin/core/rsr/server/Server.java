@@ -21,25 +21,21 @@ import com.aurawin.core.stored.entities.Entities;
 
 
 public class Server extends Engine {
-    public InetSocketAddress Address;
-    public volatile int Port;
     protected ServerSocketChannel Channel;
 
     public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName)throws
             IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aTransport,ItemKind.Server,aInfinate);
+        super (sa,aTransport,ItemKind.Server,aInfinate);
         State = esCreated;
-        Port = sa.getPort();
         Realm = aHostName;
-        Address = sa;
     }
-    public Server(Class<? extends Item> aTransport, boolean aInfinate)throws
+    public Server(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
             IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aTransport,ItemKind.Server,aInfinate);
-        Port=0;
+        super (aAddress, aTransport,ItemKind.Server,aInfinate);
     }
+
     @Override
     public void run(){
         try {

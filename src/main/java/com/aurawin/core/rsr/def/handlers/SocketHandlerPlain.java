@@ -9,6 +9,7 @@ import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
 
+import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 import static java.net.StandardSocketOptions.TCP_NODELAY;
 
@@ -32,7 +33,7 @@ public class SocketHandlerPlain extends SocketHandler {
     }
 
     @Override
-    public void Setup(boolean accepted){
+    public void Setup(){
         try {
             Channel.configureBlocking(false);
         } catch (IOException ioe) {
@@ -40,7 +41,14 @@ public class SocketHandlerPlain extends SocketHandler {
             return;
         }
         try {
-            Key = Channel.register(Owner.Owner.rwSelector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+            switch (Owner.Kind) {
+                case Client :
+                    Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ | SelectionKey.OP_CONNECT, Owner);
+                    break;
+                case Server:
+                    Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+                    break;
+            }
         } catch (IllegalBlockingModeException ibme){
             Shutdown();
             return;
@@ -49,6 +57,9 @@ public class SocketHandlerPlain extends SocketHandler {
             return;
         }
     }
+
+    @Override
+    public void beginHandshake() throws IOException {}
 
     public SocketHandlerPlain(Item owner){
         super(owner);

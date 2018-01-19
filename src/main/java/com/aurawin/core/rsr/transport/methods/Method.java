@@ -7,5 +7,5 @@ import org.hibernate.Session;
 import java.lang.reflect.InvocationTargetException;
 
 public interface Method {
-    public Result onProcess(Session ssn, Transport Transport)throws IllegalAccessException,InvocationTargetException;
+    public Result onProcess(Session ssn, Transport Transport) throws IllegalAccessException,InvocationTargetException;
 }

@@ -4,6 +4,7 @@ import com.aurawin.core.Environment;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.lang.Database;
+import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.PluginState;
 import com.aurawin.core.plugin.Plug;
@@ -18,6 +19,7 @@ import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.plugin.Noid;
 import com.aurawin.core.stored.annotations.AnnotatedList;
+import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
 import org.junit.Test;
@@ -49,20 +51,21 @@ public class ServerTest {
                 50,                                     // Max statements
                 10,                                     // timeout
                 Database.Config.Automatic.Update,       //
-                "Test",                                 // database
+                "HTTPServerTest",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),            // Driver
                 new AnnotatedList()
         );
+        Entities.Initialize(mf);
+
         serverHTTP = new Server(
-                new InetSocketAddress("172.16.1.2", 1080),
+                new InetSocketAddress("172.16.1.1", 1080),
                 HTTP_1_1.class,
                 false,
-                "chump.aurawin.com"
+                "phoenix.aurawin.com"
         );
 
-
-        //serverHTTP.loadSecurity(1l);
+        serverHTTP.loadSecurity(1l);
         serverHTTP.installPlugin(new Noid());
         serverHTTP.Configure();
     }

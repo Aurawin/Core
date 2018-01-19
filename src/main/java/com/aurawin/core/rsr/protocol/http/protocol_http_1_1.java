@@ -71,8 +71,8 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
         return new protocol_http_1_1(aOwner,ItemKind.Client);
     }
     @Override
-    public protocol_http_1_1 newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
-        protocol_http_1_1 itm = new protocol_http_1_1(aOwner,ItemKind.Server);
+    public protocol_http_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws InstantiationException, IllegalAccessException{
+        protocol_http_1_1 itm = new protocol_http_1_1(aOwner,Kind);
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
@@ -125,9 +125,9 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
         return r;
     }
     @Override
-    public void Disconnected() {}
+    public void Connected(){}
     @Override
-    public void Connected() {}
+    public void Disconnected() {}
 
     @Override
     public void Reset(){

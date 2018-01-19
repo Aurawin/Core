@@ -22,23 +22,16 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant Expired;
     private Engine Owner;
 
-
-    private Class[] itemConstructorParamsServer;
-    private Class[] itemConstructorParamsClient;
+    private Class[] itemConstructorParams=new Class[3];
 
     public Managers(Engine aOwner){
         nextId=1;
         Owner=aOwner;
         lastCleanup=Instant.now();
 
-
-        itemConstructorParamsServer = new Class[2];
-        itemConstructorParamsServer[0] = Items.class;
-        itemConstructorParamsServer[1] = SocketChannel.class;
-
-        itemConstructorParamsClient=new Class[2];
-        itemConstructorParamsClient[0] = Items.class;
-        itemConstructorParamsClient[1] = ItemKind.class;
+        itemConstructorParams[0] = Items.class;
+        itemConstructorParams[1] = SocketChannel.class;
+        itemConstructorParams[2] = ItemKind.class;
 
     }
     @Override
@@ -47,6 +40,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     }
     public void newThread(Items itms) {
         add(itms);
+        itms.LastUsed = Instant.now();
         itms.Thread=newThread((Runnable) itms);
         itms.Thread.setName("Items Thread " + nextId);
         itms.Thread.start();
@@ -81,7 +75,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
 
     }
     @SuppressWarnings("unchecked")
-    public Item Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
+    public <T extends Item>T Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
     {
         Items itms = getManager();
@@ -91,15 +85,24 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
             if ((c!=null) && (o !=null)) {
                 try {
                     SocketChannel aChannel = SocketChannel.open();
+                    if (Owner.Address!=null) {
+                        try {
+                            aChannel.bind(Owner.Address);
+                        } catch (Exception e){
+                            Syslog.Append(getClass().getCanonicalName(),"Connect.Bind", Table.Format(Table.Exception.RSR.ManagerConnectWithBind,e.getMessage(),Owner.Address.toString(),address.toString()));
+                        }
+                    }
+
                     aChannel.configureBlocking(false);
                     aChannel.connect(address);
-                    Method m = c.getMethod("newInstance", itemConstructorParamsServer);
+                    Method m = c.getMethod("newInstance", itemConstructorParams);
                     m.setAccessible(true);
-                    Item itm = (Item) m.invoke(o, itms, aChannel);
+                    Item itm = (Item) m.invoke(o, itms,aChannel,ItemKind.Client);
+
                     itms.qAddItems.add(itm);
-                    return itm;
+                    return (T) itm;
                 } catch (Exception e){
-                    Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
+                    Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerConnect,e.getMessage(),address.getHostString()));
                 }
             } else {
                 // todo log exception
@@ -118,9 +121,10 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
             Object o = Owner.transportObject;
             if ((c!=null) && (o !=null)) {
                 try {
-                    Method m = c.getMethod("newInstance", itemConstructorParamsServer);
+
+                    Method m = c.getMethod("newInstance", itemConstructorParams);
                     m.setAccessible(true);
-                    Item itm = (Item) m.invoke(o, itms, aChannel);
+                    Item itm = (Item) m.invoke(o, itms, aChannel,ItemKind.Server);
                     itms.qAddItems.add(itm);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(),"Accept", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
@@ -148,7 +152,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 Items itms = null;
                 while (it.hasNext()) {
                     itms = it.next();
-                    if ( (itms!=null) && (itms.RemovalRequested==false) && (Expired.isAfter(itms.LastUsed)) ) {
+                    if ( (itms!=null)&& (itms.isEmpty()) && (itms.RemovalRequested==false) && (Expired.isAfter(itms.LastUsed)) ) {
                         itms.RemovalRequested = true;
                     }
                 }

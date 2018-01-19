@@ -59,7 +59,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
 
     public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
-    public abstract Item newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException;
+    public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException;
 
     protected void setOwner(Items aOwner){
         Owner=aOwner;
@@ -80,8 +80,8 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     @Override
     public void Setup(){
         Owner.add(this);
-        SocketHandler.Setup(Kind == ItemKind.Server);
-        TTL=Instant.now().plusMillis(Timeout);
+        SocketHandler.Setup();
+        renewTTL();
     }
     @Override
     public void Teardown(){

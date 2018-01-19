@@ -2,6 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
+import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.Security;
 import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.commands.*;
@@ -11,10 +12,12 @@ import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
+import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.*;
 import static com.aurawin.core.rsr.def.ItemError.*;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -46,7 +49,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private Iterator<Item> it;
     private Iterator<SelectionKey> isk;
     public Security Security;
-    public Selector rwSelector;
+    public Selector Keys;
+
     protected boolean RemovalRequested;
 
     public Executor Background;
@@ -100,9 +104,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         }
 
         try {
-            rwSelector = java.nio.channels.Selector.open();
+            Keys = java.nio.channels.Selector.open();
         } catch (Exception e){
-            Syslog.Append(getClass().getCanonicalName(),"rwSelector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.transportClass.getName()));
+            Syslog.Append(getClass().getCanonicalName(),"Selector.open", Table.Format(Table.Exception.RSR.UnableToOpenItemChannelSelector, Engine.transportClass.getName()));
         }
         try {
 
@@ -119,6 +123,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                     End = Instant.now();
                 }
             }
+
         } finally {
             Release();
         }
@@ -141,9 +146,10 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         while (itm!=null){
             try {
                 itm.Setup();
-                itm.Connected();
                 itm.Initialized();
-                itm.State = isEstablished;
+                if (itm.Kind==Server){
+                    itm.State = isEstablished;
+                }
             } catch (Exception e){
                 // Discard connection
                 logEntry(itm, Table.Exception.RSR.UnableToRegisterItemChannel, itm.getClass().getCanonicalName(),"processItems - "+e.getMessage() );
@@ -162,12 +168,43 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             itm=qRemoveItems.poll();
         }
         try {
-            if (rwSelector.selectNow() > 0) { // non blocking call
-                isk = rwSelector.selectedKeys().iterator();
+            if (Keys.selectNow() > 0) { // non blocking call
+                isk = Keys.selectedKeys().iterator();
                 while (isk.hasNext()) {
                     SelectionKey k = isk.next();
                     try {
-                        if (k.isReadable() && k.isWritable() ) {
+                        if ((k.readyOps() & SelectionKey.OP_CONNECT) != 0){
+                            itm = (Item) k.attachment();
+                            if (itm != null) {
+                                try {
+                                    if (itm.SocketHandler.Channel.finishConnect()) {
+                                        if (itm.SocketHandler.Channel.isConnected()) {
+                                            if (Security.Enabled==true) {
+
+                                                itm.SocketHandler.beginHandshake();
+                                            } else {
+                                                itm.State = isEstablished;
+                                                itm.Connected();
+                                            }
+                                            itm.renewTTL();
+                                        } else {
+                                            itm.Errors.add(eConnect);
+                                            itm.Error();
+                                            qRemoveItems.add(itm);
+                                        }
+                                    }
+                                } catch (ConnectException ex) {
+                                    itm.Errors.add(eConnect);
+                                    if (ex.getMessage().equalsIgnoreCase("connection refused")){
+                                        itm.State = isRefused;
+                                    }else if (ex.getMessage().equalsIgnoreCase("connection timeout")){
+                                        itm.State = isTimed;
+                                    }
+                                    itm.Error();
+                                    qRemoveItems.add(itm);
+                                }
+                            }
+                        } else if ((k.readyOps() & (SelectionKey.OP_READ | SelectionKey.OP_WRITE) ) != 0) {
                             itm = (Item) k.attachment();
                             if (itm != null) {
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
@@ -292,6 +329,14 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
             }
         }
+        if (Keys!=null) {
+            try {
+                Keys.close();
+            } catch (Exception ex){
+
+            }
+        }
+
         Owner.remove(this);
         Started=null;
         LastUsed=null;
@@ -306,7 +351,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         isk=null;
         Security.Release();
         Security=null;
-        rwSelector=null;
+        Keys=null;
 
         qAddItems.clear();
         qAddItems=null;

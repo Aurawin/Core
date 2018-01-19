@@ -268,6 +268,10 @@ public class Table {
             public static final String MonitorLoop = "table.exception.rsr.monitor-loop";
             public static final String ItemsLoop = "table.exception.rsr.items-loop";
             public static final String ManagerAccept = "table.exception.rsr.manager-accept";
+            public static final String ManagerConnectWithBind = "table.exception.rsr.manager-connect-bind";
+            public static final String ManagerConnect = "table.exception.rsr.manager-connect";
+
+
             public static class WebSocket {
                 public static class SecurityOption {
                     public static final String Invalid = "table.exception.rsr.websocket.securityoption.invalid";
@@ -304,7 +308,9 @@ public class Table {
             public static final String Reset="table.error.rsr.reset";
             public static final String DNS="table.error.rsr.dns";
             public static final String Timeout = "table.error.rsr.timeout";
+            public static final String SSL = "table.error.rsr.ssl";
             public static final String Write="table.error.rsr.write";
+            public static final String Connect="table.error.rsr.connect";
         }
     }
 

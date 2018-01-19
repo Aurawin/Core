@@ -48,8 +48,8 @@ public class HTTP_1_1 extends protocol_http_1_1{
         return new HTTP_1_1(aOwner,ItemKind.Client);
     }
     @Override
-    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel)throws InstantiationException, IllegalAccessException{
-        HTTP_1_1 itm = new HTTP_1_1(aOwner, ItemKind.Server);
+    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException{
+        HTTP_1_1 itm = new HTTP_1_1(aOwner, aKind);
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
@@ -62,7 +62,10 @@ public class HTTP_1_1 extends protocol_http_1_1{
     @Override
     public Result resourceRequested(Session ssn){
         Response.Headers.Update(Field.ContentType,"text/plain");
-        Response.Payload.Write("File output");
+        for (int iLcv=0; iLcv<1024*1024*5; iLcv++){
+            Response.Payload.Write("12345678901234567890123456789012345678901234567890\r\n");
+        }
+
         return Ok;
     }
     @Override

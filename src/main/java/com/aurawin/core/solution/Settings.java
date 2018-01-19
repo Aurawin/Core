@@ -61,7 +61,7 @@ public class Settings {
             public static float BufferGrowFactor=1.2f;
         }
         public static class Items{
-            public static int AutoremoveEmptyItemsDelay = 1*20*1000;
+            public static int AutoremoveEmptyItemsDelay = 40*1000;
             public static int AutoremoveCleanupInterval = 10*1000;
             public static class Header {
                 public final static String Separator = "\r\n";

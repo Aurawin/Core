@@ -20,7 +20,8 @@ import org.hibernate.Session;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public abstract class Engine extends Thread {
+public abstract class Engine extends Thread  {
+    public volatile InetSocketAddress Address;
     public volatile static long nextId;
 
     public Plugins Plugins;
@@ -39,11 +40,11 @@ public abstract class Engine extends Thread {
     public String Stamp;
     protected Commands Commands;
 
-
-    public Engine(Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate) throws
+    public Engine(InetSocketAddress address, Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate) throws
             IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
     {
         nextId=1;
+        Address = address;
 
         Infinite=aInfinate;
 
@@ -122,7 +123,7 @@ public abstract class Engine extends Thread {
         }
     }
 
-    public Item Connect(InetSocketAddress a) throws Exception{
+    public <T extends Item>T Connect(InetSocketAddress a) throws Exception{
         return Managers.Connect(a);
     }
 }

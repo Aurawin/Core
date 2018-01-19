@@ -47,7 +47,7 @@ public class Entities {
         Owner.Verify();
     }
     public static void Verify(){
-        Owner.Verify();
+        if (Owner!=null) Owner.Verify();
     }
     public static Session openSession(){
         return Factory.openSession();

@@ -135,15 +135,15 @@ public class MemoryStream extends Channel {
 
         return itm.length;
     }
-    public synchronized void SaveToFile(File File) throws IOException{
-
-        Iterator<byte[]> it = Collection.iterator();
-        FileStream fs = new FileStream(File,"w");
-        fs.truncate(0);
-        while (it.hasNext()==true) {
-            fs.write(it.next());
-        }
-
+    public synchronized void SaveToFile(File Output) throws IOException{
+        if (!Output.exists()) Output.createNewFile();
+        BufferedOutputStream buffOut=new BufferedOutputStream(new FileOutputStream(Output));
+        for (byte[] bytes : Collection)
+            buffOut.write(bytes);
+    }
+    public synchronized void LoadFromFile(File File) throws IOException{
+        Collection.clear();
+        Write(new FileInputStream(File));
     }
     public synchronized int Write (InputStream Value) throws IOException{
         byte[] baBuffer=new byte[1024*1024];

@@ -15,17 +15,15 @@ import static com.aurawin.core.rsr.def.EngineState.*;
 import static com.aurawin.core.rsr.def.EngineState.esStop;
 
 public class Client  extends Engine {
-    public Client(InetSocketAddress sa, Class<? extends Item> aTransport, boolean aInfinate)throws
+    public InetSocketAddress Address;
+
+    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
             IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aTransport, ItemKind.Client,aInfinate);
+        super (aAddress, aTransport, ItemKind.Client,aInfinate);
         State = esCreated;
     }
-    public Client(Class<? extends Item> aTransport, boolean aInfinate)throws
-            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
-    {
-        super (aTransport,ItemKind.Client,aInfinate);
-    }
+
     @Override
     public void run(){
         try {
@@ -90,5 +88,8 @@ public class Client  extends Engine {
     }
     public synchronized void CheckForUpdates(){
 
+    }
+    public synchronized <T extends Item>T Connect(InetSocketAddress address) throws Exception{
+        return Managers.Connect(address);
     }
 }

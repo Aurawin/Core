@@ -1,15 +1,21 @@
 package com.aurawin.core.rsr.def.handlers;
 
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.solution.Settings;
 
 import javax.net.ssl.*;
+import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
 import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 
+import static com.aurawin.core.rsr.def.ItemError.eSSL;
+import static com.aurawin.core.rsr.def.ItemKind.Client;
+import static com.aurawin.core.rsr.def.ItemState.isHandShake;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 
 
@@ -25,12 +31,19 @@ public class SocketHandlerSecure extends SocketHandler {
     private int iWrite;
     private SSLEngineResult CryptResult;
     private SSLEngineResult.HandshakeStatus handshakeStatus;
-    private SocketSendReceiveCallback Send;
-    private SocketSendReceiveCallback Recv;
-    private SocketSendReceiveCallback SendPreHandshake;
-    private SocketSendReceiveCallback SendPostHandshake;
-    private SocketSendReceiveCallback RecvPreHandshake;
-    private SocketSendReceiveCallback RecvPostHandshake;
+    private SSLEngineResult.Status Status;
+
+    public SocketHandlerSecure(Item owner){
+        super(owner);
+        issuedHandshake=false;
+
+        peerAppData = ByteBuffer.allocate(Settings.RSR.Server.SSLEnginePeerAppDataBuffer);
+        peerNetData = ByteBuffer.allocate(Settings.RSR.Server.SSLEnginePeerNetDataBuffer);
+        localAppData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalAppDataBuffer);
+        localNetData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalNetDataBuffer);
+
+    }
+
 
     @Override
     public void Release(){
@@ -46,13 +59,6 @@ public class SocketHandlerSecure extends SocketHandler {
         localNetData.clear();
         localNetData=null;
         CryptResult=null;
-        Send=null;
-        Recv=null;
-        SendPreHandshake=null;
-        SendPostHandshake=null;
-        RecvPreHandshake=null;
-        RecvPostHandshake=null;
-
     }
     @Override
     public void Teardown(){
@@ -81,11 +87,12 @@ public class SocketHandlerSecure extends SocketHandler {
 
     }
     @Override
-    public void Setup(boolean accepted){
-        super.Setup(accepted);
+    public void Setup(){
+        super.Setup();
         try {
+
             Cryptor=Owner.Owner.Security.Context.createSSLEngine();
-            Cryptor.setUseClientMode(!accepted);
+            Cryptor.setUseClientMode(Owner.Kind==Client);
             Cryptor.setNeedClientAuth(false);
             Cryptor.setEnableSessionCreation(true);
             SSLParameters sslParams = Cryptor.getSSLParameters();
@@ -99,35 +106,110 @@ public class SocketHandlerSecure extends SocketHandler {
             Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
             Channel.configureBlocking(false);
 
-            Key = Channel.register(Owner.Owner.rwSelector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
-
-            beginHandshake();
-
-
+            switch (Owner.Kind) {
+                case Server:
+                    beginHandshake();
+                    break;
+            }
         } catch (Exception e) {
-
+            Owner.Errors.add(eSSL);
+            Owner.Error();
+            Shutdown();
         }
 
     }
-    @Override
+
     public SocketHandlerResult Send() {
-        return Send.Perform();
+        try {
+            if (Owner.Buffers.Send.Size>0) {
+                localAppData.clear();
+                Owner.Buffers.Send.read(localAppData);
+                Owner.Buffers.Send.sliceAtPosition();
+                localAppData.flip();
+                localNetData.clear();
+                while (localAppData.hasRemaining() ) {
+                    CryptResult = Cryptor.wrap(localAppData,localNetData);
+                    switch (CryptResult.getStatus()) {
+                        case OK:
+                            localNetData.flip();
+                            while (localNetData.hasRemaining())
+                                Channel.write(localNetData);
+                            localNetData.clear();
+                            break;
+                        case CLOSED:
+                            Shutdown();
+                            break;
+                        case BUFFER_UNDERFLOW:
+                            peerNetData.rewind(); // nothing to do wait for more data
+                            break;
+                        case BUFFER_OVERFLOW:
+                            localNetData.compact();
+                            localNetData.flip();
+                            Channel.write(localNetData);
+                            break;
+                    }
+                }
+                localAppData.clear();
+                if (Owner.Buffers.Send.Size==0) Owner.Owner.removeFromWriteQueue(Owner);
+            } else {
+                if (Owner.Buffers.Send.Size == 0) Owner.Owner.removeFromWriteQueue(Owner);
+            }
+            Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
+            return SocketHandlerResult.Complete;
+        } catch (Exception e){
+            return SocketHandlerResult.Failure;
+        }
     }
-    @Override
+
     public SocketHandlerResult Recv() {
-        return Recv.Perform();
+        try {
+            iRead=Channel.read(peerNetData);
+            if (iRead>0) {
+                peerNetData.flip();
+                while (peerNetData.hasRemaining()) {
+                    CryptResult = Cryptor.unwrap(peerNetData, localAppData);
+                    switch (CryptResult.getStatus()) {
+                        case OK:
+                            localAppData.flip();
+                            Owner.Buffers.Recv.write(localAppData);
+                            break;
+                        case CLOSED:
+                            Shutdown();
+                            break;
+                        case BUFFER_UNDERFLOW:
+                            peerNetData.rewind(); // nothing to do wait for more data
+                            break;
+                        case BUFFER_OVERFLOW:
+                            peerNetData.compact();
+                            localAppData.flip();
+                            Owner.Buffers.Recv.write(localAppData);
+                            break;
+                    }
+                    localAppData.clear();
+                }
+                peerNetData.compact();
+                Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
+
+            } else if (iRead==-1){
+                Shutdown();
+                return SocketHandlerResult.Failure;
+            }
+
+        } catch (Exception e){
+            return SocketHandlerResult.Failure;
+        }
+        return SocketHandlerResult.Complete;
     }
+
+
     private void processHandshakeStep() throws IOException{
         handshakeStatus=Cryptor.getHandshakeStatus();
         switch (handshakeStatus) {
-            case FINISHED:
-                Send = SendPostHandshake;
-                Recv = RecvPostHandshake;
             case NEED_UNWRAP:
-                processHandshakeUnwrap();
+                handshakeUnwrap();
                 break;
             case NEED_WRAP:
-                handshakeNeedWrap();
+                handshakeWrap();
                 break;
             case NEED_TASK:
                 processNeedTask();
@@ -135,58 +217,72 @@ public class SocketHandlerSecure extends SocketHandler {
         }
         Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
     }
-    private void beginHandshake() throws IOException{
+    @Override
+    public void beginHandshake() throws IOException{
         if (issuedHandshake==false) {
+            Owner.State = isHandShake;
             issuedHandshake = true;
             Cryptor.beginHandshake();
+            handshakeStatus = Cryptor.getHandshakeStatus();
+            while (handshakeStatus != SSLEngineResult.HandshakeStatus.FINISHED &&
+                    handshakeStatus != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING) {
+                processHandshakeStep();
+                handshakeStatus = Cryptor.getHandshakeStatus();
+            }
+            handshakeFinished();
+
         }
     }
-    private void handshakeFinished(){
+    private void handshakeFailed(){
         handshakeStatus=HandshakeStatus.FINISHED;
-        Send=SendPostHandshake;
-        Recv=RecvPostHandshake;
+        Owner.State = ItemState.isNone;
+        Owner.Errors.add(eSSL);
+        Owner.Error();
+        Owner.queueClose();
     }
-    private void processHandshakeUnwrap() throws IOException {
-        CryptResult = Cryptor.unwrap(peerNetData, peerAppData);
-        switch (CryptResult.getStatus()) {
+    private void handshakeFinished() throws IOException {
+        handshakeStatus=HandshakeStatus.FINISHED;
+        switch (Owner.Kind) {
+            case Client :
+                Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ | SelectionKey.OP_CONNECT, Owner);
+                break;
+            case Server:
+                Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+                break;
+        }
+        Owner.State = ItemState.isEstablished;
+        Owner.Connected();
+    }
+    private void handshakeWrap() throws IOException{
+        localNetData.clear();
+        CryptResult = Cryptor.wrap(localAppData, localNetData);
+        handshakeStatus = CryptResult.getHandshakeStatus();
+        Status = CryptResult.getStatus();
+        switch (Status){
             case OK:
-                peerNetData.compact();
-                peerNetData.flip();
-
-                iRead=0;
-                //peerNetData.flip();
-                //peerNetData.compact();
+                localNetData.flip();
+                while (localNetData.hasRemaining()){
+                    Channel.write(localNetData);
+                }
                 break;
             case CLOSED:
-                Shutdown();
-                break;
-            case BUFFER_UNDERFLOW:
-                peerNetData.rewind();
-                iRead=0;
-                return;
-            case BUFFER_OVERFLOW:
-                iRead=0;
+                handshakeFailed();
                 break;
         }
-        switch (CryptResult.getHandshakeStatus()) {
-            case FINISHED :
-                handshakeFinished();
-                break;
-            case NEED_WRAP :
-                handshakeNeedWrap();
-                break;
-            case NEED_UNWRAP :
-                processHandshakeUnwrap();
-                break;
-            case NEED_TASK :
-                processNeedTask();
-                break;
-            case NOT_HANDSHAKING:
-                handshakeFinished();
-                break;
-        }
+
+    }
+    private void handshakeUnwrap() throws IOException {
+        iRead=Channel.read(peerNetData);
+
+        peerNetData.flip();
+        CryptResult = Cryptor.unwrap(peerNetData, peerAppData);
+        handshakeStatus = CryptResult.getHandshakeStatus();
+        Status = CryptResult.getStatus();
+        peerNetData.compact();
     }
     private void processUnwrap() throws IOException{
+        iRead = Channel.read(peerNetData);
+        peerNetData.flip();
         CryptResult = Cryptor.unwrap(peerNetData, peerAppData);
         switch (CryptResult.getStatus()) {
             case OK:
@@ -202,206 +298,19 @@ public class SocketHandlerSecure extends SocketHandler {
             case BUFFER_OVERFLOW:
                 // too much data in peerAppData...
                 // write and try again?
-                iRead=0;// todo
+                iRead = 0;// todo
                 break;
         }
     }
 
-    private void handshakeNeedWrap() throws SSLException,IOException{
-        // Generate handshaking data
-        CryptResult = Cryptor.wrap(localAppData, localNetData);
-        handshakeStatus=CryptResult.getHandshakeStatus();
-        switch (CryptResult.getStatus()) {
-            case OK:
-                localNetData.flip();
-                while (localNetData.hasRemaining()) {
-                    iWrite=Channel.write(localNetData);
-                    if (iWrite<= 0) {
-                        // Handle closed channel
-                        Shutdown();
-                    }
-
-                }
-                localNetData.clear();
-                break;
-            case CLOSED:
-                Shutdown();
-                break;
-            case BUFFER_UNDERFLOW:
-                iWrite=0;
-                break;
-            case BUFFER_OVERFLOW:
-                iWrite=0;
-                break;
-        }
-        switch (CryptResult.getHandshakeStatus()) {
-            case FINISHED :
-                handshakeFinished();
-                break;
-            case NEED_WRAP :
-                handshakeNeedWrap();
-                break;
-            case NEED_UNWRAP :
-                //processHandshakeUnwrap();
-                break;
-            case NEED_TASK :
-                processNeedTask();
-                break;
-            case NOT_HANDSHAKING:
-                handshakeFinished();
-                break;
-        }
-    }
     private void processNeedTask() throws IOException{
         Runnable task;
         while ((task=Cryptor.getDelegatedTask()) != null) {
             task.run();
         }
-        processHandshakeStep();
     }
 
-    private void processRecv() throws IOException{
-        while (peerNetData.hasRemaining()) {
-            CryptResult = Cryptor.unwrap(peerNetData, localAppData);
-            switch (CryptResult.getStatus()) {
-                case OK:
-                    localAppData.flip();
-                    Owner.Buffers.Recv.write(localAppData);
-                    break;
-                case CLOSED:
-                    Shutdown();
-                    break;
-                case BUFFER_UNDERFLOW:
-                    peerNetData.rewind(); // nothing to do wait for more data
-                    break;
-                case BUFFER_OVERFLOW:
-                    peerNetData.compact();
-                    localAppData.flip();
-                    Owner.Buffers.Recv.write(localAppData);
-                    break;
-            }
-            localAppData.clear();
-        }
-        peerNetData.compact();
-        Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
-    }
-    private void processSend() throws IOException{
-        if (Owner.Buffers.Send.Size>0) {
-            Owner.Owner.BufferWrite.clear();
-            Owner.Buffers.Send.read(Owner.Owner.BufferWrite);
-            Owner.Owner.BufferWrite.flip();
-            while (Owner.Owner.BufferWrite.hasRemaining() ) {
-                CryptResult = Cryptor.wrap(Owner.Owner.BufferWrite,localNetData);
-                switch (CryptResult.getStatus()) {
-                    case OK:
-                        localNetData.flip();
-                        while (localNetData.hasRemaining())
-                            Channel.write(localNetData);
-                        localNetData.clear();
-                        break;
-                    case CLOSED:
-                        Shutdown();
-                        break;
-                    case BUFFER_UNDERFLOW:
-                        peerNetData.rewind(); // nothing to do wait for more data
-                        break;
-                    case BUFFER_OVERFLOW:
-                        peerNetData.compact();
-                        localNetData.flip();
-                        Channel.write(localNetData);
-                        break;
-                }
-            }
-            Owner.Buffers.Send.sliceAtPosition();
-            if (Owner.Buffers.Send.Size==0) Owner.Owner.removeFromWriteQueue(Owner);
-        } else {
-            if (Owner.Buffers.Send.Size == 0) Owner.Owner.removeFromWriteQueue(Owner);
-        }
-    }
-    public SocketHandlerSecure(Item owner){
-        super(owner);
-        issuedHandshake=false;
 
-        peerAppData = ByteBuffer.allocate(Settings.RSR.Server.SSLEnginePeerAppDataBuffer);
-        peerNetData = ByteBuffer.allocate(Settings.RSR.Server.SSLEnginePeerNetDataBuffer);
-        localAppData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalAppDataBuffer);
-        localNetData= ByteBuffer.allocate(Settings.RSR.Server.SSLEngineLocalNetDataBuffer);
-
-        SendPreHandshake=new SocketSendReceiveCallback() {
-            @Override
-            public SocketHandlerResult Perform() {
-                return SocketHandlerResult.Pending;
-            }
-        };
-        RecvPreHandshake=new SocketSendReceiveCallback() {
-            @Override
-            public SocketHandlerResult Perform() {
-                try {
-                    peerNetData.compact();
-                    iRead=Channel.read(peerNetData);
-                    if (iRead>0) {
-                        peerNetData.flip();
-                        processHandshakeStep();
-                    } else if (iRead==-1){
-                        Shutdown();
-                    }
-
-                } catch (IOException e){
-                    iRead=0;
-                } finally{
-                    if (handshakeStatus==HandshakeStatus.FINISHED) {
-                        peerAppData.clear();
-                        localAppData.clear();
-                        localNetData.clear();
-                        if (peerNetData.hasRemaining()) {
-                            try {
-                                processRecv();
-                            } catch (IOException e) {
-                                return SocketHandlerResult.Failure;
-                            }
-                        }
-                        peerNetData.clear();
-                    }
-                    return SocketHandlerResult.Pending;
-                }
-
-
-            }
-        };
-        SendPostHandshake=new SocketSendReceiveCallback() {
-            @Override
-            public SocketHandlerResult Perform() {
-                try {
-                    processSend();
-                    Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
-                    return SocketHandlerResult.Complete;
-                } catch (Exception e){
-                    return SocketHandlerResult.Failure;
-                }
-            }
-        };
-        RecvPostHandshake=new SocketSendReceiveCallback() {
-            @Override
-            public SocketHandlerResult Perform() {
-                try {
-                        iRead=Channel.read(peerNetData);
-                        if (iRead>0) {
-                            peerNetData.flip();
-                            processRecv();
-                        } else if (iRead==-1){
-                            Shutdown();
-                            return SocketHandlerResult.Failure;
-                        }
-
-                } catch (Exception e){
-                    return SocketHandlerResult.Failure;
-                }
-                return SocketHandlerResult.Complete;
-            }
-        };
-        Send=SendPreHandshake;
-        Recv=RecvPreHandshake;
-    }
 
 
 }

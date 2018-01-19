@@ -8,6 +8,7 @@ public interface Transport {
     rsrResult onPeek();
     rsrResult onProcess(Session ssn);
     void Disconnected();
+
     void Connected();
     void Error();
     void Finalized();
