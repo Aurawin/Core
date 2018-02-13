@@ -9,8 +9,8 @@ import com.aurawin.core.plugin.PluginState;
 import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.rsr.def.*;
 
-import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
-import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
+import static com.aurawin.core.rsr.def.http.ResolveResult.rrFile;
+import static com.aurawin.core.rsr.def.http.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
@@ -48,7 +48,7 @@ public class Request implements QueryResolver {
 
 
         Owner = owner;
-        Version = new Version_HTTP(1,1);
+        Version = new Version_1_1();
         Authentication = new Authenticate(owner.Owner.Engine.Realm);
 
         Headers = new KeyPairs();

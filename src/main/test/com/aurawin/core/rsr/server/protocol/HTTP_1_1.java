@@ -1,19 +1,16 @@
 package com.aurawin.core.rsr.server.protocol;
 
 
-import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.def.http.Version_HTTP;
+import com.aurawin.core.rsr.def.http.Version_1_1;
 import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
-import com.aurawin.core.rsr.transport.methods.Result.*;
 import com.aurawin.core.rsr.transport.methods.http.dav.*;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
@@ -31,7 +28,7 @@ import static com.aurawin.core.rsr.transport.methods.Result.Ok;
 import static java.time.Instant.now;
 
 @Protocol(
-        Version = Version_HTTP.class
+        Version = Version_1_1.class
 )
 public class HTTP_1_1 extends protocol_http_1_1{
     public static boolean dummyFile = false;

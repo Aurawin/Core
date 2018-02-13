@@ -1,17 +1,9 @@
 package com.aurawin.core.rsr.server;
 
 import com.aurawin.core.Environment;
-import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.lang.Database;
-import com.aurawin.core.lang.Namespace;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.PluginState;
-import com.aurawin.core.plugin.Plug;
-import com.aurawin.core.rsr.Engine;
-import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.EngineState;
-import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
@@ -20,16 +12,11 @@ import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.plugin.Noid;
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Entities;
-import com.aurawin.core.stream.MemoryStream;
-import org.hibernate.Session;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
 import java.net.InetSocketAddress;
-
-import static com.aurawin.core.rsr.def.ResolveResult.rrFile;
-import static com.aurawin.core.rsr.def.ResolveResult.rrPlugin;
 
 
 public class ServerTest {

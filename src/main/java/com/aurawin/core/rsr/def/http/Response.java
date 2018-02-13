@@ -31,7 +31,7 @@ public class Response {
         Parameters.DelimiterField="=";
 
         Payload=new MemoryStream();
-        Version = new Version_HTTP(1,1);
+        Version = new Version_1_1();
     }
     public void Reset(){
         Headers.Empty();

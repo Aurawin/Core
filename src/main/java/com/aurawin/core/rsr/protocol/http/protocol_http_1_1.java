@@ -5,7 +5,7 @@ import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.ResolveResult;
+import com.aurawin.core.rsr.def.http.ResolveResult;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.def.http.*;
 import com.aurawin.core.rsr.def.rsrResult;
@@ -19,18 +19,17 @@ import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 
-import static com.aurawin.core.rsr.def.ResolveResult.rrNone;
+import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import static com.aurawin.core.rsr.transport.methods.Result.None;
-import static com.aurawin.core.rsr.transport.methods.Result.Ok;
 
 
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 
 @Protocol(
-        Version = Version_HTTP.class
+        Version = Version_1_1.class
 )
 public class protocol_http_1_1 extends Item implements Transport,ResourceUploadHandler,ResourceDeleteHandler,
         ResourceCopyHandler,ResourceMoveHandler,ResourceLockHandler,ResourceCollectionHandler,ResourcePropertyHandler,
@@ -90,10 +89,11 @@ public class protocol_http_1_1 extends Item implements Transport,ResourceUploadH
     @Override public Result resourceMakeCollection(Session ssn){ return Result.Failure;}
     @Override public Result resourceFindProperties(Session ssn){ return Result.Failure;}
 
+    @Override
     public rsrResult onPeek() {
         return Request.Peek();
     }
-
+    @Override
     public rsrResult onProcess(Session ssn) {
         rsrResult r = rSuccess;
         if (Request.Read()==rSuccess) {

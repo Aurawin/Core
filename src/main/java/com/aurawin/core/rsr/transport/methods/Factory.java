@@ -28,8 +28,7 @@ public class Factory {
         return Result.Ok;
     }
 
-    public Result Process(String Key, Session ssn, Transport transport) {
-        Item itm = Methods.get(Key);
+    public Result Process(Item itm, Session ssn, Transport transport){
         if (itm != null) {
             try {
                 return itm.onProcess(ssn, transport);
@@ -41,9 +40,11 @@ public class Factory {
             return Result.NotFound;
         }
     }
-
+    public Result Process(String Key, Session ssn, Transport transport) {
+        Item itm = Methods.get(Key);
+        return Process(itm,ssn,transport);
+    }
     public String getAllMethods() {
-
         VarString sa = new VarString("", VarString.CreateOptionsOff,", ");
         for (Item itm : Methods.values()){
             for (String k:itm.Keys){

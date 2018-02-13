@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.def;
+package com.aurawin.core.rsr.def.http;
 
 import org.hibernate.Session;
 
