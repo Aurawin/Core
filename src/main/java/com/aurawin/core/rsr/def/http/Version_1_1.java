@@ -7,12 +7,9 @@ import com.aurawin.core.rsr.def.VersionMethods;
 
 import java.util.regex.Pattern;
 
-public class Version_HTTP extends Version {
-    public Version_HTTP(){
+public class Version_1_1 extends Version {
+    public Version_1_1(){
         super (1,1,"HTTP","%s/%d.%d");
-    }
-    public Version_HTTP(int major, int minor) {
-        super(major, minor, "HTTP","%s/%d.%d");
     }
 
     @Override
@@ -41,5 +38,4 @@ public class Version_HTTP extends Version {
             return false;
         }
     }
-
 }
