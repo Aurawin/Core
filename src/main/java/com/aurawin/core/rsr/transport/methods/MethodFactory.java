@@ -8,10 +8,10 @@ import org.hibernate.Session;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-public class Factory {
+public class MethodFactory {
     private HashMap<String, Item> Methods;
     protected String Error;
-    public Factory() {
+    public MethodFactory() {
         Methods = new HashMap<>();
     }
 

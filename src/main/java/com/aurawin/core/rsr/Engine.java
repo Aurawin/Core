@@ -7,12 +7,11 @@ import com.aurawin.core.rsr.commands.Commands;
 import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.Security;
+import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.def.handlers.SocketHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
@@ -25,9 +24,11 @@ public abstract class Engine extends Thread  {
     public volatile static long nextId;
 
     public Plugins Plugins;
-    public volatile Security Security;
+    public volatile Security SSL;
     public volatile EngineState State;
+
     public volatile String Realm;
+    public volatile long RealmId;
 
     public Boolean Infinite = false;
     protected Class<? extends Item>  transportClass;
@@ -56,7 +57,7 @@ public abstract class Engine extends Thread  {
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
         Commands  = new Commands(this);
         Managers = new Managers(this);
-        Security = new Security();
+        SSL = new Security();
         Plugins = new Plugins();
         setName("Engine Thread "+nextId);
         nextId++;
@@ -72,10 +73,14 @@ public abstract class Engine extends Thread  {
             System.getProperty(Settings.Properties.Edition)+ " Edition"
         );
 
+        // Install Mechanisms for Security
+
+
+
     }
 
     public synchronized SocketHandler createSocketHandler(Item item){
-        if (Security.Enabled) {
+        if (SSL.Enabled) {
             return new SocketHandlerSecure(item);
         } else {
             return new SocketHandlerPlain(item);
@@ -105,13 +110,14 @@ public abstract class Engine extends Thread  {
         Certificate cert= Entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,Id);
         if (cert!=null) {
             try {
-                Security.setCertificate(cert);
+                SSL.setCertificate(cert);
             } catch (Exception e){
                 if (e!=null) e.getMessage();
             }
         } else{
-            Security.Enabled=false;
+            SSL.Enabled=false;
         }
+
     }
     public void installPlugin(Plug plugin){
         Session ssn = Entities.openSession();

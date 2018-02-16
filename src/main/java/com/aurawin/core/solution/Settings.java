@@ -40,6 +40,8 @@ public class Settings {
         public static final int InitialInstantReductionMillis = 60 * 60 * 1000; // 1 hour
     }
     public static class Security{
+        public static final int LockoutThresholdToBan = 4; // number of lockouts before it bans an IP
+        public static final int LockoutThresholdWindow = 15;  // seconds
         public static final int TextMaxLength = 1024*25;
         public static final int DerMaxLength = 1024*10;
         public static final String KeyManagerStoreAlgorithm="X509";

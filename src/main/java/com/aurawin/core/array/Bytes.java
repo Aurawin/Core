@@ -93,4 +93,25 @@ public class Bytes {
         }
         return sResults;
     }
+    public static final long toLongByTripple(byte[] input){
+        long r = 0;
+        int size = input.length;
+        int p=0;
+        int v = 0;
+        if (size<=64){
+            for (int i = 0; i < size; i++) {
+                p = 3 - i;
+                v = input[i];
+
+                // 1. 192 * 256^3
+                // 2. 168 * 256^2
+                // 3. 1 * 256^1
+                // 4. 1 * 256^0
+                r += v * Math.pow(256, p);
+            }
+            return r;
+        } else {
+            return 0;
+        }
+    }
 }

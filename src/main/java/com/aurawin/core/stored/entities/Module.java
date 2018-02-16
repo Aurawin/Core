@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
-@Table(name = Database.Table.Stored.Module)
+@Table(name = Database.Table.Module)
 @NamedQueries(
         {
                 @NamedQuery(
@@ -162,7 +162,7 @@ public class Module extends Stored {
     }
 
     public String getTable(){
-        return Database.Table.Stored.Module+"_"+Id+"_";
+        return Database.Table.Module+"_"+Id+"_";
     }
 
     public String getPackage() {

@@ -1,17 +1,18 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
+import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
+import com.aurawin.core.rsr.security.Security;
 import org.hibernate.Session;
 
 import java.lang.reflect.InvocationTargetException;
 
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.http.Status.s510;
-
+import static com.aurawin.core.lang.Table.Security.Mechanism.HTTP.Basic;
 public class HEAD extends Item {
 
     public HEAD() {
@@ -19,7 +20,7 @@ public class HEAD extends Item {
     }
     public Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,InvocationTargetException{
         Result r = Result.Ok;
-        protocol_http_1_1 h = (protocol_http_1_1) transport;
+        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
         switch (h.Resolution) {
@@ -57,9 +58,7 @@ public class HEAD extends Item {
                         h.Response.Status = s401;
                         h.Response.Headers.Update(
                                 Field.WWWAuthenticate,
-                                Field.Value.Authenticate.Basic.Message(
-                                        h.Owner.Engine.Realm
-                                )
+                                Security.buildChallenge(Basic,h.Owner.Engine.Realm)
                         );
                     }
                 }

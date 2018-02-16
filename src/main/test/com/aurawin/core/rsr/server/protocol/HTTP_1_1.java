@@ -6,7 +6,7 @@ import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Version_1_1;
-import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
+import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.dav.*;
@@ -30,7 +30,7 @@ import static java.time.Instant.now;
 @Protocol(
         Version = Version_1_1.class
 )
-public class HTTP_1_1 extends protocol_http_1_1{
+public class HTTP_1_1 extends Protocol_HTTP_1_1 {
     public static boolean dummyFile = false;
 
     public HTTP_1_1() throws InstantiationException,IllegalAccessException{
@@ -59,7 +59,7 @@ public class HTTP_1_1 extends protocol_http_1_1{
     @Override
     public Result resourceRequested(Session ssn){
         Response.Headers.Update(Field.ContentType,"text/plain");
-        for (int iLcv=0; iLcv<1024*1024*5; iLcv++){
+        for (int iLcv=0; iLcv<1024*1; iLcv++){
             Response.Payload.Write("12345678901234567890123456789012345678901234567890\r\n");
         }
 

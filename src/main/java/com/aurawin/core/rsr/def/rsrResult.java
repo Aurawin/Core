@@ -1,3 +1,3 @@
 package com.aurawin.core.rsr.def;
 
-public enum rsrResult {rFailure,rPostpone,rSuccess}
+public enum rsrResult {rFailure,rPostpone,rSuccess,rAuthenticationNotSupported}

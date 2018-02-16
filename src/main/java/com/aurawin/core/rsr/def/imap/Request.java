@@ -17,7 +17,6 @@ public class Request implements QueryResolver {
     protected Item Owner;
     public Version Version;
     public com.aurawin.core.rsr.transport.methods.Item Method;
-    public Authenticate Authentication;
     public KeyPairs Parameters;
     public MemoryStream Payload;
 
@@ -25,12 +24,10 @@ public class Request implements QueryResolver {
         Method = null;
         Owner=owner;
         Version = new Version_4_1(4,1);
-        Authentication = new Authenticate(owner.Owner.Engine.Realm);
     }
     @Override
     public void Release(){
         Version.Release();
-        Authentication.Release();
         Parameters.Release();
         Payload.Release();
     }

@@ -5,10 +5,10 @@ import org.hibernate.query.Query;
 
 public class Database {
     public static class Table{
-        public static class Stored{
-            public static final String Module = "tbl_s_mle";
-            public static final String Certificate = "tbl_s_cert";
-        }
+        public static final String Module = "tbl_s_mle";
+        public static final String Certificate = "tbl_s_crt";
+        public static final String LoginFailure = "tbl_s_lif";
+        public static final String Ban = "tbl_s_ban";
         public static final String Plugin = "tbl_k_pgn";
         public static final String UniqueId = "tbl_k_uid";
     }
@@ -49,6 +49,32 @@ public class Database {
                 public static final String value = "from Certificate where Id=:Id";
             }
         }
+        public static class LoginFailure{
+            public static class ById {
+                public static final String name = "QueryLoginFailedById";
+                public static final String value = "from LoginFailed where Id=:Id";
+            }
+            public static class ByIp {
+                public static final String name = "QueryLoginFailedByIp";
+                public static final String value = "from LoginFailed where Ip=:Ip order by Instant";
+            }
+            public static class BetweenInstant {
+                public static final String name = "QueryLoginFailedByInstant";
+                public static final String value = "from LoginFailed where Instant between :InstantLow and :InstantHigh";
+            }
+        }
+
+        public static class Ban{
+            public static class ById {
+                public static final String name = "QueryBanById";
+                public static final String value = "from Ban where Id=:Id";
+            }
+            public static class ByIp {
+                public static final String name = "QueryBanByIp";
+                public static final String value = "from Ban where Ip=:Ip";
+            }
+
+        }
     }
     public static class Field{
         public static class Module{
@@ -86,6 +112,19 @@ public class Database {
             public static final String DerCert2 = "itmdc2";
             public static final String DerCert3 = "itmdc3";
             public static final String DerCert4 = "itmdc4";
+        }
+        public static class LoginFailure{
+            public static final String Id="itmid";
+            public static final String DomainId="itmdid";
+            public static final String UserId="itmuid";
+            public static final String Ip="itmip";
+            public static final String Instant="itmisn";
+            public static final String Username="itmun";
+            public static final String Password="itmpd";
+        }
+        public static class Ban{
+            public static final String Id="itmid";
+            public static final String Ip="itmip";
         }
     }
     public static class Config{

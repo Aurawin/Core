@@ -2,10 +2,8 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
-import com.aurawin.core.rsr.def.ItemState;
-import com.aurawin.core.rsr.def.Security;
+import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.def.rsrResult;
-import com.aurawin.core.rsr.commands.*;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerResult;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.Entities;
@@ -84,9 +82,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     @Override
     public void run() {
         Started = Instant.now();
-        if (Engine.Security.Enabled){
+        if (Engine.SSL.Enabled){
             try {
-                Security.setCertificate(Engine.Security.Certificate);
+                Security.setCertificate(Engine.SSL.Certificate);
             } catch (UnrecoverableKeyException uke){
 
             } catch (CertificateException ce){

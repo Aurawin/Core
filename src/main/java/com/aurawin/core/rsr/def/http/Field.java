@@ -92,14 +92,4 @@ public class Field {
     public static final String CoreCommandNamespace = "Cc-Ns";
 
     public static final String GuidWebSocket = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-
-    public static class Value{
-        public static class Authenticate{
-            public static class Basic{
-                public static final String Message(String Realm){
-                    return "Basic realm=\""+Realm+"\"";
-                }
-            }
-        }
-    }
 }

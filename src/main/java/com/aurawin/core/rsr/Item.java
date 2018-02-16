@@ -1,16 +1,12 @@
 package com.aurawin.core.rsr;
 
-import com.aurawin.core.array.KeyItem;
-import com.aurawin.core.array.KeyPairs;
-import com.aurawin.core.plugin.Plug;
+import com.aurawin.core.array.Bytes;
 import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
-import com.aurawin.core.rsr.transport.methods.Factory;
-import com.aurawin.core.rsr.transport.methods.Result;
+import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stream.MemoryStream;
 
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
@@ -34,19 +30,21 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public EnumSet<ItemError> Errors;
 
     public Items Owner;
-    public Factory Methods;
+    public MethodFactory Methods;
+
+
 
     public Item(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
         Protocol TA = getClass().getAnnotation(Protocol.class);
         Class v = TA.Version();
         Version = (Version) v.newInstance();
-        Credentials = new Credentials();
+        Credentials=new Credentials();
 
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
-        Methods = new Factory();
+        Methods = new MethodFactory();
 
         if (aOwner!=null){
             Owner = aOwner;
@@ -61,6 +59,8 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException;
 
+
+
     protected void setOwner(Items aOwner){
         Owner=aOwner;
     }
@@ -72,8 +72,12 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Buffers=null;
         Credentials=null;
     }
+
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
+    }
+    public long getRemoteIp(){
+        return Bytes.toLongByTripple(SocketHandler.Channel.socket().getInetAddress().getAddress());
     }
 
 

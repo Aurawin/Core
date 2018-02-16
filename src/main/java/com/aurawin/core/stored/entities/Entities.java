@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
@@ -14,6 +15,7 @@ import com.aurawin.core.stored.annotations.*;
 import com.aurawin.core.stored.entities.loader.Loader;
 import com.aurawin.core.stored.entities.loader.Result;
 
+import com.aurawin.core.stored.parameter.Parameters;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
@@ -370,6 +372,25 @@ public class Entities {
 
             }
         }
+    }
+
+    public static ArrayList<Stored> Fetch(Class<? extends Stored> CofE,String NamedQuery, Parameters Params){
+        Session ssn = acquireSession();
+        try{
+            Query q = ssn.getNamedQuery(NamedQuery);
+
+
+            Params.stream().forEach(p -> q.setParameter(p.Key,p.Value));
+            return (ArrayList<Stored>) q.list().stream()
+                    .filter(s -> s instanceof Stored)
+                    .map(CofE::cast)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+
+        } finally {
+            ssn.close();
+        }
+
     }
     public static boolean Fetch(Stored e, FetchKind Kind)
             throws Exception

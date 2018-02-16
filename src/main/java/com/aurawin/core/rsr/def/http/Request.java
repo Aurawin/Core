@@ -3,6 +3,7 @@ package com.aurawin.core.rsr.def.http;
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.array.KeyPairs;
 import com.aurawin.core.array.VarString;
+import com.aurawin.core.enryption.Base64;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.plugin.CommandInfo;
 import com.aurawin.core.plugin.PluginState;
@@ -14,6 +15,7 @@ import static com.aurawin.core.rsr.def.http.ResolveResult.rrPlugin;
 import static com.aurawin.core.rsr.def.rsrResult.*;
 import com.aurawin.core.rsr.Item;
 
+import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stream.MemoryStream;
 import com.aurawin.core.stream.parser.XML;
@@ -30,13 +32,14 @@ public class Request implements QueryResolver {
     public KeyPairs Cookies;
     public KeyPairs Parameters;
 
-    public Authenticate Authentication;
+
     public MemoryStream Payload;
     public String Protocol;
     public String Method;
     public String URI;
     public String Query;
     public String ETag;
+    public String Authorization;
     public String NamespacePlugin;
     public String NamespaceMethod;
     public Plug Plugin;
@@ -49,7 +52,6 @@ public class Request implements QueryResolver {
 
         Owner = owner;
         Version = new Version_1_1();
-        Authentication = new Authenticate(owner.Owner.Engine.Realm);
 
         Headers = new KeyPairs();
         Headers.DelimiterItem="\r\n";
@@ -63,6 +65,7 @@ public class Request implements QueryResolver {
         Parameters.DelimiterItem="&";
         Parameters.DelimiterField="=";
 
+        Authorization = "";
 
         Payload=new MemoryStream();
 
@@ -86,6 +89,7 @@ public class Request implements QueryResolver {
         Version.Reset();
         NamespacePlugin="";
         NamespaceMethod="";
+        Authorization = "";
         pluginState= PluginState.PluginIdle;
     }
 
@@ -97,7 +101,7 @@ public class Request implements QueryResolver {
         Cookies.Release();
         Parameters.Release();
 
-
+        Authorization = null;
         Payload=null;
         Version=null;
         Headers=null;
@@ -184,7 +188,23 @@ public class Request implements QueryResolver {
                     System.arraycopy(input, iOffset, aHeaders, 0, iChunk);
                     Headers.Load(aHeaders);
                     Cookies.Load(Headers.ValueAsString(Field.Cookie));
-                    return rSuccess;
+                    // Method Code
+                    sLine = Headers.ValueAsString(Field.Authorization);
+                    if (sLine.length() > 0) {
+                        saLine = sLine.split(" ");
+                        if (saLine.length==2) {
+                            if (Security.hasMechanism(Version.Protocol+"." + saLine[0])){
+                                Authorization = Base64.Decode(saLine[1]);
+                                return rSuccess;
+                            } else {
+                                return rAuthenticationNotSupported;
+                            }
+                        } else {
+                            return rAuthenticationNotSupported;
+                        }
+                    } else {
+                        return rSuccess;
+                    }
 
                 } else {
                     return rFailure;

@@ -112,6 +112,23 @@ public class Table {
 
     }
     public static class Security{
+        public static class Method{
+            public static class HTTP{
+                public static final String Basic = "Basic";
+            }
+            public static class IMAP{
+                public static final String Basic = "Basic";
+            }
+        }
+        public static class Mechanism{
+            public static class IMAP{
+                public static final String Basic = "IMAP.BASIC";
+            }
+            public static class HTTP{
+                public static final String Basic = "HTTP.BASIC";
+            }
+
+        }
         public static class Key {
             public static class Private {
                 public static final String Begin = "-----BEGIN PRIVATE KEY-----";

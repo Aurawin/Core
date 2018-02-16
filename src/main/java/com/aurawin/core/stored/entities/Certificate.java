@@ -26,7 +26,7 @@ import java.time.Instant;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
-@Table(name = Database.Table.Stored.Certificate)
+@Table(name = Database.Table.Certificate)
 @NamedQueries(
         {
                 @NamedQuery(

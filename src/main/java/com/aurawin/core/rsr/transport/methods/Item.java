@@ -16,5 +16,9 @@ public abstract class Item implements Method{
     public Item(String[] keys){
         for (String k:keys) Keys.add(k);
     }
-    public abstract Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,InvocationTargetException;
+
+    public abstract Result onProcess(Session ssn, Transport transport) throws
+            IllegalAccessException,
+            InvocationTargetException,
+            NoSuchMethodException;
 }

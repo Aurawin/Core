@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.protocol_http_1_1;
+import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -17,7 +17,7 @@ public class TRACE extends Item  {
     }
 
     public Result onProcess(Session ssn, Transport transport) {
-        protocol_http_1_1 h = (protocol_http_1_1) transport;
+        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
         h.Response.Status=s200;
         h.methodState=Ok;
         for (KeyItem header:h.Request.Headers) {
