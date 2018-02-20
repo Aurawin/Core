@@ -1,0 +1,69 @@
+<component name="libraryTable">
+  <library name="maven:maven-plugin-plugin:1.7.1" type="repository">
+    <properties maven-id="maven:maven-plugin-plugin:1.7.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/maven/maven-plugin-plugin/1.7.1/maven-plugin-plugin-1.7.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.0/commons-lang-2.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly-tags-xml/1.1/commons-jelly-tags-xml-1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xalan/xalan/2.3.1/xalan-2.3.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly-tags-junit/1.0/commons-jelly-tags-junit-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-beanutils/commons-beanutils/1.6/commons-beanutils-1.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/2.1/commons-collections-2.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jexl/commons-jexl/1.0/commons-jexl-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly/1.0-RC2/commons-jelly-1.0-RC2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/forehead/forehead/1.0-beta-5/forehead-1.0-beta-5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.0.6/jstl-1.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/dom4j/dom4j/1.5/dom4j-1.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jaxme/jaxme-api/0.3/jaxme-api-0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/pull-parser/pull-parser/2/pull-parser-2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/xml/jsr173/1.0/jsr173-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly-tags-interaction/1.1/commons-jelly-tags-interaction-1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.0/commons-cli-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-discovery/commons-discovery/20030211.213356/commons-discovery-20030211.213356.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jline/jline/0.9.5/jline-0.9.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jdom/jdom/1.0/jdom-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xom/xom/1.0b3/xom-1.0b3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xml-resolver/xml-resolver/1.1/xml-resolver-1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xerces/xercesImpl/2.8.0/xercesImpl-2.8.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/msv/msv/20050913/msv-20050913.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/msv/isorelax/20050913/isorelax-20050913.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/msv/relaxngDatatype/20050913/relaxngDatatype-20050913.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/msv/xsdlib/20050913/xsdlib-20050913.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.0/commons-lang-2.0-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-beanutils/commons-beanutils/1.6/commons-beanutils-1.6-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/2.1/commons-collections-2.1-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jexl/commons-jexl/1.0/commons-jexl-1.0-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly-tags-interaction/1.1/commons-jelly-tags-interaction-1.1-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.0/commons-cli-1.0-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/maven/maven-plugin-plugin/1.7.1/maven-plugin-plugin-1.7.1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.0/commons-lang-2.0-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-collections/commons-collections/2.1/commons-collections-2.1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jexl/commons-jexl/1.0/commons-jexl-1.0-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.0.6/jstl-1.0.6-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jelly/commons-jelly-tags-interaction/1.1/commons-jelly-tags-interaction-1.1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-cli/commons-cli/1.0/commons-cli-1.0-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jline/jline/0.9.5/jline-0.9.5-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jdom/jdom/1.0/jdom-1.0-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xml-resolver/xml-resolver/1.1/xml-resolver-1.1-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/xerces/xercesImpl/2.8.0/xercesImpl-2.8.0-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/msv/msv/20050913/msv-20050913-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

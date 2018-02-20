@@ -1,6 +1,8 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 
+import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
@@ -13,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import static com.aurawin.core.lang.Table.Security.Mechanism.HTTP.Basic;
 import static com.aurawin.core.rsr.def.http.Status.*;
+import static com.aurawin.core.rsr.security.fetch.PassportState.psValid;
 import static com.aurawin.core.rsr.transport.methods.Result.NotAuthorizied;
 import static com.aurawin.core.rsr.transport.methods.Result.NotFound;
 import static com.aurawin.core.rsr.transport.methods.Result.Ok;
@@ -26,7 +29,9 @@ public class GET extends Item {
         super(key);
     }
 
-    public Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,InvocationTargetException{
+    public Result onProcess(Session ssn, Transport transport) throws NoSuchMethodException,
+            IllegalAccessException,InvocationTargetException
+    {
         Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
 
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
@@ -37,12 +42,14 @@ public class GET extends Item {
                 h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
                 if (h.Request.pluginCommandInfo!=null) {
                     // check to see if access is granted in method
+
                     if ( h.Credentials.aclCoreGranted(
                            !h.Request.pluginCommandInfo.annotationCommand.Anonymous(),
                            h.Request.pluginCommandInfo.getId()
                          )
                        )
                     {
+                        h.Response.requiresAuthentication=false;
                         h.Request.pluginState=h.Request.pluginCommandInfo.Execute(ssn,h);
                         if (h.Response.Status==null) {
                             switch (h.Request.pluginState) {
@@ -69,6 +76,7 @@ public class GET extends Item {
                             }
                         }
                     } else{
+                        h.Response.requiresAuthentication=true;
                         h.methodState=NotAuthorizied;
                         h.Response.Status = s401;
                         h.Response.Headers.Update(
@@ -79,6 +87,28 @@ public class GET extends Item {
                 }
                 break;
             case rrFile :
+                CredentialResult cr = h.resourceRequiresAuthentication(ssn);
+                if (cr != CredentialResult.None ) {
+                    if (h.Credentials.Passport.State!=psValid) {
+                        cr = Security.Login(
+                                Table.Security.Mechanism.HTTP.Basic,
+                                h.Owner.Engine.RealmId,
+                                h.getRemoteIp(),
+                                h.Credentials.Passport.Username,
+                                h.Credentials.Passport.Password
+                        );
+                    } else {
+                        if (h.Credentials.Passport.State!=psValid){
+                            cr = Security.Login(
+                                    Table.Security.Mechanism.HTTP.Basic,
+                                    h.Owner.Engine.RealmId,
+                                    h.getRemoteIp(),
+                                    h.Credentials.Passport.Username,
+                                    h.Credentials.Passport.Password
+                            );
+                        }
+                    }
+                }
                 h.methodState=h.resourceRequested(ssn);
                 if (h.Response.Status==null) {
                     switch (h.methodState) {

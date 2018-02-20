@@ -373,7 +373,7 @@ public class Entities {
             }
         }
     }
-
+    @SuppressWarnings("unchecked")
     public static ArrayList<Stored> Fetch(Class<? extends Stored> CofE,String NamedQuery, Parameters Params){
         Session ssn = acquireSession();
         try{

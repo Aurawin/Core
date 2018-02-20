@@ -29,6 +29,7 @@ public class Server extends Engine {
         super (sa,aTransport,ItemKind.Server,aInfinate);
         State = esCreated;
         Realm = aHostName;
+
     }
     public Server(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
             IOException,NoSuchMethodException, InstantiationException,IllegalAccessException

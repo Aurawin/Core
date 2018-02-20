@@ -7,6 +7,7 @@ import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stored.entities.security.Credentials;
 
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
@@ -14,9 +15,9 @@ import java.util.EnumSet;
 
 
 public abstract class Item  implements Transport,AuthenticateHandler{
-    public volatile Version Version;
-    public volatile Buffers Buffers;
-    public volatile Credentials Credentials;
+    public Version Version;
+    public Buffers Buffers;
+    public Credentials Credentials;
     public boolean Infinite;
 
     public int Timeout;
@@ -58,8 +59,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException;
-
-
+    public abstract void registerSecurityMechanism();
 
     protected void setOwner(Items aOwner){
         Owner=aOwner;

@@ -11,8 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.apache.maven.plugins:maven-source-plugin:3.0.0" level="project" />
-    <orderEntry type="library" name="org.apache.maven.plugins:maven-compiler-plugin:3.5.1" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20080701" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.miglayout:miglayout-swing:5.0" level="project" />

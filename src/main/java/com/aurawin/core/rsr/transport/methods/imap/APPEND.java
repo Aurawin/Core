@@ -23,7 +23,6 @@ public class APPEND extends Item{
         Protocol_IMAP_4_1 h = (Protocol_IMAP_4_1) transport;
 
         return None;
-
     }
 
 }

@@ -59,11 +59,28 @@ public class HTTP_1_1 extends Protocol_HTTP_1_1 {
     @Override
     public Result resourceRequested(Session ssn){
         Response.Headers.Update(Field.ContentType,"text/plain");
-        for (int iLcv=0; iLcv<1024*1; iLcv++){
-            Response.Payload.Write("12345678901234567890123456789012345678901234567890\r\n");
-        }
+        // if Request.URI requires authentication we should ask if not provided.
+        // Retrieve Resource
+        // Generate
+
+
+        Response.Payload.Write("<br>Realm: ");
+        Response.Payload.Write(Credentials.Passport.Realm);
+
+
+        Response.Payload.Write("<br>Username: ");
+        Response.Payload.Write(Credentials.Passport.Username);
+
+        Response.Payload.Write("<br>Password: ");
+        Response.Payload.Write(Credentials.Passport.Password);
+
+
 
         return Ok;
+    }
+    @Override
+    public CredentialResult resourceRequiresAuthentication(Session ssn){
+        return CredentialResult.None; // requires no Authentication
     }
     @Override
     public Result resourceUploaded(Session ssn){

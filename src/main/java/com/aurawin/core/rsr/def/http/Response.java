@@ -1,11 +1,9 @@
 package com.aurawin.core.rsr.def.http;
 
 import com.aurawin.core.array.KeyPairs;
-import com.aurawin.core.rsr.def.Credentials;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.Version;
 import com.aurawin.core.stream.MemoryStream;
-import static com.aurawin.core.rsr.def.http.Status.s500;
 
 public class Response {
     private Item Owner;
@@ -16,6 +14,7 @@ public class Response {
     public volatile Status Status;
     public volatile Version Version;
     public volatile MemoryStream Payload;
+    public volatile boolean requiresAuthentication;
     public Response(Item aOwner) {
         Owner = aOwner;
         Headers = new KeyPairs();
@@ -32,8 +31,10 @@ public class Response {
 
         Payload=new MemoryStream();
         Version = new Version_1_1();
+        requiresAuthentication = false;
     }
     public void Reset(){
+        requiresAuthentication=false;
         Headers.Empty();
         Cookies.Empty();
         Parameters.Empty();

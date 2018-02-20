@@ -1,19 +1,26 @@
 package com.aurawin.core.rsr.def.http;
 
 
+import com.aurawin.core.enryption.Base64;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.rsr.def.Credentials;
+import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.security.fetch.Mechanism;
+import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.entities.security.Credentials;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import static com.aurawin.core.rsr.def.rsrResult.rAuthenticationNotSupported;
+import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
+
 
 public class SecurityMechanismBasic extends Mechanism {
     private String Method;
 
     public SecurityMechanismBasic() {
-        Key= Table.Security.Mechanism.HTTP.Basic;
+        super (Table.Security.Mechanism.HTTP.Basic);
+
         Method = Table.Security.Method.HTTP.Basic;
 
         if (!Security.hasMechanism(Table.Security.Mechanism.HTTP.Basic)){
@@ -21,30 +28,41 @@ public class SecurityMechanismBasic extends Mechanism {
         }
     }
 
-    public boolean Parse(String input, Credentials creds) {
-
-        String[] i = input.split(" ");
-        if ( (i.length==2) && i[0].equalsIgnoreCase(Method)){
-            byte[] ba = Base64.getMimeDecoder().decode(i[1]);
-            String p0 = new String(ba, StandardCharsets.UTF_8);
-            String [] c = p0.split(":");
-            if (c.length==2) {
-
-                // creds.Username = c[0];
-                // creds.Password = c[1];
-                return true;
+    @Override
+    public rsrResult decryptCredentials(Item RSR, String... Params){
+        if (Params.length==1) {
+            String s = Base64.Decode(Params[0]);
+            String[] sa = s.split(":");
+            if (sa.length==2) {
+                RSR.Credentials.Passport.Realm=RSR.Owner.Engine.Realm;
+                RSR.Credentials.Passport.Username=sa[0];
+                RSR.Credentials.Passport.Password=sa[1];
+                return  rSuccess;
+            } else {
+                return rAuthenticationNotSupported;
             }
+        } else {
+            return rAuthenticationNotSupported;
         }
-        return false;
     }
     @Override
     public String buildAuthorization(String User, String Pass){
         return Table.Security.Method.HTTP.Basic+ " " +
-        com.aurawin.core.enryption.Base64.Encode(User+":"+Pass);
+        Base64.Encode(User+":"+Pass);
     }
     @Override
     public String buildChallenge(String realm){
         return Method+ " realm=\""+realm+"\"";
+    }
+
+    @Override
+    public CredentialResult DoLogin(long DomainId, String Username, String Password) {
+        return null;
+    }
+
+    @Override
+    public CredentialResult DoAuthenticate(long DomainId, String User, String Salt) {
+        return null;
     }
 
     public void Reset(){

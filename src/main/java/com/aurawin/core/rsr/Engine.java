@@ -16,8 +16,10 @@ import com.aurawin.core.stored.entities.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 public abstract class Engine extends Thread  {
     public volatile InetSocketAddress Address;
@@ -52,6 +54,8 @@ public abstract class Engine extends Thread  {
         transportClass = aTransport;
         transportObject = aTransport.newInstance();
         transportKind = aKind;
+
+        transportObject.registerSecurityMechanism();
 
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;
@@ -119,6 +123,7 @@ public abstract class Engine extends Thread  {
         }
 
     }
+
     public void installPlugin(Plug plugin){
         Session ssn = Entities.openSession();
         try{
@@ -132,4 +137,5 @@ public abstract class Engine extends Thread  {
     public <T extends Item>T Connect(InetSocketAddress a) throws Exception{
         return Managers.Connect(a);
     }
+
 }

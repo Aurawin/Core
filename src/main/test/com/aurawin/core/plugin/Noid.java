@@ -56,8 +56,8 @@ public class Noid extends Plug {
     public PluginState DoAnother(Session ssn, Item Transport){
         HTTP_1_1 h = (HTTP_1_1) Transport;
         h.Response.Headers.Update(Field.ContentType,"text/plain");
-        h.Response.Payload.Write("Plug output - another something was done.");
-
+        h.Response.Payload.Write("Plug output - another something was done. <br>");
+        h.Response.Payload.Write("User: " +h.Credentials +"<br>"  );
         return PluginState.PluginSuccess;
     }
 

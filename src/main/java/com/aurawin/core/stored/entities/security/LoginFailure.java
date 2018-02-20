@@ -72,6 +72,9 @@ public class LoginFailure extends Stored {
     @Column(name = Database.Field.LoginFailure.Password)
     public String Password;
 
+    @Column(name = Database.Field.LoginFailure.Salt)
+    public String Salt;
+
     @Override
     public boolean equals(Object u) {
         return ((u instanceof LoginFailure) && (Id == ((LoginFailure) u).Id));
@@ -99,7 +102,7 @@ public class LoginFailure extends Stored {
 
     public static void entityUpdated(Stored Entity, boolean Cascade) {
     }
-
+    @SuppressWarnings("unchecked")
     public static ArrayList<LoginFailure> listAll(long Ip){
         ArrayList<LoginFailure> r = new ArrayList(Entities.Fetch(
                 LoginFailure.class,

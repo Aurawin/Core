@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr.transport.methods.imap;
 
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.protocol.imap.Protocol_IMAP_4_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
@@ -12,6 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import static com.aurawin.core.rsr.transport.methods.Result.NotAuthorizied;
 import static com.aurawin.core.rsr.transport.methods.Result.Ok;
+
+import static com.aurawin.core.rsr.def.CredentialResult.None;
 
 /**
  * Created by atbrunner on 2/12/18.
@@ -28,23 +31,33 @@ public class LOGIN extends Item {
             InvocationTargetException, NoSuchMethodException
     {
         Protocol_IMAP_4_1 h = (Protocol_IMAP_4_1) transport;
+        CredentialResult cr = CredentialResult.None;
+
         h.Credentials.Empty();
         if (h.Request.Parameters.size()==2) {
-            if (Security.Login(
+            cr = Security.Login(
                     Table.Security.Mechanism.IMAP.Basic,
                     h.Owner.Engine.RealmId,
                     h.getRemoteIp(),
                     h.Request.Parameters.get(0).Name,
                     h.Request.Parameters.get(1).Name
-            )){
-                return Ok;
-            } else {
-                return NotAuthorizied;
+            );
+            switch (cr){
+                case None : {
+                    return Result.None;
+                }
+                case Passed:{
+                    return Ok;
+                }
+                case Failed: {
+                    return NotAuthorizied;
+                }
+                case Blocked:{
+                    return NotAuthorizied;
+                }
             }
-
-        } else {
-            return NotAuthorizied;
         }
+        return NotAuthorizied;
     }
 
 }

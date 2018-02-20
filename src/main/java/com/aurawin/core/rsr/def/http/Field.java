@@ -20,7 +20,7 @@ public class Field {
 
     public static final String Allow = "Allow";
     public static final String Authorization = "Authorization";
-
+    public static final String Auth = "Auth";
     public static final String Cookie= "Cookie";
     public static final String Date = "Date";
     public static final String DAV = "DAV";
@@ -81,7 +81,7 @@ public class Field {
     public static final String Id = "Id";
     public static final String ResourceId = "Rcid";
     public static final String UserKind = "Euk";
-    public static final String Auth = "Auth";
+
     public static final String User = "User";
     public static final String Code = "Code";
     public static final String Search = "Srch";
