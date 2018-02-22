@@ -56,12 +56,17 @@ public class SecurityMechanismBasic extends Mechanism {
     }
 
     @Override
-    public CredentialResult DoLogin(long DomainId, String Username, String Password) {
+    public CredentialResult DoLogin(long DomainId, long Ip, String Username, String Password) {
         return null;
     }
 
     @Override
-    public CredentialResult DoAuthenticate(long DomainId, String User, String Salt) {
+    public CredentialResult DoAuthenticate(long DomainId, long Ip, String User, String Digest) {
+        return null;
+    }
+    @Override
+
+    public CredentialResult DoPeer(long Ip) {
         return null;
     }
 

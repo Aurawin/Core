@@ -4,5 +4,5 @@ import com.aurawin.core.rsr.def.CredentialResult;
 
 
 public interface Authenticate {
-    CredentialResult DoAuthenticate(long RealmId, String User, String Salt);
+    CredentialResult DoAuthenticate(long RealmId, long Ip, String User, String Digest);
 }

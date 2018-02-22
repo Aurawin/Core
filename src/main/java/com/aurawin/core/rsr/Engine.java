@@ -55,7 +55,7 @@ public abstract class Engine extends Thread  {
         transportObject = aTransport.newInstance();
         transportKind = aKind;
 
-        transportObject.registerSecurityMechanism();
+        transportObject.registerSecurityMechanisms();
 
         BufferSizeRead = Settings.RSR.Server.BufferSizeRead;
         BufferSizeWrite = Settings.RSR.Server.BufferSizeWrite;

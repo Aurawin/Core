@@ -3,6 +3,9 @@ package com.aurawin.core.solution;
 import com.aurawin.core.lang.Table;
 import sun.security.x509.AlgorithmId;
 
+import java.security.cert.Certificate;
+//import sun.security.x509.AlgorithmId;
+
 import java.io.File;
 
 public class Settings {
@@ -85,6 +88,40 @@ public class Settings {
                     public static boolean On = true;
                     public static boolean Off = false;
                 }
+                public static class Authenticate {
+                   public static String Name = "Authenticate";
+                   public static String Plain = "Plain";
+                   public static String Login = "Login";
+                   public static String DigestMD5 = "DIGEST-MD5";
+                }
+                public static class Method{
+                    public static String Capability    = "Capability";
+                    public static String Noop          = "Noop";
+                    public static String Fetch         = "Fetch";
+                    public static String UID           = "UID";
+                    public static String Search        = "Search";
+                    public static String Store         = "Store";
+                    public static String Close         = "Close";
+                    public static String Check         = "Check";
+                    public static String Expunge       = "Expunge";
+                    public static String Logout        = "Logout";
+                    public static String Login         = "Login";
+                    public static String StartTLS      = "StartTLS";
+                    public static String Select        = "Select";
+                    public static String Examine       = "Examine";
+                    public static String Created       = "Create";
+                    public static String CopyUID       = "CopyUID";
+                    public static String Delete        = "Delete";
+                    public static String Rename        = "Rename";
+                    public static String Subscribe     = "Subscribe";
+                    public static String UnSubscribe   = "UnSubscribe";
+                    public static String Status        = "Status";
+                    public static String List          = "List";
+                    public static String LSub          = "LSub";
+                    public static String Append        = "Append";
+                    public static String ID            = "ID";
+                  }
+
                 public static class Command{
                     public static String Ok = "OK";
                     public static String No = "NO";
@@ -97,6 +134,7 @@ public class Settings {
                     public static String Search  = "search";
                     public static String Expunge = "expunge";
                     public static String UID     = "uid";
+
 
                     public static class Parameter {
                         public static String Flags          = "flags";

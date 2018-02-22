@@ -72,8 +72,8 @@ public class LoginFailure extends Stored {
     @Column(name = Database.Field.LoginFailure.Password)
     public String Password;
 
-    @Column(name = Database.Field.LoginFailure.Salt)
-    public String Salt;
+    @Column(name = Database.Field.LoginFailure.Digest)
+    public String Digest;
 
     @Override
     public boolean equals(Object u) {

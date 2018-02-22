@@ -80,7 +80,7 @@ public class Protocol_IMAP_4_1 extends Item implements Transport{
         return CredentialResult.None;
     }
 
-    @Override public void registerSecurityMechanism(){
+    @Override public void registerSecurityMechanisms(){
         Security.registerMechanism(new SecurityMechanismBasic());
     };
 

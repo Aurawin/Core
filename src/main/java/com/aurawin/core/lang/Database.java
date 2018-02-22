@@ -121,7 +121,7 @@ public class Database {
             public static final String Instant="itmisn";
             public static final String Username="itmun";
             public static final String Password="itmpd";
-            public static final String Salt="itmslt";
+            public static final String Digest="itmdsgt";
         }
         public static class Ban{
             public static final String Id="itmid";

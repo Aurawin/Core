@@ -80,7 +80,7 @@ public class Protocol_HTTP_1_1 extends Item implements Transport,ResourceRequire
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }
-    @Override public void registerSecurityMechanism(){
+    @Override public void registerSecurityMechanisms(){
         Security.registerMechanism(new SecurityMechanismBasic());
     };
     @Override public Result resourceUploaded(Session ssn){ return Result.Failure;}

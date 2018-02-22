@@ -2,6 +2,10 @@ package com.aurawin.core.rsr.def.imap.search;
 
 import com.aurawin.core.solution.Settings;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.aurawin.core.solution.Settings.RSR.Items.IMAP.Search.Argument.*;
 
 public enum Argument {
@@ -42,7 +46,61 @@ public enum Argument {
     srchArgUnKeyword,
     srchArgUnseen,
     srchArgUnknown;
+    static Set<Argument>ReadAhead=  new HashSet<>(Arrays.asList(
+            srchArgBcc,
+            srchArgBefore,
+            srchArgBody,
+            srchArgCC,
+            srchArgFrom,
+            srchArgKeyword,
+            srchArgSubject,
+            srchArgText,
+            srchArgTo,
+            srchArgUID,
+            srchArgMessageID,
+            srchArgUnKeyword,
+            srchArgHeader
+    ));
+    static Set<Argument>SearchSingle = new HashSet<>(Arrays.asList(
+            srchArgAnswered,
+            srchArgDeleted,
+            srchArgDraft,
+            srchArgFlagged,
+            srchArgNew,
+            srchArgOld,
+            srchArgRecent,
+            srchArgSeen,
+            srchArgUnAnwered,
+            srchArgUnDeleted,
+            srchArgUnDraft,
+            srchArgUnFlagged,
+            srchArgUnseen
+    ));
+    static Set<Argument>SearchDouble = new HashSet<>(Arrays.asList(
+            srchArgBcc,
+            srchArgBefore,
+            srchArgBody,
+            srchArgCC,
+            srchArgFrom,
+            srchArgKeyword,
+            srchArgLarger,
+            srchArgOn,
+            srchArgSentBefore,
+            srchArgSentOn,
+            srchArgSentSince,
+            srchArgSince,
+            srchArgSmaller,
+            srchArgSubject,
+            srchArgText,
+            srchArgTo,
+            srchArgUID,
+            srchArgMessageID,
+            srchArgUnKeyword
 
+    ));
+    static Set<Argument>SearchTripple = new HashSet<>(Arrays.asList(
+            srchArgHeader
+    ));
     static Argument fromString(String sData) {
         if (sData.equalsIgnoreCase(ALL)) {
             return srchArgAll;

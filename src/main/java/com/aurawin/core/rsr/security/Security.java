@@ -135,7 +135,7 @@ public class Security {
                 findFirst().
                 orElse(null);
         if (Mech!=null){
-            result = Mech.DoLogin(RealmId,User,Pass);
+            result = Mech.DoLogin(RealmId,Ip,User,Pass);
             if (result==CredentialResult.Passed )  {
                 // check last and clear entries from log if threshold meets
 

@@ -59,7 +59,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
     public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException;
-    public abstract void registerSecurityMechanism();
+    public abstract void registerSecurityMechanisms();
 
     protected void setOwner(Items aOwner){
         Owner=aOwner;
