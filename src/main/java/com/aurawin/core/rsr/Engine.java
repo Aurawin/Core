@@ -29,8 +29,11 @@ public abstract class Engine extends Thread  {
     public volatile Security SSL;
     public volatile EngineState State;
 
+
+    public volatile String Root;
     public volatile String Realm;
     public volatile long RealmId;
+
 
     public Boolean Infinite = false;
     protected Class<? extends Item>  transportClass;
