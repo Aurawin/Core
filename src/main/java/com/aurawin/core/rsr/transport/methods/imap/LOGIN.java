@@ -37,7 +37,7 @@ public class LOGIN extends Item {
         if (h.Request.Parameters.size()==2) {
             cr = Security.Login(
                     Table.Security.Mechanism.IMAP.Basic,
-                    h.Owner.Engine.RealmId,
+                    h.Owner.Engine.realmId,
                     h.getRemoteIp(),
                     h.Request.Parameters.get(0).Name,
                     h.Request.Parameters.get(1).Name

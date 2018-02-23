@@ -92,7 +92,7 @@ public class GET extends Item {
                     if (h.Credentials.Passport.State!=psValid) {
                         cr = Security.Login(
                                 Table.Security.Mechanism.HTTP.Basic,
-                                h.Owner.Engine.RealmId,
+                                h.Owner.Engine.realmId,
                                 h.getRemoteIp(),
                                 h.Credentials.Passport.Username,
                                 h.Credentials.Passport.Password
@@ -101,7 +101,7 @@ public class GET extends Item {
                         if (h.Credentials.Passport.State!=psValid){
                             cr = Security.Login(
                                     Table.Security.Mechanism.HTTP.Basic,
-                                    h.Owner.Engine.RealmId,
+                                    h.Owner.Engine.realmId,
                                     h.getRemoteIp(),
                                     h.Credentials.Passport.Username,
                                     h.Credentials.Passport.Password

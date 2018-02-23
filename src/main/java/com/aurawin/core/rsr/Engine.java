@@ -23,7 +23,7 @@ import java.util.Set;
 
 public abstract class Engine extends Thread  {
     public volatile InetSocketAddress Address;
-    public volatile static long nextId;
+    protected volatile static long nextId;
 
     public Plugins Plugins;
     public volatile Security SSL;
@@ -31,7 +31,8 @@ public abstract class Engine extends Thread  {
 
 
     public volatile String Realm;
-    public volatile long RealmId;
+    public volatile long realmId;
+
     public volatile String Root;
     public volatile long rootId;
     public volatile String rootDigest;
