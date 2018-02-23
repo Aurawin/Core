@@ -30,9 +30,11 @@ public abstract class Engine extends Thread  {
     public volatile EngineState State;
 
 
-    public volatile String Root;
     public volatile String Realm;
     public volatile long RealmId;
+    public volatile String Root;
+    public volatile long rootId;
+    public volatile String rootDigest;
 
 
     public Boolean Infinite = false;
