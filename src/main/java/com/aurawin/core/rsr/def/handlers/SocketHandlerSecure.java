@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.def.handlers;
 
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.solution.Settings;
@@ -109,6 +110,7 @@ public class SocketHandlerSecure extends SocketHandler {
             beginHandshake();
 
         } catch (Exception e) {
+            Syslog.Append("SocketHandlerSecure", "Setup", e.getMessage());
             Owner.Errors.add(eSSL);
             Owner.Error();
             Shutdown();
@@ -154,6 +156,7 @@ public class SocketHandlerSecure extends SocketHandler {
             Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
             return SocketHandlerResult.Complete;
         } catch (Exception e){
+            Syslog.Append("SocketHandlerSecure", "Send", e.getMessage());
             return SocketHandlerResult.Failure;
         }
     }
@@ -193,6 +196,7 @@ public class SocketHandlerSecure extends SocketHandler {
             }
 
         } catch (Exception e){
+            Syslog.Append("SocketHandlerSecure", "Recv", e.getMessage());
             return SocketHandlerResult.Failure;
         }
         return SocketHandlerResult.Complete;

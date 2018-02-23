@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.def.handlers;
 
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
 import java.io.IOException;
@@ -23,10 +24,9 @@ public abstract class SocketHandler implements SocketMethods {
             Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
             Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
 
-        } catch (IllegalBlockingModeException ibme){
 
-        } catch (IOException ie){
-
+        } catch (IOException ex){
+            Syslog.Append("SocketHandler", "Setup", ex.getMessage());
         }
     }
     public void Shutdown(){
@@ -36,8 +36,8 @@ public abstract class SocketHandler implements SocketMethods {
         try {
             if (Channel!=null)  Channel.close();
             if (Key!=null) Key.cancel();
-        } catch (IOException e){
-
+        } catch (Exception ex){
+            Syslog.Append("SocketHandler", "Release", ex.getMessage());
         } finally{
             Owner=null;
             Channel=null;

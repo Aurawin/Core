@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.def.handlers;
 
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
 
@@ -24,7 +25,7 @@ public class SocketHandlerPlain extends SocketHandler {
             try {
                 Channel.close();
             } catch (IOException ioe) {
-                // do nothing.  already closed.
+                Syslog.Append("SocketHandlerPlain", "Teardown", ex.getMessage());
             }
         }
         Owner.Disconnected();
@@ -37,7 +38,9 @@ public class SocketHandlerPlain extends SocketHandler {
         try {
             Channel.configureBlocking(false);
         } catch (IOException ioe) {
+            Syslog.Append("SocketHandlerPlain", "Setup", ex.getMessage());
             Shutdown();
+
             return;
         }
         try {
@@ -49,10 +52,8 @@ public class SocketHandlerPlain extends SocketHandler {
                     Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
                     break;
             }
-        } catch (IllegalBlockingModeException ibme){
-            Shutdown();
-            return;
-        } catch (ClosedChannelException cce) {
+        } catch (Exception ex){
+            Syslog.Append("SocketHandlerPlain", "Setup", ex.getMessage());
             Shutdown();
             return;
         }
