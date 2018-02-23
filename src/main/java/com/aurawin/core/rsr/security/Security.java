@@ -168,36 +168,47 @@ public class Security {
         }
     }
 
-    public CredentialResult Authenticate(long Ip, long RealmId, String User, String Salt)throws
+    public CredentialResult Authenticate(String Mechanism, long RealmId, long Ip,String User, String Digest)throws
             InvocationTargetException,NoSuchMethodException,IllegalAccessException
     {
         CredentialResult result = CredentialResult.None;
-
-        if (result==CredentialResult.Passed )  {
-
-        } else {
-            // Obtain all Login Failures for this Ip
-            ArrayList<LoginFailure> Fails = LoginFailure.listAll(Ip);
-
-            if (Fails.size()>0) {
+        Mechanism Mech = Factory.stream().
+                filter((M)-> M.Key.equalsIgnoreCase(Mechanism)).
+                findFirst().
+                orElse(null);
+        if (Mech!=null){
+            result = Mech.DoAuthenticate(RealmId,Ip,User,Digest);
+            if (result==CredentialResult.Passed )  {
+                // check last and clear entries from log if threshold meets
 
             } else {
-                LoginFailure lf = new LoginFailure();
-                lf.Username=User;
-                lf.DomainId=RealmId;
-                lf.Instant=Instant.now();
-                lf.Ip=Ip;
+                // Obtain all Login Failures for this Ip
+                ArrayList<LoginFailure> Fails = LoginFailure.listAll(Ip);
 
-                Entities.Save(lf,CascadeOff);
+                if (Fails.size()>0) {
+
+                } else {
+                    LoginFailure lf = new LoginFailure();
+                    lf.Password="";
+                    lf.Digest=Digest;
+                    lf.Username=User;
+                    lf.DomainId=RealmId;
+                    lf.Instant=Instant.now();
+                    lf.Ip=Ip;
+
+                    Entities.Save(lf,CascadeOff);
+                }
+
+                Ban ban = new Ban();
+                ban.Ip=Ip;
+                Entities.Save(ban,CascadeOff);
+                return CredentialResult.Blocked;
             }
 
-            Ban ban = new Ban();
-            ban.Ip=Ip;
-            Entities.Save(ban,CascadeOff);
-            return CredentialResult.Blocked;
-
+            return result;
+        } else{
+            return result;
         }
-        return result;
     }
 
     public Security(){

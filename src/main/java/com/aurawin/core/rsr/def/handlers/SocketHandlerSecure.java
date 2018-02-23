@@ -106,11 +106,8 @@ public class SocketHandlerSecure extends SocketHandler {
             Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
             Channel.configureBlocking(false);
 
-            switch (Owner.Kind) {
-                case Server:
-                    beginHandshake();
-                    break;
-            }
+            beginHandshake();
+
         } catch (Exception e) {
             Owner.Errors.add(eSSL);
             Owner.Error();
