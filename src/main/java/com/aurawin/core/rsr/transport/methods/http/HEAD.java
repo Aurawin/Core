@@ -1,7 +1,7 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -22,7 +22,7 @@ public class HEAD extends Item {
     }
     public Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,InvocationTargetException{
         Result r = Result.Ok;
-        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
+        HTTP_1_1 h = (HTTP_1_1) transport;
         h.Response.Headers.Update(Field.Connection,h.Request.Headers.ValueAsString(Field.Connection));
         h.Resolution = h.Request.Resolve(ssn);
         switch (h.Resolution) {

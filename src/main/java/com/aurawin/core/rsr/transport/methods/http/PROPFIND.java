@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -26,7 +26,7 @@ public class PROPFIND extends Item {
 
     public Result onProcess(Session ssn, Transport transport) {
         Result r = Result.Ok;
-        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
+        HTTP_1_1 h = (HTTP_1_1) transport;
         if (CredentialResult.Granted.contains(h.validateCredentials(ssn))) {
             h.methodState = h.resourceFindProperties(ssn);
             if (h.Response.Status==null) {

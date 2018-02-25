@@ -6,7 +6,6 @@ import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Version_1_1;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.dav.*;
@@ -30,7 +29,7 @@ import static java.time.Instant.now;
 @Protocol(
         Version = Version_1_1.class
 )
-public class HTTP_1_1 extends Protocol_HTTP_1_1 {
+public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1 {
     public static boolean dummyFile = false;
 
     public HTTP_1_1() throws InstantiationException,IllegalAccessException{

@@ -1,6 +1,6 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -18,7 +18,7 @@ public class SEARCH extends Item {
     }
 
     public Result onProcess(Session ssn, Transport transport) {
-        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
+        HTTP_1_1 h = (HTTP_1_1) transport;
 
         //todo
 

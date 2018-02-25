@@ -1,7 +1,7 @@
 package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -19,7 +19,7 @@ public class OPTIONS extends Item {
     }
 
     public Result onProcess(Session ssn, Transport transport) {
-        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
+        HTTP_1_1 h = (HTTP_1_1) transport;
         h.Response.Status=s200;
         h.Response.Headers.Update(Field.DAV, Settings.RSR.Items.HTTP.DAV.Compliance);
         h.Response.Headers.Update(Field.Allow,h.Methods.getAllMethods());

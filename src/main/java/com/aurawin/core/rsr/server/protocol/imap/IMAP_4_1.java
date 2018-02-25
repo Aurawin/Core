@@ -1,12 +1,9 @@
-package com.aurawin.core.rsr.client.protocol.imap;
+package com.aurawin.core.rsr.server.protocol.imap;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
-
-import static com.aurawin.core.rsr.def.imap.Status.*;
-
 import com.aurawin.core.rsr.def.imap.*;
 import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.security.Security;
@@ -19,13 +16,16 @@ import org.hibernate.Session;
 import java.nio.channels.SocketChannel;
 
 import static com.aurawin.core.rsr.def.imap.ResolveResult.rrNone;
-import static com.aurawin.core.rsr.def.rsrResult.*;
+import static com.aurawin.core.rsr.def.imap.Status.sFail;
+import static com.aurawin.core.rsr.def.imap.Status.sOK;
+import static com.aurawin.core.rsr.def.rsrResult.rFailure;
+import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
 import static com.aurawin.core.rsr.transport.methods.Result.None;
 
 @Protocol(
         Version = Version_4_1.class
 )
-public class Protocol_IMAP_4_1 extends Item implements Transport{
+public class IMAP_4_1 extends Item implements Transport{
 
     public volatile Request Request;
     public volatile Response Response;
@@ -33,10 +33,10 @@ public class Protocol_IMAP_4_1 extends Item implements Transport{
     public Result methodState;
 
 
-    public Protocol_IMAP_4_1() throws InstantiationException, IllegalAccessException{
+    public IMAP_4_1() throws InstantiationException, IllegalAccessException{
         super(null, ItemKind.None);
     }
-    public Protocol_IMAP_4_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
+    public IMAP_4_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
 
         Methods.registerMethod(new APPEND());
@@ -67,12 +67,12 @@ public class Protocol_IMAP_4_1 extends Item implements Transport{
     }
 
     @Override
-    public Protocol_IMAP_4_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
-        return new Protocol_IMAP_4_1(aOwner,ItemKind.Client);
+    public IMAP_4_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
+        return new IMAP_4_1(aOwner,ItemKind.Client);
     }
     @Override
-    public Protocol_IMAP_4_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws InstantiationException, IllegalAccessException{
-        Protocol_IMAP_4_1 itm = new Protocol_IMAP_4_1(aOwner,Kind);
+    public IMAP_4_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws InstantiationException, IllegalAccessException{
+        IMAP_4_1 itm = new IMAP_4_1(aOwner,Kind);
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }

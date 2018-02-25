@@ -32,7 +32,7 @@ import static com.aurawin.core.rsr.transport.methods.Result.None;
 @Protocol(
         Version = Version_1_1.class
 )
-public class Protocol_HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenticationHandler,
+public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenticationHandler,
         ResourceUploadHandler,ResourceDeleteHandler,ResourceCopyHandler,ResourceMoveHandler,ResourceLockHandler,
         ResourceCollectionHandler,ResourcePropertyHandler,ResourceRequestedHandler
 {
@@ -42,10 +42,10 @@ public class Protocol_HTTP_1_1 extends Item implements Transport,ResourceRequire
     public ResolveResult Resolution;
     public Result methodState;
 
-    public Protocol_HTTP_1_1() throws InstantiationException, IllegalAccessException{
+    public HTTP_1_1() throws InstantiationException, IllegalAccessException{
         super(null,ItemKind.None);
     }
-    public Protocol_HTTP_1_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
+    public HTTP_1_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
 
         Methods.registerMethod(new GET());
@@ -70,12 +70,12 @@ public class Protocol_HTTP_1_1 extends Item implements Transport,ResourceRequire
     }
 
     @Override
-    public Protocol_HTTP_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
-        return new Protocol_HTTP_1_1(aOwner,ItemKind.Client);
+    public HTTP_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
+        return new HTTP_1_1(aOwner,ItemKind.Client);
     }
     @Override
-    public Protocol_HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws InstantiationException, IllegalAccessException{
-        Protocol_HTTP_1_1 itm = new Protocol_HTTP_1_1(aOwner,Kind);
+    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws InstantiationException, IllegalAccessException{
+        HTTP_1_1 itm = new HTTP_1_1(aOwner,Kind);
         itm.SocketHandler.Channel=aChannel;
         return itm;
     }

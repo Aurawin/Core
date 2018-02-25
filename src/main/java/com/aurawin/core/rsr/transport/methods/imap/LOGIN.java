@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport.methods.imap;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
-import com.aurawin.core.rsr.client.protocol.imap.Protocol_IMAP_4_1;
+import com.aurawin.core.rsr.client.protocol.imap.IMAP_4_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -29,7 +29,7 @@ public class LOGIN extends Item {
     public Result onProcess(Session ssn, Transport transport) throws IllegalAccessException,
             InvocationTargetException, NoSuchMethodException
     {
-        Protocol_IMAP_4_1 h = (Protocol_IMAP_4_1) transport;
+        IMAP_4_1 h = (IMAP_4_1) transport;
         CredentialResult cr = CredentialResult.None;
 
         h.Credentials.Empty();

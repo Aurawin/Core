@@ -3,12 +3,11 @@ package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.security.Security;
-import com.aurawin.core.solution.Table;
 import org.hibernate.Session;
 
 import static com.aurawin.core.lang.Table.Security.Mechanism.HTTP.Basic;
@@ -25,7 +24,7 @@ public class COPY extends Item {
         super(key);
     }
     public Result onProcess(Session ssn, Transport transport) {
-        Protocol_HTTP_1_1 h = (Protocol_HTTP_1_1) transport;
+        HTTP_1_1 h = (HTTP_1_1) transport;
         if (CredentialResult.Granted.contains(h.validateCredentials(ssn))) {
             h.methodState = h.resourceCopied(ssn);
             if (h.Response.Status==null) {

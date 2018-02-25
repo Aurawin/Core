@@ -2,33 +2,22 @@ package com.aurawin.core.rsr.client.protocol;
 
 
 import com.aurawin.core.rsr.Items;
-import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Version_1_1;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
-import com.aurawin.core.rsr.transport.methods.http.dav.*;
-import com.aurawin.core.solution.Settings;
-import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.ByteArrayOutputStream;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 
-import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.transport.methods.Result.Ok;
 import static java.time.Instant.now;
 
 @Protocol(
         Version = Version_1_1.class
 )
-public class HTTP_1_1 extends Protocol_HTTP_1_1 {
+public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1 {
     public static boolean dummyFile = false;
 
     public HTTP_1_1() throws InstantiationException,IllegalAccessException{
@@ -39,12 +28,12 @@ public class HTTP_1_1 extends Protocol_HTTP_1_1 {
     }
 
     @Override
-    public com.aurawin.core.rsr.client.protocol.HTTP_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
-        return new com.aurawin.core.rsr.client.protocol.HTTP_1_1(aOwner,ItemKind.Client);
+    public HTTP_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
+        return new HTTP_1_1(aOwner,ItemKind.Client);
     }
     @Override
-    public com.aurawin.core.rsr.client.protocol.HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException{
-        com.aurawin.core.rsr.client.protocol.HTTP_1_1 itm = new com.aurawin.core.rsr.client.protocol.HTTP_1_1(aOwner, aKind);
+    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException{
+        HTTP_1_1 itm = new HTTP_1_1(aOwner, aKind);
         itm.setChannel(aChannel);
         return itm;
     }
