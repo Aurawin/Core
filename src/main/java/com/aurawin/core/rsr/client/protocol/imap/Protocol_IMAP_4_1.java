@@ -1,4 +1,4 @@
-package com.aurawin.core.rsr.protocol.imap;
+package com.aurawin.core.rsr.client.protocol.imap;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;

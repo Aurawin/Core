@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport.methods.http;
 
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -13,10 +13,11 @@ import static com.aurawin.core.lang.Table.Security.Mechanism.HTTP.Basic;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.http.Status.s510;
 import static com.aurawin.core.rsr.transport.methods.Result.NotAuthorizied;
+import static com.aurawin.core.solution.Table.RSR.HTTP.Method.MakeCollection;
 
 public class MKCOL extends Item {
     public MKCOL() {
-        super("MKCOL");
+        super(MakeCollection);
     }
     public MKCOL(String key) {
         super(key);

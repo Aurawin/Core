@@ -64,20 +64,25 @@ public class Settings {
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static class Security{
             public static float BufferGrowFactor=1.2f;
+            public static int HandshakeTimeout = 100000; // seconds
         }
         public static class Items{
             public static int AutoremoveEmptyItemsDelay = 40*1000;
             public static int AutoremoveCleanupInterval = 10*1000;
             public static class Header {
                 public final static String Separator = "\r\n";
-                public final static Integer SeparatorLength = Separator.length();
-                public final static Integer MaxSize=1024*1024;
+                public final static int SeparatorLength = Separator.length();
+                public final static int MaxSize=1024*1024;
+            }
+            public static class TransportConnect{
+                public static int MaxTries = 10;
+                public static int TryInterleave =10000;
             }
             public static class HTTP {
                 public static class Payload {
-                    public final static Integer MaxHeaderSize = 1024 * 1024;
+                    public final static int MaxHeaderSize = 1024 * 1024;
                     public final static String Separator = "\r\n\r\n";
-                    public final static Integer SeparatorLength = Separator.length();
+                    public final static int SeparatorLength = Separator.length();
                 }
                 public static class DAV{
                     public static final String Compliance = "1, 2";
@@ -94,33 +99,6 @@ public class Settings {
                    public static String Login = "Login";
                    public static String DigestMD5 = "DIGEST-MD5";
                 }
-                public static class Method{
-                    public static String Capability    = "Capability";
-                    public static String Noop          = "Noop";
-                    public static String Fetch         = "Fetch";
-                    public static String UID           = "UID";
-                    public static String Search        = "Search";
-                    public static String Store         = "Store";
-                    public static String Close         = "Close";
-                    public static String Check         = "Check";
-                    public static String Expunge       = "Expunge";
-                    public static String Logout        = "Logout";
-                    public static String Login         = "Login";
-                    public static String StartTLS      = "StartTLS";
-                    public static String Select        = "Select";
-                    public static String Examine       = "Examine";
-                    public static String Created       = "Create";
-                    public static String CopyUID       = "CopyUID";
-                    public static String Delete        = "Delete";
-                    public static String Rename        = "Rename";
-                    public static String Subscribe     = "Subscribe";
-                    public static String UnSubscribe   = "UnSubscribe";
-                    public static String Status        = "Status";
-                    public static String List          = "List";
-                    public static String LSub          = "LSub";
-                    public static String Append        = "Append";
-                    public static String ID            = "ID";
-                  }
 
                 public static class Command{
                     public static String Ok = "OK";

@@ -286,7 +286,10 @@ public class Table {
             public static final String ItemsLoop = "table.exception.rsr.items-loop";
             public static final String ManagerAccept = "table.exception.rsr.manager-accept";
             public static final String ManagerConnectWithBind = "table.exception.rsr.manager-connect-bind";
+            public static final String ManagerConnectConstructor = "table.exception.rsr.manager-connect-constructor";
             public static final String ManagerConnect = "table.exception.rsr.manager-connect";
+            public static final String ManagerConnectTransport = "table.exception.rsr.manager-connect-transport";
+
 
 
             public static class WebSocket {

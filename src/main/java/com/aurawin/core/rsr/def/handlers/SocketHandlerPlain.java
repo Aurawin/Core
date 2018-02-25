@@ -24,7 +24,7 @@ public class SocketHandlerPlain extends SocketHandler {
         if (Channel.isOpen()==true) {
             try {
                 Channel.close();
-            } catch (IOException ioe) {
+            } catch (IOException ex) {
                 Syslog.Append("SocketHandlerPlain", "Teardown", ex.getMessage());
             }
         }
@@ -37,10 +37,9 @@ public class SocketHandlerPlain extends SocketHandler {
     public void Setup(){
         try {
             Channel.configureBlocking(false);
-        } catch (IOException ioe) {
+        } catch (IOException ex) {
             Syslog.Append("SocketHandlerPlain", "Setup", ex.getMessage());
             Shutdown();
-
             return;
         }
         try {
@@ -96,7 +95,6 @@ public class SocketHandlerPlain extends SocketHandler {
             while (Owner.Owner.BufferWrite.hasRemaining()) {
                 try {
                     Channel.write(Owner.Owner.BufferWrite);
-
                 } catch (IOException ioe){
                     return SocketHandlerResult.Failure;
                 }

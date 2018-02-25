@@ -4,7 +4,7 @@ package com.aurawin.core.rsr.transport.methods.http;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;
@@ -19,11 +19,12 @@ import static com.aurawin.core.rsr.security.fetch.PassportState.psValid;
 import static com.aurawin.core.rsr.transport.methods.Result.NotAuthorizied;
 import static com.aurawin.core.rsr.transport.methods.Result.NotFound;
 import static com.aurawin.core.rsr.transport.methods.Result.Ok;
+import static com.aurawin.core.solution.Table.RSR.HTTP.Method.Get;
 
 public class GET extends Item {
 
     public GET() {
-        super("GET");
+        super(Get);
     }
     public GET(String key) {
         super(key);

@@ -6,7 +6,7 @@ import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Version_1_1;
-import com.aurawin.core.rsr.protocol.http.Protocol_HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.Protocol_HTTP_1_1;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.dav.*;

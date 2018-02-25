@@ -3,6 +3,7 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
@@ -75,40 +76,30 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
 
     }
     @SuppressWarnings("unchecked")
-    public <T extends Item>T Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
+    public TransportConnect Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
     {
+        TransportConnect tc = null;
         Items itms = getManager();
         if (itms!=null) {
             Class c = Owner.transportClass;
             Object o = Owner.transportObject;
+
             if ((c!=null) && (o !=null)) {
+                Method m = c.getMethod("newInstance", itemConstructorParams);
                 try {
-                    SocketChannel aChannel = SocketChannel.open();
-                    if (Owner.Address!=null) {
-                        try {
-                            aChannel.bind(Owner.Address);
-                        } catch (Exception e){
-                            Syslog.Append(getClass().getCanonicalName(),"Connect.Bind", Table.Format(Table.Exception.RSR.ManagerConnectWithBind,e.getMessage(),Owner.Address.toString(),address.toString()));
-                        }
-                    }
-
-                    aChannel.configureBlocking(false);
-                    aChannel.connect(address);
-                    Method m = c.getMethod("newInstance", itemConstructorParams);
                     m.setAccessible(true);
-                    Item itm = (Item) m.invoke(o, itms,aChannel,ItemKind.Client);
-
-                    itms.qAddItems.add(itm);
-                    return (T) itm;
+                    tc = new TransportConnect(o,m,address);
+                    itms.qRequestConnect.add(tc);
                 } catch (Exception e){
-                    Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerConnect,e.getMessage(),address.getHostString()));
+                    Syslog.Append(getClass().getCanonicalName(), "Connect", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), address.getHostString()));
                 }
+
             } else {
-                // todo log exception
+                Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerConnectTransport,address.getHostString()));
             }
         }
-        return null;
+        return tc;
     }
 
     @SuppressWarnings("unchecked")
@@ -152,7 +143,12 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 Items itms = null;
                 while (it.hasNext()) {
                     itms = it.next();
-                    if ( (itms!=null)&& (itms.isEmpty()) && (itms.RemovalRequested==false) && (Expired.isAfter(itms.LastUsed)) ) {
+                    if (
+                            (itms!=null)&& (itms.isEmpty() && (itms.qRequestConnect.isEmpty())) &&
+
+                            (itms.RemovalRequested==false) &&
+                            (Expired.isAfter(itms.LastUsed))
+                    ) {
                         itms.RemovalRequested = true;
                     }
                 }

@@ -9,6 +9,9 @@ import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.security.Credentials;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.Channel;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.EnumSet;
@@ -25,6 +28,8 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public ItemState State;
 
     public Instant TTL;
+    public InetSocketAddress Address;
+    public InetSocketAddress bindAddress;
 
     protected SocketHandler SocketHandler;
 
@@ -72,12 +77,17 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Buffers=null;
         Credentials=null;
     }
-
+    public void setChannel(SocketChannel aChannel)
+    {
+        SocketHandler.Channel=aChannel;
+    }
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
     }
+
     public long getRemoteIp(){
-        return Bytes.toLongByTripple(SocketHandler.Channel.socket().getInetAddress().getAddress());
+        return Bytes.toLongByTripple(this.Address.getAddress().getAddress());
+        //return Bytes.toLongByTripple(SocketHandler.Channel.socket().getInetAddress().getAddress());
     }
 
 

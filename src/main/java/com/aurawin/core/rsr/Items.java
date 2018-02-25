@@ -2,6 +2,8 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
+import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerResult;
@@ -20,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 
+import java.nio.channels.SocketChannel;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +47,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private rsrResult ioResult;
     private rsrResult evResult;
     private Item itm;
+    private TransportConnect tcItem;
+    private TransportConnect tcNextItem;
     private Iterator<Item> it;
     private Iterator<SelectionKey> isk;
     public Security Security;
@@ -52,7 +57,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     protected boolean RemovalRequested;
 
     public Executor Background;
-
+    protected ConcurrentLinkedQueue<TransportConnect> qRequestConnect;
     protected ConcurrentLinkedQueue<Item> qAddItems;
     protected ConcurrentLinkedQueue<Item> qWriteItems;
     protected ConcurrentLinkedQueue<Item> qRemoveItems;
@@ -73,6 +78,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         qAddItems = new ConcurrentLinkedQueue<Item>();
         qWriteItems = new ConcurrentLinkedQueue<Item>();
         qRemoveItems = new ConcurrentLinkedQueue<Item>();
+        qRequestConnect = new ConcurrentLinkedQueue<TransportConnect>();
         BufferRead = ByteBuffer.allocate(Engine.BufferSizeRead);
         BufferWrite = ByteBuffer.allocate(Engine.BufferSizeWrite);
         Security = new Security();
@@ -154,6 +160,73 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             }
             itm=qAddItems.poll();
         }
+        // process client connect requests
+        tcItem = qRequestConnect.poll();
+        tcNextItem = null;
+        while (tcItem!=null) {
+            if (Instant.now().isAfter(tcItem.getTTL())) {
+                SocketChannel aChannel = SocketChannel.open();
+                try {
+                    if (tcItem.getOwner() == null) {
+                        itm = (Item) tcItem.getMethod().invoke(
+                                tcItem.getObject(),
+                                this,
+                                aChannel,
+                                ItemKind.Client
+                        );
+                        itm.Address = tcItem.getAddress();
+                        itm.bindAddress = Engine.Address;
+                        itm.Kind = ItemKind.Client;
+
+                        tcItem.setOwner(itm);
+                    }
+                    itm = tcItem.getOwner();
+                    itm.setChannel(aChannel);
+
+                    if (tcItem.getAddress() != null) {
+                        try {
+                            if (itm.bindAddress != null) {
+                                aChannel.bind(itm.bindAddress);
+                            }
+                            aChannel.configureBlocking(true);
+                            try {
+                                aChannel.connect(itm.Address); // todo what about ssl?
+                                qAddItems.add(itm);
+                                aChannel.configureBlocking(false);
+                            } catch (Exception e) {
+                                tcItem.incTry();
+                                if (tcItem.getTries() < Settings.RSR.Items.TransportConnect.MaxTries) {
+                                    tcItem.setTTL(Instant.now().plusMillis(Settings.RSR.Items.TransportConnect.TryInterleave));
+                                    qRequestConnect.add(tcItem);
+                                    aChannel.close();
+                                } else {
+                                }
+                                itm.setChannel(null);
+                                Syslog.Append(getClass().getCanonicalName(), "processItems.Connect", Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(), tcItem.getAddress().getHostString()));
+                            }
+                        } catch (Exception e) {
+                            aChannel.close();
+                            Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Bind", Table.Format(Table.Exception.RSR.ManagerConnectWithBind, e.getMessage(), Engine.Address.toString(), tcItem.getAddress().toString()));
+                        }
+                    }
+
+                } catch (Exception e) {
+                    aChannel.close();
+                    Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Constructor", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), tcItem.getAddress().toString()));
+
+                }
+            } else {
+                  qRequestConnect.add(tcItem);
+            }
+            tcNextItem = qRequestConnect.poll();
+            if (tcItem == tcNextItem) {
+                tcItem = qRequestConnect.poll();
+                qRequestConnect.add(tcNextItem);
+
+            } else {
+                tcItem = tcNextItem;
+            }
+        }
         // process remove items
         itm = qRemoveItems.poll();
         while (itm!=null){
@@ -171,16 +244,22 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 while (isk.hasNext()) {
                     SelectionKey k = isk.next();
                     try {
-                        if ((k.readyOps() & SelectionKey.OP_CONNECT) != 0){
+                        if (
+                                ((k.readyOps() & SelectionKey.OP_CONNECT) != 0) &&
+                                ((k.readyOps() & SelectionKey.OP_WRITE)!=0)&&
+                                ((k.readyOps() & SelectionKey.OP_READ)!=0)
+                           )
+
+                        {
                             itm = (Item) k.attachment();
                             if (itm != null) {
                                 try {
                                     if (itm.SocketHandler.Channel.finishConnect()) {
                                         if (itm.SocketHandler.Channel.isConnected()) {
                                             if (Security.Enabled==true) {
-
                                                 itm.SocketHandler.beginHandshake();
                                             } else {
+                                                qAddItems.add(itm);
                                                 itm.State = isEstablished;
                                                 itm.Connected();
                                             }
@@ -260,7 +339,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         it=iterator();
         while (it.hasNext()) {
             itm=it.next();
-            if ( (itm.TTL!=null) && (itm.Timeout>0) && Begin.isAfter(itm.TTL)){
+            if ((itm.TTL!=null) && (itm.Timeout>0) && Begin.isAfter(itm.TTL)){
                 itm.Errors.add(eTimeout);
                 itm.Error();
                 qRemoveItems.add(itm);
@@ -350,6 +429,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         Security.Release();
         Security=null;
         Keys=null;
+
+        qRequestConnect.clear();
+        qRequestConnect=null;
 
         qAddItems.clear();
         qAddItems=null;

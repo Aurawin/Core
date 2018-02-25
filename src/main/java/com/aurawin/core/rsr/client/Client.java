@@ -5,6 +5,7 @@ import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.Entities;
 
@@ -89,7 +90,7 @@ public class Client  extends Engine {
     public synchronized void CheckForUpdates(){
 
     }
-    public synchronized <T extends Item>T Connect(InetSocketAddress address) throws Exception{
+    public synchronized TransportConnect Connect(InetSocketAddress address) throws Exception{
         return Managers.Connect(address);
     }
 }
