@@ -9,6 +9,7 @@ import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.security.Credentials;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.Channel;
@@ -39,11 +40,12 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public MethodFactory Methods;
 
 
-
-    public Item(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException{
+    @SuppressWarnings("unchecked")
+    public Item(Items aOwner, ItemKind aKind) throws InvocationTargetException,NoSuchMethodException,
+            InstantiationException, IllegalAccessException{
         Protocol TA = getClass().getAnnotation(Protocol.class);
         Class v = TA.Version();
-        Version = (Version) v.newInstance();
+        Version = (Version) v.getConstructor().newInstance();
         Credentials=new Credentials();
 
         Kind = aKind;
@@ -62,8 +64,8 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         }
     }
 
-    public abstract Item newInstance(Items aOwner) throws InstantiationException, IllegalAccessException;
-    public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException;
+    public abstract Item newInstance(Items aOwner) throws NoSuchMethodException,InvocationTargetException,InstantiationException, IllegalAccessException;
+    public abstract Item newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws NoSuchMethodException,InvocationTargetException,InstantiationException, IllegalAccessException;
     public abstract void registerSecurityMechanisms();
 
     protected void setOwner(Items aOwner){

@@ -1,9 +1,12 @@
-package com.aurawin.core.rsr.server.protocol.imap;
+package com.aurawin.core.rsr.client.protocol.imap;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.ItemKind;
+
+import static com.aurawin.core.rsr.def.imap.Status.*;
+
 import com.aurawin.core.rsr.def.imap.*;
 import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.security.Security;
@@ -17,10 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.SocketChannel;
 
 import static com.aurawin.core.rsr.def.imap.ResolveResult.rrNone;
-import static com.aurawin.core.rsr.def.imap.Status.sFail;
-import static com.aurawin.core.rsr.def.imap.Status.sOK;
-import static com.aurawin.core.rsr.def.rsrResult.rFailure;
-import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
+import static com.aurawin.core.rsr.def.rsrResult.*;
 import static com.aurawin.core.rsr.transport.methods.Result.None;
 
 @Protocol(
@@ -34,10 +34,11 @@ public class IMAP_4_1 extends Item implements Transport{
     public Result methodState;
 
 
-    public IMAP_4_1() throws InvocationTargetException,NoSuchMethodException,InstantiationException, IllegalAccessException{
+    public IMAP_4_1() throws NoSuchMethodException,InvocationTargetException,InstantiationException, IllegalAccessException{
         super(null, ItemKind.None);
     }
-    public IMAP_4_1(Items aOwner, ItemKind aKind) throws NoSuchMethodException,InvocationTargetException,InstantiationException, IllegalAccessException {
+    public IMAP_4_1(Items aOwner, ItemKind aKind) throws NoSuchMethodException,InvocationTargetException,
+            InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
 
         Methods.registerMethod(new APPEND());
@@ -69,6 +70,7 @@ public class IMAP_4_1 extends Item implements Transport{
 
     @Override
     public IMAP_4_1 newInstance(Items aOwner) throws NoSuchMethodException,InvocationTargetException,
+            NoSuchMethodException,InvocationTargetException,
             InstantiationException, IllegalAccessException{
         return new IMAP_4_1(aOwner,ItemKind.Client);
     }

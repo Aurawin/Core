@@ -8,6 +8,7 @@ import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
+import static java.net.SocketOptions.SO_LINGER;
 import static java.net.StandardSocketOptions.TCP_NODELAY;
 
 public abstract class SocketHandler implements SocketMethods {
@@ -21,6 +22,7 @@ public abstract class SocketHandler implements SocketMethods {
     public void Setup() {
         try {
             Channel.setOption(TCP_NODELAY,true);
+            Channel.socket().setSoLinger(false,0);
             Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
             Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
 

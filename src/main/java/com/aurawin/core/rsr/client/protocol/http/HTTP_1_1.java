@@ -1,34 +1,35 @@
-package com.aurawin.core.rsr.server.protocol.http;
+package com.aurawin.core.rsr.client.protocol.http;
 
 
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.rsr.Item;
-import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.stored.entities.security.Credentials;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.http.ResolveResult;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.def.http.*;
 import com.aurawin.core.rsr.def.rsrResult;
+import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.transport.Transport;
-import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.transport.methods.http.*;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stored.entities.security.Credentials;
 import com.aurawin.core.time.Time;
 import org.hibernate.Session;
+import com.aurawin.core.rsr.transport.annotations.Protocol;
+
+import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
+import static com.aurawin.core.rsr.def.http.Status.*;
+import static com.aurawin.core.rsr.def.rsrResult.*;
+import static com.aurawin.core.rsr.transport.methods.Result.None;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
-
-import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
-import static com.aurawin.core.rsr.def.http.Status.*;
-import static com.aurawin.core.rsr.def.rsrResult.rFailure;
-import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
-import static com.aurawin.core.rsr.transport.methods.Result.None;
 
 @Protocol(
         Version = Version_1_1.class
@@ -43,8 +44,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     public ResolveResult Resolution;
     public Result methodState;
 
-    public HTTP_1_1() throws NoSuchMethodException,InvocationTargetException,InstantiationException,
-            IllegalAccessException{
+    public HTTP_1_1() throws NoSuchMethodException,InvocationTargetException,InstantiationException, IllegalAccessException{
         super(null,ItemKind.None);
     }
     public HTTP_1_1(Items aOwner, ItemKind aKind) throws NoSuchMethodException,InvocationTargetException,
@@ -79,7 +79,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
     @Override
     public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws NoSuchMethodException,
-            InvocationTargetException,InstantiationException, IllegalAccessException{
+            InvocationTargetException, InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner,Kind);
         itm.SocketHandler.Channel=aChannel;
         return itm;

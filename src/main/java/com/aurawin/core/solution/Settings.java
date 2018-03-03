@@ -1,12 +1,13 @@
 package com.aurawin.core.solution;
 
+import com.aurawin.core.enryption.Base64;
 import com.aurawin.core.lang.Table;
-import sun.security.x509.AlgorithmId;
 
-import java.security.cert.Certificate;
-//import sun.security.x509.AlgorithmId;
 
-import java.io.File;
+
+import java.util.Arrays;
+
+import static com.aurawin.core.lang.Table.CRLF;
 
 public class Settings {
     public static class Properties{
@@ -43,16 +44,48 @@ public class Settings {
         public static final int InitialInstantReductionMillis = 60 * 60 * 1000; // 1 hour
     }
     public static class Security{
+        public static class Provider{
+            public static final String BouncyCastle = "BC";
+        }
         public static final int LockoutThresholdToBan = 4; // number of lockouts before it bans an IP
         public static final int LockoutThresholdWindow = 15;  // seconds
         public static final int TextMaxLength = 1024*25;
         public static final int DerMaxLength = 1024*10;
         public static final String KeyManagerStoreAlgorithm="X509";
         public static final String KeyAlgorithm="RSA";
+
         public static final int KeySize = 2048;
-        public static final String SignatureAlgorithm="MD5WithRSA";
-        public static class Certificate {
-            public static final AlgorithmId Algorithm = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
+        public static final String SignatureAlgorithm="SHA1withRSA"; // "SHA-256"; // "MD5WithRSA";
+        public static final String [] Ciphers = new String[] {"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"};
+        public static final String [] Protocols = new String[] {"TLSv1.2"};
+        public static class Certificate {//md5WithRSAEncryption_oid
+            public static class Request{
+                public static final String encode(byte[] derRequest){
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("-----BEGIN CERTIFICATE REQUEST-----");
+                    sb.append(CRLF);
+                    sb.append(Base64.Encode(derRequest,LineWrap));
+                    sb.append("-----END CERTIFICATE REQUEST-----");
+                    return sb.toString();
+
+                }
+            }
+            //public static final AlgorithmId Algorithm = new AlgorithmId(AlgorithmId.SHA512_oid);
+            public static final String SelfSignedRequestMessage="This certificate had an auto generated request";
+            public static final String NoNameOnCertificateFound="ERROR: Could not find subject's name";
+            public static final int LineWrap=65;
+            public static final String encode(byte[] derCert){
+                StringBuilder sb= new StringBuilder();
+
+                sb.append("-----BEGIN CERTIFICATE-----");
+                sb.append(CRLF);
+                sb.append(Base64.Encode(derCert,LineWrap));
+                sb.append(CRLF);
+                sb.append("-----END CERTIFICATE-----");
+
+                return sb.toString();
+
+            };
         }
     }
     public static class RSR{
@@ -65,6 +98,11 @@ public class Settings {
         public static class Security{
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 100000; // seconds
+
+            public static int SSLEngineInBuffer = 1024*512;
+            public static int SSLEngineOutBuffer = 1024*512;
+            public static int SSLEngineRemoteBuffer = 1024*512;
+
         }
         public static class Items{
             public static int AutoremoveEmptyItemsDelay = 40*1000;
@@ -218,10 +256,6 @@ public class Settings {
             public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
             public static int BufferSizeRead = 1024*1024*5; // 5MiB
             public static int BufferSizeWrite = 1024*1024; // 1MiB
-            public static int SSLEnginePeerAppDataBuffer = 1024*512;
-            public static int SSLEnginePeerNetDataBuffer = 1024*512;
-            public static int SSLEngineLocalAppDataBuffer = 1024*512;
-            public static int SSLEngineLocalNetDataBuffer = 1024*512;
         }
     }
     public static class File{

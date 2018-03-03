@@ -38,6 +38,7 @@ public class Entities {
         Loader = new Loader();
         Owner=manifest;
         if (Factory==null) {
+
             Factory = Hibernate.openSession(manifest);
             if (Loader.Cache.size()>0) {
                 ClassLoader cL = Loader.Cache.get(0);
@@ -279,7 +280,6 @@ public class Entities {
             ssn.close();
         }
     }
-
     @SuppressWarnings("unchecked")
     public static <T extends Stored>T Lookup(Class<? extends Stored> CofE,long Id) {
         Session ssn = acquireSession();
@@ -356,7 +356,7 @@ public class Entities {
             NoSuchFieldException, IllegalAccessException
     {
         try {
-            ssn.load(item, new Long(item.getId()));
+            ssn.load(item, item.getId());
         } catch (Exception e){
 
         }

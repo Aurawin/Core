@@ -174,7 +174,7 @@ public class Loader {
 
         if (ml!=null) {
             try {
-                return (Stored) ml.class_.newInstance();
+                return (Stored) ml.class_.getConstructor().newInstance();
             } catch (Exception e){
                 return null;
             }

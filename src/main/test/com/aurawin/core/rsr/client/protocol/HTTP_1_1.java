@@ -9,6 +9,7 @@ import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.Result;
 import org.hibernate.Session;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.SocketChannel;
 
 import static com.aurawin.core.rsr.transport.methods.Result.Ok;
@@ -20,19 +21,23 @@ import static java.time.Instant.now;
 public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1 {
     public static boolean dummyFile = false;
 
-    public HTTP_1_1() throws InstantiationException,IllegalAccessException{
+    public HTTP_1_1() throws NoSuchMethodException,InvocationTargetException,InstantiationException,
+            IllegalAccessException{
         super();
     }
-    public HTTP_1_1(Items aOwner, ItemKind aKind) throws InstantiationException, IllegalAccessException {
+    public HTTP_1_1(Items aOwner, ItemKind aKind) throws NoSuchMethodException,InvocationTargetException,
+            InstantiationException, IllegalAccessException {
         super(aOwner,aKind);
     }
 
     @Override
-    public HTTP_1_1 newInstance(Items aOwner) throws InstantiationException, IllegalAccessException{
+    public HTTP_1_1 newInstance(Items aOwner) throws NoSuchMethodException,InvocationTargetException,
+            InstantiationException, IllegalAccessException{
         return new HTTP_1_1(aOwner,ItemKind.Client);
     }
     @Override
-    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws InstantiationException, IllegalAccessException{
+    public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws NoSuchMethodException,InvocationTargetException,
+            InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner, aKind);
         itm.setChannel(aChannel);
         return itm;

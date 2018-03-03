@@ -10,6 +10,7 @@ import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.Entities;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
@@ -19,7 +20,7 @@ public class Client  extends Engine {
     public InetSocketAddress Address;
 
     public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
-            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
+            InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
         super (aAddress, aTransport, ItemKind.Client,aInfinate);
         State = esCreated;

@@ -48,6 +48,10 @@ public class Database {
                 public static final String name = "QueryCertificateById";
                 public static final String value = "from Certificate where Id=:Id";
             }
+            public static class All {
+                public static final String name = "QueryCertificateAll";
+                public static final String value = "from Certificate";
+            }
         }
         public static class LoginFailure{
             public static class ById {
@@ -101,8 +105,11 @@ public class Database {
             public static final String DomainId="itmdid";
             public static final String ChainCount = "itcc";
             public static final String Expires = "itexp";
-            public static final String TextKey = "ittk";
-            public static final String DerKey = "itdk";
+            public static final String Created = "itctd";
+            public static final String TextRequest = "irq";
+            public static final String DerRequest = "irder";
+            public static final String KeyPrivate = "idkp";
+            public static final String KeyPublic = "ikpb";
             public static final String Request = "itrq";
             public static final String TextCert1 = "imtc1";
             public static final String TextCert2 = "imtc2";

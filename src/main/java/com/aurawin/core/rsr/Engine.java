@@ -13,14 +13,14 @@ import com.aurawin.core.rsr.def.handlers.SocketHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
 import com.aurawin.core.solution.Settings;
-import com.aurawin.core.stored.entities.Certificate;
+import com.aurawin.core.stored.entities.security.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
-import java.util.Set;
 
 public abstract class Engine extends Thread  {
     public volatile InetSocketAddress Address;
@@ -51,7 +51,7 @@ public abstract class Engine extends Thread  {
     protected Commands Commands;
 
     public Engine(InetSocketAddress address, Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate) throws
-            IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
+            InvocationTargetException,IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
     {
         nextId=1;
         Address = address;
@@ -59,7 +59,7 @@ public abstract class Engine extends Thread  {
         Infinite=aInfinate;
 
         transportClass = aTransport;
-        transportObject = aTransport.newInstance();
+        transportObject = aTransport.getConstructor().newInstance();
         transportKind = aKind;
 
         transportObject.registerSecurityMechanisms();
@@ -118,10 +118,10 @@ public abstract class Engine extends Thread  {
 
 
     public void loadSecurity(long Id){
-        Certificate cert= Entities.Lookup(com.aurawin.core.stored.entities.Certificate.class,Id);
+        Certificate cert= Entities.Lookup(Certificate.class,Id);
         if (cert!=null) {
             try {
-                SSL.setCertificate(cert);
+                SSL.Load(cert);
             } catch (Exception e){
                 if (e!=null) e.getMessage();
             }

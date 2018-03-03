@@ -59,7 +59,7 @@ public class SocketHandlerPlain extends SocketHandler {
     }
 
     @Override
-    public void beginHandshake() throws IOException {}
+    public void beginHandshake() {}
 
     public SocketHandlerPlain(Item owner){
         super(owner);

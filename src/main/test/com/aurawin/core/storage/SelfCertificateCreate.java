@@ -2,17 +2,22 @@ package com.aurawin.core.storage;
 
 import com.aurawin.core.Environment;
 import com.aurawin.core.lang.*;
-import com.aurawin.core.rsr.def.CertSelfSigned;
+
 import com.aurawin.core.rsr.security.Security;
+import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.*;
 import com.aurawin.core.stored.annotations.AnnotatedList;
-import com.aurawin.core.stored.entities.Certificate;
+
+import com.aurawin.core.stored.entities.security.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
-public class HibernateTest {
+import java.util.ArrayList;
+
+public class SelfCertificateCreate {
+    public long Id = 1;
     public Manifest Manifest;
     @Before
     public void before() throws Exception {
@@ -28,7 +33,7 @@ public class HibernateTest {
                 50,                                     // Max statements
                 10,                                     // timeout
                 Database.Config.Automatic.Update,       //
-                "Test",                                 // database
+                "HTTPServerTest",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),           // Driver
                 new AnnotatedList()
@@ -42,9 +47,8 @@ public class HibernateTest {
 
     @Test
     public void SelfSignedCertCreate() throws Exception{
-        Certificate cert = new Certificate();
-        CertSelfSigned ssc = new CertSelfSigned(
-                "chump.aurawin.com",
+        Certificate cert = Certificate.createSelfSigned(
+                "172.16.1.1",
                 "NOC",
                 "Aurawin LLC",
                 "19309 Stage Line Trail",
@@ -55,27 +59,28 @@ public class HibernateTest {
                 "support@aurawin.com",
                 365
         );
-        cert.Request=Table.Security.Certificate.Request.SelfSigned;
-        cert.DerKey=ssc.getPrivateKeyAsDER();
-        cert.TextKey=ssc.PrintPrivateKey();
+        ArrayList<Stored> cs = Entities.Lookup(Certificate.QueryAll());
+        for (Stored c:cs){
+            if (c.getId()!=1l) Entities.Delete(c,Entities.CascadeOff);
+        }
 
-        cert.DerCert1=ssc.getCertificateAsDER();
-        cert.TextCert1 = ssc.PrintCertificate();
 
-        cert.ChainCount=1;
-        cert.Expires=ssc.ToDate.toInstant();
+        Id = 1;
+        cert.Id=1;
 
-        Entities.Save(cert,Entities.CascadeOn);
+        cert.TextRequest= Settings.Security.Certificate.SelfSignedRequestMessage;
+        Entities.Update(cert,Entities.CascadeOn);
 
         Security sec = new Security();
         sec.Load(cert);
     }
     @Test
-    public void CertificateLoadTest() throws Exception{
-        Certificate cert = Entities.Lookup(Certificate.class,1l);
+    public void CertificateLoad() throws Exception{
+        assert(Id==1);
+        Certificate cert = Entities.Lookup(Certificate.class,Id);
         if (cert!=null){
             Security sec = new Security();
-            sec.Load(cert.DerKey,cert.DerCert1);
+            sec.Load(cert);
         }
 
     }

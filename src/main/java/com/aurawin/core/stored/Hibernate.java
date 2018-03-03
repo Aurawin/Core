@@ -79,8 +79,6 @@ public class Hibernate{
             Class<Stored> cos = (Class<Stored>) it.next();
             cfg.addAnnotatedClass(cos);
         }
-        cfg.configure();
-
         return cfg.buildSessionFactory();
     }
 }

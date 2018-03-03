@@ -2,6 +2,7 @@ package com.aurawin.core.rsr.server;
 
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -24,7 +25,7 @@ public class Server extends Engine {
     protected ServerSocketChannel Channel;
 
     public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName)throws
-            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
+            InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
         super (sa,aTransport,ItemKind.Server,aInfinate);
         State = esCreated;
@@ -32,7 +33,7 @@ public class Server extends Engine {
 
     }
     public Server(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
-            IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
+            InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
         super (aAddress, aTransport,ItemKind.Server,aInfinate);
     }
@@ -66,6 +67,8 @@ public class Server extends Engine {
                                 Managers.Reset();
                             }
                             Channel = ServerSocketChannel.open();
+                            Channel.socket().setSoTimeout(60);
+                            Channel.socket().setReuseAddress(true);
                             Entities.Verify();
                             State = esStart;
                         } catch (IOException e) {

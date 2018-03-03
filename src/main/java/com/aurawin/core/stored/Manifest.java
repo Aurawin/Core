@@ -2,14 +2,12 @@ package com.aurawin.core.stored;
 
 
 import com.aurawin.core.stored.annotations.AnnotatedList;
-import com.aurawin.core.stored.entities.Certificate;
+import com.aurawin.core.stored.entities.security.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
 import com.aurawin.core.lang.Namespace;
-
-import org.hibernate.Session;
 
 public class Manifest {
     public String Username;

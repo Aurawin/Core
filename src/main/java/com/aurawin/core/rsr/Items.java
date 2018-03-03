@@ -51,9 +51,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     private TransportConnect tcNextItem;
     private Iterator<Item> it;
     private Iterator<SelectionKey> isk;
-    public Security Security;
-    public Selector Keys;
 
+    public Selector Keys;
+    public Security Security;
     protected boolean RemovalRequested;
 
     public Executor Background;
@@ -90,7 +90,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         Started = Instant.now();
         if (Engine.SSL.Enabled){
             try {
-                Security.setCertificate(Engine.SSL.Certificate);
+                Security.Load(Engine.SSL.getCertificate());
+            } catch (IOException ioe){
+
             } catch (UnrecoverableKeyException uke){
 
             } catch (CertificateException ce){
@@ -351,6 +353,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             Written=itm.SocketHandler.Send();
             switch (Written) {
                 case Complete:
+                    qWriteItems.remove(itm);
                     break;
                 case Pending:
                     break;
