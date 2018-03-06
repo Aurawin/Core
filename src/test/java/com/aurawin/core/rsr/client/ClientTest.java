@@ -3,11 +3,11 @@ package com.aurawin.core.rsr.client;
 import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
-import com.aurawin.core.plugin.Noid;
+
 import com.aurawin.core.rsr.client.Client;
 import com.aurawin.core.rsr.def.EngineState;
 
-import com.aurawin.core.rsr.client.protocol.HTTP_1_1;
+import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.rsr.def.TransportConnectStatus;
 import com.aurawin.core.solution.Settings;
@@ -33,7 +33,7 @@ public class ClientTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("client.test", "Aurawin ClientTest", "Universal", "1", "1", "0");
+        Settings.Initialize("client.test", "Aurawin ClientTest", "Universal");
 
         Manifest mf = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username

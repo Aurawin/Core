@@ -1,5 +1,6 @@
 package com.aurawin.core.json;
 
+import com.aurawin.core.json.Builder;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import org.junit.Test;

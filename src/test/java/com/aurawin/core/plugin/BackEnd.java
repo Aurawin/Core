@@ -6,11 +6,13 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.def.http.Request;
 import com.aurawin.core.rsr.def.http.Response;
-import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
+import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
+
 import org.hibernate.Session;
 
+
 @com.aurawin.core.plugin.annotations.Plugin(
-        Name = "Noid",
+        Name = "BackEnd",
         Namespace = "/core/noid",
         Package = "com.aurawin.core.plugin",
         Title = "Empty Plug",
@@ -20,7 +22,7 @@ import org.hibernate.Session;
         Transport = HTTP_1_1.class
 )
 
-public class Noid extends Plug {
+public class BackEnd extends Plug {
     @Override
     public PluginState Setup(Session ssn){
         return super.Setup(ssn);

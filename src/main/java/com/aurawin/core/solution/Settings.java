@@ -4,12 +4,16 @@ import com.aurawin.core.enryption.Base64;
 import com.aurawin.core.lang.Table;
 
 
-
+import java.io.IOException;
 import java.util.Arrays;
 
 import static com.aurawin.core.lang.Table.CRLF;
 
 public class Settings {
+    public static Version Version;
+    public static class Resource{
+        public static int MaxBufferSize = 1024*1024;
+    }
     public static class Properties{
         public static final String Program = "program.name";
         public static final String Title = "program.title";
@@ -26,6 +30,7 @@ public class Settings {
             public static final String Major = "program.version.major";
             public static final String Middle = "program.version.middle";
             public static final String Minor = "program.version.minor";
+            public static final String Build = "program.version.build";
         }
     }
     public static String Language = "us";
@@ -272,13 +277,19 @@ public class Settings {
             }
         }
     }
-    public static void Initialize(String program, String title, String edition, String major, String middle, String minor){
+    public static void Initialize(String program, String title, String edition) throws IOException{
+        Version = new Version();
+
+        Version.loadFromResouce();
+
         System.setProperty(Properties.Program,program);
         System.setProperty(Properties.Title,title);
         System.setProperty(Properties.Edition,edition);
-        System.setProperty(Properties.Version.Major,major);
-        System.setProperty(Properties.Version.Middle,middle);
-        System.setProperty(Properties.Version.Minor,minor);
+
+        System.setProperty(Properties.Version.Major,String.valueOf(Version.Major));
+        System.setProperty(Properties.Version.Middle,String.valueOf(Version.Mid));
+        System.setProperty(Properties.Version.Minor,String.valueOf(Version.Minor));
+        System.setProperty(Properties.Version.Build,String.valueOf(Version.Build));
 
         Table.Load();
     }

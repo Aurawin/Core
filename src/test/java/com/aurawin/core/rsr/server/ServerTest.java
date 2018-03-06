@@ -4,18 +4,20 @@ import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.EngineState;
-import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
+import com.aurawin.core.rsr.server.Server;
+import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
-import com.aurawin.core.plugin.Noid;
+
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Entities;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
+import com.aurawin.core.plugin.BackEnd;
 import java.net.InetSocketAddress;
 
 
@@ -24,7 +26,7 @@ public class ServerTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("server.test","Aurawin ServerTest","Universal","1","1","0");
+        Settings.Initialize("server.test","Aurawin ServerTest","Universal");
 
         Manifest mf = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
@@ -53,7 +55,7 @@ public class ServerTest {
         );
 
         serverHTTP.loadSecurity(1l);
-        serverHTTP.installPlugin(new Noid());
+        serverHTTP.installPlugin(new BackEnd());
         serverHTTP.Configure();
     }
 

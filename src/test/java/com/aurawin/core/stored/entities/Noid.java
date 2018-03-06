@@ -5,7 +5,7 @@ import com.aurawin.core.plugin.annotations.*;
 
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.server.protocol.HTTP_1_1;
+import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 import org.hibernate.Session;
 
 @Plugin(

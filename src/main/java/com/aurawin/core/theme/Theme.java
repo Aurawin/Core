@@ -11,12 +11,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static com.aurawin.core.solution.Settings.Resource.MaxBufferSize;
+
 public class Theme {
     public static boolean Loaded = false;
     public static void main(String[] args) {
         Load();
     }
-    public static final int MaxSize = 1024*1024;
+
     public static final String defaultResource = "/core.theme.json";
     public static JSONObject Manifest;
     public static final void Load(String Data){
@@ -28,10 +30,10 @@ public class Theme {
     }
     public static final void Load(){
         try {
-            InputStream is = Class.class.getResourceAsStream(defaultResource);
+            InputStream is = com.aurawin.core.theme.Theme.class.getResourceAsStream(defaultResource);
             InputStreamReader ir = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader r = new BufferedReader(ir);
-            StringBuilder sb = new StringBuilder(MaxSize);
+            StringBuilder sb = new StringBuilder(MaxBufferSize);
             String sLine = "";
             while ( (sLine = r.readLine()) !=null) {
                 sb.append(sLine);
@@ -149,7 +151,7 @@ public class Theme {
         try {
             if (Loaded!=true) Load();
 
-            BufferedImage bi = ImageIO.read(Class.class.getResourceAsStream(Location(NameSpace)));
+            BufferedImage bi = ImageIO.read(com.aurawin.core.theme.Theme.class.getResourceAsStream(Location(NameSpace)));
             ImageIcon ii = new ImageIcon(bi);
             return ii;
         } catch (Exception E){

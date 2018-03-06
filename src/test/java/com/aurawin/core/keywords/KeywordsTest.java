@@ -1,16 +1,15 @@
 package com.aurawin.core.keywords;
 
 import com.aurawin.core.VarString;
-import com.aurawin.core.solution.Settings;
+import com.aurawin.core.keywords.Keyword;
+import com.aurawin.core.keywords.Keywords;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
 
 public class KeywordsTest {
-    public static final String defaultResource = "/test/keywords.text";
+    public static final String defaultResource = "/keywords.text";
     private Keywords keywords;
     private String Output;
     private String Input;

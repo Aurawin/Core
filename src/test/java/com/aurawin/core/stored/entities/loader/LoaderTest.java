@@ -10,6 +10,7 @@ import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.compiler.Result.Kind;
+import com.aurawin.core.stored.entities.loader.Result;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.After;
@@ -19,7 +20,7 @@ import org.junit.Test;
 import static com.aurawin.core.stored.entities.Entities.CascadeOff;
 
 public class LoaderTest {
-    public static final String defaultResource = "/test/keywords.text";
+    public static final String defaultResource = "/keywords.text";
     public Manifest Manifest;
     public Singleton Compiler;
     public Module Module;
@@ -119,7 +120,7 @@ public class LoaderTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("loader.Test","Aurawin ServerTest","Test","1","0","0");
+        Settings.Initialize("loader.Test","Aurawin ServerTest","Test");
         Compiler=new Singleton();
 
         AnnotatedList annotations = new AnnotatedList();
