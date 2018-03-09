@@ -18,7 +18,9 @@ import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 import javax.xml.transform.OutputKeys;
 
 import static com.aurawin.core.rsr.def.ItemError.eSSL;
+import static com.aurawin.core.rsr.def.ItemError.eTimeout;
 import static com.aurawin.core.rsr.def.ItemKind.Client;
+import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.isHandShake;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Complete;
@@ -29,6 +31,7 @@ import static com.aurawin.core.solution.Settings.RSR.Security.SSLEngineOutBuffer
 import static com.aurawin.core.solution.Settings.RSR.Security.SSLEngineRemoteBuffer;
 import static com.aurawin.core.solution.Settings.Security.Ciphers;
 import static com.aurawin.core.solution.Settings.Security.Protocols;
+import static java.time.LocalTime.now;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.*;
 import static javax.net.ssl.SSLEngineResult.Status.*;
 
@@ -38,6 +41,7 @@ public class SocketHandlerSecure extends SocketHandler {
     public SSLContext Context;
     private boolean issuedHandshake = false;
     private boolean needNetInFlip = true;
+    private boolean needNetOutFlip = true;
     private int iRead;
     private int iWrite;
     private SSLEngineResult CryptResult;
@@ -96,6 +100,8 @@ public class SocketHandlerSecure extends SocketHandler {
             Context = Owner.Owner.Security.getContext();//SSLContext.getInstance("TLSv1.2");
 
             Cryptor=Context.createSSLEngine();
+            needNetInFlip = (Owner.Kind==Server);
+            needNetOutFlip = (Owner.Kind==Server);
             Cryptor.setUseClientMode((Owner.Kind==Client));
 
             Cryptor.setNeedClientAuth(false);
@@ -245,7 +251,16 @@ public class SocketHandlerSecure extends SocketHandler {
                 Owner.TTL = Instant.now().plusMillis(HandshakeTimeout);
                 Cryptor.beginHandshake();
                 handshakeStatus = Cryptor.getHandshakeStatus();
-                while (handshakeStatus!=FINISHED && handshakeStatus!=NOT_HANDSHAKING && !Owner.Errors.contains(eSSL)) {
+                while (
+                        handshakeStatus!=FINISHED &&
+                        handshakeStatus!=NOT_HANDSHAKING &&
+                        !Owner.Errors.contains(eSSL)
+                ) {
+                   if (Instant.now().isAfter(Owner.TTL)) {
+                        Owner.Errors.add(eTimeout);
+                        Owner.Errors.add(eSSL);
+                        Owner.Error();
+                    }
                     switch (handshakeStatus) {
                         case NEED_UNWRAP:
                            handshakeStatus=handshakeUnwrap();
@@ -314,6 +329,7 @@ public class SocketHandlerSecure extends SocketHandler {
     private HandshakeStatus handshakeWrap() {
         try {
             bbAppOut.flip();
+            bbAppOut.limit(bbAppOut.capacity());
 
             bbNetOut.limit(bbNetOut.capacity());
             CryptResult = Cryptor.wrap(bbAppOut,bbNetOut);
@@ -326,7 +342,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 case OK:
                     bbNetOut.flip();
                     while (bbNetOut.hasRemaining())
-                      Channel.write(bbNetOut);
+                        iWrite= Channel.write(bbNetOut);
                     bbNetOut.compact();
                     bbNetOut.flip();
                     return handshakeStatus;
@@ -355,8 +371,9 @@ public class SocketHandlerSecure extends SocketHandler {
     private HandshakeStatus handshakeUnwrap()    {
         // todo timeout check here (infinite loop)
         boolean needTry = true;
+        iRead=0;
         try {
-            while (needTry) {
+            while ( (iRead!=-1) && (needTry) && (Instant.now().isBefore(Owner.TTL)) ){
                 if (needNetInFlip) bbNetIn.flip();
                 needNetInFlip=false;
                 needTry=false;
@@ -375,7 +392,7 @@ public class SocketHandlerSecure extends SocketHandler {
                     case BUFFER_UNDERFLOW:
                         //bbNetIn.compact();
                         bbNetIn.limit(bbNetIn.capacity());
-                        Channel.read(bbNetIn);
+                        iRead = Channel.read(bbNetIn);
                         bbNetIn.flip();
                         //
 
