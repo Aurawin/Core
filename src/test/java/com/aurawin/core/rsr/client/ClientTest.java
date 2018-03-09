@@ -82,8 +82,8 @@ public class ClientTest {
                 Client = (HTTP_1_1) Transport.getOwner();
                 Client.Request.URI="/index.html";
                 Client.Request.Method= "GET";
-                Client.Credentials.Passport.Username="user";
-                Client.Credentials.Passport.Password="pass";
+                //Client.Credentials.Passport.Username="user";
+                //Client.Credentials.Passport.Password="pass";
             }
             Thread.sleep(100);
         }
