@@ -4,9 +4,8 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Request.java" line="48" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="">
+    <list default="true" id="d4645715-aece-4a7b-b19d-4bc68004626a" name="Default" comment="Added Security Mechanisms for IMAP and HTTP">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java" />
     </list>
     <ignored path="Core.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,9 +23,6 @@
       <FILTER>test.com.aurawin.core.rsr.server.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/Core$SingletonTest.coverage" NAME="SingletonTest Coverage Results" MODIFIED="1456454974168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/Core$ClientTest.coverage" NAME="ClientTest Coverage Results" MODIFIED="1519503102809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>com.aurawin.core.rsr.client.*</FILTER>
-    </SUITE>
     <SUITE FILE_PATH="coverage/Core$EntitiesTest_testCheckEntities.coverage" NAME="EntitiesTest.testCheckEntities Coverage Results" MODIFIED="1443210152528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>test.com.aurawin.core.storage.entities.*</FILTER>
     </SUITE>
@@ -39,103 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/package-info.java">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CertificateTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/CertificateTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Noid.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/Noid.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-info.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/package-info.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="47" column="66" lean-forward="true" selection-start-line="47" selection-start-column="66" selection-end-line="47" selection-end-column="66" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoaderTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/LoaderTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
+            <state relative-caret-position="180">
+              <caret line="10" column="18" lean-forward="false" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -147,47 +51,47 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Enum" />
+        <option value="JUnit4 Test Class" />
         <option value="AnnotationType" />
         <option value="Interface" />
         <option value="Enum" />
-        <option value="Class" />
-        <option value="JUnit4 Test Class" />
         <option value="package-info" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.send</find>
-      <find>SO_LINGER</find>
-      <find>true</find>
-      <find>2</find>
-      <find>QueryAll</find>
-      <find>CertFactory</find>
-      <find>PKCS8EncodedKeySpec</find>
+      <find>table.error.rsr.timeout</find>
+      <find>RecvPreHandshake</find>
+      <find>processRecv</find>
+      <find>send</find>
+      <find>.Send</find>
+      <find>Respond</find>
+      <find>OwnerId</find>
+      <find>Owner</find>
+      <find>NamedQuery</find>
+      <find>q.list</find>
+      <find>extends</find>
+      <find>cofE</find>
+      <find>now</find>
+      <find>unchecked</find>
+      <find>qAddItems</find>
+      <find>resourceRequested</find>
+      <find>validateCredentials</find>
       <find>Request</find>
-      <find>----BEGIN CERTIFICATE-----</find>
-      <find>newInstance</find>
-      <find>context</find>
-      <find>KeyManaster</find>
-      <find>random</find>
-      <find>enabled</find>
-      <find>bbRemote</find>
-      <find>handshakeFinished</find>
-      <find>bbNetIn</find>
-      <find>handshakeFin</find>
-      <find>Class.class</find>
-      <find>getResource</find>
-      <find>Default</find>
-      <find>default</find>
-      <find>Vers</find>
-      <find>maven-surefire-plugin</find>
-      <find>final</find>
-      <find>aurawin</find>
-      <find>deploy</find>
-      <find>buildYear</find>
-      <find>version</find>
-      <find>Noid</find>
+      <find>Authorization</find>
+      <find>Field</find>
+      <find>Basic</find>
+      <find>@Transient</find>
+      <find>loadSecurity</find>
+      <find>decryptCredentials</find>
+      <find>Credentials</find>
+      <find>registerSecurityMechanism</find>
+      <find>RegisterSe</find>
+      <find>setCredentials</find>
+      <find>reflect</find>
+      <find>'</find>
     </findStrings>
     <replaceStrings>
       <replace>org.hibernate.query.Query</replace>
@@ -196,8 +100,6 @@
     <dirStrings>
       <dir>$PROJECT_DIR$/src/main/java</dir>
       <dir>$PROJECT_DIR$/src/main/java/com/aurawin/core/stored</dir>
-      <dir>$PROJECT_DIR$/src/main/java/com/aurawin/core</dir>
-      <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -211,57 +113,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Database.java" />
+        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/plugin/Noid.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/fetch/Mechanism.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/fetch/DecryptCredentials.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/imap/Protocol_IMAP_4_1.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Item.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/security/Credentials.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SecurityMechanismBasic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/SecurityMechanismBasic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/Response.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/RequestAuthenticationHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/RequestRequestAuthenticationHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/RequestResourceAuthenticationHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/ResourceRequestAuthenticationHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/fetch/PassportState.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/fetch/Passport.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/ResourceRequiresAuthenticationHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/Security.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Items.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/version.json" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/VarString.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/theme/Theme.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/project.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/build" />
-        <option value="$PROJECT_DIR$/buildNumber.properties" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Version.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Settings.java" />
-        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities/loader/LoaderTest.java" />
-        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/client/ClientTest.java" />
-        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/ServerTest.java" />
-        <option value="$PROJECT_DIR$/src/main/test/com/aurawin/core/solution/VersionTest.java" />
+        <option value="$PROJECT_DIR$/reflections.iml" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/test/java/com/aurawin/core/stored/entities/Noid.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/plugin/Noid.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/solution/VersionTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/compiler/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/compiler/SingletonTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/json/BuilderTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/keywords/KeywordsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/log/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/log/SyslogTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/plugin/BackEnd.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/plugin/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/protocol/HTTP_1_1.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/protocol/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/def/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecureTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/protocol/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/ServerTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/SelfCertificateCreate.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/LoaderTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/CertificateTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/Noid.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/package-info.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Engine.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/LOGIN.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/GET.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/APPEND.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SessionStatus.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SearchArgument.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SearchDirective.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SearchTermKind.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Single.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Double.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Tripple.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Term.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Key.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Data.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/fetch/Kind.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/fetch/Range.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/store/FlagMode.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/reload/Kind.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Sesssion.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/SessionStatus.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/Status.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/Sesssion.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Settings.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Message.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/command/Command.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/SearchArgument.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Directive.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Argument.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/Entities.java" />
       </list>
     </option>
   </component>
@@ -284,29 +186,15 @@
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
-      <expand>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Profiles" type="6783ec58:MavenProjectsStructure$ProfilesNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Core" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Core" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
-        </path>
-      </expand>
+      <expand />
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="36" />
-    <option name="y" value="50" />
-    <option name="width" value="1676" />
-    <option name="height" value="1020" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="67" />
+    <option name="y" value="27" />
+    <option name="width" value="1853" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -326,6 +214,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -363,28 +252,7 @@
               <item name="Core" type="b2602c69:ProjectViewProjectNode" />
               <item name="Core" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="com" type="462c0819:PsiDirectoryNode" />
               <item name="aurawin" type="462c0819:PsiDirectoryNode" />
@@ -393,218 +261,30 @@
               <item name="Core" type="b2602c69:ProjectViewProjectNode" />
               <item name="Core" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="com" type="462c0819:PsiDirectoryNode" />
               <item name="aurawin" type="462c0819:PsiDirectoryNode" />
               <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="aurawin" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="rsr" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="aurawin" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="rsr" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="aurawin" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="rsr" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="protocol" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="com" type="462c0819:PsiDirectoryNode" />
-              <item name="aurawin" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="solution" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Core" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Core" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-              <item name="test-classes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <expand>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-              <item name="core" type="cbb8eebc:String" user="core" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-              <item name="core" type="cbb8eebc:String" user="core" />
-              <item name="rsr" type="cbb8eebc:String" user="rsr" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-              <item name="core" type="cbb8eebc:String" user="core" />
-              <item name="rsr" type="cbb8eebc:String" user="rsr" />
-              <item name="server" type="cbb8eebc:String" user="server" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-              <item name="core" type="cbb8eebc:String" user="core" />
-              <item name="rsr" type="cbb8eebc:String" user="rsr" />
-              <item name="server" type="cbb8eebc:String" user="server" />
-              <item name="protocol" type="cbb8eebc:String" user="protocol" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="Core" type="cbb8eebc:String" user="Core" />
-              <item name="src/main" type="cbb8eebc:String" user="src/main" />
-              <item name="test" type="cbb8eebc:String" user="test" />
-              <item name="com" type="cbb8eebc:String" user="com" />
-              <item name="aurawin" type="cbb8eebc:String" user="aurawin" />
-              <item name="core" type="cbb8eebc:String" user="core" />
-              <item name="storage" type="cbb8eebc:String" user="storage" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-            </path>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-              <item name="com" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-              <item name="com" type="1f31426a:PackageElementNode" />
-              <item name="aurawin" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-              <item name="com" type="1f31426a:PackageElementNode" />
-              <item name="aurawin" type="1f31426a:PackageElementNode" />
-              <item name="core" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-              <item name="com" type="1f31426a:PackageElementNode" />
-              <item name="aurawin" type="1f31426a:PackageElementNode" />
-              <item name="core" type="1f31426a:PackageElementNode" />
-              <item name="storage" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="Core" type="58d84e3e:PackageViewProjectNode" />
-              <item name="core" type="616d4139:PackageViewModuleNode" />
-              <item name="test" type="1f31426a:PackageElementNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Jetac/pom.xml" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.4380597" />
     <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="true" />
+    <property name="Repository.Attach.Sources" value="true" />
     <property name="dynamic.classpath" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="132" />
@@ -635,39 +315,36 @@
       <recent name="com.aurawin.core.rsr.def.sockethandler" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
-      <recent name="com.aurawin.core.solution" />
-      <recent name="com.aurawin.core.stored.entities" />
-      <recent name="com.aurawin.core.rsr.def.handlers" />
       <recent name="com.aurawin.core.json" />
       <recent name="com.aurawin.core.keywords" />
+      <recent name="test.com.aurawin.core.stored.entities.Loader" />
+      <recent name="test.com.aurawin.core.compiler" />
+      <recent name="com.aurawin.core.compiler" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.aurawin.core.rsr.client" />
       <recent name="com.aurawin.core.rsr" />
-      <recent name="com.aurawin.core.rsr.protocol" />
       <recent name="com.aurawin.core.plugin" />
       <recent name="com.aurawin.core.rsr.def.sockethandler" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.aurawin.core.rsr.server.protocol.smtp" />
-      <recent name="com.aurawin.core.rsr.server.protocol.imap" />
-      <recent name="com.aurawin.core.rsr.server.protocol.http" />
-      <recent name="com.aurawin.core.rsr.client.protocol" />
       <recent name="com.aurawin.core.rsr.def.handlers" />
+      <recent name="com.aurawin.core.file" />
+      <recent name="com.aurawin.core.stored.annotations" />
+      <recent name="com.aurawin.core.rsr.commands" />
+      <recent name="test" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/def/handlers" />
       <recent name="$PROJECT_DIR$/src/main/resources/" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/test/resources" />
-      <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/webDAV" />
       <recent name="$PROJECT_DIR$/src/main/test" />
-      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/sockethandler" />
+      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\entities" />
+      <recent name="C:\Users\Andrew\Documents\Aurawin\Developer\Java\Core\src\main\java\com\aurawin\core\stored\modules" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -682,7 +359,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Maven.core [deploy]">
+  <component name="RunManager">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
@@ -703,81 +380,6 @@
       <module name="" />
       <envs />
     </configuration>
-    <configuration name="CertificateTest.createRequest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.aurawin.core.stored.entities.security.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.aurawin.core.stored.entities" />
-      <option name="MAIN_CLASS_NAME" value="com.aurawin.core.stored.entities.CertificateTest" />
-      <option name="METHOD_NAME" value="createRequest" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="SelfCertificateCreate.CertificateLoad" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.aurawin.core.storage.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.aurawin.core.storage" />
-      <option name="MAIN_CLASS_NAME" value="com.aurawin.core.storage.SelfCertificateCreate" />
-      <option name="METHOD_NAME" value="CertificateLoad" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="SelfCertificateCreate.SelfSignedCertCreate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.aurawin.core.storage.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.aurawin.core.storage" />
-      <option name="MAIN_CLASS_NAME" value="com.aurawin.core.storage.SelfCertificateCreate" />
-      <option name="METHOD_NAME" value="SelfSignedCertCreate" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
     <configuration name="ServerTest" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="core" />
@@ -790,31 +392,6 @@
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="VersionTest.testVersion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.aurawin.core.solution.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.aurawin.core.solution" />
-      <option name="MAIN_CLASS_NAME" value="com.aurawin.core.solution.VersionTest" />
-      <option name="METHOD_NAME" value="testVersion" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="TEST_SEARCH_SCOPE">
@@ -847,31 +424,6 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="JAR_PATH" value="$PROJECT_DIR$/target/core-experimental.jar" />
       <envs />
-    </configuration>
-    <configuration name="core [deploy]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
-      <MavenSettings>
-        <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
-        <option name="myRunnerParameters">
-          <MavenRunnerParameters>
-            <option name="profiles">
-              <set />
-            </option>
-            <option name="goals">
-              <list>
-                <option value="deploy" />
-              </list>
-            </option>
-            <option name="profilesMap">
-              <map>
-                <entry key="Release" value="true" />
-              </map>
-            </option>
-            <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="$PROJECT_DIR$" />
-          </MavenRunnerParameters>
-        </option>
-      </MavenSettings>
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
@@ -1024,6 +576,7 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="core" />
       <envs />
+      <method />
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
@@ -1059,23 +612,6 @@
       </MavenSettings>
       <method />
     </configuration>
-    <list size="6">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.ServerTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.SelfCertificateCreate.CertificateLoad" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.SelfCertificateCreate.SelfSignedCertCreate" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.CertificateTest.createRequest" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.VersionTest.testVersion" />
-      <item index="5" class="java.lang.String" itemvalue="Maven.core [deploy]" />
-    </list>
-    <recent_temporary>
-      <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Maven.core [deploy]" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.VersionTest.testVersion" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.SelfCertificateCreate.SelfSignedCertCreate" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.CertificateTest.createRequest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.SelfCertificateCreate.CertificateLoad" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -1090,6 +626,83 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1441072894308</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Adding Database Modules for runtime support of back-end data objects with Hibernate.">
+      <created>1456501570965</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1456501570966</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Adding Database Modules for runtime support of back-end data objects with Hibernate.">
+      <created>1456670758031</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1456670758032</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Back-end Stored Object Hibernate Modules with loading and unloading at runtime">
+      <created>1456856760481</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1456856760482</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Cleanup of Entities Object">
+      <created>1456930088610</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1456930088611</updated>
+    </task>
+    <task id="LOCAL-00081" summary="SSL Work">
+      <created>1457145841366</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1457145841367</updated>
+    </task>
+    <task id="LOCAL-00082" summary="SSL Work">
+      <created>1457146710021</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1457146710022</updated>
+    </task>
+    <task id="LOCAL-00083" summary="SSL Self Signed Certificates and Cert Requests">
+      <created>1457228243355</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1457228243356</updated>
+    </task>
+    <task id="LOCAL-00084" summary="SocketHandler">
+      <created>1457452980410</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1457452980411</updated>
+    </task>
+    <task id="LOCAL-00085" summary="SSLSocketFactory Work">
+      <created>1457627536290</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1457627536292</updated>
+    </task>
+    <task id="LOCAL-00086" summary="HTTPS 1.1 Server">
+      <created>1458052665934</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1458052665935</updated>
+    </task>
+    <task id="LOCAL-00087" summary="HTTPS 1.1 Server">
+      <created>1458143590185</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1458143590185</updated>
     </task>
     <task id="LOCAL-00088" summary="HTTPS 1.1 Server">
       <created>1458222328983</created>
@@ -1357,116 +970,39 @@
       <option name="project" value="LOCAL" />
       <updated>1518810435641</updated>
     </task>
-    <task id="LOCAL-00126" summary="Framing IMAP support">
-      <created>1519157809952</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
-      <option name="project" value="LOCAL" />
-      <updated>1519157809953</updated>
-    </task>
-    <task id="LOCAL-00127" summary="Framing IMAP support">
-      <created>1519318291408</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
-      <option name="project" value="LOCAL" />
-      <updated>1519318291409</updated>
-    </task>
-    <task id="LOCAL-00128" summary="Security for Authenticate mod">
-      <created>1519400676774</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1519400676774</updated>
-    </task>
-    <task id="LOCAL-00129" summary="Added root field to Engine for access to Stored">
-      <created>1519402556961</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1519402556961</updated>
-    </task>
-    <task id="LOCAL-00130" summary="Added root fields to Engine for generic useage of Engine">
-      <created>1519402804741</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1519402804741</updated>
-    </task>
-    <task id="LOCAL-00131" summary="Added root fields to Engine for generic use of Engine">
-      <created>1519403220779</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
-      <option name="project" value="LOCAL" />
-      <updated>1519403220779</updated>
-    </task>
-    <task id="LOCAL-00132" summary="Socket Handlers exception logging">
-      <created>1519408022338</created>
-      <option name="number" value="00132" />
-      <option name="presentableId" value="LOCAL-00132" />
-      <option name="project" value="LOCAL" />
-      <updated>1519408022339</updated>
-    </task>
-    <task id="LOCAL-00133" summary="Added Client/Server breakout">
-      <created>1519571299941</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
-      <option name="project" value="LOCAL" />
-      <updated>1519571299942</updated>
-    </task>
-    <task id="LOCAL-00134" summary="Refactored protocols for client and server">
-      <created>1519571650424</created>
-      <option name="number" value="00134" />
-      <option name="presentableId" value="LOCAL-00134" />
-      <option name="project" value="LOCAL" />
-      <updated>1519571650424</updated>
-    </task>
-    <task id="LOCAL-00135" summary="Refactored for Java 1.9&#10;&#10;Removed sun code for generating certs and switched to bouncy castle.">
-      <created>1520111638813</created>
-      <option name="number" value="00135" />
-      <option name="presentableId" value="LOCAL-00135" />
-      <option name="project" value="LOCAL" />
-      <updated>1520111638813</updated>
-    </task>
-    <task id="LOCAL-00136" summary="Refactored for build and version">
-      <created>1520301130501</created>
-      <option name="number" value="00136" />
-      <option name="presentableId" value="LOCAL-00136" />
-      <option name="project" value="LOCAL" />
-      <updated>1520301130501</updated>
-    </task>
-    <option name="localTasksCounter" value="137" />
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 12h 23m 03s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 14h 01m 36s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 14h 59m 02s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 14h 03m 01s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 04m 46s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 14h 19m 45s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 26m 39s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 14h 24m 18s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 27m 10s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 14h 58m 46s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 28m 55s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 15h 35m 36s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 36m 21s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 15h 35m 38s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.04 at 15h 36m 30s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.19 at 15h 50m 48s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.05 at 09h 09m 59s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.20 at 07h 43m 52s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="VersionTest_testVersion - 2018.03.05 at 09h 10m 07s.xml">
-      <configuration name="VersionTest.testVersion" configurationId="JUnit" />
+    <history-entry file="ServerTest - 2018.02.20 at 07h 44m 41s.xml">
+      <configuration name="ServerTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -1479,7 +1015,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="36" y="50" width="1920" height="1175" extended-state="6" />
+    <frame x="67" y="27" width="1853" height="1053" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.49790794" order="6" side_tool="false" content_ui="tabs" />
@@ -1487,19 +1023,19 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.27375972" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1125" sideWeight="0.47804877" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6654171" sideWeight="0.48475793" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17244612" sideWeight="0.7262403" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.090216756" sideWeight="0.4841998" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20431115" sideWeight="0.7262403" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32254696" sideWeight="0.48475793" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23541667" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21586616" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24830918" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2494331" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42455482" sideWeight="0.6744186" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41557017" sideWeight="0.6744186" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1507,21 +1043,43 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11246485" sideWeight="0.55813956" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17910448" sideWeight="0.55813956" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.111979164" sideWeight="0.5219512" order="9" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29615745" sideWeight="0.49347702" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0393531" sideWeight="0.5158002" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5516529" sideWeight="0.49347702" order="1" side_tool="false" content_ui="tabs" />
     </layout>
-  </component>
-  <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ORDER">
-      <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
-      </list>
-    </option>
+    <layout-to-restore>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.27375972" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20107816" sideWeight="0.4841998" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.248671" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40978593" sideWeight="0.6744186" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282365" sideWeight="0.49790794" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18042813" sideWeight="0.55813956" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32342008" sideWeight="0.48475793" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2517839" sideWeight="0.7262403" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0393531" sideWeight="0.5158002" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33908355" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5555556" sideWeight="0.49347702" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -1535,6 +1093,16 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="SocketHandler" />
+    <MESSAGE value="SSLSocketFactory Work" />
+    <MESSAGE value="HTTPS 1.1 Server" />
+    <MESSAGE value="Test" />
+    <MESSAGE value="Ketwords with testing" />
+    <MESSAGE value="Breakout database items for AuSCS" />
+    <MESSAGE value="GSON wrapper for core" />
+    <MESSAGE value="Deploy Changes for Maven" />
+    <MESSAGE value="Relocated file for UserAccount" />
+    <MESSAGE value="Additional Queries For Social Computing" />
     <MESSAGE value="Hibernate 5.2" />
     <MESSAGE value="Cleanup" />
     <MESSAGE value="Changed to environment variables for sql auth data" />
@@ -1550,580 +1118,840 @@
     <MESSAGE value="Removed Dispatch" />
     <MESSAGE value="Started IMAP protocol" />
     <MESSAGE value="Added Security Mechanisms for IMAP and HTTP" />
-    <MESSAGE value="Framing IMAP support" />
-    <MESSAGE value="Security for Authenticate mod" />
-    <MESSAGE value="Added root field to Engine for access to Stored" />
-    <MESSAGE value="Added root fields to Engine for generic useage of Engine" />
-    <MESSAGE value="Added root fields to Engine for generic use of Engine" />
-    <MESSAGE value="Socket Handlers exception logging" />
-    <MESSAGE value="Added Client/Server breakout" />
-    <MESSAGE value="Refactored protocols for client and server" />
-    <MESSAGE value="Refactored for Java 1.9&#10;&#10;Removed sun code for generating certs and switched to bouncy castle." />
-    <MESSAGE value="Refactored for build and version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactored for build and version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Security Mechanisms for IMAP and HTTP" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/SelfCertificateCreate.java</url>
-          <line>79</line>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/domain/network/Folder.java</url>
+          <line>3</line>
           <properties />
-          <option name="timeStamp" value="1702" />
+          <option name="timeStamp" value="195" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/SelfCertificateCreate.java</url>
-          <line>49</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/Manifest.java</url>
+          <line>3</line>
           <properties />
-          <option name="timeStamp" value="1709" />
+          <option name="timeStamp" value="259" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/SelfCertificateCreate.java</url>
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/SingletonTest.java</url>
+          <line>29</line>
+          <properties />
+          <option name="timeStamp" value="389" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/Hibernate.java</url>
+          <line>12</line>
+          <properties />
+          <option name="timeStamp" value="394" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/Hibernate.java</url>
+          <line>35</line>
+          <properties />
+          <option name="timeStamp" value="395" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/loader/Loader.java</url>
+          <line>141</line>
+          <properties />
+          <option name="timeStamp" value="427" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/loader/Loader.java</url>
+          <line>123</line>
+          <properties />
+          <option name="timeStamp" value="429" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
+          <line>161</line>
+          <properties />
+          <option name="timeStamp" value="452" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
+          <line>154</line>
+          <properties />
+          <option name="timeStamp" value="454" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
+          <line>150</line>
+          <properties />
+          <option name="timeStamp" value="462" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/test/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
+          <line>151</line>
+          <properties />
+          <option name="timeStamp" value="464" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/CertRequest.java</url>
+          <line>46</line>
+          <properties />
+          <option name="timeStamp" value="494" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/CertSelfSigned.java</url>
+          <line>147</line>
+          <properties />
+          <option name="timeStamp" value="512" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java</url>
+          <line>74</line>
+          <properties />
+          <option name="timeStamp" value="517" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java</url>
+          <line>76</line>
+          <properties />
+          <option name="timeStamp" value="521" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Engine.java</url>
+          <line>118</line>
+          <properties />
+          <option name="timeStamp" value="572" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
+          <line>114</line>
+          <properties />
+          <option name="timeStamp" value="576" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stream/MemoryStream.java</url>
+          <line>153</line>
+          <properties />
+          <option name="timeStamp" value="609" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java</url>
+          <line>70</line>
+          <properties />
+          <option name="timeStamp" value="696" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>118</line>
+          <properties />
+          <option name="timeStamp" value="991" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Managers.java</url>
+          <line>136</line>
+          <properties />
+          <option name="timeStamp" value="1066" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java</url>
+          <line>30</line>
+          <properties />
+          <option name="timeStamp" value="1081" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/keywords/KeywordsTest.java</url>
+          <line>22</line>
+          <properties />
+          <option name="timeStamp" value="1082" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/json/BuilderTest.java</url>
+          <line>28</line>
+          <properties />
+          <option name="timeStamp" value="1087" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>117</line>
+          <properties />
+          <option name="timeStamp" value="1091" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerPlain.java</url>
+          <line>55</line>
+          <properties />
+          <option name="timeStamp" value="1100" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerPlain.java</url>
+          <line>39</line>
+          <properties />
+          <option name="timeStamp" value="1111" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>81</line>
+          <properties />
+          <option name="timeStamp" value="1122" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/log/Syslog.java</url>
+          <line>23</line>
+          <properties />
+          <option name="timeStamp" value="1124" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
+          <line>172</line>
+          <properties />
+          <option name="timeStamp" value="1127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java</url>
+          <line>67</line>
+          <properties />
+          <option name="timeStamp" value="1129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/HEAD.java</url>
+          <line>21</line>
+          <properties />
+          <option name="timeStamp" value="1158" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Items.java</url>
+          <line>256</line>
+          <properties />
+          <option name="timeStamp" value="1205" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Items.java</url>
+          <line>118</line>
+          <properties />
+          <option name="timeStamp" value="1206" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/Items.java</url>
+          <line>289</line>
+          <properties />
+          <option name="timeStamp" value="1219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>117</line>
+          <properties />
+          <option name="timeStamp" value="1235" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>125</line>
+          <properties />
+          <option name="timeStamp" value="1236" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>122</line>
+          <properties />
+          <option name="timeStamp" value="1237" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/SEARCH.java</url>
+          <line>19</line>
+          <properties />
+          <option name="timeStamp" value="1240" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>73</line>
+          <properties />
+          <option name="timeStamp" value="1259" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/ResourceUploadHandler.java</url>
+          <line>6</line>
+          <properties />
+          <option name="timeStamp" value="1265" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java</url>
+          <line>51</line>
+          <properties />
+          <option name="timeStamp" value="1282" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java</url>
           <line>78</line>
           <properties />
-          <option name="timeStamp" value="1710" />
+          <option name="timeStamp" value="1283" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/security/Certificate.java</url>
-          <line>302</line>
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java</url>
+          <line>7</line>
           <properties />
-          <option name="timeStamp" value="1721" />
+          <option name="timeStamp" value="1291" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/CertificateTest.java</url>
-          <line>11</line>
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/plugin/Noid.java</url>
+          <line>42</line>
           <properties />
-          <option name="timeStamp" value="1722" />
+          <option name="timeStamp" value="1301" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/security/Certificate.java</url>
-          <line>257</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/array/KeyPairs.java</url>
+          <line>48</line>
           <properties />
-          <option name="timeStamp" value="1723" />
+          <option name="timeStamp" value="1305" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/security/Certificate.java</url>
-          <line>265</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerPlain.java</url>
+          <line>76</line>
           <properties />
-          <option name="timeStamp" value="1724" />
+          <option name="timeStamp" value="1312" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/SingletonTest.java</url>
+          <line>15</line>
+          <properties />
+          <option name="timeStamp" value="1314" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/SingletonTest.java</url>
+          <line>17</line>
+          <properties />
+          <option name="timeStamp" value="1315" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/compiler/SingletonTest.java</url>
+          <line>18</line>
+          <properties />
+          <option name="timeStamp" value="1316" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/storage/HibernateTest.java</url>
+          <line>44</line>
+          <properties />
+          <option name="timeStamp" value="1317" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/client/Client.java</url>
+          <line>84</line>
+          <properties />
+          <option name="timeStamp" value="1322" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>212</line>
+          <line>145</line>
           <properties />
-          <option name="timeStamp" value="1767" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>209</line>
-          <properties />
-          <option name="timeStamp" value="1769" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>223</line>
-          <properties />
-          <option name="timeStamp" value="1782" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>216</line>
-          <properties />
-          <option name="timeStamp" value="1799" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>333</line>
-          <properties />
-          <option name="timeStamp" value="1826" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
-          <line>336</line>
-          <properties />
-          <option name="timeStamp" value="1827" />
+          <option name="timeStamp" value="1349" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
           <line>142</line>
           <properties />
-          <option name="timeStamp" value="1846" />
+          <option name="timeStamp" value="1350" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Table.java</url>
-          <line>42</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stream/FileStream.java</url>
+          <line>119</line>
           <properties />
-          <option name="timeStamp" value="1847" />
+          <option name="timeStamp" value="1384" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/solution/VersionTest.java</url>
-          <line>14</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stream/FileStream.java</url>
+          <line>124</line>
           <properties />
-          <option name="timeStamp" value="1848" />
+          <option name="timeStamp" value="1385" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Version.java</url>
-          <line>48</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stream/FileStream.java</url>
+          <line>33</line>
           <properties />
-          <option name="timeStamp" value="1850" />
+          <option name="timeStamp" value="1389" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Version.java</url>
-          <line>42</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stream/FileStream.java</url>
+          <line>36</line>
           <properties />
-          <option name="timeStamp" value="1853" />
+          <option name="timeStamp" value="1390" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/LoaderTest.java</url>
-          <line>122</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecure.java</url>
+          <line>139</line>
           <properties />
-          <option name="timeStamp" value="1854" />
+          <option name="timeStamp" value="1394" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/solution/VersionTest.java</url>
-          <line>15</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Request.java</url>
+          <line>33</line>
           <properties />
-          <option name="timeStamp" value="1855" />
+          <option name="timeStamp" value="1397" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Version.java</url>
-          <line>51</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>91</line>
           <properties />
-          <option name="timeStamp" value="1856" />
+          <option name="timeStamp" value="1411" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java</url>
-          <line>78</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>99</line>
           <properties />
-          <option name="timeStamp" value="1857" />
+          <option name="timeStamp" value="1412" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/Server.java</url>
+          <line>105</line>
+          <properties />
+          <option name="timeStamp" value="1414" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>113</line>
+          <properties />
+          <option name="timeStamp" value="1424" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>110</line>
+          <properties />
+          <option name="timeStamp" value="1425" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/GET.java</url>
+          <line>112</line>
+          <properties />
+          <option name="timeStamp" value="1426" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java</url>
+          <line>55</line>
+          <properties />
+          <option name="timeStamp" value="1427" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SecurityMechanismBasic.java</url>
+          <line>33</line>
+          <properties />
+          <option name="timeStamp" value="1448" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/security/Security.java</url>
+          <line>132</line>
+          <properties />
+          <option name="timeStamp" value="1449" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/LOGIN.java</url>
+          <line>37</line>
+          <properties />
+          <option name="timeStamp" value="1451" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/GET.java</url>
+          <line>111</line>
+          <properties />
+          <option name="timeStamp" value="1452" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/http/Protocol_HTTP_1_1.java</url>
+          <line>88</line>
+          <properties />
+          <option name="timeStamp" value="1454" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/http/SecurityMechanismBasic.java</url>
+          <line>36</line>
+          <properties />
+          <option name="timeStamp" value="1461" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java</url>
+          <line>82</line>
+          <properties />
+          <option name="timeStamp" value="1463" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/GET.java</url>
+          <line>89</line>
+          <properties />
+          <option name="timeStamp" value="1465" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/Entities.java</url>
+          <line>365</line>
+          <properties class="com.aurawin.core.stored.entities.Entities" />
+          <option name="timeStamp" value="1399" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="1858" />
+      <option name="time" value="1466" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="Collection.get(iLcv)" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="watch">
-      <expression>
-        <expression-string>Channel.read(bbRead)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>remoteData.compact()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>iRead</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>remoteData.rewind()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>remoteData</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>Cryptor.getDelegatedTask()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>Channel.socket().closed</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>Channel.isConnected()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="setValue">
-      <expression>
-        <expression-string>NEED_WRAP</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/rsr/server/ServerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="6" lean-forward="false" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+        <state relative-caret-position="684">
+          <caret line="54" column="0" lean-forward="false" selection-start-line="54" selection-start-column="0" selection-end-line="56" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/array/KeyPairs.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/loader/Loader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="195" column="16" lean-forward="false" selection-start-line="195" selection-start-column="16" selection-end-line="195" selection-end-column="16" />
+        <state relative-caret-position="1944">
+          <caret line="131" column="36" lean-forward="false" selection-start-line="131" selection-start-column="36" selection-end-line="131" selection-end-column="36" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/buildNumber">
+    <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/stored/entities/loader/LoaderTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        <state relative-caret-position="2610">
+          <caret line="161" column="19" lean-forward="false" selection-start-line="161" selection-start-column="19" selection-end-line="161" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/target/surefire-reports/com.aurawin.core.solution.VersionTest.txt">
+    <entry file="file://$PROJECT_DIR$/src/main/test/com/aurawin/core/plugin/Noid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="882">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/smtp/smtp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/LOGIN.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/GET.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1458">
+          <caret line="102" column="42" lean-forward="false" selection-start-line="102" selection-start-column="42" selection-end-line="102" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/http/HEAD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="24" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/APPEND.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="10" column="65" lean-forward="true" selection-start-line="10" selection-start-column="65" selection-end-line="10" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/protocol/imap/Protocol_IMAP_4_1.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1170">
+          <caret line="91" column="0" lean-forward="true" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/Transport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="6" column="17" lean-forward="false" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Version_4_1.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SearchDirective.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="2" lean-forward="false" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/SearchTermKind.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Tripple.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="1" lean-forward="true" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/fetch/Range.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/fetch/Kind.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="1" lean-forward="false" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/store/package-info.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/store/FlagMode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="77" lean-forward="false" selection-start-line="3" selection-start-column="77" selection-end-line="3" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/fetch/package-info.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/reload/package-info.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/reload/Kind.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Key.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="31" lean-forward="true" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Data.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Term.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="18" lean-forward="true" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Single.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="32" lean-forward="false" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/package-info.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Status.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/Status.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/session/Sesssion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="25" column="25" lean-forward="true" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/Stored.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="9" column="47" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Settings.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="282" column="25" lean-forward="false" selection-start-line="282" selection-start-column="25" selection-end-line="282" selection-end-column="25" />
+        <state relative-caret-position="-1168">
+          <caret line="93" column="20" lean-forward="false" selection-start-line="93" selection-start-column="20" selection-end-line="108" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/transport/methods/imap/STATUS.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="16" lean-forward="false" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/plugin/annotations/Command.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="11" column="18" lean-forward="false" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/command/Command.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/command/package-info.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Double.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Directive.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/def/imap/search/Argument.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="652">
+          <caret line="115" column="32" lean-forward="false" selection-start-line="115" selection-start-column="32" selection-end-line="115" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/annotations/QueryByOwnerId.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="10" column="18" lean-forward="false" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/annotations/FetchField.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/annotations/FetchFields.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="18" lean-forward="false" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/lang/Table.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="158" column="39" lean-forward="false" selection-start-line="158" selection-start-column="39" selection-end-line="158" selection-end-column="39" />
-          <folding />
+        <state relative-caret-position="4140">
+          <caret line="249" column="17" lean-forward="false" selection-start-line="249" selection-start-column="17" selection-end-line="249" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/solution/Version.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/test/keywords.text" />
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="122" column="19" lean-forward="false" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/client/protocol/http/HTTP_1_1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/rsr/server/protocol/http/HTTP_1_1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="35" column="13" lean-forward="false" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/plugin/Plug.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/keywords.text">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/core.lang.us.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/buildNumber">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/plugin/Plugins.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        <state relative-caret-position="1008">
+          <caret line="60" column="13" lean-forward="false" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/package-info.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/plugin/CommandInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="342">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/package-info.java" />
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/compiler/SingletonTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/stored/entities/Entities.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/compiler/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/json/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/keywords/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/log/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/log/SyslogTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/plugin/BackEnd.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/keywords/KeywordsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/json/BuilderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="11" column="13" lean-forward="false" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/plugin/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/protocol/HTTP_1_1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/protocol/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/def/handlers/SocketHandlerSecureTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/def/handlers/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/def/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/protocol/HTTP_1_1.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/protocol/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="8" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/server/ServerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/solution/VersionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/solution/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/storage/SelfCertificateCreate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/CertificateTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/Noid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
+        <state relative-caret-position="890">
+          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1722#1752#0" expanded="true" />
+            <element signature="e#9264#9294#0" expanded="true" />
+            <element signature="e#9920#9950#0" expanded="true" />
+            <element signature="e#13185#13215#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/package-info.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/aurawin/core/plugin/Methods.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
+        <state relative-caret-position="72">
+          <caret line="5" column="17" lean-forward="false" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/package-info.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/stored/entities/loader/LoaderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/aurawin/core/rsr/client/ClientTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="47" column="66" lean-forward="true" selection-start-line="47" selection-start-column="66" selection-end-line="47" selection-end-column="66" />
+        <state relative-caret-position="180">
+          <caret line="10" column="18" lean-forward="false" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -2168,7 +1996,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>9.0</last-edited>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -2185,7 +2013,6 @@
             <option name="proportions">
               <list>
                 <option value="0.4380597" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -2205,7 +2032,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: antlr:antlr:2.7.7</last-edited>
+          <last-edited>maven:maven-plugin-plugin:1.7.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
