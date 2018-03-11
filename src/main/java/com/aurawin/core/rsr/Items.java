@@ -3,6 +3,7 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.def.ItemKind;
+import com.aurawin.core.rsr.def.Persist;
 import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.def.rsrResult;
@@ -166,7 +167,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         tcItem = qRequestConnect.poll();
         tcNextItem = null;
         while (tcItem!=null) {
-            if (Instant.now().isAfter(tcItem.getTTL())) {
+            if (tcItem.isReadyToConnect()) {
                 SocketChannel aChannel = SocketChannel.open();
                 try {
                     if (tcItem.getOwner() == null) {
@@ -176,11 +177,14 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                 aChannel,
                                 ItemKind.Client
                         );
+
+
                         itm.Address = tcItem.getAddress();
                         itm.bindAddress = Engine.Address;
                         itm.Kind = ItemKind.Client;
-
+                        itm.connectionData = tcItem;
                         tcItem.setOwner(itm);
+
                     }
                     itm = tcItem.getOwner();
                     itm.setChannel(aChannel);
@@ -192,13 +196,13 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                             }
                             aChannel.configureBlocking(true);
                             try {
-                                aChannel.connect(itm.Address); // todo what about ssl?
+                                tcItem.attemptConnect();
+                                aChannel.connect(itm.Address);
                                 qAddItems.add(itm);
                                 aChannel.configureBlocking(false);
                             } catch (Exception e) {
                                 tcItem.incTry();
                                 if (tcItem.getTries() < Settings.RSR.Items.TransportConnect.MaxTries) {
-                                    tcItem.setTTL(Instant.now().plusMillis(Settings.RSR.Items.TransportConnect.TryInterleave));
                                     qRequestConnect.add(tcItem);
                                     aChannel.close();
                                 } else {
@@ -217,8 +221,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                     Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Constructor", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), tcItem.getAddress().toString()));
 
                 }
-            } else {
-                  qRequestConnect.add(tcItem);
+            } else if (tcItem.exceededTrys()==false) {
+                qRequestConnect.add(tcItem);
             }
             tcNextItem = qRequestConnect.poll();
             if (tcItem == tcNextItem) {
@@ -232,6 +236,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         // process remove items
         itm = qRemoveItems.poll();
         while (itm!=null){
+
             itm.Teardown();
             try {
                 itm.Release();
@@ -239,6 +244,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
 
             }
             itm=qRemoveItems.poll();
+
         }
         try {
             if (Keys.selectNow() > 0) { // non blocking call

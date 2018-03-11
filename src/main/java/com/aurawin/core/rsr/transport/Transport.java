@@ -7,6 +7,7 @@ import org.hibernate.Session;
 public interface Transport {
     rsrResult onPeek();
     rsrResult onProcess(Session ssn);
+
     void Disconnected();
 
     void Connected();

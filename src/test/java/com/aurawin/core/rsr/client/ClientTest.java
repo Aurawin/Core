@@ -76,7 +76,7 @@ public class ClientTest {
         System.out.println("ClientTest.testRun()");
         System.out.println("ClientTest.clientHTTP Start()");
         Engine.Start();
-        System.out.println("ServerTest.clientHTTP running");
+        System.out.println("ClientTest.clientHTTP running");
         Transport=Engine.Connect(saServer);
         while (Engine.State != EngineState.esFinalize) {
             if (Transport.getStatus()== tcsConnected) {

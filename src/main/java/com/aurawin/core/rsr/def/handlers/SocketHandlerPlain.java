@@ -71,7 +71,7 @@ public class SocketHandlerPlain extends SocketHandler {
             Owner.Owner.BufferRead.clear();
             try {
                 int i = Channel.read(Owner.Owner.BufferRead);
-                if (i <= 0 )
+                if (i == -1 )
                     return SocketHandlerResult.Failure;
             } catch (IOException ioe){
                 return SocketHandlerResult.Failure;
