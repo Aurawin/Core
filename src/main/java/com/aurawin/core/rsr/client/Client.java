@@ -17,13 +17,15 @@ import static com.aurawin.core.rsr.def.EngineState.*;
 import static com.aurawin.core.rsr.def.EngineState.esStop;
 
 public class Client  extends Engine {
+
     public InetSocketAddress Address;
 
-    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
+    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate, boolean aPersistent) throws
             InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aAddress, aTransport, ItemKind.Client,aInfinate);
+        super (aAddress, aTransport, ItemKind.Client,aInfinate, aPersistent);
         State = esCreated;
+
     }
 
     @Override

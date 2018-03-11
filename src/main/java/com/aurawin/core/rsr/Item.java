@@ -23,6 +23,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Buffers Buffers;
     public Credentials Credentials;
     public boolean Infinite;
+    public boolean Persistent;
 
     public int Timeout;
     public ItemKind Kind;
@@ -47,7 +48,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Class v = TA.Version();
         Version = (Version) v.getConstructor().newInstance();
         Credentials=new Credentials();
-
+        Persistent = Owner.Engine.Persistent;
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();

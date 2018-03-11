@@ -51,6 +51,7 @@ public class ServerTest {
                 new InetSocketAddress("172.16.1.1", 1080),
                 HTTP_1_1.class,
                 false,
+                false,
                 "phoenix.aurawin.com"
         );
 
