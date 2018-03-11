@@ -28,7 +28,7 @@ public class ClientTest {
     public Client Engine;
     public TransportConnect Transport;
     public HTTP_1_1 Client;
-    InetSocketAddress saServer  = new InetSocketAddress("107.218.165.193",443);
+    InetSocketAddress saServer  = new InetSocketAddress("172.16.1.2",1080);
     InetSocketAddress saClient  = new InetSocketAddress("172.16.1.1",0);
 
     @Before
@@ -57,6 +57,7 @@ public class ClientTest {
         Engine = new Client(
                 saClient,
                 HTTP_1_1.class,
+                false,
                 false
 
         );

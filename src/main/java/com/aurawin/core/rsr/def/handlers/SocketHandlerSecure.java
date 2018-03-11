@@ -100,6 +100,7 @@ public class SocketHandlerSecure extends SocketHandler {
             Context = Owner.Owner.Security.getContext();//SSLContext.getInstance("TLSv1.2");
 
             Cryptor=Context.createSSLEngine();
+
             needNetInFlip = (Owner.Kind==Server);
             needNetOutFlip = (Owner.Kind==Server);
             Cryptor.setUseClientMode((Owner.Kind==Client));
@@ -110,23 +111,6 @@ public class SocketHandlerSecure extends SocketHandler {
             Cryptor.setEnabledProtocols(Context.getSupportedSSLParameters().getProtocols());//Settings.Security.Protocols
             Cryptor.setEnabledCipherSuites(Context.getSupportedSSLParameters().getCipherSuites());//Ciphers
             Cryptor.setEnableSessionCreation(true);
-
-
-
-            /*SSLParameters sslParams = Cryptor.getSSLParameters();
-            sslParams.setNeedClientAuth(false);
-            sslParams.setWantClientAuth(false);
-
-            //String[] cs=Owner.Owner.Security.Context.getSupportedSSLParameters().getCipherSuites();
-            //sslParams.setCipherSuites(Ciphers);
-
-            //sslParams.setProtocols(Owner.Owner.Security.Context.getSupportedSSLParameters().getProtocols());
-            //sslParams.setProtocols(Protocols);
-
-
-            //sslParams.setEndpointIdentificationAlgorithm("HTTPS");
-
-            Cryptor.setSSLParameters(sslParams);*/
 
             Channel.socket().setKeepAlive(false);
             Channel.socket().setReuseAddress(false);
@@ -380,7 +364,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 CryptResult = Cryptor.unwrap(bbNetIn, bbAppIn);
 
                 Status = CryptResult.getStatus();
-                handshakeStatus = CryptResult.getHandshakeStatus();
+                handshakeStatus = Cryptor.getHandshakeStatus();
                 switch (Status) {
                     case OK:
                         bbNetIn.compact();
