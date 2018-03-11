@@ -23,8 +23,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Buffers Buffers;
     public Credentials Credentials;
     public boolean Infinite;
-    public boolean Persistent;
-
+    protected TransportConnect connectionData;
     public int Timeout;
     public ItemKind Kind;
     public ItemState State;
@@ -40,6 +39,13 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Items Owner;
     public MethodFactory Methods;
 
+    public TransportConnect getConnectionData() {
+        return connectionData;
+    }
+
+    public Persist getPersistant() {
+        return (connectionData!=null) ?  connectionData.getPersistent() : null;
+    }
 
     @SuppressWarnings("unchecked")
     public Item(Items aOwner, ItemKind aKind) throws InvocationTargetException,NoSuchMethodException,
@@ -48,7 +54,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Class v = TA.Version();
         Version = (Version) v.getConstructor().newInstance();
         Credentials=new Credentials();
-        Persistent = Owner.Engine.Persistent;
+
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
@@ -92,7 +98,6 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         return Bytes.toLongByTripple(this.Address.getAddress().getAddress());
         //return Bytes.toLongByTripple(SocketHandler.Channel.socket().getInetAddress().getAddress());
     }
-
 
     @Override
     public void Setup(){

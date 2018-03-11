@@ -100,6 +100,7 @@ public class Settings {
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
+        public static final int persistDelay = 20*1000 /*m-sec*/;
         public static class Security{
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 100000; // seconds
@@ -279,7 +280,6 @@ public class Settings {
     }
     public static void Initialize(String program, String title, String edition) throws IOException{
         Version = new Version();
-
         Version.loadFromResouce();
 
         System.setProperty(Properties.Program,program);

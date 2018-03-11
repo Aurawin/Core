@@ -281,6 +281,7 @@ public class Table {
             public static final String ManagerConnectConstructor = "table.exception.rsr.manager-connect-constructor";
             public static final String ManagerConnect = "table.exception.rsr.manager-connect";
             public static final String ManagerConnectTransport = "table.exception.rsr.manager-connect-transport";
+            public static final String ManagerConnectNoItemThread = "table.exception.rsr.manager-connect-no-item-thread";
 
 
 

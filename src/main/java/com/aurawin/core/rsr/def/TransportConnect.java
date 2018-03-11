@@ -1,6 +1,7 @@
 package com.aurawin.core.rsr.def;
 
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.solution.Settings;
 
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
@@ -13,13 +14,12 @@ public class TransportConnect {
     private Object transportObject;
     private Method transportConstructor;
     private InetSocketAddress transportAddress;
-    private Instant TTL;
+    protected  Persist Persistent;
 
     public TransportConnect(Object transportObject, Method transportConstructor, InetSocketAddress transportAddress) {
         this.transportObject = transportObject;
         this.transportConstructor = transportConstructor;
         this.transportAddress= transportAddress;
-        this.TTL = Instant.now();
         this.Trys = 0;
     }
 
@@ -33,15 +33,36 @@ public class TransportConnect {
 
     public void setOwner(Item owner){
         Owner = owner;
+        if ( (Owner!=null) && (Owner.Owner.Engine.Persistent)) Persistent = new Persist(Settings.RSR.persistDelay);
     }
 
-    public void setTTL(Instant ttl){ TTL= ttl;  }
-    public Instant getTTL(){ return TTL;  }
-
+    public Persist getPersistent(){
+        return Persistent;
+    }
     public TransportConnectStatus getStatus() {
         return Status;
     }
 
+    public boolean exceededTrys(){
+        if ((Owner!=null) && (Owner.getPersistant()!=null)) {
+            return Owner.getPersistant().exceededTrys();
+        } else {
+            return (Trys < Settings.RSR.Items.TransportConnect.MaxTries);
+        }
+    }
+    public boolean isReadyToConnect(){
+        if ((Owner!=null) && (Owner.getPersistant()!=null)){
+            return Owner.getPersistant().readyToTry();
+        } else {
+            return true;
+        }
+    }
+    public void attemptConnect(){
+        Trys +=1;
+        if (Owner.getPersistant()!=null){
+            Owner.getPersistant().reTry();
+        }
+    }
     public Item getOwner() {
         return Owner;
     }

@@ -75,6 +75,14 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
+    public void reConnect(TransportConnect tcData){
+        Items itms = getManager();
+        if (itms!=null) {
+            itms.qRequestConnect.add(tcData);
+        } else {
+            Syslog.Append(getClass().getCanonicalName(),"reConnect", Table.Format(Table.Exception.RSR.ManagerConnectNoItemThread,tcData.getAddress().getHostString()));
+        }
+    }
     @SuppressWarnings("unchecked")
     public TransportConnect Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
