@@ -101,6 +101,7 @@ public class Settings {
         public static int SocketBufferSendSize = 1024*512;
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 20*1000 /*m-sec*/;
+        public static final int refusedDelay = 20*1000 /*m-sec*/;
         public static class Security{
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 100000; // seconds

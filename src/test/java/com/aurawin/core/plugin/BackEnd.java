@@ -13,7 +13,7 @@ import org.hibernate.Session;
 
 @com.aurawin.core.plugin.annotations.Plugin(
         Name = "BackEnd",
-        Namespace = "/core/noid",
+        Namespace = "/core/be",
         Package = "com.aurawin.core.plugin",
         Title = "Empty Plug",
         Prompt = "Cannot count on this plugin.",

@@ -20,10 +20,10 @@ public class Client  extends Engine {
 
     public InetSocketAddress Address;
 
-    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate, boolean aPersistent) throws
+    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate) throws
             InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aAddress, aTransport, ItemKind.Client,aInfinate, aPersistent);
+        super (aAddress, aTransport, ItemKind.Client,aInfinate);
         State = esCreated;
 
     }
@@ -93,7 +93,7 @@ public class Client  extends Engine {
     public synchronized void CheckForUpdates(){
 
     }
-    public synchronized TransportConnect Connect(InetSocketAddress address) throws Exception{
-        return Managers.Connect(address);
+    public synchronized TransportConnect Connect(InetSocketAddress address,boolean persistent) throws Exception{
+        return Managers.Connect(address,persistent);
     }
 }

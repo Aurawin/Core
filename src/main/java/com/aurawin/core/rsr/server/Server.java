@@ -24,18 +24,18 @@ import com.aurawin.core.stored.entities.Entities;
 public class Server extends Engine {
     protected ServerSocketChannel Channel;
 
-    public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, boolean aPersistent, String aHostName)throws
+    public Server(InetSocketAddress sa, Class<? extends Item>  aTransport, boolean aInfinate, String aHostName)throws
             InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (sa,aTransport,ItemKind.Server,aInfinate, aPersistent);
+        super (sa,aTransport,ItemKind.Server,aInfinate);
         State = esCreated;
         Realm = aHostName;
 
     }
-    public Server(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate, boolean aPersistent)throws
+    public Server(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate)throws
             InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aAddress, aTransport,ItemKind.Server,aInfinate,aPersistent);
+        super (aAddress, aTransport,ItemKind.Server,aInfinate);
     }
 
     @Override

@@ -15,7 +15,10 @@ public class Persist {
         Delay = delay;
         Try = 0;
     }
-
+    public void resetTrys(){
+        TTL = null;
+        Try = 0;
+    }
     public void setDelay(int delay){
         Delay = delay;
         TTL = Instant.now().plusMillis(Delay);
@@ -24,6 +27,7 @@ public class Persist {
         Try+=1;
         TTL = Instant.now().plusMillis(Delay);
     }
+
     public boolean readyToTry(){
         return (Instant.now().isAfter(TTL));
     }

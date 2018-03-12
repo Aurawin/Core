@@ -7,20 +7,26 @@ import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 
+import static com.aurawin.core.rsr.def.TransportConnectStatus.tcsCreated;
+
 public class TransportConnect {
     private int Trys;
+    private Instant ttlRetry;
     private TransportConnectStatus Status;
-    private Item Owner;
+    protected Item Owner;
     private Object transportObject;
     private Method transportConstructor;
     private InetSocketAddress transportAddress;
     protected  Persist Persistent;
 
-    public TransportConnect(Object transportObject, Method transportConstructor, InetSocketAddress transportAddress) {
+    public TransportConnect(Object transportObject, Method transportConstructor, InetSocketAddress transportAddress, boolean persistent) {
         this.transportObject = transportObject;
         this.transportConstructor = transportConstructor;
         this.transportAddress= transportAddress;
+        if (persistent) this.Persistent = new Persist(Settings.RSR.persistDelay);
         this.Trys = 0;
+        this.ttlRetry=null;
+        this.Status = tcsCreated;
     }
 
     public Object getObject() {
@@ -33,9 +39,16 @@ public class TransportConnect {
 
     public void setOwner(Item owner){
         Owner = owner;
-        if ( (Owner!=null) && (Owner.Owner.Engine.Persistent)) Persistent = new Persist(Settings.RSR.persistDelay);
     }
-
+    public boolean isAlive(){
+        if (Owner==null){
+            return true;
+        } else if ( Persistent!=null)  {
+            return true;
+        } else {
+            return (Owner.State == ItemState.isEstablished);
+        }
+    }
     public Persist getPersistent(){
         return Persistent;
     }
@@ -47,20 +60,44 @@ public class TransportConnect {
         if ((Owner!=null) && (Owner.getPersistant()!=null)) {
             return Owner.getPersistant().exceededTrys();
         } else {
-            return (Trys < Settings.RSR.Items.TransportConnect.MaxTries);
+            return (Trys >= Settings.RSR.Items.TransportConnect.MaxTries);
         }
     }
-    public boolean isReadyToConnect(){
+    public boolean readyForUse(){
+        if (Owner!=null){
+            return (Owner.State == ItemState.isEstablished);
+
+        } else {
+
+            return false;
+        }
+
+    }
+    public boolean readyToConnect(){
+
         if ((Owner!=null) && (Owner.getPersistant()!=null)){
             return Owner.getPersistant().readyToTry();
         } else {
-            return true;
+            if (ttlRetry==null) {
+                ttlRetry = Instant.now().plusMillis(Settings.RSR.refusedDelay);
+                return true;
+            } else {
+                return Instant.now().isAfter(ttlRetry);
+            }
+        }
+    }
+    public void resetTrys(){
+        Trys = 0;
+        if (Owner.getPersistant()!=null){
+            Owner.getPersistant().resetTrys();
         }
     }
     public void attemptConnect(){
         Trys +=1;
         if (Owner.getPersistant()!=null){
             Owner.getPersistant().reTry();
+        } else {
+            ttlRetry = Instant.now().plusMillis(Settings.RSR.refusedDelay);
         }
     }
     public Item getOwner() {

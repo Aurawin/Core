@@ -22,7 +22,18 @@ import java.net.InetSocketAddress;
 
 
 public class ServerTest {
-    public Server serverHTTP;
+
+
+    @Test
+    public void testServer() throws Exception {
+        System.out.println("ServerTest.testRun()");
+        System.out.println("ServerTest.serverHTTP Start()");
+        serverHTTP.Start();
+        System.out.println("ServerTest.serverHTTP running");
+        while (serverHTTP.State != EngineState.esFinalize) {
+            Thread.sleep(100);
+        }
+    }
 
     @Before
     public void before() throws Exception {
@@ -51,7 +62,6 @@ public class ServerTest {
                 new InetSocketAddress("172.16.1.1", 1080),
                 HTTP_1_1.class,
                 false,
-                false,
                 "phoenix.aurawin.com"
         );
 
@@ -66,17 +76,7 @@ public class ServerTest {
         serverHTTP = null;
     }
 
-    @Test
-    public void testServer() throws Exception {
-        System.out.println("ServerTest.testRun()");
-        System.out.println("ServerTest.serverHTTP Start()");
-        serverHTTP.Start();
-        System.out.println("ServerTest.serverHTTP running");
-        while (serverHTTP.State != EngineState.esFinalize) {
-            Thread.sleep(100);
-        }
-    }
-
+    public Server serverHTTP;
 
 }
 

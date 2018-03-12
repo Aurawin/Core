@@ -4,7 +4,7 @@ package com.aurawin.core.rsr.transport.methods.http;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
-import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
+import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.methods.Item;
 import com.aurawin.core.rsr.transport.methods.Result;

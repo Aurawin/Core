@@ -84,7 +84,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         }
     }
     @SuppressWarnings("unchecked")
-    public TransportConnect Connect(InetSocketAddress address)throws InstantiationException, IllegalAccessException,
+    public TransportConnect Connect(InetSocketAddress address, boolean persistent)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
     {
         TransportConnect tc = null;
@@ -97,7 +97,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 Method m = c.getMethod("newInstance", itemConstructorParams);
                 try {
                     m.setAccessible(true);
-                    tc = new TransportConnect(o,m,address);
+                    tc = new TransportConnect(o,m,address,persistent);
                     itms.qRequestConnect.add(tc);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(), "Connect", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), address.getHostString()));

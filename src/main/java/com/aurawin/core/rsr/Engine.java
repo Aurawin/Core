@@ -44,18 +44,18 @@ public abstract class Engine extends Thread  {
     protected ItemKind transportKind;
     protected Item transportObject;
 
-    public volatile boolean Persistent;
+
     public volatile int BufferSizeRead;
     public volatile int BufferSizeWrite;
     protected Managers Managers;
     public String Stamp;
     protected Commands Commands;
 
-    public Engine(InetSocketAddress address, Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate, boolean aPersistent) throws
+    public Engine(InetSocketAddress address, Class<? extends Item> aTransport, ItemKind aKind, boolean aInfinate) throws
             InvocationTargetException,IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
     {
         nextId=1;
-        Persistent=aPersistent;
+
         Address = address;
 
         Infinite=aInfinate;
@@ -125,7 +125,7 @@ public abstract class Engine extends Thread  {
             try {
                 SSL.Load(cert);
             } catch (Exception e){
-                if (e!=null) e.getMessage();
+                if (e!=null) e.getMessage();  //todo log error <=====
             }
         } else{
             SSL.Enabled=false;
@@ -143,8 +143,8 @@ public abstract class Engine extends Thread  {
         }
     }
 
-    public TransportConnect Connect(InetSocketAddress a) throws Exception{
-        return Managers.Connect(a);
+    public TransportConnect Connect(InetSocketAddress a, boolean persistent) throws Exception{
+        return Managers.Connect(a,persistent);
     }
 
 }

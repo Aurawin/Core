@@ -167,7 +167,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         tcItem = qRequestConnect.poll();
         tcNextItem = null;
         while (tcItem!=null) {
-            if (tcItem.isReadyToConnect()) {
+            if (tcItem.readyToConnect()) {
                 SocketChannel aChannel = SocketChannel.open();
                 try {
                     if (tcItem.getOwner() == null) {
@@ -177,7 +177,6 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                 aChannel,
                                 ItemKind.Client
                         );
-
 
                         itm.Address = tcItem.getAddress();
                         itm.bindAddress = Engine.Address;
@@ -200,6 +199,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                 aChannel.connect(itm.Address);
                                 qAddItems.add(itm);
                                 aChannel.configureBlocking(false);
+                                tcItem.resetTrys();
                             } catch (Exception e) {
                                 tcItem.incTry();
                                 if (tcItem.getTries() < Settings.RSR.Items.TransportConnect.MaxTries) {
@@ -228,23 +228,26 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             if (tcItem == tcNextItem) {
                 tcItem = qRequestConnect.poll();
                 qRequestConnect.add(tcNextItem);
-
             } else {
                 tcItem = tcNextItem;
             }
         }
         // process remove items
         itm = qRemoveItems.poll();
-        while (itm!=null){
-
+        while (itm!=null) {
+            TransportConnect tcData= itm.getConnectionData();
+            if (tcData!=null) {
+                if (!tcData.exceededTrys()) {
+                    qRequestConnect.add(tcData);
+                    break;
+                }
+            }
             itm.Teardown();
             try {
-                itm.Release();
+                    itm.Release();
             } catch (Exception e) {
-
             }
             itm=qRemoveItems.poll();
-
         }
         try {
             if (Keys.selectNow() > 0) { // non blocking call
