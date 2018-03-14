@@ -1,17 +1,13 @@
 package com.aurawin.core.plugin.annotations;
 
 import com.aurawin.core.rsr.Item;
-import com.aurawin.core.rsr.transport.methods.Method;
+import com.aurawin.core.rsr.transport.methods.MethodProcess;
 import com.aurawin.core.rsr.transport.methods.http.GET;
-import com.aurawin.core.stored.entities.UniqueId;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -27,5 +23,5 @@ public @interface Plugin {
     String Vendor() default "";
     String[] Roles() default {};
     Class<? extends Item> Transport() default Item.class;
-    Class<? extends Method> Method() default GET.class;
+    Class<? extends MethodProcess> Method() default GET.class;
 }

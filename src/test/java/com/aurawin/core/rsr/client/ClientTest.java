@@ -78,7 +78,7 @@ public class ClientTest {
         Transport=Engine.Connect(saServer,false);
         while (Engine.State != EngineState.esFinalize) {
             if (Transport.getStatus()== tcsConnected) {
-                Client = (HTTP_1_1) Transport.getOwner();
+                Client = (HTTP_1_1) Transport.getOwnerOrWait();
                 Client.Request.URI="/index.html";
                 Client.Request.Method= "GET";
                 //Client.Credentials.Passport.Username="user";

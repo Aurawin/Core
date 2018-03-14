@@ -97,7 +97,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 Method m = c.getMethod("newInstance", itemConstructorParams);
                 try {
                     m.setAccessible(true);
-                    tc = new TransportConnect(o,m,address,persistent);
+                    tc = new TransportConnect(itms.Engine,o,m,address,persistent);
                     itms.qRequestConnect.add(tc);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(), "Connect", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), address.getHostString()));
@@ -169,6 +169,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         Items itms = null;
         while (it.hasNext()){
             itms = it.next();
+            itms.Release();
             itms.RemovalRequested=true;
         }
     }

@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.def;
 
+import com.aurawin.core.rsr.Engine;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.solution.Settings;
 
@@ -14,12 +15,14 @@ public class TransportConnect {
     private Instant ttlRetry;
     private TransportConnectStatus Status;
     protected Item Owner;
+    protected Engine Engine;
     private Object transportObject;
     private Method transportConstructor;
     private InetSocketAddress transportAddress;
     protected  Persist Persistent;
 
-    public TransportConnect(Object transportObject, Method transportConstructor, InetSocketAddress transportAddress, boolean persistent) {
+    public TransportConnect(Engine engine, Object transportObject, Method transportConstructor, InetSocketAddress transportAddress, boolean persistent) {
+        this.Engine=engine;
         this.transportObject = transportObject;
         this.transportConstructor = transportConstructor;
         this.transportAddress= transportAddress;
@@ -100,8 +103,25 @@ public class TransportConnect {
             ttlRetry = Instant.now().plusMillis(Settings.RSR.refusedDelay);
         }
     }
-    public Item getOwner() {
+    public boolean hasOwner(){
+        return (Owner!=null);
+    }
+    public Item getOwnerOrWait() {
+        while ((Owner==null) && (Engine.State!=EngineState.esFinalize))
+            try {
+                Thread.sleep(Settings.RSR.TransportConnect.SleepDelay);
+            } catch (InterruptedException ie){
+               return null;
+            }
+
         return Owner;
+    }
+    public void Release(){
+        if (Owner!=null){
+            Owner.Release();
+            Owner=null;
+        }
+        Engine = null;
     }
     public void incTry(){ Trys+=1;}
     public int getTries(){ return Trys; }

@@ -9,6 +9,7 @@ import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.security.Credentials;
 
+import javax.management.relation.Relation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -38,7 +39,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public Items Owner;
     public MethodFactory Methods;
-
+    private boolean Released;
     public TransportConnect getConnectionData() {
         return connectionData;
     }
@@ -50,6 +51,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     @SuppressWarnings("unchecked")
     public Item(Items aOwner, ItemKind aKind) throws InvocationTargetException,NoSuchMethodException,
             InstantiationException, IllegalAccessException{
+        Released=false;
         Protocol TA = getClass().getAnnotation(Protocol.class);
         Class v = TA.Version();
         Version = (Version) v.getConstructor().newInstance();
@@ -79,12 +81,17 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Owner=aOwner;
     }
     @Override
-    public void Release() throws Exception{
-        Credentials.Release();
-        SocketHandler.Release();
-        Buffers.Release();
-        Buffers=null;
-        Credentials=null;
+    public void Release() {
+        if (!Released){
+            Teardown();
+            Released=true;
+            Credentials.Release();
+            SocketHandler.Release();
+            Buffers.Release();
+            Buffers=null;
+            Credentials=null;
+            SocketHandler=null;
+        }
     }
     public void setChannel(SocketChannel aChannel)
     {

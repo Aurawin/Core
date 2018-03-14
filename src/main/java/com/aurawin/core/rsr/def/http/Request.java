@@ -185,7 +185,7 @@ public class Request implements QueryResolver {
                     System.arraycopy(input, iOffset, aHeaders, 0, iChunk);
                     Headers.Load(aHeaders);
                     Cookies.Load(Headers.ValueAsString(Field.Cookie));
-                    // Method Code
+                    // MethodProcess Code
                     sLine = Headers.ValueAsString(Field.Authorization);
                     if (sLine.length() > 0) {
                         return Security.decryptCredentials(Owner, sLine);

@@ -156,7 +156,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         queueClose();
     }
     @Override
-    public void Release() throws Exception{
+    public void Release() {
 
         Request.Release();
         Response.Release();

@@ -117,7 +117,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         }
         try {
 
-            while ((Engine.State != esFinalize) && (RemovalRequested == false)) {
+            while ((Engine.State != esFinalize) && (!RemovalRequested)) {
                 Begin = Instant.now();
                 try {
                     if (size() > 0) {
@@ -130,7 +130,6 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                     End = Instant.now();
                 }
             }
-
         } finally {
             Release();
         }
@@ -146,7 +145,6 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                 )
         );
     }
-
     private void processItems() throws IOException{
         // process add items
         itm = qAddItems.poll();
@@ -170,7 +168,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
             if (tcItem.readyToConnect()) {
                 SocketChannel aChannel = SocketChannel.open();
                 try {
-                    if (tcItem.getOwner() == null) {
+                    if (!tcItem.hasOwner()) {
                         itm = (Item) tcItem.getMethod().invoke(
                                 tcItem.getObject(),
                                 this,
@@ -185,7 +183,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                         tcItem.setOwner(itm);
 
                     }
-                    itm = tcItem.getOwner();
+                    itm = tcItem.getOwnerOrWait();
                     itm.setChannel(aChannel);
 
                     if (tcItem.getAddress() != null) {
@@ -410,14 +408,12 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     }
 
     public void Release(){
-        for (Item itm:this) {
-            try {
-                itm.Teardown();
-                itm.Release();
-            } catch (Exception e){
+        stream().forEach(i-> i.Release());
+        qAddItems.stream().forEach(i-> i.Release());
+        qRequestConnect.stream().forEach(tc-> tc.Release());
+        qRemoveItems.stream().forEach(i-> i.Release());
+        qWriteItems.stream().forEach(i->i.Release());
 
-            }
-        }
         if (Keys!=null) {
             try {
                 Keys.close();

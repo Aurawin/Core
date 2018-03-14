@@ -110,7 +110,8 @@ public class IMAP_4_1 extends Item implements Transport{
         queueClose();
     }
     @Override
-    public void Release() throws Exception{
+
+    public void Release() {
         super.Release();
         Request.Release();
         Response.Release();

@@ -8,7 +8,7 @@
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
     <artifactId>core</artifactId>
-    <version>2018.3.12.2</version>
+    <version>2018.3.13.7</version>
     <scm>
         <connection>scm:svn:http://127.0.0.1/dummy</connection>
         <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
@@ -142,10 +142,6 @@
                         <version>2.20.1</version>
                         <configuration>
                             <skipTests>true</skipTests>
-\                           <includes>
-                                <!--<include>com.aurawin.core.solution.VersionTest.java</include>-->
-                                <!--<include>com.aurawin.core.rsr.server.ServerTest.java</include>-->
-                            </includes>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -217,10 +213,10 @@
                                 <item>buildNumber</item>
                             </items>
                             <buildNumberPropertiesFileLocation>${basedir}/src/main/resources/buildNumber</buildNumberPropertiesFileLocation>
-                            <attach>true</attach>
+
                             <doCheck>true</doCheck>
                             <doUpdate>true</doUpdate>
-                            <addOutputDirectoryToResources>true</addOutputDirectoryToResources>
+
                         </configuration>
                     </plugin>
 

@@ -102,6 +102,15 @@ public class Settings {
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 20*1000 /*m-sec*/;
         public static final int refusedDelay = 20*1000 /*m-sec*/;
+        public static class TransportConnect{
+            public static int SleepDelay = 500;
+            public static int RequestDelay = 150;
+            public static int ResponseDelay = 150;
+            public static class Persist{
+                public static boolean Infinite = true;
+                public static boolean Finite = false;
+            }
+        }
         public static class Security{
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 100000; // seconds

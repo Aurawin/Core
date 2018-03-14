@@ -68,6 +68,9 @@ public class Client  extends Engine {
                     Syslog.Append("Client", "monitor", "Interrupted");
                 }
             }
+            if (State==esFinalize){
+                Managers.Reset();
+            }
         } catch (Exception e){
             State = esException;
             Syslog.Append("Client", "run", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
@@ -89,6 +92,9 @@ public class Client  extends Engine {
         if (State!=esFinalize){
             State=esStop;
         }
+    }
+    public synchronized void Close(){
+        State=esFinalize;
     }
     public synchronized void CheckForUpdates(){
 
