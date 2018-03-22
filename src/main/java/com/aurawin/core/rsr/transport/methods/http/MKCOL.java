@@ -4,7 +4,7 @@ import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.transport.Transport;
-import com.aurawin.core.rsr.transport.methods.Item;
+import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.security.Security;
 import org.hibernate.Session;
@@ -15,7 +15,7 @@ import static com.aurawin.core.rsr.def.http.Status.s510;
 import static com.aurawin.core.rsr.transport.methods.Result.NotAuthorizied;
 import static com.aurawin.core.solution.Table.RSR.HTTP.Method.MakeCollection;
 
-public class MKCOL extends Item {
+public class MKCOL extends Method {
     public MKCOL() {
         super(MakeCollection);
     }

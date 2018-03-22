@@ -5,7 +5,6 @@ import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.Version;
 
 import com.aurawin.core.rsr.def.rsrResult;
-import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.stream.MemoryStream;
 import org.hibernate.Session;
 
@@ -16,7 +15,7 @@ import static com.aurawin.core.rsr.def.rsrResult.rPostpone;
 public class Request implements QueryResolver {
     protected Item Owner;
     public Version Version;
-    public com.aurawin.core.rsr.transport.methods.Item Method;
+    public com.aurawin.core.rsr.transport.methods.Method Method;
     public KeyPairs Parameters;
     public MemoryStream Payload;
 

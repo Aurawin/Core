@@ -2,7 +2,7 @@ package com.aurawin.core.rsr.transport.methods.imap;
 
 import com.aurawin.core.rsr.client.protocol.imap.IMAP_4_1;
 import com.aurawin.core.rsr.transport.Transport;
-import com.aurawin.core.rsr.transport.methods.Item;
+import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
 import org.hibernate.Session;
 
@@ -12,7 +12,7 @@ import static com.aurawin.core.rsr.transport.methods.Result.None;
 import static com.aurawin.core.solution.Table.RSR.IMAP.Method.Append;
 
 
-public class APPEND extends Item{
+public class APPEND extends Method {
     public APPEND() {
         super(Append);
     }

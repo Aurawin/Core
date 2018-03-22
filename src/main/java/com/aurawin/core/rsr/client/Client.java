@@ -20,10 +20,10 @@ public class Client  extends Engine {
 
     public InetSocketAddress Address;
 
-    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate, boolean aPersistent) throws
+    public Client(InetSocketAddress aAddress, Class<? extends Item> aTransport, boolean aInfinate) throws
             InvocationTargetException,IOException,NoSuchMethodException, InstantiationException,IllegalAccessException
     {
-        super (aAddress, aTransport, ItemKind.Client,aInfinate, aPersistent);
+        super (aAddress, aTransport, ItemKind.Client,aInfinate);
         State = esCreated;
 
     }
@@ -68,6 +68,9 @@ public class Client  extends Engine {
                     Syslog.Append("Client", "monitor", "Interrupted");
                 }
             }
+            if (State==esFinalize){
+                Managers.Reset();
+            }
         } catch (Exception e){
             State = esException;
             Syslog.Append("Client", "run", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
@@ -90,10 +93,13 @@ public class Client  extends Engine {
             State=esStop;
         }
     }
+    public synchronized void Close(){
+        State=esFinalize;
+    }
     public synchronized void CheckForUpdates(){
 
     }
-    public synchronized TransportConnect Connect(InetSocketAddress address) throws Exception{
-        return Managers.Connect(address);
+    public synchronized TransportConnect Connect(InetSocketAddress address,boolean persistent) throws Exception{
+        return Managers.Connect(address,persistent);
     }
 }

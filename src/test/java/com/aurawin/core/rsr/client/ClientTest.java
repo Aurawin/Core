@@ -57,9 +57,7 @@ public class ClientTest {
         Engine = new Client(
                 saClient,
                 HTTP_1_1.class,
-                false,
                 false
-
         );
         Engine.loadSecurity(1l);
         Engine.Configure();
@@ -77,10 +75,10 @@ public class ClientTest {
         System.out.println("ClientTest.clientHTTP Start()");
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
-        Transport=Engine.Connect(saServer);
+        Transport=Engine.Connect(saServer,false);
         while (Engine.State != EngineState.esFinalize) {
             if (Transport.getStatus()== tcsConnected) {
-                Client = (HTTP_1_1) Transport.getOwner();
+                Client = (HTTP_1_1) Transport.getOwnerOrWait();
                 Client.Request.URI="/index.html";
                 Client.Request.Method= "GET";
                 //Client.Credentials.Passport.Username="user";

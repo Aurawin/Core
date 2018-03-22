@@ -15,13 +15,13 @@ public class Table {
         Load();
     }
     public static final int MaxSize = 1024*1024;
-    public static final String TrueFalse(boolean val){
-        return (val==true) ? "true" : "false";
+    public static String TrueFalse(boolean val){
+        return (val) ? "true" : "false";
     }
-    public static final String YesNo(boolean val){
-        return (val==true) ? "yes" : "no";
+    public static String YesNo(boolean val){
+        return (val) ? "yes" : "no";
     }
-    public static final String defaultResource = "/core.lang."+ Settings.Language+".json";
+    public static String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
     public static final String LF="\n";
     public static final String CRLF = "\r\n";
@@ -172,7 +172,7 @@ public class Table {
         public static final String File = "table.label.File";
         public static final String Folder = "table.label.Folder";
 
-        public static final String Item = "table.label.Item";
+        public static final String Item = "table.label.Method";
         public static final String Items = "table.label.Implements";
         public static final String Collection = "table.label.Collection";
         public static final String Collections = "table.label.Collections";

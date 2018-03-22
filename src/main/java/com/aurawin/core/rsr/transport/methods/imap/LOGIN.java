@@ -4,7 +4,7 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
 import com.aurawin.core.rsr.client.protocol.imap.IMAP_4_1;
 import com.aurawin.core.rsr.transport.Transport;
-import com.aurawin.core.rsr.transport.methods.Item;
+import com.aurawin.core.rsr.transport.methods.Method;
 import com.aurawin.core.rsr.transport.methods.Result;
 import com.aurawin.core.rsr.security.Security;
 import org.hibernate.Session;
@@ -18,7 +18,7 @@ import static com.aurawin.core.solution.Table.RSR.IMAP.Method.Login;
 /**
  * Created by atbrunner on 2/12/18.
  */
-public class LOGIN extends Item {
+public class LOGIN extends Method {
     public LOGIN() {
         super(Login);
     }

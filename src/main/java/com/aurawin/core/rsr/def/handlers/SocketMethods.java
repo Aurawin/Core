@@ -6,7 +6,7 @@ public interface SocketMethods {
     SocketHandlerResult Send();
     SocketHandlerResult Recv();
     void Setup();
-    void Teardown();
     void Shutdown();
+    void Teardown();
     void beginHandshake();
 }
