@@ -1,11 +1,9 @@
 package com.aurawin.core.plugin;
 
-import com.aurawin.core.lang.Namespace;
-import com.aurawin.core.stored.Stored;
+import com.aurawin.core.solution.Namespace;
 import com.aurawin.core.stored.entities.UniqueId;
 import org.hibernate.Session;
 import com.aurawin.core.plugin.annotations.Plugin;
-import org.hibernate.collection.internal.PersistentBag;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;

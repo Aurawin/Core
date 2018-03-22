@@ -1,4 +1,4 @@
-package com.aurawin.core.lang;
+package com.aurawin.core.solution;
 
 import com.aurawin.core.stored.entities.UniqueId;
 

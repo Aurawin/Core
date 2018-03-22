@@ -1,13 +1,11 @@
 package com.aurawin.core.plugin;
 
 import com.aurawin.core.rsr.Item;
-import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.UniqueId;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aurawin.core.plugin.annotations.Plugin;
@@ -26,7 +24,7 @@ public abstract class Plug extends UniqueId implements Methods {
         Annotation=getClass().getAnnotation(Plugin.class);
         if (Annotation!=null) {
             setNamespace(
-                    com.aurawin.core.lang.Namespace.Entities.Plugin.getNamespace(
+                    com.aurawin.core.solution.Namespace.Entities.Plugin.getNamespace(
                             Annotation.Package(),
                             Annotation.Name()
                     )
@@ -38,7 +36,7 @@ public abstract class Plug extends UniqueId implements Methods {
             for (java.lang.reflect.Method f : fs) {
                 aC = f.getAnnotation(Command.class);
                 if (aC != null) {
-                    String ns=com.aurawin.core.lang.Namespace.Entities.Plugin.getMethodNamespace(
+                    String ns= com.aurawin.core.solution.Namespace.Entities.Plugin.getMethodNamespace(
                             Annotation.Package(),
                             Annotation.Name(),
                             aC.Name()

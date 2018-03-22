@@ -102,6 +102,7 @@ public class Settings {
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 20*1000 /*m-sec*/;
         public static final int refusedDelay = 20*1000 /*m-sec*/;
+        public static final int AnyPort = 0;
         public static class TransportConnect{
             public static int SleepDelay = 500;
             public static int RequestDelay = 150;
@@ -113,7 +114,7 @@ public class Settings {
         }
         public static class Security{
             public static float BufferGrowFactor=1.2f;
-            public static int HandshakeTimeout = 100000; // seconds
+            public static int HandshakeTimeout = 1000*10; //milliseconds
 
             public static int SSLEngineInBuffer = 1024*512;
             public static int SSLEngineOutBuffer = 1024*512;

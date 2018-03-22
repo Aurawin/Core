@@ -270,6 +270,7 @@ public class Table {
             public static final String UnableToOpenItemChannelSelector = "table.exception.rsr.unable-to-open-item-channel-selector";
             public static final String UnableToRegisterItemChannel = "table.exception.rsr.unable-to-register-item-channel";
             public static final String UnableToCloseItemChannel = "table.exception.rsr.unable-to-close-item-channel";
+            public static final String ExceptionWhileReleaseingItem = "table.exception.rsr.release-item";
             public static final String UnableToSetReadBuffer = "table.exception.rsr.unable-to-set-read-buffer";
             public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
             public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";

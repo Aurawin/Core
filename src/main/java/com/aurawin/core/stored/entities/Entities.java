@@ -27,9 +27,10 @@ import org.hibernate.query.Query;
 
 
 public class Entities {
+
     public static final boolean CascadeOn = true;
     public static final boolean CascadeOff = false;
-
+    public static boolean Loaded = false;
     private static Loader Loader;
     private static Manifest Owner;
     private static SessionFactory Factory;
@@ -48,6 +49,7 @@ public class Entities {
             RecreateFactory();
         }
         Owner.Verify();
+        Loaded=true;
     }
     public static void Verify(){
         if (Owner!=null) Owner.Verify();

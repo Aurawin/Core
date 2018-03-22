@@ -3,6 +3,7 @@ package com.aurawin.core.rsr;
 import com.aurawin.core.array.Bytes;
 import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.rsr.def.handlers.*;
+import com.aurawin.core.rsr.transport.AutoNumber;
 import com.aurawin.core.rsr.transport.Transport;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 import com.aurawin.core.rsr.transport.methods.MethodFactory;
@@ -32,7 +33,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Instant TTL;
     public InetSocketAddress Address;
     public InetSocketAddress bindAddress;
-
+    public AutoNumber Id;
     protected SocketHandler SocketHandler;
 
     public EnumSet<ItemError> Errors;
@@ -52,6 +53,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Item(Items aOwner, ItemKind aKind) throws InvocationTargetException,NoSuchMethodException,
             InstantiationException, IllegalAccessException{
         Released=false;
+        Id = new AutoNumber();
         Protocol TA = getClass().getAnnotation(Protocol.class);
         Class v = TA.Version();
         Version = (Version) v.getConstructor().newInstance();
@@ -99,11 +101,12 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
+        if (getPersistant()!=null)
+            getPersistant().renewTTL();
     }
 
     public long getRemoteIp(){
-        return Bytes.toLongByTripple(this.Address.getAddress().getAddress());
-        //return Bytes.toLongByTripple(SocketHandler.Channel.socket().getInetAddress().getAddress());
+        return IpHelper.toLong(this.Address.getAddress().getAddress());
     }
 
     @Override
@@ -114,6 +117,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
     @Override
     public void Teardown(){
+        Id = null;
         SocketHandler.Teardown();
         Timeout=0;
         TTL=null;

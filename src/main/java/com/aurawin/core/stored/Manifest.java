@@ -7,7 +7,7 @@ import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
-import com.aurawin.core.lang.Namespace;
+import com.aurawin.core.solution.Namespace;
 
 public class Manifest {
     public String Username;
