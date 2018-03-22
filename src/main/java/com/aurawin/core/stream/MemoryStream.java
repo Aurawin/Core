@@ -128,6 +128,7 @@ public class MemoryStream extends Channel {
     @Override
     public void close(){}
 
+
     public synchronized int Write (byte[] Value){
         byte[] itm = Value.clone();
         Collection.add(itm);
@@ -140,6 +141,16 @@ public class MemoryStream extends Channel {
         BufferedOutputStream buffOut=new BufferedOutputStream(new FileOutputStream(Output));
         for (byte[] bytes : Collection)
             buffOut.write(bytes);
+    }
+    @Override
+    public synchronized String toString(){
+        StringBuffer sb = new StringBuffer();
+        String chunk;
+        for(byte[] ba:Collection){
+            chunk=new String(ba);
+            sb.append(chunk);
+        }
+        return sb.toString();
     }
     public synchronized void LoadFromFile(File File) throws IOException{
         Collection.clear();
@@ -340,6 +351,18 @@ public class MemoryStream extends Channel {
             byte[] itm = Collection.pop();
             Dest.Collection.add(itm);
             Dest.Size+=itm.length;
+        }
+        return Size;
+    }
+
+    public synchronized long CopyFrom(MemoryStream Source){
+        Position=Size;
+        if (Source!=null) {
+            while (Source.Collection.size() > 0) {
+                byte[] itm = Source.Collection.pop();
+                Collection.add(itm);
+                Size += itm.length;
+            }
         }
         return Size;
     }

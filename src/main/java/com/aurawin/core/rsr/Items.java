@@ -13,6 +13,7 @@ import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
+import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.*;
 import static com.aurawin.core.rsr.def.ItemError.*;
@@ -173,12 +174,12 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                 tcItem.getObject(),
                                 this,
                                 aChannel,
-                                ItemKind.Client
+                                Client
                         );
 
                         itm.Address = tcItem.getAddress();
                         itm.bindAddress = Engine.Address;
-                        itm.Kind = ItemKind.Client;
+                        itm.Kind = Client;
                         itm.connectionData = tcItem;
                         tcItem.setOwner(itm);
 
@@ -193,7 +194,8 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                             }
                             aChannel.configureBlocking(true);
                             try {
-                                tcItem.attemptConnect();
+                                tcItem.attemptingConnect();
+
                                 aChannel.connect(itm.Address);
                                 qAddItems.add(itm);
                                 aChannel.configureBlocking(false);
@@ -209,6 +211,7 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
                                 Syslog.Append(getClass().getCanonicalName(), "processItems.Connect", Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(), tcItem.getAddress().getHostString()));
                             }
                         } catch (Exception e) {
+                            tcItem.incTry();
                             aChannel.close();
                             Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Bind", Table.Format(Table.Exception.RSR.ManagerConnectWithBind, e.getMessage(), Engine.Address.toString(), tcItem.getAddress().toString()));
                         }
@@ -233,17 +236,20 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         // process remove items
         itm = qRemoveItems.poll();
         while (itm!=null) {
-            TransportConnect tcData= itm.getConnectionData();
-            if (tcData!=null) {
-                if (!tcData.exceededTrys()) {
-                    qRequestConnect.add(tcData);
-                    break;
+            if (itm.Kind==Client) {
+                TransportConnect tcData = itm.getConnectionData();
+                if (tcData != null) {
+                    if (!tcData.exceededTrys()) {
+                        qRequestConnect.add(tcData);
+                        break;
+                    }
                 }
             }
             itm.Teardown();
             try {
                     itm.Release();
             } catch (Exception e) {
+                Syslog.Append(getClass().getCanonicalName(), "processItems.qRemoveItems.Release", Table.Format(Table.Exception.RSR.ExceptionWhileReleaseingItem, e.getMessage(),Item.class.getName()));
             }
             itm=qRemoveItems.poll();
         }

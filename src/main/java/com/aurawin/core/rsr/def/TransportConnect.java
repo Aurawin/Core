@@ -90,15 +90,17 @@ public class TransportConnect {
         }
     }
     public void resetTrys(){
+        Persist p =Owner.getPersistant();
         Trys = 0;
-        if (Owner.getPersistant()!=null){
-            Owner.getPersistant().resetTrys();
+        if (p!=null){
+            p.resetTrys();
         }
     }
-    public void attemptConnect(){
+    public void attemptingConnect(){
+        Persist p =Owner.getPersistant();
         Trys +=1;
-        if (Owner.getPersistant()!=null){
-            Owner.getPersistant().reTry();
+        if (p!=null){
+            p.reTry();
         } else {
             ttlRetry = Instant.now().plusMillis(Settings.RSR.refusedDelay);
         }
@@ -123,7 +125,13 @@ public class TransportConnect {
         }
         Engine = null;
     }
-    public void incTry(){ Trys+=1;}
+    public void incTry(){
+        Trys+=1;
+        Persist p =Owner.getPersistant();
+        if (p!=null){
+            p.renewTTL();
+        }
+    }
     public int getTries(){ return Trys; }
     public InetSocketAddress getAddress() {
         return transportAddress;

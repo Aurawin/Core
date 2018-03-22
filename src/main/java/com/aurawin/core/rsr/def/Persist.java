@@ -11,12 +11,12 @@ public class Persist {
     protected TransportConnect TransportConnect;
 
     public Persist(int delay) {
-        TTL = null;
         Delay = delay;
         Try = 0;
+        TTL = Instant.now().plusMillis(Delay);
     }
     public void resetTrys(){
-        TTL = null;
+        TTL = Instant.now().plusMillis(Delay);
         Try = 0;
     }
     public void setDelay(int delay){
@@ -25,6 +25,10 @@ public class Persist {
     }
     public void reTry(){
         Try+=1;
+        TTL = Instant.now().plusMillis(Delay);
+    }
+
+    public void renewTTL(){
         TTL = Instant.now().plusMillis(Delay);
     }
 
