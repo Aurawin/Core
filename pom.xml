@@ -8,12 +8,7 @@
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
     <artifactId>core</artifactId>
-    <version>2018.3.19.4</version>
-    <properties>
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <version>2018.3.22.3</version>
     <scm>
         <connection>scm:svn:http://127.0.0.1/dummy</connection>
         <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
@@ -31,7 +26,11 @@
         <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
 
     </build>
-
+    <properties>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <distributionManagement>
         <repository>
             <id>aurawin</id>
@@ -63,7 +62,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -121,7 +120,6 @@
         <profile>
             <id>Release</id>
             <build>
-                <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
                 <resources>
                     <resource>
                         <directory>${basedir}/src/main/resources/</directory>
@@ -130,14 +128,22 @@
                 </resources>
                 <pluginManagement>
                     <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-deploy-plugin</artifactId>
-                            <version>2.8.2</version>
-                        </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.8.2</version>
+                    </plugin>
                     </plugins>
                 </pluginManagement>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.20.1</version>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
@@ -146,16 +152,6 @@
                             <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.20.1</version>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                            <includes></includes>
-                        </configuration>
-                    </plugin>
-
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -202,6 +198,7 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>buildnumber-maven-plugin</artifactId>
                         <version>1.3</version>
+
                         <executions>
                             <execution>
                                 <phase>validate</phase>
