@@ -7,7 +7,6 @@ import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.Module;
 import com.aurawin.core.stored.entities.UniqueId;
 import java.util.ArrayList;
-import com.aurawin.core.solution.Namespace;
 
 public class Manifest {
     public String Username;
@@ -71,11 +70,6 @@ public class Manifest {
         for( Class<? extends Stored> ac : annotations)  {
             if (Annotated.contains(ac)==false)
               Annotated.add(ac);
-        }
-        Namespaces.clear();
-        ArrayList<UniqueId> l = Namespace.Discover();
-        for (UniqueId u: l){
-            Namespaces.add(u);
         }
     }
     public void Verify(){
