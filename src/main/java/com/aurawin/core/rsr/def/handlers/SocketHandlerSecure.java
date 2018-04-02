@@ -263,7 +263,6 @@ public class SocketHandlerSecure extends SocketHandler {
                     handshakeFinished();
                 } else {
                     handshakeFailed();
-                    Syslog.Append("SocketHandlerSecure", "beginHandshake", "Handshake Failure.");
                 }
             } catch (SSLException sle) {
                 Syslog.Append("SocketHandlerSecure", "beginHandshake", "SSL Exception.");
@@ -288,7 +287,7 @@ public class SocketHandlerSecure extends SocketHandler {
         Syslog.Append(
                 "SocketHandlerSecure",
                 "handshakeFailed",
-                "Connecting to ["+Owner.Address.toString()+ "] failed due to a handshake failure."
+                "Connection ["+Owner.Address.toString()+ "] failed due to a handshake failure."
         );
 
     }

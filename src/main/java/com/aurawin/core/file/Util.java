@@ -18,4 +18,11 @@ public class Util {
         return filename;
 
     }
+    public static String extractFileExtension(String filename){
+        int idxEnd = Math.max(0,filename.length()-1);
+        int idxDot = filename.lastIndexOf(".");
+        if (idxDot==-1) idxDot = 0;
+
+        return filename.substring(idxDot+1,idxEnd);
+    }
 }

@@ -1,25 +1,55 @@
 package com.aurawin.core.plugin;
 
+import com.aurawin.core.json.Builder;
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.entities.UniqueId;
+import com.aurawin.core.stream.MemoryStream;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aurawin.core.plugin.annotations.Plugin;
 import com.aurawin.core.plugin.annotations.Command;
 
+import static com.aurawin.core.plugin.PluginState.PluginSuccess;
+
 public abstract class Plug extends UniqueId implements Methods {
     public Plugin Annotation;
     public ConcurrentHashMap<String,CommandInfo>Commands;
+    private Builder bldr;
+    public Gson gson;
 
     @SuppressWarnings("unchecked")
     public ArrayList<CommandInfo>discoverCommands(){
         return new ArrayList<CommandInfo>(Commands.values());
     }
+
+
+    public void writeObject(MemoryStream Stream, Object Data){
+        Stream.Write(gson.toJson(Data));
+    }
+    public void writeObjects(MemoryStream Stream, Object[] Data){
+        Stream.Write(gson.toJson(Data));
+    }
+    public void writeObjects(MemoryStream Stream, ArrayList<? extends Object> Data){
+        Stream.Write(gson.toJson(Data));
+    }
+    public <T extends Stored>T readObject(MemoryStream Stream,Class<T> clazz){
+        return gson.fromJson(Stream.toString(),clazz);
+    }
+    public <T extends Stored>T[] readObjects(MemoryStream Stream, Class<T> clazz){
+        return gson.fromJson(Stream.toString(),new TypeToken<T>(){}.getType());
+    }
+
     public PluginState Setup(Session ssn){
+        bldr = new Builder();
+        gson = bldr.Create();
         PluginState r = PluginState.PluginFailure;
         Annotation=getClass().getAnnotation(Plugin.class);
         if (Annotation!=null) {
@@ -53,11 +83,16 @@ public abstract class Plug extends UniqueId implements Methods {
             }
             Commands = ms;
             Plugins.Register(this);
-            r =  PluginState.PluginSuccess;
+            r =  PluginSuccess;
         } else {
             r = PluginState.PluginAnnotationError;
         }
         return r;
+    }
+    public PluginState Teardown(Session ssn){
+        gson = null;
+        bldr = null;
+        return PluginSuccess;
     }
     @Override
     public PluginState Execute(Session ssn, String Namespace, Item itm) {

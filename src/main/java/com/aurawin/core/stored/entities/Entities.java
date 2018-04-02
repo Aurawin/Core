@@ -48,12 +48,9 @@ public class Entities {
         } else {
             RecreateFactory();
         }
-        Owner.Verify();
         Loaded=true;
     }
-    public static void Verify(){
-        if (Owner!=null) Owner.Verify();
-    }
+
     public static Session openSession(){
         return Factory.openSession();
     }
@@ -262,6 +259,9 @@ public class Entities {
         } finally {
             s.close();
         }
+    }
+    public static void Identify(ArrayList<UniqueId> es){
+        es.stream().forEach(e-> Identify(e));
     }
     @SuppressWarnings("unchecked")
     public static <T extends Stored>T Lookup(Class<? extends Stored> CofE, String Name) {

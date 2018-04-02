@@ -25,7 +25,7 @@ public class Manifest {
     public Driver Driver;
 
     public AnnotatedList Annotated= new AnnotatedList();
-    public ArrayList<UniqueId> Namespaces = new ArrayList<UniqueId>();
+
     public Manifest(
             String username,
             String password,
@@ -72,11 +72,7 @@ public class Manifest {
               Annotated.add(ac);
         }
     }
-    public void Verify(){
-        for (UniqueId uid : Namespaces){
-            Entities.Identify(uid);
-        }
-    }
+
     public String getConnectionURL(){
         return "jdbc:".concat(Driver.getTemplate()
                 .replace("$host",Host)

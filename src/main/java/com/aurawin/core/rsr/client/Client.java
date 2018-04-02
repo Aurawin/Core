@@ -38,7 +38,6 @@ public class Client  extends Engine {
                         break;
                     case esConfigure:
                         try {
-                            Entities.Verify();
                             State = esStart;
                         } catch (Exception e) {
 

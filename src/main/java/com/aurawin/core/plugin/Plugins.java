@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import com.aurawin.core.plugin.annotations.Plugin;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Plugins {

@@ -12,4 +12,10 @@ public class Writer {
     public static void toFile(MemoryStream Data, File Output) throws IOException{
         Data.SaveToFile(Output);
     }
+
+    public static void toFile(byte[] data, File Output) throws IOException{
+        MemoryStream Data = new MemoryStream();
+        Data.Write(data);
+        Data.SaveToFile(Output);
+    }
 }

@@ -28,6 +28,7 @@ public class Noid extends Plug {
     public PluginState Teardown(Session ssn){
         return PluginState.PluginSuccess;
     }
+
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
             Name = "DoSomething",
@@ -35,7 +36,7 @@ public class Noid extends Plug {
             Title = "Something",
             Prompt = "Enable this feature to do something.",
             Description = "The command \"Something\" does something!",
-            Format = FormatIO.JSON
+            Format = FormatIO.None
     )
     public PluginState DoSomething(Session ssn, Item Transport){
         HTTP_1_1 h = (HTTP_1_1) Transport;
@@ -50,7 +51,7 @@ public class Noid extends Plug {
             Title = "Another",
             Prompt = "Enable this feature to do another.",
             Description = "The command \"Another\" does another!",
-            Format = FormatIO.JSON
+            Format = FormatIO.None
     )
     public PluginState DoAnother(Session ssn, Item Transport){
         HTTP_1_1 h = (HTTP_1_1) Transport;

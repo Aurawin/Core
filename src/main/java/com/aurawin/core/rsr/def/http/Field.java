@@ -85,6 +85,7 @@ public class Field {
     public static final String User = "User";
     public static final String Code = "Code";
     public static final String Search = "Srch";
+    public static final String Query  ="Query";
     public static final String Depth = "Depth";
     public static final String NameSpace = "NS";
     public static final String Kind = "KIND";

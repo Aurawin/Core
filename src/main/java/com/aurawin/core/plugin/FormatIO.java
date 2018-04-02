@@ -1,3 +1,3 @@
 package com.aurawin.core.plugin;
 
-public enum FormatIO {None,XML,JSON,ASCII}
+public enum FormatIO {None,XML,JSON,ASCII,UTF8}

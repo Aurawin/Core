@@ -69,7 +69,6 @@ public class Server extends Engine {
                             Channel = ServerSocketChannel.open();
                             Channel.socket().setSoTimeout(60);
                             Channel.socket().setReuseAddress(true);
-                            Entities.Verify();
                             State = esStart;
                         } catch (IOException e) {
                             Channel = null;

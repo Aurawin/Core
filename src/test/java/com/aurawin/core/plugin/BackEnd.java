@@ -8,6 +8,7 @@ import com.aurawin.core.rsr.def.http.Request;
 import com.aurawin.core.rsr.def.http.Response;
 import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 
+import com.aurawin.core.stored.entities.Null;
 import org.hibernate.Session;
 
 
@@ -31,6 +32,8 @@ public class BackEnd extends Plug {
     public PluginState Teardown(Session ssn){
         return PluginState.PluginSuccess;
     }
+
+
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
             Name = "DoSomething",
@@ -38,7 +41,7 @@ public class BackEnd extends Plug {
             Title = "Something",
             Prompt = "Enable this feature to do something.",
             Description = "The command \"Something\" does something!",
-            Format = FormatIO.JSON
+            Format = FormatIO.None
     )
     public PluginState DoSomething(Session ssn, Item Transport){
         HTTP_1_1 h = (HTTP_1_1) Transport;
