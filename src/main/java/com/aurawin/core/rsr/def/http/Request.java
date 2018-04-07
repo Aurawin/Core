@@ -160,8 +160,8 @@ public class Request implements QueryResolver {
 
         // METHOD URI VERSION
 
-        idxLineEnd=Bytes.indexOf(input,Bytes.CRLF,0);
-        idxHeadersEnd =Bytes.indexOf(input,Settings.RSR.Items.HTTP.Payload.Separator.getBytes(),0);
+        idxLineEnd=Bytes.indexOf(input,Bytes.CRLF,0,0);
+        idxHeadersEnd =Bytes.indexOf(input,Settings.RSR.Items.HTTP.Payload.Separator.getBytes(),0,0);
         if ( (idxLineEnd>-1) && (idxHeadersEnd>-1)) {
             iChunk = iOffset + idxLineEnd;
             aLine = new byte[iChunk];

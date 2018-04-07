@@ -227,30 +227,38 @@ public class MemoryStream extends Channel {
         return itm.length;
     }
     public synchronized byte[] Read(int Count){
-        int iOffset=0;
-        return Read(iOffset,Count,false);
+        return Read(Position,Count,false);
     }
     public synchronized byte[] Read(){
-        int iOffset=0;
-        int  iCount=(int) Size;
-        return Read(iOffset,iCount,false);
+        return Read(Position,Size,false);
     }
     public synchronized long readWhole(int Count){
         byte[] ba = Read(Count);
-        long result = ba[0];
-
-        for (int iLcv=1; iLcv<Count; iLcv++){
-            result = (ba[iLcv] & 0xFF) << iLcv;
+        long result = 0;
+        for (int i = 0; i < ba.length; i++)
+        {
+            result = (result << 8) + (ba[i] & 0xff);
         }
+
         return result;
 
     }
-    public synchronized String readString(int Count){
+    public synchronized String readString(int count, String charset){
         try {
-            return new String(Read(Count), "UTF-8");
+            return new String(Read(count), charset);
         } catch (UnsupportedEncodingException iee){
             return "";
         }
+
+    }
+    public synchronized String readStringUntil(byte until,long position, String charset){
+
+        long idx = Find(new byte[]{Byte.valueOf(until)},position);
+
+        int count = (int) (idx - position);
+        Position = position;
+
+        return readString(count, charset);
 
     }
     public synchronized byte readByte(){
@@ -284,7 +292,7 @@ public class MemoryStream extends Channel {
 
 
 
-        byte[] Result = new byte[(int) (Position+Count)];
+        byte[] Result = new byte[(int) Count];
 
         // seek to Collection with position
 
@@ -411,8 +419,7 @@ public class MemoryStream extends Channel {
         }
         return Size;
     }
-
-    public synchronized long Find(String Term, long position){
+    public synchronized long Find(byte[] Term, long position){
         long iPreSeek=0;
         int iOffset=0;
         int iChunk=0;
@@ -421,21 +428,17 @@ public class MemoryStream extends Channel {
         int iLcv =0;
         int idxTerm=-1;
         int iColSize=0;
-        int iTermLen=0;
-        byte[] bTerm = null;
+        int iColPosition=0;
+        int iTermLen=Term.length;
+
         byte[] bWindow = null;
         byte[] col = null;
-        try {
-            bTerm=Term.getBytes("UTF-8");
-            iTermLen=bTerm.length;
-        } catch (UnsupportedEncodingException uee){
-            return iResult;
-        }
 
         while ( (iLcv<Collection.size()) && (iSeek<Size) ) {
             col = Collection.get(iLcv);
             if (iPreSeek+col.length>=Position) {
-                idxTerm = Bytes.indexOf(Collection.get(iLcv), bTerm);
+                iColPosition =(int) (position - iPreSeek);
+                idxTerm = Bytes.indexOf(Collection.get(iLcv), Term,(int) iColPosition, 0);
                 if (idxTerm > -1) {
                     iResult = idxTerm + iPreSeek;
                     break;
@@ -449,6 +452,15 @@ public class MemoryStream extends Channel {
             }
         }
         return iResult;
+
+    }
+    public synchronized long Find(String Term, long position){
+        try {
+            return Find(Term.getBytes("UTF-8"),position);
+
+        } catch (UnsupportedEncodingException uee){
+            return -1;
+        }
 
     }
 

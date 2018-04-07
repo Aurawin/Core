@@ -28,9 +28,9 @@ public class Bytes {
     }
 
 
-    public static final int indexOf(byte[] aOuter, byte[] aInner, int SkipCount) {
+    public static final int indexOf(byte[] aOuter, byte[] aInner, long Position, int SkipCount) {
         int iCounter=0;
-        for(int i = 0; i < aOuter.length - aInner.length+1; ++i) {
+        for(int i = (int) Position; i < aOuter.length - aInner.length+1; ++i) {
             boolean found = true;
             for(int j = 0; j < aInner.length; ++j) {
                 if (aOuter[i+j] != aInner[j]) {
