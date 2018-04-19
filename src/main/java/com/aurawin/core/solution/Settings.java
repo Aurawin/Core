@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.aurawin.core.lang.Table.CRLF;
+import static com.aurawin.core.solution.Settings.File.Log.Base;
 
 public class Settings {
     public static Version Version;
@@ -287,6 +288,12 @@ public class Settings {
             public static String Path() throws Exception{
                 return Base()+ java.io.File.separator+System.getProperty(Properties.Program)+"."+Ext;
             }
+        }
+        public static class Data{
+            public static String Path() throws Exception{
+                return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty(Properties.Program);
+            }
+
         }
     }
     public static void Initialize(String program, String title, String edition) throws IOException{
