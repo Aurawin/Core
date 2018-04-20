@@ -34,8 +34,9 @@ import static com.aurawin.core.rsr.transport.methods.Result.None;
         Version = Version_1_1.class
 )
 public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenticationHandler,
-        ResourceUploadHandler,ResourceDeleteHandler,ResourceCopyHandler,ResourceMoveHandler,ResourceLockHandler,
-        ResourceCollectionHandler,ResourcePropertyHandler,ResourceRequestedHandler
+        ResourceUploadHandler,ResourceDeleteHandler,ResourceCopyHandler,ResourceListRequestedHandler,
+        ResourceMoveHandler,ResourceLockHandler, ResourceCollectionHandler,ResourcePropertyHandler,
+        ResourceRequestedHandler
 {
 
     public volatile Request Request;
@@ -95,6 +96,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     @Override public CredentialResult resourceRequiresAuthentication(Session ssn) {return CredentialResult.None;}
     @Override public Result resourceDeleted(Session ssn){ return Result.Failure;}
     @Override public Result resourceRequested(Session ssn){ return Result.Failure;}
+    @Override public Result resourceListRequested(Session ssn){ return Result.Failure;}
     @Override public Result resourceCopied(Session ssn){ return Result.Failure;}
     @Override public Result resourceMoved(Session ssn){ return Result.Failure;}
     @Override public Result resourceLocked(Session ssn){ return Result.Failure;}

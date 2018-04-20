@@ -55,9 +55,7 @@ public class Plugins {
         ArrayList<UniqueId> al = new ArrayList<>();
         for (Plug p : Master.values()) {
             al.add(p);
-            for (CommandInfo ci : p.Commands.values()){
-                al.add(ci);
-            }
+            al.addAll(p.getCommands());
         }
         return al;
     }

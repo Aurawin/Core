@@ -62,6 +62,10 @@ public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1
 
     }
     @Override
+    public Result resourceListRequested(Session ssn){
+        return Ok;
+    }
+    @Override
     public Result resourceRequested(Session ssn){
         Response.Headers.Update(Field.ContentType,"text/plain");
         // if Request.URI requires authentication we should ask if not provided.
@@ -79,18 +83,18 @@ public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1
         Response.Payload.Write("<br>Password: ");
         Response.Payload.Write(Credentials.Passport.Password);
 
-
-
         return Ok;
     }
     @Override
     public CredentialResult resourceRequiresAuthentication(Session ssn){
         return CredentialResult.None; // requires no Authentication
     }
+
     @Override
     public Result resourceUploaded(Session ssn){
         return Ok;
     }
+
     @Override
     public Result resourceDeleted(Session ssn){
         return Ok;

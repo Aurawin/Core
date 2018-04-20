@@ -36,11 +36,12 @@ public class BackEnd extends Plug {
 
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
-            Name = "DoSomething",
+            Name = "GetSomething",
             Namespace = "/ds",
+            Method = "GET",
             Title = "Something",
             Prompt = "Enable this feature to do something.",
-            Description = "The command \"Something\" does something!",
+            Description = "The command \"GetSomething\" GET something!",
             Format = FormatIO.None
     )
     public PluginState DoSomething(Session ssn, Item Transport){
@@ -52,10 +53,11 @@ public class BackEnd extends Plug {
     @com.aurawin.core.plugin.annotations.Command(
             Anonymous=true,
             Name = "DoAnother",
-            Namespace = "/da",
+            Namespace = "/ds",
+            Method = "POST",
             Title = "Another",
             Prompt = "Enable this feature to do another.",
-            Description = "The command \"Another\" does another!",
+            Description = "The command \"DoAnother\" POST another!",
             Format = FormatIO.JSON
     )
     public PluginState DoAnother(Session ssn, Item Transport){

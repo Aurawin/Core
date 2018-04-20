@@ -96,6 +96,7 @@ public class Settings {
     }
     public static class RSR{
         public static boolean Finite = false;
+        public static int ResponseToQueryDelay = 1000*60;
         public static boolean Infinite = true;
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
         public static int SocketBufferRecvSize = 1024*512;

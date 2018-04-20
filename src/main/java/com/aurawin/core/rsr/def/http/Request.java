@@ -27,6 +27,7 @@ import java.util.EnumSet;
 public class Request implements QueryResolver {
     protected Item Owner;
     protected ResolveResult Result;
+    public long Id;
     public Version Version;
     public KeyPairs Headers;
     public KeyPairs Cookies;
@@ -41,7 +42,7 @@ public class Request implements QueryResolver {
     public String ETag;
 
     public String NamespacePlugin;
-    public String NamespaceMethod;
+    public String NamespaceEntry;
     public Plug Plugin;
     public CommandInfo pluginCommandInfo;
     public PluginState pluginState;
@@ -86,7 +87,7 @@ public class Request implements QueryResolver {
         ETag="";
         Version.Reset();
         NamespacePlugin="";
-        NamespaceMethod="";
+        NamespaceEntry="";
 
         pluginState= PluginState.PluginIdle;
     }
@@ -213,20 +214,20 @@ public class Request implements QueryResolver {
                 NamespacePlugin = saPath.Extract(0, 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
                 Plugin = this.Owner.Owner.Engine.Plugins.getPlugin(NamespacePlugin);
                 if (Plugin != null) {
-                    NamespaceMethod = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
-                    pluginCommandInfo=Plugin.Commands.get(NamespaceMethod);
+                    NamespaceEntry = saPath.Extract(2, PathSize - 1, EnumSet.of(VarString.ExtractOption.IncludeLeadingDelim));
+                    pluginCommandInfo=Plugin.getCommand(NamespaceEntry,Method);
                     if (pluginCommandInfo != null) {
                         Result=rrPlugin;
                     } else {
                         NamespacePlugin = "";
-                        NamespaceMethod = "";
+                        NamespaceEntry = "";
                         Plugin = null;
                         pluginCommandInfo=null;
                         Result=rrFile;
                     }
                 } else {
                     NamespacePlugin = "";
-                    NamespaceMethod = "";
+                    NamespaceEntry = "";
                     Plugin = null;
                     pluginCommandInfo=null;
                     Result=rrFile;

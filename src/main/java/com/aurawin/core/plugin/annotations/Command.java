@@ -19,5 +19,6 @@ public @interface Command {
     String Title() default "";
     String Prompt() default "";
     String Description() default "";
+    String Method() default "";
     FormatIO Format() default FormatIO.None;
 }

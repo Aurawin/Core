@@ -13,10 +13,11 @@ public class Namespace {
                         .replace("$package",Package)
                         .replace("$name",Name);
             }
-            public static String getMethodNamespace(String Package,String Name,String Method){
-                return "$package.$name.$method"
+            public static String buildEntryNamespace(String Package,String Name,String Entry,String Method){
+                return "$package.$name.$entry.$method"
                         .replace("$package",Package)
                         .replace("$name",Name)
+                        .replace("$entry",Entry)
                         .replace("$method",Method);
             }
         }

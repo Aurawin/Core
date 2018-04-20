@@ -21,6 +21,7 @@ import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 
+import static com.aurawin.core.rsr.def.EngineState.esFinalize;
 import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -29,16 +30,18 @@ import static com.aurawin.core.rsr.transport.methods.Result.None;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.SocketChannel;
+import java.time.Instant;
 import java.util.Date;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Protocol(
         Version = Version_1_1.class
 )
 public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenticationHandler,
         ResourceUploadHandler,ResourceDeleteHandler,ResourceCopyHandler,ResourceMoveHandler,ResourceLockHandler,
-        ResourceCollectionHandler,ResourcePropertyHandler,ResourceRequestedHandler
+        ResourceCollectionHandler,ResourcePropertyHandler,ResourceRequestedHandler,ResourceListRequestedHandler
 {
-
     public volatile Request Request;
     public volatile Response Response;
     public ResolveResult Resolution;
@@ -95,6 +98,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     @Override public CredentialResult resourceRequiresAuthentication(Session ssn) {return CredentialResult.None;}
     @Override public Result resourceDeleted(Session ssn){ return Result.Failure;}
     @Override public Result resourceRequested(Session ssn){ return Result.Failure;}
+    @Override public Result resourceListRequested(Session ssn){ return Result.Failure;}
     @Override public Result resourceCopied(Session ssn){ return Result.Failure;}
     @Override public Result resourceMoved(Session ssn){ return Result.Failure;}
     @Override public Result resourceLocked(Session ssn){ return Result.Failure;}
@@ -111,7 +115,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         rsrResult r = rSuccess;
         // preprocess Authentication Header...
 
-        if (Request.Read()==rSuccess) {
+        if (Response.Read()==rSuccess) {
             Result mr = Methods.Process(Request.Method,ssn,this);
             switch (mr){
                 case Ok:
@@ -180,11 +184,13 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         Resolution=rrNone;
         methodState=None;
     }
-    private void Prepare(){
+
+    private void prepareResponse(){
         Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.Engine.Realm);
         Response.Headers.Update(Field.Server,Owner.Engine.Stamp);
+
         for (KeyItem itm:Response.Headers){
             if (itm.Name.equalsIgnoreCase(Field.Connection)){
                 itm.Streams = (itm.Value.length()==0) ? false : true;
@@ -193,20 +199,43 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         }
     }
 
-    private String getHeaders(){
-        Prepare();
+    private void prepareRequest(){
+        Request.Headers.Update(Field.ContentLength,Long.toString(Request.Payload.Size));
+        Request.Headers.Update(Field.Date, Time.rfc822(new Date()));
+        Request.Headers.Update(Field.Host,Owner.Engine.Realm);
+        Request.Headers.Update(Field.Client,Owner.Engine.Stamp);
+        Request.Headers.Update(Field.Id,Request.Id);
+
+        for (KeyItem itm:Request.Headers){
+            if (itm.Name.equalsIgnoreCase(Field.Connection)){
+                itm.Streams = (itm.Value.length()==0) ? false : true;
+                break;
+            }
+        }
+    }
+
+    private String getRequestHeaders(){
+        prepareRequest();
+        return Request.Headers.Stream();
+    }
+    private String getResponseHeaders(){
+        prepareResponse();
         return Response.Headers.Stream();
     }
-    private String getCommandLine(){
+    private String getResponseCommandLine(){
         return Version.toString()+ " " +Response.Status.getValue()+Table.CRLF;
+    }
+
+    private String getRequestCommandLine(){
+        return Request.Method+" "+Request.URI+" "+ Version.toString()+Table.CRLF;
     }
 
     private void Respond() {
 
         Buffers.Send.position(Buffers.Send.size());
-        Buffers.Send.Write(getCommandLine());
+        Buffers.Send.Write(getResponseCommandLine());
 
-        Buffers.Send.Write(getHeaders());
+        Buffers.Send.Write(getResponseHeaders());
         Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
 
         if (Response.Payload.size()>0) {
@@ -216,5 +245,38 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
 
         if (Response.Headers.ValueAsString(Field.Connection).equalsIgnoreCase("close"))
            this.queueClose();
+    }
+
+    public void Query(){
+        if (Request.Plugin!=null) {
+            Request.URI=Request.pluginCommandInfo.Namespace;
+            Request.Id=Id.Spin();
+            Response.Status=sEmpty;
+
+            prepareRequest();
+
+            Buffers.Send.position(Buffers.Send.size());
+            Buffers.Send.Write(getRequestCommandLine());
+
+            Buffers.Send.Write(getRequestHeaders());
+            Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
+            if (Request.Payload.size()>0) {
+                Request.Payload.Move(Buffers.Send);
+            }
+
+            queueSend();
+
+            Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
+            while ((Owner.Engine.State != esFinalize) && (Response.Status != sEmpty) && Instant.now().isBefore(ttl)) {
+                try {
+                    if (Response.Status == sEmpty) {
+                        Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);
+                    }
+                } catch (InterruptedException ie) {
+                }
+
+            }
+
+        }
     }
 }

@@ -33,6 +33,7 @@ public class Field {
     public static final String Upgrade = "Upgrade";
     public static final String Origin = "Origin";
     public static final String Connection = "Connection";
+    public static final String Client = "Client";
     public static final String ContentType = "Content-Type";
     public static final String ContentDisposition = "Content-Disposition";
     public static final String ContentEncoding = "Content-Encoding";

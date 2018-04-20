@@ -1,6 +1,8 @@
 package com.aurawin.core.rsr.def.http;
 
+
 public enum Status {
+    sEmpty ( ""),
     // 1XX informational
     s100 ("100 Continue"),
     s101 ("101 Switching Protocols"),
@@ -75,5 +77,13 @@ public enum Status {
     private final String value;
 
     public String getValue(){return value;}
+    public static final Status Empty = sEmpty;
+    public static Status fromString(String input){
+        String i = input.substring(0,3);
+        for ( Status s : Status.values()){
+            if (s.value.startsWith(i)) return s;
+        }
+        return null;
+    }
 }
 

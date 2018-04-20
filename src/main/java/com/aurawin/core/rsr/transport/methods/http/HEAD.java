@@ -28,7 +28,7 @@ public class HEAD extends Method {
         switch (h.Resolution) {
             case rrPlugin :
                 h.Response.Headers.Update(Field.CoreObjectNamespace,h.Request.NamespacePlugin);
-                h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceMethod);
+                h.Response.Headers.Update(Field.CoreCommandNamespace,h.Request.NamespaceEntry);
                 if (h.Request.pluginCommandInfo!=null) {
                     if (h.Credentials.aclCoreGranted(
                             !h.Request.pluginCommandInfo.annotationCommand.Anonymous(),

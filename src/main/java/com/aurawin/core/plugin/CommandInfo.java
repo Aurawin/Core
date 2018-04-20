@@ -12,12 +12,12 @@ import java.lang.reflect.InvocationTargetException;
 public class CommandInfo extends com.aurawin.core.stored.entities.UniqueId {
     public Plugin annotationPlugin = null;
     public Command annotationCommand = null;
-    protected java.lang.reflect.Method Method;
+    protected java.lang.reflect.Method Entry;
     protected Plug Plugin;
 
     public PluginState Execute(Session ssn, Item Transport) throws IllegalAccessException,InvocationTargetException{
-        if (Method!=null) {
-            return (PluginState) Method.invoke(Plugin,ssn,Transport);
+        if (Entry!=null) {
+            return (PluginState) Entry.invoke(Plugin,ssn,Transport);
         } else {
             return PluginState.PluginMethodNotFound;
         }

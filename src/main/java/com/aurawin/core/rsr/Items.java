@@ -10,6 +10,8 @@ import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerResult;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.Entities;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.hibernate.Session;
 
 import static com.aurawin.core.rsr.def.EngineState.*;
@@ -70,6 +72,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
     public Engine Engine;
     public Managers Owner;
 
+    public static Gson gsonParser;
+    private static GsonBuilder gsonBuilder;
+
     public Items(Managers aOwner, Engine aEngine, boolean aInfinite){
         super ();
         LastUsed = Instant.now();
@@ -86,6 +91,9 @@ public class Items extends ConcurrentLinkedQueue<Item> implements Runnable {
         Security = new Security();
 
         Background = Executors.newSingleThreadExecutor();
+        gsonBuilder = new GsonBuilder();
+        gsonParser = gsonBuilder.create();
+
     }
     @Override
     public void run() {

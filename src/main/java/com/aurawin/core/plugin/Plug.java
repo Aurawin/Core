@@ -21,7 +21,7 @@ import static com.aurawin.core.plugin.PluginState.PluginSuccess;
 
 public abstract class Plug extends UniqueId implements Methods {
     public Plugin Annotation;
-    public ConcurrentHashMap<String,CommandInfo>Commands;
+    private ConcurrentHashMap<String,CommandInfo>Commands;
     private Builder bldr;
     public Gson gson;
 
@@ -29,7 +29,6 @@ public abstract class Plug extends UniqueId implements Methods {
     public ArrayList<CommandInfo>discoverCommands(){
         return new ArrayList<CommandInfo>(Commands.values());
     }
-
 
     public void writeObject(MemoryStream Stream, Object Data){
         Stream.Write(gson.toJson(Data));
@@ -46,7 +45,14 @@ public abstract class Plug extends UniqueId implements Methods {
     public <T extends Stored>T[] readObjects(MemoryStream Stream, Class<T> clazz){
         return gson.fromJson(Stream.toString(),new TypeToken<T>(){}.getType());
     }
+    public CommandInfo getCommand(String Namespace, String Method){
+        String key = Namespace + "."+Method;
+        return Commands.get(key);
+    }
+    public Collection<CommandInfo> getCommands(){
+       return Commands.values();
 
+    }
     public PluginState Setup(Session ssn){
         bldr = new Builder();
         gson = bldr.Create();
@@ -66,19 +72,21 @@ public abstract class Plug extends UniqueId implements Methods {
             for (java.lang.reflect.Method f : fs) {
                 aC = f.getAnnotation(Command.class);
                 if (aC != null) {
-                    String ns= com.aurawin.core.solution.Namespace.Entities.Plugin.getMethodNamespace(
+                    String ns= com.aurawin.core.solution.Namespace.Entities.Plugin.buildEntryNamespace(
                             Annotation.Package(),
                             Annotation.Name(),
-                            aC.Name()
+                            aC.Name(),
+                            aC.Method()
                     );
                     CommandInfo ci = new CommandInfo();
                     ci.setNamespace(ns);
                     ci.Identify(ssn);
-                    ci.Method=f;
+                    ci.Entry=f;
                     ci.annotationPlugin=Annotation;
                     ci.annotationCommand=aC;
                     ci.Plugin=this;
-                    ms.put(aC.Namespace(),ci);
+                    String key = aC.Namespace()+"."+ aC.Method();
+                    ms.put(key,ci);
                 }
             }
             Commands = ms;
@@ -99,7 +107,7 @@ public abstract class Plug extends UniqueId implements Methods {
         CommandInfo ci = Commands.get(Namespace);
         if (ci!=null) {
             try {
-                return (PluginState) ci.Method.invoke(this,ssn,itm);
+                return (PluginState) ci.Entry.invoke(this,ssn,itm);
             } catch (Exception e) {
                 return PluginState.PluginException;
             }
