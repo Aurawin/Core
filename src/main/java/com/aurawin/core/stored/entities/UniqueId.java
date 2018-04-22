@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.annotations.Namespaced;
 import com.aurawin.core.stored.annotations.QueryById;
 
 import com.google.gson.annotations.Expose;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 
 
 @Entity
+@Namespaced
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)

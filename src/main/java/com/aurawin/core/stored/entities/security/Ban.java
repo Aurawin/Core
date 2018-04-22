@@ -2,6 +2,7 @@ package com.aurawin.core.stored.entities.security;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.annotations.Namespaced;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.stored.entities.Entities;
 
@@ -14,11 +15,9 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
+@Namespaced
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
@@ -38,6 +37,7 @@ import java.util.stream.Collectors;
 @QueryById(
         Name = Database.Query.LoginFailure.ById.name,Fields = { "Id" }
 )
+
 public class Ban extends Stored {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

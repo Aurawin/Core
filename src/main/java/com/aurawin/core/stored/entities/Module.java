@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.stored.Stored;
+import com.aurawin.core.stored.annotations.Namespaced;
 import com.aurawin.core.stored.entities.loader.Loader.*;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.stored.annotations.QueryByName;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 
 
 @Entity
+@Namespaced
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @SelectBeforeUpdate(value=true)
@@ -45,7 +47,7 @@ import javax.persistence.Table;
 )
 @QueryByName(
         Name = Database.Query.Module.ByNamespace.name,
-        Fields = {"Namespace"}
+        Fields = {"Namespaced"}
 )
 public class Module extends Stored {
     @javax.persistence.Id
@@ -209,7 +211,7 @@ public class Module extends Stored {
             Transaction tx = (ssn.isJoinedToTransaction())? ssn.getTransaction() : ssn.beginTransaction();
             try {
                 Query q = ssn.getNamedQuery(Database.Query.Module.ByNamespace.name)
-                        .setParameter("Namespace", Namespace);
+                        .setParameter("Namespaced", Namespace);
                 m = (Module) q.getSingleResult();
                 if (m == null) {
                     m = new Module(Name,Namespace,Package);

@@ -20,7 +20,7 @@ public class Database {
             }
             public static class ByNamespace {
                 public static final String name = "QueryModule";
-                public static final String value = "from Module where Namespace=:Namespace";
+                public static final String value = "from Module where Namespaced=:Namespaced";
             }
         }
         public static class Plugin{
@@ -30,7 +30,7 @@ public class Database {
             }
             public static class ByNamespace {
                 public static final String name = "QueryPluginByNamspace";
-                public static final String value = "from Plugin where Namespace=:Namespace";
+                public static final String value = "from Plugin where Namespaced=:Namespaced";
             }
         }
         public static class UniqueId{
