@@ -26,7 +26,7 @@ public class Namespace {
         public static long Identify(Class c){
             UniqueId id = Cache.get(c);
             if (id==null) {
-                new UniqueId(c.getCanonicalName());
+                id=new UniqueId(c.getCanonicalName());
                 com.aurawin.core.stored.entities.Entities.Identify(id);
                 Cache.put(c, id);
             }
@@ -35,7 +35,7 @@ public class Namespace {
         public static UniqueId getUniqueId(Class c){
             UniqueId id = Cache.get(c);
             if (id==null) {
-                new UniqueId(c.getCanonicalName());
+                id=new UniqueId(c.getCanonicalName());
                 com.aurawin.core.stored.entities.Entities.Identify(id);
                 Cache.put(c, id);
             }
