@@ -52,19 +52,23 @@ public class Database {
                 public static final String name = "QueryCertificateAll";
                 public static final String value = "from Certificate";
             }
+            public static class ByDomainId {
+                public static final String name = "QueryCertificateByDomainId";
+                public static final String value = "from Certificate where DomainId=:DomainId";
+            }
         }
         public static class LoginFailure{
             public static class ById {
-                public static final String name = "QueryLoginFailedById";
-                public static final String value = "from LoginFailed where Id=:Id";
+                public static final String name = "QueryLoginFailureById";
+                public static final String value = "from LoginFailure where Id=:Id";
             }
             public static class ByIp {
-                public static final String name = "QueryLoginFailedByIp";
-                public static final String value = "from LoginFailed where Ip=:Ip order by Instant";
+                public static final String name = "QueryLoginFailureByIp";
+                public static final String value = "from LoginFailure where Ip=:Ip order by Instant";
             }
             public static class BetweenInstant {
-                public static final String name = "QueryLoginFailedByInstant";
-                public static final String value = "from LoginFailed where Instant between :InstantLow and :InstantHigh";
+                public static final String name = "QueryLoginFailureByInstant";
+                public static final String value = "from LoginFailure where Instant>:InstantLow and Instant<sInstantHigh";
             }
         }
 

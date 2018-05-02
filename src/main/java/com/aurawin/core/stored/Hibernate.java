@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import javax.persistence.Entity;
 import java.util.Iterator;
 
 public class Hibernate{
@@ -77,7 +78,8 @@ public class Hibernate{
         Iterator it = manifest.Annotated.iterator();
         while (it.hasNext()){
             Class<Stored> cos = (Class<Stored>) it.next();
-            cfg.addAnnotatedClass(cos);
+            Entity e = cos.getAnnotation(Entity.class);
+            if (e!=null) cfg.addAnnotatedClass(cos);
         }
         return cfg.buildSessionFactory();
     }

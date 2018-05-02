@@ -31,7 +31,7 @@ public class Syslog {
         _fs = new FileStream(filename, "rw");
     }
     private static void checkBase() throws Exception{
-        java.io.File Path = new java.io.File(Settings.File.Log.Base());
+        java.io.File Path = new java.io.File(Settings.Folder.Base());
         if (!Path.exists()) Path.mkdirs();
     }
     public static void main(String[] args) throws Exception {

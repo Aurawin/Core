@@ -35,20 +35,22 @@ public class Entities {
     private static Manifest Owner;
     private static SessionFactory Factory;
 
-    public static void Initialize(Manifest manifest){
+    public static boolean Initialize(Manifest manifest){
+        Loaded = false;
         Loader = new Loader();
         Owner=manifest;
         if (Factory==null) {
-
             Factory = Hibernate.openSession(manifest);
             if (Loader.Cache.size()>0) {
                 ClassLoader cL = Loader.Cache.get(0);
                 Thread.currentThread().setContextClassLoader(cL);
             }
+            Loaded=true;
+            return true;
         } else {
-            RecreateFactory();
+            return RecreateFactory();
         }
-        Loaded=true;
+
     }
 
     public static Session openSession(){
@@ -67,7 +69,7 @@ public class Entities {
     public static Loader getLoader(){
         return Loader;
     }
-    public static void RecreateFactory(){
+    public static boolean RecreateFactory(){
         if ((Factory!=null) && (Factory.isClosed()==false)) {
             Factory.close();
         }
@@ -75,8 +77,16 @@ public class Entities {
             ClassLoader cL = Loader.Cache.get(0);
             Thread.currentThread().setContextClassLoader(cL);
         }
-        Factory = Hibernate.openSession(Owner);
-        Loader.Injected=false;
+        try{
+            Factory = Hibernate.openSession(Owner);
+            Loader.Injected=false;
+            Loaded=true;
+
+            return true;
+        } catch (Exception ex){
+            return false;
+
+        }
     }
     public static boolean hasInjected(){
         return (Loader.Injected==true);
@@ -174,7 +184,7 @@ public class Entities {
         return al;
     }
     public static boolean Save(Stored e, boolean Cascade)
-            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+
     {
         Session s = openSession();
         Transaction tx = s.beginTransaction();
@@ -185,6 +195,7 @@ public class Entities {
         } catch (Exception err) {
             tx.rollback();
             s.close();
+            Syslog.Append(Entities.class.getCanonicalName(),"Save", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
             return false;
         }
         if (Cascade==true) {
@@ -201,7 +212,6 @@ public class Entities {
 
     }
     public static boolean Update(Stored e,boolean Cascade)
-            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
         Session s = openSession();
         Transaction tx = s.beginTransaction();
@@ -212,6 +222,7 @@ public class Entities {
         } catch (Exception err) {
             tx.rollback();
             s.close();
+            Syslog.Append(Entities.class.getCanonicalName(),"Update", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
             return false;
         }
         if (Cascade==true) {
@@ -227,7 +238,7 @@ public class Entities {
         return true;
     }
     public static boolean Delete(Stored e,boolean Cascade)
-            throws InvocationTargetException, NoSuchMethodException,IllegalAccessException
+
     {
         Session s = openSession();
         Transaction tx = s.beginTransaction();
@@ -238,6 +249,7 @@ public class Entities {
         } catch (Exception err) {
             tx.rollback();
             s.close();
+            Syslog.Append(Entities.class.getCanonicalName(),"Delete", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
             return false;
         }
         if (Cascade==true) {
@@ -311,11 +323,20 @@ public class Entities {
         try {
             Query q = ssn.getNamedQuery(aQuery.Name());
             if (q != null) {
-                q.setParameter("OwnerId", Id);
-                return toArrayList(q.list());
+                try {
+                    q.setParameter("OwnerId", Id);
+                    return toArrayList(q.list());
+                } catch (Exception ex){
+                    Syslog.Append("Entities.Lookup","QueryByOwnerId.setParameter", Table.Format(Table.Exception.Entities.EntityNotifyExecution,ex.getMessage()));
+                    return new ArrayList<Stored>();
+                }
+
             } else {
                 return new ArrayList<Stored>();
             }
+        } catch (Exception ex){
+            Syslog.Append("Entities.Lookup","QueryByOwnerId", Table.Format(Table.Exception.Entities.EntityNotifyExecution,ex.getMessage()));
+            return new ArrayList<Stored>();
         } finally{
             ssn.close();
         }

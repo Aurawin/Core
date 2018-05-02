@@ -8,6 +8,7 @@ import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.annotations.Namespaced;
 import com.aurawin.core.stored.annotations.QueryAll;
+import com.aurawin.core.stored.annotations.QueryByDomainId;
 import com.aurawin.core.stored.annotations.QueryById;
 import com.aurawin.core.time.Time;
 
@@ -58,7 +59,13 @@ import java.util.Date;
                 @NamedQuery(
                         name = Database.Query.Certificate.All.name,
                         query = Database.Query.Certificate.All.value
+                ),
+                @NamedQuery(
+                        name = Database.Query.Certificate.ByDomainId.name,
+                        query = Database.Query.Certificate.ByDomainId.value
                 )
+
+
         }
 )
 @QueryById(
@@ -66,6 +73,7 @@ import java.util.Date;
 )
 
 @QueryAll(Name = Database.Query.Certificate.All.name)
+@QueryByDomainId(Name = Database.Query.Certificate.ByDomainId.name)
 
 public class Certificate extends Stored {
     @javax.persistence.Id
@@ -190,7 +198,33 @@ public class Certificate extends Stored {
         }
     }
 
+    public static String keysPresent(Certificate cert){
+        if (
+                (cert.KeyPrivate!=null) &&
+                (cert.KeyPrivate.length>0) &&
+                (cert.KeyPublic!=null) &&
+                (cert.KeyPublic.length>0)
+        ){
+            return "Ok";
+        } else {
+            return "Missing";
+        }
+    }
+    public static String requestPresent(Certificate cert){
+        if ((cert.TextRequest!=null) && cert.TextRequest.length()>0) {
+            return "Ok";
+        } else {
+            return "Missing";
+        }
+    }
+    public static String isIssued(Certificate cert){
 
+        if ((cert.TextCert1!=null) && cert.TextCert1.length()>0) {
+            return "Ok";
+        } else {
+            return "Waiting";
+        }
+    }
     public static Certificate createSelfSigned(String commonName,String organizationUnit,String organizationName,String street, String locality,String state,String Postal, String country, String email,int days) throws Exception{
         Certificate cert = new Certificate();
         cert.ChainCount=1;
@@ -256,17 +290,27 @@ public class Certificate extends Stored {
 
         return cert;
     }
-    public static  Certificate createRequestCertRequest (String commonName,String organizationUnit,String organizationName,String street,String locality,String state,String postal, String country, String email) throws Exception{
+    public static  Certificate createRequestCertRequest (
+            String commonName,
+            String organizationUnit,
+            String organizationName,
+            String street,
+            String locality,
+            String state,
+            String postal,
+            String country,
+            String email
+    ) throws Exception {
         Certificate Result = new Certificate();
 
         Security.addProvider(new BouncyCastleProvider());
-        String sigName =Settings.Security.SignatureAlgorithm;
+        String sigName = Settings.Security.SignatureAlgorithm;
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(Settings.Security.KeyAlgorithm, Settings.Security.Provider.BouncyCastle);
         kpg.initialize(Settings.Security.KeySize);
         KeyPair kp = kpg.genKeyPair();
 
-        Result.KeyPrivate=kp.getPrivate().getEncoded();
-        Result.KeyPublic=kp.getPublic().getEncoded();
+        Result.KeyPrivate = kp.getPrivate().getEncoded();
+        Result.KeyPublic = kp.getPublic().getEncoded();
 
         X500NameBuilder x500NameBld = new X500NameBuilder(BCStyle.INSTANCE);
         x500NameBld.addRDN(BCStyle.CN, commonName);
@@ -283,11 +327,6 @@ public class Certificate extends Stored {
 
         PKCS10CertificationRequestBuilder requestBuilder = new JcaPKCS10CertificationRequestBuilder(subject, kp.getPublic());
         ExtensionsGenerator extGen = new ExtensionsGenerator();
-//        extGen.addExtension(
-//                Extension.subjectAlternativeName,
-//                false,
-//                new GeneralNames(new GeneralName(GeneralName.rfc822Name, "feedback-crypto@bouncycastle.org"))
-//        );
 
         requestBuilder.addAttribute(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest, extGen.generate());
         org.bouncycastle.pkcs.PKCS10CertificationRequest Request = requestBuilder.build(
@@ -299,75 +338,17 @@ public class Certificate extends Stored {
         // Validate Request
         if (Request.isSignatureValid(
                 new JcaContentVerifierProviderBuilder().
-                setProvider(Settings.Security.Provider.BouncyCastle).
-                build(kp.getPublic())
-        )){
+                        setProvider(Settings.Security.Provider.BouncyCastle).
+                        build(kp.getPublic())
+        )) {
             Result.DerRequest = Request.getEncoded();
-            Result.TextRequest =Settings.Security.Certificate.Request.encode(Result.DerRequest);
+            Result.TextRequest = Settings.Security.Certificate.Request.encode(Result.DerRequest);
 
             return Result;
-        }
-        else
-        {
+        } else {
             throw new Exception("PKCS#10 did not verify.");
         }
-
-//        KeyPairs Fields;
-//        KeyItem CommonName;
-//        KeyItem OrganizationUnit;
-//        KeyItem OrganizationName;
-//        KeyItem Street;
-//        KeyItem Locality;
-//        KeyItem State;
-//        KeyItem Country;
-//        KeyItem Email;
-//        KeyItem Postal;
-//
-//        java.security.KeyPair Keys;
-//        KeyPairGenerator KeyGenerator;
-//
-//        Fields= new KeyPairs();
-//        Fields.DelimiterField="=";
-//        Fields.DelimiterItem=", ";
-//
-//
-//
-//        CommonName=Fields.Update("CN",commonName);
-//        OrganizationUnit=Fields.Update("OU",organizationUnit);
-//        OrganizationName=Fields.Update("O",organizationName);
-//        Street = Fields.Update("STREET",street);
-//        Locality=Fields.Update("L",locality);
-//        State=Fields.Update("S",state);
-//        Email=Fields.Update("emailAddress",email);
-//        Country=Fields.Update("C",country);
-//
-//        KeyGenerator = KeyPairGenerator.getInstance(Settings.Security.KeyAlgorithm);
-//        KeyGenerator.initialize(Settings.Security.KeySize,new SecureRandom());
-//        Keys = KeyGenerator.generateKeyPair();
-//
-//        X500Name xn = new X500Name(Fields.Stream());
-//
-//
-//
-//        ContentSigner signGen = new JcaContentSignerBuilder(Settings.Security.SignatureAlgorithm)
-//                .build(Keys.getPrivate());
-//
-//        PKCS10CertificationRequest csr = new JcaPKCS10CertificationRequestBuilder(
-//                xn, Keys.getPublic()).build(signGen);
-//
-//
-//        Signature sig = Signature.getInstance(Settings.Security.SignatureAlgorithm);
-//        sig.initSign(Keys.getPrivate());
-//
-
-
-
-        //pkcs10 = new PKCS10(Keys.getPublic());
-        //pkcs10.encodeAndSign(xn,sig);
-
-
     }
-
 
     public static void entityCreated(Stored Entity, boolean Cascade){}
     public static void entityDeleted(Stored Entity, boolean Cascade){}

@@ -58,18 +58,16 @@ public class Manifest {
         Dialect = com.aurawin.core.stored.Dialect.fromString(dialect);
         Driver = com.aurawin.core.stored.Driver.fromString(driver);
 
-        if (Annotated.contains(UniqueId.class)==false)
-          Annotated.add(0,UniqueId.class);
-
-        if (Annotated.contains(Module.class)==false)
-            Annotated.add(1,Module.class);
-
-        if (Annotated.contains(Certificate.class)==false)
-            Annotated.add(2, Certificate.class);
+        Class<? extends Stored> cs=null;
 
         for( Class<? extends Stored> ac : annotations)  {
-            if (Annotated.contains(ac)==false)
-              Annotated.add(ac);
+            cs = Annotated.stream()
+                    .filter(c->c.getCanonicalName().equalsIgnoreCase(ac.getCanonicalName()))
+                    .findFirst()
+                    .orElse(null);
+            if (cs==null) {
+                Annotated.add(ac);
+            }
         }
     }
 

@@ -1,17 +1,14 @@
 package com.aurawin.core.plugin;
 
+import com.aurawin.core.ClassScanner;
 import com.aurawin.core.plugin.annotations.Plugin;
-import com.aurawin.core.stored.annotations.EntityDispatch;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
-
-import static org.junit.Assert.*;
+import java.util.Set;
 
 public class ClassScannerTest {
-    private static final String packageName = "com.aurawin";
-
     ClassScanner cs ;
 
   @Before
@@ -23,12 +20,13 @@ public class ClassScannerTest {
   @Test
     public void test() throws Exception {
 
-        Class[] ca = cs.scanPackage(packageName);
+      Set<Class<? extends Plug>> ca = cs.scanPackageForPlugins(com.aurawin.core.Package.class);
         for (Class c : ca){
             Annotation ed = c.getAnnotation(Plugin.class);
             if (ed != null) {
                 System.out.println("Plugin Found "+ c.getName());
             }
       }
+
   }
 }

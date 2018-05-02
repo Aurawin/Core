@@ -21,6 +21,7 @@ public class Table {
     public static String YesNo(boolean val){
         return (val) ? "yes" : "no";
     }
+
     public static String defaultResource = "/core.lang."+ Settings.Language+".json";
     public static JSONObject Manifest;
     public static final String LF="\n";

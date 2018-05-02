@@ -3,8 +3,8 @@ package com.aurawin.core.rsr.server;
 import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
+import com.aurawin.core.ClassScanner;
 import com.aurawin.core.rsr.def.EngineState;
-import com.aurawin.core.rsr.server.Server;
 import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
@@ -19,6 +19,7 @@ import org.junit.After;
 
 import com.aurawin.core.plugin.BackEnd;
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 
 public class ServerTest {
@@ -38,7 +39,10 @@ public class ServerTest {
     @Before
     public void before() throws Exception {
         Settings.Initialize("server.test","Aurawin ServerTest","Universal");
-
+        AnnotatedList al = new AnnotatedList();
+        ClassScanner cs= new ClassScanner();
+        Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);
+        for (Class c : sa) al.add(c);
         Manifest mf = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password
@@ -54,7 +58,8 @@ public class ServerTest {
                 "HTTPServerTest",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),            // Driver
-                new AnnotatedList()
+                al
+
         );
         Entities.Initialize(mf);
 

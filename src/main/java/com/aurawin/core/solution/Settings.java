@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.aurawin.core.lang.Table.CRLF;
-import static com.aurawin.core.solution.Settings.File.Log.Base;
+import static com.aurawin.core.solution.Settings.Folder.Base;
 
 public class Settings {
     public static Version Version;
@@ -277,15 +277,19 @@ public class Settings {
             public static int BufferSizeWrite = 1024*1024; // 1MiB
         }
     }
-    public static class File{
-        public static class Log{
-            public static String Ext = "log";
-            public static String Base() throws Exception{
-                if (System.getProperty("program.name")==null) {
-                    throw new Exception(Table.String(Table.Exception.Settings.NoProgramName));
-                }
-                return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty(Properties.Program);
+    public static class Folder{
+        public static String Base() throws Exception{
+            if (System.getProperty("program.name")==null) {
+                throw new Exception(Table.String(Table.Exception.Settings.NoProgramName));
             }
+            return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty(Properties.Program);
+        }
+    }
+    public static class File{
+        public static String Ext = "log";
+
+        public static class Log{
+
             public static String Path() throws Exception{
                 return Base()+ java.io.File.separator+System.getProperty(Properties.Program)+"."+Ext;
             }
@@ -295,6 +299,9 @@ public class Settings {
                 return System.getProperty("user.home")+java.io.File.separator+"."+System.getProperty(Properties.Program);
             }
 
+        }
+        public static String Settings() throws Exception{
+            return Base()+ java.io.File.separator+System.getProperty(Properties.Program)+".cfg";
         }
     }
     public static void Initialize(String program, String title, String edition) throws IOException{
