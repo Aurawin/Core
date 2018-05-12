@@ -22,8 +22,6 @@ public class Field {
     public static final String Authorization = "Authorization";
     public static final String Auth = "Auth";
     public static final String Cookie= "Cookie";
-    public static final String Date = "Date";
-    public static final String DAV = "DAV";
     public static final String Expires = "Expires";
     public static final String From = "From";
     public static final String Vary = "Vary";
@@ -44,6 +42,9 @@ public class Field {
     public static final String CacheControl = "Cache-Control";
 
     public static final String Deflate = "Deflate";
+    public static final String Date = "Date";
+    public static final String DAV = "DAV";
+    public static final String Domain = "Domain";
 
     public static final String IfModifiedSince = "If-Modified-Since";
     public static final String IfRange = "If-Range";

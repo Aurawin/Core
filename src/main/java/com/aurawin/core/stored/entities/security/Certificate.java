@@ -284,6 +284,7 @@ public class Certificate extends Stored {
 
         // serialize in DER format
         cert.KeyPrivate = keypair.getPrivate().getEncoded();
+        cert.KeyPublic = keypair.getPublic().getEncoded();
         cert.DerCert1 = x509.getEncoded();
         cert.TextCert1 = Settings.Security.Certificate.encode(cert.DerCert1);
         cert.ChainCount=1;

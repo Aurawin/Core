@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 
 public class Syslog {
     private static String _charset = "UTF-8";
-    private static String _delimit = "\t\t";
+    private static String _delimit = "\t\t\t\t\t";
     private static String _end = System.getProperty("line.separator");
     private static volatile FileStream _fs;
 

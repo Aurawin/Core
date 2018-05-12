@@ -7,12 +7,12 @@ import com.aurawin.core.rsr.def.rsrResult;
 import com.aurawin.core.rsr.security.fetch.Mechanism;
 import com.aurawin.core.stored.Stored;
 import com.aurawin.core.stored.entities.security.Credentials;
-import com.aurawin.core.enryption.Base64;
+
 import java.nio.charset.StandardCharsets;
 
 import static com.aurawin.core.rsr.def.rsrResult.rAuthenticationNotSupported;
 import static com.aurawin.core.rsr.def.rsrResult.rSuccess;
-import com.aurawin.core.enryption.Base64;
+
 
 public class SecurityMechanismBasic extends Mechanism {
     private String Method;
@@ -22,7 +22,7 @@ public class SecurityMechanismBasic extends Mechanism {
         Method = Table.Security.Method.IMAP.Basic;
     }
     public String buildAuthorization(String user, String pass){
-        return Method +" " + Base64.Encode(user+":"+pass);
+        return Method +" " + java.util.Base64.getEncoder().encodeToString((user+":"+pass).getBytes());
     }
     public String buildChallenge(String realm){
 
@@ -32,7 +32,7 @@ public class SecurityMechanismBasic extends Mechanism {
     @Override
     public rsrResult decryptCredentials(Item RSR,String... Params){
         if (Params.length==1) {
-            String s = Base64.Decode(Params[0]);
+            String s = new String(java.util.Base64.getDecoder().decode(Params[0]));
             String[] sa = s.split(":");
             if (sa.length==2) {
                 RSR.Credentials.Passport.Realm=RSR.Owner.Engine.Realm;

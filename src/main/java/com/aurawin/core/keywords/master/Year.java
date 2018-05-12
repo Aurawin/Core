@@ -9,8 +9,8 @@ public class Year extends Keyword implements KeywordMethod {
     public String Evaluate(){
         return com.aurawin.core.time.Time.yearOnly(new java.util.Date());
     }
-    public Year(Keywords owner, String name) {
-        super(owner, name);
+    public Year(Keywords owner, String name,String value) {
+        super(owner, name, value);
         Builder = this;
     }
 }

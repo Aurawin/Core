@@ -26,6 +26,7 @@ public class Table {
     public static JSONObject Manifest;
     public static final String LF="\n";
     public static final String CRLF = "\r\n";
+    public static final String UTF8 = "UTF-8";
     public static Boolean getLoaded(){
         return Loaded;
     }
@@ -242,6 +243,7 @@ public class Table {
         public static class Entities {
             public static final String EntityCreatedMethodNotDefined = "table.exception.entities.entity-created-method-not-defined";
             public static final String EntityDeletedMethodNotDefined = "table.exception.entities.entity-deleted-method-not-defined";
+            public static final String EntityBeforeDeleteMethodNotDefined = "table.exception.entities.entity-before-delete-method-not-defined";
             public static final String EntityUpdatedMethodNotDefined = "table.exception.entities.entity-updated-method-not-defined";
             public static final String EntityNotifyExecution= "table.exception.entities.entity-notify-execution";
 

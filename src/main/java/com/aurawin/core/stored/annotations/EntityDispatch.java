@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 
 public @interface EntityDispatch {
+    boolean onPurge() default false;
     boolean onCreated()  default false;
     boolean onDeleted()  default false;
     boolean onUpdated()  default false;

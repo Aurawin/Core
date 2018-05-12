@@ -14,21 +14,21 @@ public class SystemDialog extends JFileChooser {
     }
     public void setKind(DialogKind kind){
         Kind=kind;
-        int m = getFileSelectionMode();
-        switch (Kind) {
+         switch (Kind) {
             case dkNew:
+                setDialogType(JFileChooser.SAVE_DIALOG);
                 setDialogTitle(Table.Format(Table.Dialog.New, Table.Action.a, Table.JSON.Document));
                 break;
             case dkSave:
-                m = JFileChooser.SAVE_DIALOG;
+                 setDialogType(JFileChooser.SAVE_DIALOG);
                 setDialogTitle(Table.Format(Table.Dialog.Save, Table.Action.$this, Table.JSON.Document));
                 break;
             case dkOpen:
-                m = JFileChooser.OPEN_DIALOG;
+                setDialogType(JFileChooser.OPEN_DIALOG);
                 setDialogTitle(Table.Format(Table.Dialog.Open, Table.Action.a, Table.JSON.Document));
                 break;
         }
-        setFileSelectionMode(m);
+        setDialogType(JFileChooser.FILES_AND_DIRECTORIES);
 
     }
     public void setMode(DialogMode mode){
@@ -36,7 +36,7 @@ public class SystemDialog extends JFileChooser {
         int m = getFileSelectionMode();
         switch (Mode){
             case dmFile:
-                m = JFileChooser.FILES_AND_DIRECTORIES;
+                m = JFileChooser.FILES_ONLY;
                 break;
             case dmFolder:
                 m = JFileChooser.DIRECTORIES_ONLY;

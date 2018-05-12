@@ -4,12 +4,12 @@ import com.aurawin.core.keywords.Keyword;
 import com.aurawin.core.keywords.KeywordMethod;
 import com.aurawin.core.keywords.Keywords;
 
-public class Time extends Keyword implements KeywordMethod {
+public class Custom extends Keyword implements KeywordMethod{
     public String Evaluate(){
-        return com.aurawin.core.time.Time.timeOnly(new java.util.Date());
+        return (String) Data;
     }
-    public Time(Keywords owner, String name, String value) {
-        super(owner, name,value);
+    public Custom(Keywords owner, String name, String value) {
+        super(owner, name, value);
         Builder = this;
     }
 }

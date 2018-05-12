@@ -6,7 +6,7 @@ public class IpHelper {
         String[] ip = input.split("\\.");
         byte[] ba = new byte[ip.length];
         for (int i=0; i<ip.length; i++){
-            ba[i]= (byte) Integer.parseInt(ip[i]);
+            ba[i]= (ip[i].length()==0)? 0: (byte)  Integer.parseInt(ip[i]);
         }
         return toLong(ba);
     }

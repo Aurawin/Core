@@ -1,7 +1,7 @@
 package com.aurawin.core.rsr.def.http;
 
 
-import com.aurawin.core.enryption.Base64;
+
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.def.CredentialResult;
@@ -31,7 +31,7 @@ public class SecurityMechanismBasic extends Mechanism {
     @Override
     public rsrResult decryptCredentials(Item RSR, String... Params){
         if (Params.length==1) {
-            String s = Base64.Decode(Params[0]);
+            String s = new String(java.util.Base64.getDecoder().decode(Params[0]));
             String[] sa = s.split(":");
             if (sa.length==2) {
                 RSR.Credentials.Passport.Realm=RSR.Owner.Engine.Realm;
@@ -48,7 +48,7 @@ public class SecurityMechanismBasic extends Mechanism {
     @Override
     public String buildAuthorization(String User, String Pass){
         return Table.Security.Method.HTTP.Basic+ " " +
-        Base64.Encode(User+":"+Pass);
+            java.util.Base64.getEncoder().encodeToString((User+":"+Pass).getBytes());
     }
     @Override
     public String buildChallenge(String realm){

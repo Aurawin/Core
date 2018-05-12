@@ -9,8 +9,8 @@ public class Date extends Keyword implements KeywordMethod{
     public String Evaluate(){
         return Time.dateOnly(new java.util.Date());
     }
-    public Date(Keywords owner, String name) {
-        super(owner, name);
+    public Date(Keywords owner, String name, String value) {
+        super(owner, name, value);
         Builder = this;
     }
 }

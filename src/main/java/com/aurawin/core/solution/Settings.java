@@ -1,13 +1,24 @@
 package com.aurawin.core.solution;
 
-import com.aurawin.core.enryption.Base64;
+
 import com.aurawin.core.lang.Table;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.jce.provider.X509CertificateObject;
+import org.bouncycastle.asn1.x509.Certificate;
 
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.PublicKey;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 import static com.aurawin.core.lang.Table.CRLF;
+import static com.aurawin.core.lang.Table.UTF8;
 import static com.aurawin.core.solution.Settings.Folder.Base;
 
 public class Settings {
@@ -65,33 +76,92 @@ public class Settings {
         public static final String [] Ciphers = new String[] {"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"};
         public static final String [] Protocols = new String[] {"TLSv1.2"};
         public static class Certificate {//md5WithRSAEncryption_oid
+
             public static class Request{
                 public static final String encode(byte[] derRequest){
                     StringBuilder sb = new StringBuilder();
                     sb.append("-----BEGIN CERTIFICATE REQUEST-----");
                     sb.append(CRLF);
-                    sb.append(Base64.Encode(derRequest,LineWrap));
+                    sb.append(java.util.Base64.getEncoder().encodeToString(derRequest));
                     sb.append("-----END CERTIFICATE REQUEST-----");
                     return sb.toString();
 
                 }
             }
             //public static final AlgorithmId Algorithm = new AlgorithmId(AlgorithmId.SHA512_oid);
+            public static final String BeginCertificate="-----BEGIN CERTIFICATE-----";
+            public static final String EndCertificate="-----END CERTIFICATE-----";
             public static final String SelfSignedRequestMessage="This certificate had an auto generated request";
             public static final String NoNameOnCertificateFound="ERROR: Could not find subject's name";
             public static final int LineWrap=65;
             public static final String encode(byte[] derCert){
                 StringBuilder sb= new StringBuilder();
 
-                sb.append("-----BEGIN CERTIFICATE-----");
+                sb.append(BeginCertificate);
                 sb.append(CRLF);
-                sb.append(Base64.Encode(derCert,LineWrap));
+                sb.append(java.util.Base64.getEncoder().encode(derCert));
                 sb.append(CRLF);
-                sb.append("-----END CERTIFICATE-----");
+                sb.append(EndCertificate);
 
                 return sb.toString();
 
-            };
+            }
+            public static final String getCertificateBlock(String txtCert){
+                int idxStart;
+                int idxStop;
+                int idxM;
+                int idxN;
+                int newLineOffset = 0;
+                idxM=txtCert.indexOf(13);
+                idxN=txtCert.indexOf(10);
+                if (idxM>-1) newLineOffset+=1;
+                if (idxN>-1) newLineOffset+=1;
+
+                idxStart = txtCert.indexOf(BeginCertificate);
+                idxStop=txtCert.indexOf(EndCertificate);
+                if (idxStart!=-1) {
+                    idxStart += BeginCertificate.length() + newLineOffset;
+                    txtCert= txtCert.substring(idxStart, idxStop);
+                    txtCert = txtCert.replace("\n","");
+                    txtCert = txtCert.replace("\r","");
+                }
+                return txtCert;
+            }
+
+            public static final byte[] decode(String txtCert) throws UnsupportedEncodingException{
+                txtCert = getCertificateBlock(txtCert);
+                return java.util.Base64.getDecoder().decode(txtCert.getBytes(UTF8));
+            }
+
+            public static X509Certificate loadCertificate(String asn1)throws IOException, GeneralSecurityException
+            {
+                java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+                asn1=getCertificateBlock(asn1);
+                byte []data=java.util.Base64.getDecoder().decode(asn1.getBytes(UTF8));
+                ByteArrayInputStream inStream = new ByteArrayInputStream(data);
+                ASN1InputStream derin = new ASN1InputStream(inStream);
+                ASN1Primitive certInfo = derin.readObject();
+                ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
+                return new X509CertificateObject(org.bouncycastle.asn1.x509.Certificate.getInstance(seq));
+            }
+            public static X509Certificate loadCertificate(byte[] derCert)throws IOException, CertificateParsingException {
+                java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+                ByteArrayInputStream inStream = new ByteArrayInputStream(derCert);
+                ASN1InputStream derin = new ASN1InputStream(inStream);
+                ASN1Primitive certInfo = derin.readObject();
+                ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
+                return new X509CertificateObject(org.bouncycastle.asn1.x509.Certificate.getInstance(seq));
+            }
+            public static final byte[] extractPublicKey(String txtCert) throws IOException,GeneralSecurityException{
+                X509Certificate cert = loadCertificate(txtCert);
+                PublicKey key=cert.getPublicKey();
+                return key.getEncoded();
+            }
+            public static final byte[] extractPublicKey(byte[] derCert) throws IOException,GeneralSecurityException{
+                X509Certificate cert = loadCertificate(derCert);
+                PublicKey key=cert.getPublicKey();
+                return key.getEncoded();
+            }
         }
     }
     public static class RSR{

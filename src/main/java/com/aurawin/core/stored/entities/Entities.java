@@ -28,6 +28,8 @@ import org.hibernate.query.Query;
 
 public class Entities {
 
+    public static final boolean UseCurrentTransaction = true;
+    public static final boolean UseNewTransaction = false;
     public static final boolean CascadeOn = true;
     public static final boolean CascadeOff = false;
     public static boolean Loaded = false;
@@ -127,51 +129,84 @@ public class Entities {
             }
         }
     }
+
+    private static void entityPurge(Stored obj, boolean Cascade)
+            throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
+    {
+        EntityDispatch ed = obj.getClass().getAnnotation(EntityDispatch.class);
+        if ((ed != null) && (ed.onPurge() == true)) {
+            Method[] methods = null;
+            Iterator it = Owner.Annotated.iterator();
+            while (it.hasNext()){
+                Class<?> goe = (Class<?>) it.next();
+                if (Stored.class.isAssignableFrom(obj.getClass())) {
+                    methods = goe.getDeclaredMethods();
+                    for (Method m : methods) {
+                        if ((m != null) && (m.getName().equalsIgnoreCase("entityPurge"))) {
+                            try {
+                                m.invoke(obj, obj, Cascade);
+                            } catch (Exception err) {
+                                Syslog.Append(goe.getCanonicalName(), m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
+                            }
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+    }
     private static void entityDeleted(Stored obj, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
-        Method[] methods = null;
-        Iterator it = Owner.Annotated.iterator();
-        while (it.hasNext()){
-	        Class<?> goe = (Class<?>) it.next();
-	        if (Stored.class.isAssignableFrom(goe)==true) {
+        EntityDispatch ed = obj.getClass().getAnnotation(EntityDispatch.class);
+        if ((ed != null) && (ed.onDeleted() == true)) {
+
+            Method[] methods = null;
+            Iterator it = Owner.Annotated.iterator();
+            while (it.hasNext()) {
+                Class<?> goe = (Class<?>) it.next();
                 methods = goe.getMethods();
-                for (Method m : methods){
-                    if ((m!=null)  && (m.getName()=="entityDeleted")) {
+                for (Method m : methods) {
+                    if ((m != null) && (m.getName().equalsIgnoreCase("entityDeleted"))) {
                         try {
                             m.invoke(obj, obj, Cascade);
-                        } catch (Exception err){
-                            Syslog.Append(goe.getCanonicalName(),m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                        } catch (Exception err) {
+                            Syslog.Append(goe.getCanonicalName(), m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
                         }
                         break;
                     }
                 }
-	        }
-        }
 
+            }
+        }
     }
     private static void entityUpdated(Stored obj, boolean Cascade)
             throws InvocationTargetException,NoSuchMethodException, IllegalAccessException
     {
-        Method[] methods = null;
-        Iterator it = Owner.Annotated.iterator();
-        while (it.hasNext()){
-            Class<?> goe = (Class<?>) it.next();
-            if (Stored.class.isAssignableFrom(goe)==true) {
+        EntityDispatch ed = obj.getClass().getAnnotation(EntityDispatch.class);
+        if ((ed != null) && (ed.onDeleted() == true)) {
+            Method[] methods = null;
+            Iterator it = Owner.Annotated.iterator();
+            while (it.hasNext()) {
+                Class<?> goe = (Class<?>) it.next();
+
                 methods = goe.getMethods();
-                for (Method m : methods){
-                    if ((m!=null) && (m.getName()=="entityUpdated")) {
+                for (Method m : methods) {
+                    if ((m != null) && (m.getName().equalsIgnoreCase("entityUpdated"))) {
                         try {
                             m.invoke(obj, obj, Cascade);
-                        } catch (Exception err){
-                            Syslog.Append(goe.getCanonicalName(),m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                        } catch (Exception err) {
+                            Syslog.Append(goe.getCanonicalName(), m.getName(), Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
                         }
                         break;
                     }
                 }
+
             }
         }
-
     }
     public static ArrayList<Stored> toArrayList(List Items){
         ArrayList<Stored> al = new ArrayList<>();
@@ -237,32 +272,57 @@ public class Entities {
         }
         return true;
     }
-    public static boolean Delete(Stored e,boolean Cascade)
-
-    {
-        Session s = openSession();
-        Transaction tx = s.beginTransaction();
-        try{
-            s.delete(e);
-            tx.commit();
-            s.close();
-        } catch (Exception err) {
-            tx.rollback();
-            s.close();
-            Syslog.Append(Entities.class.getCanonicalName(),"Delete", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
-            return false;
-        }
+    public static boolean Purge(Stored e, boolean Cascade){
+        EntityDispatch ed;
         if (Cascade==true) {
-            EntityDispatch ed = e.getClass().getAnnotation(EntityDispatch.class);
+            ed = e.getClass().getAnnotation(EntityDispatch.class);
             try {
-                if ((ed != null) && (ed.onDeleted() == true)) {
-                    entityDeleted(e, Cascade);
+                if ((ed != null) && (ed.onPurge() == true)) {
+                    entityPurge(e, Cascade);
+                    return true;
                 }
             } catch (Exception err) {
-                Syslog.Append(Entities.class.getCanonicalName(),"Delete.entityDeleted", Table.Format(Table.Exception.Entities.EntityNotifyExecution,err.getMessage()));
+                Syslog.Append(Entities.class.getCanonicalName(), "Purge.entityPurge", Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
             }
         }
-        return true;
+        return false;
+
+    }
+    public static boolean Delete(Stored e,boolean Cascade, boolean useSessionTransaction)
+    {
+        EntityDispatch ed;
+        Session s = (useSessionTransaction) ?  Factory.getCurrentSession() : openSession();
+        try {
+            Transaction tx = (useSessionTransaction) ? s.getTransaction() : s.beginTransaction();
+            try {
+                s.delete(e);
+                if (!useSessionTransaction) {
+                    try {
+                        tx.commit();
+                    } catch (Exception err) {
+                        tx.rollback();
+                        Syslog.Append(e.getClass().getCanonicalName(), "Delete.Commit", Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
+                        return false;
+                    }
+                }
+            } catch (Exception err) {
+                Syslog.Append(e.getClass().getCanonicalName(), "Delete", Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
+                return false;
+            }
+            if (Cascade == true) {
+                ed = e.getClass().getAnnotation(EntityDispatch.class);
+                try {
+                    if ((ed != null) && (ed.onDeleted() == true)) {
+                        entityDeleted(e, Cascade);
+                    }
+                } catch (Exception err) {
+                    Syslog.Append(Entities.class.getCanonicalName(), "Delete.entityDeleted", Table.Format(Table.Exception.Entities.EntityNotifyExecution, err.getMessage()));
+                }
+            }
+            return true;
+        } finally{
+            if (!useSessionTransaction) s.close();
+        }
     }
     public static void Identify(Stored e){
         Session s = openSession();

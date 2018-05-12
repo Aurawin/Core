@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Keywords extends ConcurrentLinkedQueue<Keyword> {
+    public final KeyPairs Custom = new KeyPairs();
     public static class Default {
         public static final Keywords System = createSystemKeywords();
         public static final KeyPairs Master = new KeyPairs();
@@ -21,13 +22,13 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
 
     public static Keywords createSystemKeywords(){
         Keywords items = new Keywords();
-        items.add(new Date(items,"date"));
-        items.add(new Time(items,"time"));
-        items.add(new Year(items,"year"));
+        items.add(new Date(items,"date",""));
+        items.add(new Time(items,"time",""));
+        items.add(new Year(items,"year",""));
         return items;
     }
     public ArrayList<Keyword>fromString(String Input) {
-        // Keywords become manifest collection to stream output as String
+        // Keywords become manifest collection to stream output as Custom
         ArrayList<Keyword> Replacement = new ArrayList<Keyword>();
         String name = "";
         int idxInput = 0;
@@ -52,7 +53,7 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                                 return preKeyword;
                             }
                         };
-                        Keyword kw = new Keyword(this, "", km);
+                        Keyword kw = new Keyword(this, "", "",km);
                         Replacement.add(kw);
                     }
                     idxInput = idxPhraseEnd+Settings.Keywords.Phrase.EndLength;
@@ -60,6 +61,7 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
 
                     name = Input.substring(idxPhrase+Settings.Keywords.Phrase.StartLength,idxPhraseEnd).trim();
                     Keyword kw = Default.System.Find(name);
+
 
                     if (kw!=null) {
                         Replacement.add(kw);
@@ -79,20 +81,40 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                                         return ki.Value;
                                     }
                                 };
-                                Keyword subK = new Keyword(this, name, km);
+                                Keyword subK = new Keyword(this, name, "", km);
                                 Replacement.add(subK);
                             }
                         } else {
-                            String preKeyword = name;
-                            KeywordMethod km = new KeywordMethod() {
-                                @Override
-                                public String Evaluate() {
-                                    return Settings.Keywords.Phrase.Start+ preKeyword+ Settings.Keywords.Phrase.End;
-
+                            KeyItem cki = Custom.Find(name);
+                            if (cki!=null){
+                                idxSubPhrase=cki.Value.indexOf(Settings.Keywords.Phrase.Start);
+                                idxSubPhraseEnd = cki.Value.indexOf(Settings.Keywords.Phrase.End,idxSubPhrase);
+                                if ((idxSubPhrase>-1) && (idxSubPhraseEnd>-1)) {
+                                    ArrayList<Keyword> subKeys = fromString(cki.Value);
+                                    Replacement.addAll(subKeys);
+                                } else {
+                                    KeywordMethod km = new KeywordMethod() {
+                                        @Override
+                                        public String Evaluate() {
+                                            return cki.Value;
+                                        }
+                                    };
+                                    Keyword subK = new Keyword(this, name, "", km);
+                                    Replacement.add(subK);
                                 }
-                            };
-                            Keyword subK = new Keyword(this, name, km);
-                            Replacement.add(subK);
+
+                            } else {
+                                String preKeyword = name;
+                                KeywordMethod km = new KeywordMethod() {
+                                    @Override
+                                    public String Evaluate() {
+                                        return Settings.Keywords.Phrase.Start + preKeyword + Settings.Keywords.Phrase.End;
+
+                                    }
+                                };
+                                Keyword subK = new Keyword(this, name, "", km);
+                                Replacement.add(subK);
+                            }
                         }
                     }
 
@@ -104,7 +126,7 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                             return preKeyword;
                         }
                     };
-                    Keyword kw = new Keyword(this, "", km);
+                    Keyword kw = new Keyword(this, "", "", km);
                     Replacement.add(kw);
                     idxInput=lengthInput;
                 }
@@ -116,7 +138,7 @@ public class Keywords extends ConcurrentLinkedQueue<Keyword> {
                         return preKeyword;
                     }
                 };
-                Keyword kw = new Keyword(this, "", km);
+                Keyword kw = new Keyword(this, "", "",km);
                 Replacement.add(kw);
                 idxInput=lengthInput;
             }

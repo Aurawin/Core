@@ -16,6 +16,10 @@ import org.junit.After;
 
 import java.util.ArrayList;
 
+import static com.aurawin.core.stored.entities.Entities.CascadeOff;
+import static com.aurawin.core.stored.entities.Entities.UseCurrentTransaction;
+import static com.aurawin.core.stored.entities.Entities.UseNewTransaction;
+
 public class SelfCertificateCreate {
     public long Id = 1;
     public Manifest Manifest;
@@ -61,7 +65,7 @@ public class SelfCertificateCreate {
         );
         ArrayList<Stored> cs = Entities.Lookup(Certificate.QueryAll());
         for (Stored c:cs){
-            if (c.getId()!=1l) Entities.Delete(c,Entities.CascadeOff);
+            if (c.getId()!=1l) Entities.Delete(c,CascadeOff,UseNewTransaction);
         }
 
 

@@ -17,7 +17,9 @@ public class KeywordsTest {
     public void testList(){
         Keywords.Default.Master.Find("date");
         keywords= new Keywords();
+
         try {
+            keywords.Custom.Update("tobar","<div>lskflk</div>");
             Input = VarString.fromResource(defaultResource);
             ArrayList<Keyword> items  = keywords.fromString(Input);
             keywords.addAll(items);

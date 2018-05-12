@@ -113,7 +113,7 @@ public class UniqueId extends Stored {
             }
         }
     }
-
+    public static void entityPurge(Stored Entity, boolean Cascade){}
     public static void entityCreated(Stored Entity, boolean Cascade){}
     public static void entityDeleted(Stored Entity, boolean Cascade){}
     public static void entityUpdated(Stored Entity, boolean Cascade){}
