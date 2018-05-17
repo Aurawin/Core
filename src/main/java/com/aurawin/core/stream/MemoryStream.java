@@ -289,6 +289,7 @@ public class MemoryStream extends Channel {
         int iColSize=0;
         long iRead=Count;
         int iLcv =0;
+        byte[] col;
 
 
 
@@ -298,13 +299,14 @@ public class MemoryStream extends Channel {
 
 
         while ( (iLcv<Collection.size()) && (iRead>0) ) {
-            iColSize=Collection.get(iLcv).length;
+            col = Collection.get(iLcv);
+            iColSize=col.length;
             if (iPreSeek+iColSize>=Position) {
                 iOffset=(int)(Position-iPreSeek);
                 iChunk=iColSize-iOffset;
                 if (iChunk>iRead)
                     iChunk=iRead;
-                System.arraycopy(Collection.get(iLcv), iOffset, Result, iTotal, (int) iChunk);
+                System.arraycopy(col, iOffset, Result, iTotal, (int) iChunk);
 
                 Position+=iChunk;
 
@@ -438,7 +440,7 @@ public class MemoryStream extends Channel {
             col = Collection.get(iLcv);
             if (iPreSeek+col.length>=Position) {
                 iColPosition =(int) (position - iPreSeek);
-                idxTerm = Bytes.indexOf(Collection.get(iLcv), Term,(int) iColPosition, 0);
+                idxTerm = Bytes.indexOf(col, Term,(int) iColPosition, 0);
                 if (idxTerm > -1) {
                     iResult = idxTerm + iPreSeek;
                     break;

@@ -4,6 +4,7 @@ package com.aurawin.core.rsr.server;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
@@ -40,16 +41,18 @@ public class Server extends Engine {
 
     @Override
     public void run(){
+        boolean bRun = true;
         try {
-            while (State != esFinalize) {
+            while (bRun) {
                 switch (State) {
                     case esRun:
                         try {
                             SocketChannel chRemote = Channel.accept();
                             if (chRemote != null) {
+                                chRemote.setOption(StandardSocketOptions.SO_LINGER, 3000);
+                                chRemote.socket().setReuseAddress(true);
                                 Managers.Accept(chRemote);
                             }
-                            Managers.cleanupItemThreads();
                         } catch (IOException ioe) {
                             Syslog.Append("Engine", "accept", Table.Format(Table.Exception.RSR.UnableToAcceptSocket, Address.toString()));
                             try {
@@ -67,7 +70,6 @@ public class Server extends Engine {
                                 Managers.Reset();
                             }
                             Channel = ServerSocketChannel.open();
-                            Channel.socket().setSoTimeout(60);
                             Channel.socket().setReuseAddress(true);
                             State = esStart;
                         } catch (IOException e) {
@@ -90,12 +92,15 @@ public class Server extends Engine {
                         }
                         break;
                     case esStop:
+                        bRun=false;
                         try {
+                            Managers.Reset();
+
                             Channel.close();
                             Channel = null;
                         } catch (IOException ioe) {
                             // network interface maybe down
-                            Syslog.Append("Engine", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, Address.toString()));
+                            Syslog.Append("Server", "close", Table.Format(Table.Exception.RSR.UnableToCloseAcceptSocket, Address.toString()));
                         }
                         break;
                     case esUpgrade:
@@ -107,8 +112,6 @@ public class Server extends Engine {
                         //load_class
                         State = esRun;
                         break;
-                    case esException:
-                        break;
                 }
                 try {
                     sleep(Settings.RSR.Server.AcceptYield);
@@ -117,7 +120,7 @@ public class Server extends Engine {
                 }
             }
         } catch (Exception e){
-            State = esException;
+            Stop();
             Syslog.Append("Server", "run", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
         }
     }
@@ -134,9 +137,7 @@ public class Server extends Engine {
         }
     }
     public synchronized void Stop(){
-        if (State!=esFinalize){
-            State=esStop;
-        }
+        State=esStop;
     }
     public synchronized void CheckForUpdates(){
 

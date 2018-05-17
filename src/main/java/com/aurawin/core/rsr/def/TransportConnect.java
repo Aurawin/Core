@@ -109,7 +109,7 @@ public class TransportConnect {
         return (Owner!=null);
     }
     public Item getOwnerOrWait() {
-        while ((Owner==null) && (Engine.State!=EngineState.esFinalize))
+        while ((Owner==null) && (Engine.State!=EngineState.esStop))
             try {
                 Thread.sleep(Settings.RSR.TransportConnect.SleepDelay);
             } catch (InterruptedException ie){

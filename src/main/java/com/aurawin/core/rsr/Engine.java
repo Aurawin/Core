@@ -1,6 +1,8 @@
 package com.aurawin.core.rsr;
 
 
+import com.aurawin.core.lang.Table;
+import com.aurawin.core.log.Syslog;
 import com.aurawin.core.plugin.Plug;
 import com.aurawin.core.plugin.Plugins;
 import com.aurawin.core.rsr.commands.Commands;
@@ -119,18 +121,20 @@ public abstract class Engine extends Thread  {
     }
 
 
-    public void loadSecurity(long Id){
-        Certificate cert= Entities.Lookup(Certificate.class,Id);
+    public void loadSecurity(Certificate cert){
         if (cert!=null) {
             try {
                 SSL.Load(cert);
             } catch (Exception e){
-                if (e!=null) e.getMessage();  //todo log error <=====
+                Syslog.Append("Engine", "loadSecurity", Table.Format(Table.Exception.RSR.UnableToLoadCertificate, e.getMessage()));
             }
         } else{
             SSL.Enabled=false;
+            Syslog.Append("Engine", "loadSecurity", Table.Format(Table.Exception.RSR.UnableToLoadCertificate, "No certificate was loaded"));
         }
-
+    }
+    public void loadSecurity(long Id){
+        loadSecurity(Entities.Lookup(Certificate.class,Id));
     }
 
     public void installPlugin(Plug plugin){

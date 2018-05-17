@@ -2,6 +2,7 @@ package com.aurawin.core.rsr;
 
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
+import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.TransportConnect;
 import com.aurawin.core.solution.Settings;
@@ -15,6 +16,9 @@ import java.time.Instant;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadFactory;
+
+import static com.aurawin.core.rsr.def.ItemCommand.cmdAccept;
+import static com.aurawin.core.rsr.def.ItemCommand.cmdConnect;
 
 public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFactory {
     private long nextId;
@@ -55,7 +59,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
 
         while (it.hasNext()) {
             itms=it.next();
-            if (itms.size()<ctLcv) {
+            if (itms.List.size()<ctLcv) {
                 result = itms;
             }
         }
@@ -65,7 +69,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Items getManager(){
         Items result = getManagerByLowestItemCount(Settings.RSR.Server.ManagerItemNewThreadThreshold);
         if (result!=null) {
-            if (result.size()>=Settings.RSR.Server.ManagerItemCascadeThreshold) result=null;
+            if (result.List.size()>=Settings.RSR.Server.ManagerItemCascadeThreshold) result=null;
         }
         if ( (result==null) && (size()<Settings.RSR.Server.ManagerItemCascadeLimit) ){
             result = new Items(this,Owner,Owner.Infinite);
@@ -75,14 +79,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         return result;
 
     }
-    public void reConnect(TransportConnect tcData){
-        Items itms = getManager();
-        if (itms!=null) {
-            itms.qRequestConnect.add(tcData);
-        } else {
-            Syslog.Append(getClass().getCanonicalName(),"reConnect", Table.Format(Table.Exception.RSR.ManagerConnectNoItemThread,tcData.getAddress().getHostString()));
-        }
-    }
+
     @SuppressWarnings("unchecked")
     public TransportConnect Connect(InetSocketAddress address, boolean persistent)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
@@ -98,7 +95,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 try {
                     m.setAccessible(true);
                     tc = new TransportConnect(itms.Engine,o,m,address,persistent);
-                    itms.qRequestConnect.add(tc);
+                    ((Item) o).Commands.add(cmdConnect);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(), "Connect", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), address.getHostString()));
                 }
@@ -124,7 +121,8 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                     Method m = c.getMethod("newInstance", itemConstructorParams);
                     m.setAccessible(true);
                     Item itm = (Item) m.invoke(o, itms, aChannel,ItemKind.Server);
-                    itms.qAddItems.add(itm);
+                    itms.List.add(itm);
+                    itm.Commands.add(cmdAccept);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(),"Accept", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
                 }
@@ -141,36 +139,14 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         }
     }
 
-    public void cleanupItemThreads(){
-        currentInstant=Instant.now();
-        try {
-            if (currentInstant.minusMillis(Settings.RSR.Items.AutoremoveCleanupInterval).isAfter(lastCleanup)) {
-                lastCleanup = currentInstant;
-                Expired = lastCleanup.minusMillis(Settings.RSR.Items.AutoremoveEmptyItemsDelay);
-                Iterator<Items> it = iterator();
-                Items itms = null;
-                while (it.hasNext()) {
-                    itms = it.next();
-                    if (
-                            (itms!=null)&& (itms.isEmpty() && (itms.qRequestConnect.isEmpty())) &&
 
-                            (itms.RemovalRequested==false) &&
-                            (Expired.isAfter(itms.LastUsed))
-                    ) {
-                        itms.RemovalRequested = true;
-                    }
-                }
-            }
-        } catch (Exception e){
-        }
-    }
     public void Reset(){
         Iterator<Items> it = iterator();
         Items itms = null;
         while (it.hasNext()){
             itms = it.next();
             itms.Release();
-            itms.RemovalRequested=true;
+            itms.elasticRebound=true;
         }
     }
 }

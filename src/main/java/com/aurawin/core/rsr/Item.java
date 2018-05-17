@@ -1,6 +1,5 @@
 package com.aurawin.core.rsr;
 
-import com.aurawin.core.array.Bytes;
 import com.aurawin.core.rsr.def.*;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.transport.AutoNumber;
@@ -10,17 +9,16 @@ import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.security.Credentials;
 
-import javax.management.relation.Relation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.channels.Channel;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.EnumSet;
+import java.util.Set;
 
 
 public abstract class Item  implements Transport,AuthenticateHandler{
+    public volatile EnumSet<ItemCommand> Commands = EnumSet.noneOf(ItemCommand.class);
     public Version Version;
     public Buffers Buffers;
     public Credentials Credentials;
@@ -85,20 +83,20 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     @Override
     public void Release() {
         if (!Released){
-            Teardown();
             Released=true;
             Credentials.Release();
             SocketHandler.Release();
+            if (connectionData!=null) {
+                connectionData.Release();
+                connectionData=null;
+            }
             Buffers.Release();
             Buffers=null;
             Credentials=null;
             SocketHandler=null;
         }
     }
-    public void setChannel(SocketChannel aChannel)
-    {
-        SocketHandler.Channel=aChannel;
-    }
+
     public void renewTTL(){
         TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
         if (getPersistant()!=null)
@@ -111,7 +109,6 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     @Override
     public void Setup(){
-        Owner.add(this);
         SocketHandler.Setup();
         renewTTL();
     }
@@ -121,14 +118,5 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         SocketHandler.Teardown();
         Timeout=0;
         TTL=null;
-        Owner.remove(this);
-        Owner.qRemoveItems.remove(this);
-        Owner.qWriteItems.remove(this);
-    }
-    public void queueSend(){
-        Owner.qWriteItems.add(this);
-    }
-    public void queueClose(){
-        Owner.qRemoveItems.add(this);
     }
 }

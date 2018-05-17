@@ -246,7 +246,6 @@ public class Table {
             public static final String EntityBeforeDeleteMethodNotDefined = "table.exception.entities.entity-before-delete-method-not-defined";
             public static final String EntityUpdatedMethodNotDefined = "table.exception.entities.entity-updated-method-not-defined";
             public static final String EntityNotifyExecution= "table.exception.entities.entity-notify-execution";
-
             public static final String EntityAnnotationForFetchNotDefined = "table.exception.entities.entity-annotation-for-fetch-not-defined";
             public static class UniqueId {
                 public static String UnableToCreateNamespaceEmpty = "table.exception.entities.uniqueid.unable-to-create-namespace-empty";
@@ -278,6 +277,7 @@ public class Table {
             public static final String UnableToSetWriteBuffer = "table.exception.rsr.unable-to-set-write-buffer";
             public static final String UnableToAccessConncurrently = "table.exception.rsr.unable-to-access-concurrently";
             public static final String UnableToSelectItemKeys = "table.exception.rsr.unable-to-select-item-keys";
+            public static final String UnableToLoadCertificate = "table.exception.rsr.unable-to-load-certificate";
             public static final String MonitorLoop = "table.exception.rsr.monitor-loop";
             public static final String ItemsLoop = "table.exception.rsr.items-loop";
             public static final String ManagerAccept = "table.exception.rsr.manager-accept";

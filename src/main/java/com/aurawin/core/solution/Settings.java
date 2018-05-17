@@ -187,6 +187,7 @@ public class Settings {
         public static class Security{
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 1000*10; //milliseconds
+            public static int HandshakeTimeoutDebug = 1000*60*2; //milliseconds
 
             public static int SSLEngineInBuffer = 1024*512;
             public static int SSLEngineOutBuffer = 1024*512;

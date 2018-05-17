@@ -10,6 +10,7 @@ import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.time.Instant;
 
+import static com.aurawin.core.rsr.def.ItemCommand.cmdSend;
 import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 import static java.net.StandardSocketOptions.TCP_NODELAY;
@@ -101,9 +102,9 @@ public class SocketHandlerPlain extends SocketHandler {
             }
             Owner.Owner.BufferWrite.clear();
             Owner.Buffers.Send.sliceAtPosition();
-            if (Owner.Buffers.Send.Size==0) Owner.Owner.removeFromWriteQueue(Owner);
+            if (Owner.Buffers.Send.Size==0) Owner.Commands.remove(cmdSend);
         } else {
-            if (Owner.Buffers.Send.Size == 0) Owner.Owner.removeFromWriteQueue(Owner);
+            if (Owner.Buffers.Send.Size == 0) Owner.Commands.remove(cmdSend);
         }
         return SocketHandlerResult.Complete;
     }

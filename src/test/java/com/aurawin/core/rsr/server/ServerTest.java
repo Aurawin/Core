@@ -4,6 +4,8 @@ import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.ClassScanner;
+import com.aurawin.core.plugin.Plug;
+import com.aurawin.core.plugin.annotations.Plugin;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.server.protocol.http.HTTP_1_1;
 import com.aurawin.core.solution.Settings;
@@ -18,6 +20,8 @@ import org.junit.Before;
 import org.junit.After;
 
 import com.aurawin.core.plugin.BackEnd;
+
+import java.lang.annotation.Annotation;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
@@ -30,15 +34,16 @@ public class ServerTest {
         System.out.println("ServerTest.testRun()");
         System.out.println("ServerTest.serverHTTP Start()");
         serverHTTP.Start();
-        System.out.println("ServerTest.serverHTTP running");
-        while (serverHTTP.State != EngineState.esFinalize) {
+        System.out.println("ServerTest.serverHTTP started");
+        while (serverHTTP.State != EngineState.esStop) {
             Thread.sleep(100);
         }
+        System.out.println("ServerTest.serverHTTP stopped");
     }
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("server.test","Aurawin ServerTest","Universal");
+        Settings.Initialize("AuProcess","Aurawin ServerTest","Universal");
         AnnotatedList al = new AnnotatedList();
         ClassScanner cs= new ClassScanner();
         Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);
@@ -69,9 +74,17 @@ public class ServerTest {
                 false,
                 "phoenix.aurawin.com"
         );
-
         serverHTTP.loadSecurity(1l);
-        serverHTTP.installPlugin(new BackEnd());
+        Set<Class<? extends Plug>> ca = cs.scanPackageForPlugins(com.aurawin.core.Package.class);
+        for (Class c : ca){
+            Annotation ed = c.getAnnotation(Plugin.class);
+            if (ed != null) {
+                System.out.println("Plugin "+ c.getName()+ " installed.");
+                Plug p = (Plug) c.getConstructor().newInstance();
+                serverHTTP.installPlugin(p);
+
+            }
+        }
         serverHTTP.Configure();
     }
 

@@ -39,7 +39,7 @@ public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1
     public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind aKind)throws NoSuchMethodException,InvocationTargetException,
             InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner, aKind);
-        itm.setChannel(aChannel);
+        itm.SocketHandler.Reset(aChannel);
         return itm;
     }
     @Override

@@ -2,6 +2,7 @@ package com.aurawin.core.rsr.def.handlers;
 
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.solution.Settings;
@@ -17,6 +18,9 @@ import java.time.Instant;
 import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 import javax.xml.transform.OutputKeys;
 
+import static com.aurawin.core.rsr.def.ItemCommand.cmdError;
+import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
+import static com.aurawin.core.rsr.def.ItemError.eRead;
 import static com.aurawin.core.rsr.def.ItemError.eSSL;
 import static com.aurawin.core.rsr.def.ItemError.eTimeout;
 import static com.aurawin.core.rsr.def.ItemKind.Client;
@@ -25,10 +29,7 @@ import static com.aurawin.core.rsr.def.ItemState.isHandShake;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Complete;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Failure;
-import static com.aurawin.core.solution.Settings.RSR.Security.HandshakeTimeout;
-import static com.aurawin.core.solution.Settings.RSR.Security.SSLEngineInBuffer;
-import static com.aurawin.core.solution.Settings.RSR.Security.SSLEngineOutBuffer;
-import static com.aurawin.core.solution.Settings.RSR.Security.SSLEngineRemoteBuffer;
+import static com.aurawin.core.solution.Settings.RSR.Security.*;
 import static com.aurawin.core.solution.Settings.Security.Ciphers;
 import static com.aurawin.core.solution.Settings.Security.Protocols;
 import static java.time.LocalTime.now;
@@ -39,7 +40,7 @@ import static javax.net.ssl.SSLEngineResult.Status.*;
 public class SocketHandlerSecure extends SocketHandler {
     public SSLEngine Cryptor;
     public SSLContext Context;
-    private boolean issuedHandshake = false;
+
     private boolean needNetInFlip = true;
     private boolean needNetOutFlip = true;
     private int iRead;
@@ -64,7 +65,6 @@ public class SocketHandlerSecure extends SocketHandler {
         super.Release();
 
         Cryptor=null;
-
         CryptResult=null;
     }
     @Override
@@ -81,28 +81,26 @@ public class SocketHandlerSecure extends SocketHandler {
             Key.cancel();
             Key=null;
         }
-        if (Channel.isOpen()==true) {
+
+        if ((Channel!=null) && (Channel.isOpen()==true)) {
             try{
                 Channel.close();
             } catch (IOException ioe){
                 // do nothing.  already closed.
             }
         }
-        Owner.Disconnected();
-        Owner.Finalized();
-        Owner.State = isNone;
-
     }
     @Override
     public void Setup(){
         super.Setup();
         try {
+            issuedHandshake=false;
             Context = Owner.Owner.Security.getContext();//SSLContext.getInstance("TLSv1.2");
 
             Cryptor=Context.createSSLEngine();
 
-            needNetInFlip = (Owner.Kind==Server);
-            needNetOutFlip = (Owner.Kind==Server);
+            needNetInFlip = true; // (Owner.Kind==Server);
+            needNetOutFlip = true; //(Owner.Kind==Server);
             Cryptor.setUseClientMode((Owner.Kind==Client));
 
             Cryptor.setNeedClientAuth(false);
@@ -232,7 +230,7 @@ public class SocketHandlerSecure extends SocketHandler {
             issuedHandshake = true;
             needNetInFlip=true;
             try {
-                Owner.TTL = Instant.now().plusMillis(HandshakeTimeout);
+                Owner.TTL = Instant.now().plusMillis(HandshakeTimeoutDebug);
                 Cryptor.beginHandshake();
                 handshakeStatus = Cryptor.getHandshakeStatus();
                 while (
@@ -273,17 +271,16 @@ public class SocketHandlerSecure extends SocketHandler {
     private void cryptorFailed() {
         Owner.State = ItemState.isNone;
         Owner.Errors.add(eSSL);
-        Owner.Error();
-        Owner.queueClose();
+        Owner.Commands.add(cmdTeardown);
+        Owner.Commands.add(cmdError);
     }
     private void handshakeFailed(){
 
         handshakeStatus= FINISHED;
         Owner.State = ItemState.isNone;
         Owner.Errors.add(eSSL);
-        Owner.Error();
-        Owner.queueClose();
-
+        Owner.Commands.add(cmdError);
+        Owner.Commands.add(cmdTeardown);
         Syslog.Append(
                 "SocketHandlerSecure",
                 "handshakeFailed",
@@ -307,7 +304,9 @@ public class SocketHandlerSecure extends SocketHandler {
             return;
         }
         Owner.State = ItemState.isEstablished;
-        Owner.Connected();
+
+
+
     }
     private HandshakeStatus handshakeWrap() {
         try {
@@ -376,6 +375,11 @@ public class SocketHandlerSecure extends SocketHandler {
                         //bbNetIn.compact();
                         bbNetIn.limit(bbNetIn.capacity());
                         iRead = Channel.read(bbNetIn);
+                        if (iRead==-1){
+                            Owner.Errors.add(eRead);
+                            Owner.Errors.add(eSSL);
+                            Channel.close();
+                        }
                         bbNetIn.flip();
                         //
 

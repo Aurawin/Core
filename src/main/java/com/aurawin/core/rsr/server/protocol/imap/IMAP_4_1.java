@@ -107,7 +107,7 @@ public class IMAP_4_1 extends Item implements Transport{
     }
     @Override
     public void Error() {
-        queueClose();
+        // todo log error
     }
     @Override
 

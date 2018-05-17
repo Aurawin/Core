@@ -6,6 +6,7 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.handlers.*;
 import com.aurawin.core.rsr.def.http.*;
@@ -24,6 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 
+import static com.aurawin.core.rsr.def.ItemCommand.cmdSend;
+import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
 import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.rFailure;
@@ -155,7 +158,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
     @Override
     public void Error() {
-        queueClose();
+        Commands.add(cmdTeardown);
     }
 
     @Override
@@ -203,7 +206,6 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
 
     private void Respond() {
-
         Buffers.Send.position(Buffers.Send.size());
         Buffers.Send.Write(getCommandLine());
 
@@ -213,9 +215,9 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         if (Response.Payload.size()>0) {
             Response.Payload.Move(Buffers.Send);
         }
-        queueSend();
+        Commands.add(cmdSend);
 
         if (Response.Headers.ValueAsString(Field.Connection).equalsIgnoreCase("close"))
-           this.queueClose();
+           Commands.add(cmdTeardown);
     }
 }

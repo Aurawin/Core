@@ -3,8 +3,10 @@ package com.aurawin.core.rsr.client.protocol.imap;
 import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.Items;
 import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemKind;
 
+import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
 import static com.aurawin.core.rsr.def.imap.Status.*;
 
 import com.aurawin.core.rsr.def.imap.*;
@@ -109,7 +111,7 @@ public class IMAP_4_1 extends Item implements Transport{
     }
     @Override
     public void Error() {
-        queueClose();
+        Commands.add(cmdTeardown);
     }
     @Override
     public void Release() {

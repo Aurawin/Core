@@ -31,10 +31,9 @@ public class Client  extends Engine {
     @Override
     public void run(){
         try {
-            while (State != esFinalize) {
+            while (State != esStop) {
                 switch (State) {
                     case esRun:
-                        Managers.cleanupItemThreads();
                         break;
                     case esConfigure:
                         try {
@@ -58,20 +57,18 @@ public class Client  extends Engine {
                         //load_class
                         State = esRun;
                         break;
-                    case esException:
-                        break;
                 }
                 try {
                     sleep(Settings.RSR.Server.AcceptYield);
                 } catch (InterruptedException irqe) {
-                    Syslog.Append("Client", "monitor", "Interrupted");
+                    Syslog.Append(getClass().getCanonicalName(), "run", "Interrupted");
                 }
             }
-            if (State==esFinalize){
+            if (State==esStop){
                 Managers.Reset();
             }
         } catch (Exception e){
-            State = esException;
+            Stop();
             Syslog.Append("Client", "run", Table.Format(Table.Exception.RSR.MonitorLoop, e.getMessage()));
         }
     }
@@ -88,13 +85,9 @@ public class Client  extends Engine {
         }
     }
     public synchronized void Stop(){
-        if (State!=esFinalize){
-            State=esStop;
-        }
+        State=esStop;
     }
-    public synchronized void Close(){
-        State=esFinalize;
-    }
+
     public synchronized void CheckForUpdates(){
 
     }

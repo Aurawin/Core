@@ -18,7 +18,7 @@ public abstract class SocketHandler implements SocketMethods {
     protected Item Owner;
     public SocketChannel Channel;
     public SelectionKey Key;
-
+    protected boolean issuedHandshake = false;
     public void Setup() {
         try {
             Channel.setOption(TCP_NODELAY,true);
@@ -31,8 +31,18 @@ public abstract class SocketHandler implements SocketMethods {
             Syslog.Append("SocketHandler", "Setup", ex.getMessage());
         }
     }
+
+    public void Reset(SocketChannel channel){
+        Channel=channel;
+        issuedHandshake=false;
+    }
     public void Shutdown(){
-        Owner.Owner.scheduleRemoval(Owner);
+        try {
+            Channel.close();
+        } catch (Exception ex){
+
+        }
+        Channel = null;
     }
     public void Release(){
         try {

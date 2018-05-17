@@ -4,6 +4,7 @@ package com.aurawin.core.rsr.client.protocol.http;
 import com.aurawin.core.array.KeyItem;
 import com.aurawin.core.lang.Table;
 import com.aurawin.core.rsr.def.CredentialResult;
+import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.stored.entities.security.Credentials;
 import com.aurawin.core.rsr.def.ItemKind;
 import com.aurawin.core.rsr.def.http.ResolveResult;
@@ -21,7 +22,9 @@ import com.aurawin.core.time.Time;
 import org.hibernate.Session;
 import com.aurawin.core.rsr.transport.annotations.Protocol;
 
-import static com.aurawin.core.rsr.def.EngineState.esFinalize;
+import static com.aurawin.core.rsr.def.EngineState.esStop;
+import static com.aurawin.core.rsr.def.ItemCommand.cmdSend;
+import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
 import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -157,7 +160,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
     @Override
     public void Error() {
-        queueClose();
+        Commands.add(cmdTeardown);
     }
     @Override
     public void Release() {
@@ -241,10 +244,10 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         if (Response.Payload.size()>0) {
             Response.Payload.Move(Buffers.Send);
         }
-        queueSend();
+        Commands.add(cmdSend);
 
         if (Response.Headers.ValueAsString(Field.Connection).equalsIgnoreCase("close"))
-           this.queueClose();
+           Commands.add(cmdTeardown);
     }
 
     public void Query(){
@@ -264,10 +267,10 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
                 Request.Payload.Move(Buffers.Send);
             }
 
-            queueSend();
+            Commands.add(cmdSend);
 
             Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
-            while ((Owner.Engine.State != esFinalize) && (Response.Status != sEmpty) && Instant.now().isBefore(ttl)) {
+            while ((Owner.Engine.State != esStop) && (Response.Status != sEmpty) && Instant.now().isBefore(ttl)) {
                 try {
                     if (Response.Status == sEmpty) {
                         Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);

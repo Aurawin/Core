@@ -76,7 +76,7 @@ public class ClientTest {
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
         Transport=Engine.Connect(saServer,false);
-        while (Engine.State != EngineState.esFinalize) {
+        while (Engine.State != EngineState.esStop) {
             if (Transport.getStatus()== tcsConnected) {
                 Client = (HTTP_1_1) Transport.getOwnerOrWait();
                 Client.Request.URI="/index.html";

@@ -1,5 +1,6 @@
 package com.aurawin.core.storage;
 
+import com.aurawin.core.ClassScanner;
 import com.aurawin.core.Environment;
 import com.aurawin.core.lang.*;
 
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.After;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import static com.aurawin.core.stored.entities.Entities.CascadeOff;
 import static com.aurawin.core.stored.entities.Entities.UseCurrentTransaction;
@@ -25,6 +27,11 @@ public class SelfCertificateCreate {
     public Manifest Manifest;
     @Before
     public void before() throws Exception {
+        AnnotatedList al = new AnnotatedList();
+        ClassScanner cs= new ClassScanner();
+        Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);
+        for (Class c : sa) al.add(c);
+
         Manifest = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
                 Environment.getString(Table.DBMS.Password),  // password
@@ -40,7 +47,7 @@ public class SelfCertificateCreate {
                 "HTTPServerTest",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),           // Driver
-                new AnnotatedList()
+                al
         );
         Entities.Initialize(Manifest);
     }
@@ -63,17 +70,9 @@ public class SelfCertificateCreate {
                 "support@aurawin.com",
                 365
         );
-        ArrayList<Stored> cs = Entities.Lookup(Certificate.QueryAll());
-        for (Stored c:cs){
-            if (c.getId()!=1l) Entities.Delete(c,CascadeOff,UseNewTransaction);
-        }
-
-
-        Id = 1;
-        cert.Id=1;
 
         cert.TextRequest= Settings.Security.Certificate.SelfSignedRequestMessage;
-        Entities.Update(cert,Entities.CascadeOn);
+        Entities.Save(cert,Entities.CascadeOn);
 
         Security sec = new Security();
         sec.Load(cert);

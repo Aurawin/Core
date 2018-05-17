@@ -8,7 +8,7 @@
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
     <artifactId>core</artifactId>
-    <version>2018.5.12.2</version>
+    <version>2018.5.16.7</version>
     <scm>
         <connection>scm:svn:http://127.0.0.1/dummy</connection>
         <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
@@ -17,6 +17,7 @@
     </scm>
     <packaging>jar</packaging>
     <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -130,6 +131,18 @@
                     </plugins>
                 </pluginManagement>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
