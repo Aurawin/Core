@@ -25,6 +25,8 @@ import com.aurawin.core.rsr.transport.annotations.Protocol;
 import static com.aurawin.core.rsr.def.EngineState.esStop;
 import static com.aurawin.core.rsr.def.ItemCommand.cmdSend;
 import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
+import static com.aurawin.core.rsr.def.ItemKind.Client;
+import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -81,7 +83,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     @Override
     public HTTP_1_1 newInstance(Items aOwner) throws NoSuchMethodException,InvocationTargetException,
             InstantiationException, IllegalAccessException{
-        return new HTTP_1_1(aOwner,ItemKind.Client);
+        return new HTTP_1_1(aOwner,Client);
     }
     @Override
     public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws NoSuchMethodException,
@@ -111,32 +113,37 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
 
     @Override
     public rsrResult onPeek() {
-        return Request.Peek();
+        if (Kind == Client){
+            return Response.Peek();
+        } else {
+            return Request.Peek();
+        }
     }
     @Override
     public rsrResult onProcess(Session ssn) {
         rsrResult r = rSuccess;
-        // preprocess Authentication Header...
+        if (Response.Read() == rSuccess) {
+            if (Kind==Server) {
+                Result mr = Methods.Process(Request.Method, ssn, this);
+                switch (mr) {
+                    case Ok:
+                        Respond();
+                        break;
+                    case NotFound:
+                        Response.Status = s405;
+                        Response.Headers.Update(Field.Allow, Methods.getAllMethods());
+                        Respond();
+                        break;
+                    case Exception:
+                        Response.Status = s500;
+                        Respond();
+                        break;
+                    case Failure:
+                        Response.Status = s503;
+                        Respond();
+                        break;
+                }
 
-        if (Response.Read()==rSuccess) {
-            Result mr = Methods.Process(Request.Method,ssn,this);
-            switch (mr){
-                case Ok:
-                    Respond();
-                    break;
-                case NotFound:
-                    Response.Status=s405;
-                    Response.Headers.Update(Field.Allow,Methods.getAllMethods());
-                    Respond();
-                    break;
-                case Exception :
-                    Response.Status = s500;
-                    Respond();
-                    break;
-                case Failure:
-                    Response.Status = s503;
-                    Respond();
-                    break;
             }
         } else {
             r = rFailure;
@@ -203,6 +210,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
 
     private void prepareRequest(){
+        Response.Obtained=false;
         Request.Headers.Update(Field.ContentLength,Long.toString(Request.Payload.Size));
         Request.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Request.Headers.Update(Field.Host,Owner.Engine.Realm);
@@ -255,34 +263,15 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
             Request.URI=Request.pluginCommandInfo.Namespace;
             Request.Id=Id.Spin();
             Response.Status=sEmpty;
-
             prepareRequest();
-
             Buffers.Send.position(Buffers.Send.size());
             Buffers.Send.Write(getRequestCommandLine());
-
             Buffers.Send.Write(getRequestHeaders());
             Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
             if (Request.Payload.size()>0) {
                 Request.Payload.Move(Buffers.Send);
             }
-
-            Commands.add(cmdSend);
-
-            Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
-            while ((Owner.Engine.State != esStop) && (Response.Status != sEmpty) && Instant.now().isBefore(ttl)) {
-                try {
-                    if (Response.Status == sEmpty) {
-                        Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);
-                    }
-                } catch (InterruptedException ie) {
-                }
-
-            }
-
         } else {
-            Response.Status=sEmpty;
-
             prepareRequest();
 
             Buffers.Send.position(Buffers.Send.size());
@@ -293,7 +282,19 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
             if (Request.Payload.size()>0) {
                 Request.Payload.Move(Buffers.Send);
             }
-            Commands.add(cmdSend);
         }
+        Response.Status=sEmpty;
+        Commands.add(cmdSend);
+        Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
+        while ((Owner.Engine.State != esStop) && (!Response.Obtained) && Instant.now().isBefore(ttl)) {
+            try {
+                if (Response.Status == sEmpty) {
+                    Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);
+                }
+            } catch (InterruptedException ie) {
+            }
+
+        }
+
     }
 }

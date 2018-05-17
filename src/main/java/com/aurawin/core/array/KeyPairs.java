@@ -117,9 +117,11 @@ public class KeyPairs extends ArrayList<KeyItem> {
         }
     }
     public void Load(String Data){
-        String[] saItems = Data.split(DelimiterItem);
-        for (String sItem : saItems) {
-            Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.Singleton));
+        if ((Data!=null ) && (Data.length()>0)) {
+            String[] saItems = Data.split(DelimiterItem);
+            for (String sItem : saItems) {
+                Append(VarString.Extract(sItem, DelimiterField, VarString.ExtractOption.Singleton));
+            }
         }
     }
     public void Invalidate(){

@@ -270,6 +270,7 @@ public class Items  implements Runnable {
                                             break;
                                         case rSuccess:
                                             itm.renewTTL();
+
                                             Session ssn = Entities.openSession();
                                             try {
                                                 evResult = itm.onProcess(ssn);
@@ -288,10 +289,11 @@ public class Items  implements Runnable {
                                                         itm.Commands.remove(cmdPoll);
                                                         break;
                                                 }
-                                                itm.Reset();
+                                                if (itm.Kind==Server) itm.Reset();
                                             } finally {
                                                 ssn.close();
                                             }
+
                                             break;
                                         case rFailure:
                                             logEntry(itm, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");

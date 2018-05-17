@@ -31,7 +31,7 @@ import static com.aurawin.core.rsr.def.ItemState.isFinalize;
 public class ClientTest {
     boolean cmdIssued=false;
     boolean cmdResponse=false;
-    Item rsrItem;
+
     public Client Engine;
     public HTTP_1_1 Client;
     InetSocketAddress saServer  = new InetSocketAddress("172.16.1.1",1080);
@@ -86,11 +86,10 @@ public class ClientTest {
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
 
-        rsrItem=Engine.Connect(saServer,false);
-        while ((Engine.State != EngineState.esStop) && (rsrItem.State!=isFinalize) ) {
-            if (rsrItem.State== isEstablished) {
+        Client=(HTTP_1_1) Engine.Connect(saServer,false);
+        while ((Engine.State != EngineState.esStop) && (Client.State!=isFinalize) && (!Client.Response.Obtained)) {
+            if (Client.State== isEstablished) {
                 if (!cmdIssued) {
-                    Client = (HTTP_1_1) rsrItem;
                     Client.Request.URI = "/index.html";
                     Client.Request.Method = "GET";
 
@@ -98,13 +97,13 @@ public class ClientTest {
                     //Client.Credentials.Passport.Username="user";
                     //Client.Credentials.Passport.Password="pass";
                     Client.Query();
-                    cmdIssued=true;
+
                 }
 
             }
             Thread.sleep(100);
         }
-
+        Engine.Stop();
         System.out.println("ClientTest.clientHTTP stopped");
     }
 }

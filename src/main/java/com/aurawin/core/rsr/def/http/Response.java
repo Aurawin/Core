@@ -23,7 +23,8 @@ public class Response{
     public volatile Status Status = sEmpty;
     public volatile Version Version;
     public volatile MemoryStream Payload;
-    public volatile boolean requiresAuthentication;
+    public volatile boolean requiresAuthentication = false;
+    public volatile boolean Obtained = false;
     public Response(Item aOwner) {
         Owner = aOwner;
         Headers = new KeyPairs();
@@ -43,6 +44,7 @@ public class Response{
         requiresAuthentication = false;
     }
     public void Reset(){
+        Obtained=false;
         Status = sEmpty;
         requiresAuthentication=false;
         Headers.Empty();
@@ -91,6 +93,7 @@ public class Response{
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
                 Owner.Buffers.Recv.Move(Payload,cLen);
                 Status = r;
+                Obtained=true;
                 return rSuccess;
             } else {
                 return rPostpone;
@@ -117,9 +120,9 @@ public class Response{
             aLine = new byte[iChunk];
             System.arraycopy(input, iOffset, aLine, 0, iChunk);
             sLine=Bytes.toString(aLine);
-            //        HTTP/1.1 200 Ok
+            //        HTTP/1.1 503 Service Unvailable
             saLine=sLine.split(" ");
-            if (saLine.length==3){
+            if (saLine.length>=3){
 
                 if ( Version.Load(saLine[0])==true) {
 
