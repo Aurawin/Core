@@ -1,5 +1,6 @@
 package com.aurawin.core.rsr.client;
 
+import com.aurawin.core.ClassScanner;
 import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
@@ -21,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 import static com.aurawin.core.rsr.def.TransportConnectStatus.tcsConnected;
 
@@ -33,7 +35,11 @@ public class ClientTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("client.test", "Aurawin ClientTest", "Universal");
+        Settings.Initialize("AuProcess", "Aurawin ClientTest", "Universal");
+        AnnotatedList al = new AnnotatedList();
+        ClassScanner cs= new ClassScanner();
+        Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);
+        for (Class c : sa) al.add(c);
 
         Manifest mf = new Manifest(
                 Environment.getString(Table.DBMS.Username), // username
@@ -50,7 +56,7 @@ public class ClientTest {
                 "HTTPServerTest",                                 // database
                 Dialect.Postgresql.getValue(),          // Dialect
                 Driver.Postgresql.getValue(),            // Driver
-                new AnnotatedList()
+                al
         );
         Entities.Initialize(mf);
 
@@ -75,6 +81,7 @@ public class ClientTest {
         System.out.println("ClientTest.clientHTTP Start()");
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
+
         Transport=Engine.Connect(saServer,false);
         while (Engine.State != EngineState.esStop) {
             if (Transport.getStatus()== tcsConnected) {
@@ -86,5 +93,7 @@ public class ClientTest {
             }
             Thread.sleep(100);
         }
+
+        System.out.println("ClientTest.clientHTTP stopped");
     }
 }
