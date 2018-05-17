@@ -9,12 +9,16 @@ import com.aurawin.core.rsr.transport.methods.MethodFactory;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.entities.security.Credentials;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
+import java.nio.channels.Channel;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.EnumSet;
 import java.util.Set;
+
+import static com.aurawin.core.rsr.def.ItemState.isNone;
 
 
 public abstract class Item  implements Transport,AuthenticateHandler{
@@ -23,28 +27,31 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Buffers Buffers;
     public Credentials Credentials;
     public boolean Infinite;
-    protected TransportConnect connectionData;
     public int Timeout;
     public ItemKind Kind;
-    public ItemState State;
-
+    public ItemState State = isNone;
+    public SocketChannel Channel;
     public Instant TTL;
+    private Instant retryTTL;
     public InetSocketAddress Address;
     public InetSocketAddress bindAddress;
     public AutoNumber Id;
     protected SocketHandler SocketHandler;
+
+
+    private int Trys;
+
+    protected  Persist Persistent;
 
     public EnumSet<ItemError> Errors;
 
     public Items Owner;
     public MethodFactory Methods;
     private boolean Released;
-    public TransportConnect getConnectionData() {
-        return connectionData;
-    }
+
 
     public Persist getPersistant() {
-        return (connectionData!=null) ?  connectionData.getPersistent() : null;
+        return Persistent;
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +69,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Buffers = new Buffers();
         Timeout = Settings.RSR.Server.Timeout;
         Methods = new MethodFactory();
-
+        retryTTL = Instant.now();
         if (aOwner!=null){
             Owner = aOwner;
             Infinite = aOwner.Infinite;
@@ -86,10 +93,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
             Released=true;
             Credentials.Release();
             SocketHandler.Release();
-            if (connectionData!=null) {
-                connectionData.Release();
-                connectionData=null;
-            }
+
             Buffers.Release();
             Buffers=null;
             Credentials=null;
@@ -107,6 +111,39 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         return IpHelper.toLong(this.Address.getAddress().getAddress());
     }
 
+    public void reAllocateChannel() throws IOException {
+        if (Channel != null) Channel.close();
+
+        Channel = SocketChannel.open();
+        if (bindAddress != null) {
+            Channel.bind(bindAddress);
+        }
+        Channel.socket().setKeepAlive(false);
+        Channel.socket().setReuseAddress(false);
+        Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
+        Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
+
+    }
+    public void resetTrys(){
+        Trys = 0;
+        if (Persistent!=null) Persistent.resetTrys();
+    }
+
+    public void incTrys(){
+        Trys += 1;
+        if (Persistent!=null) Persistent.reTry();
+    }
+    public boolean allowedToRetry(){
+        return (Trys < Settings.RSR.Items.TransportConnect.MaxTries) ||
+                ((Persistent!=null) && (!Persistent.exceededTrys()));
+
+    }
+    public void renewRetryTLL(){
+        retryTTL = Instant.now().plusMillis(Settings.RSR.Items.TransportConnect.TryInterleave);
+    }
+    public boolean readyToConnect(){
+        return Instant.now().isAfter(retryTTL);
+    }
     @Override
     public void Setup(){
         SocketHandler.Setup();

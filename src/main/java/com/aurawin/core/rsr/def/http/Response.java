@@ -20,7 +20,7 @@ public class Response{
     public volatile KeyPairs Cookies;
     public volatile KeyPairs Parameters;
 
-    public volatile Status Status;
+    public volatile Status Status = sEmpty;
     public volatile Version Version;
     public volatile MemoryStream Payload;
     public volatile boolean requiresAuthentication;

@@ -8,5 +8,5 @@ public interface SocketMethods {
     void Setup();
     void Shutdown();
     void Teardown();
-    void beginHandshake();
+    void beginHandshake() throws IOException;
 }

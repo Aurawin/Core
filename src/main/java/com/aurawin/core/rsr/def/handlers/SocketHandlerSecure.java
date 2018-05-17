@@ -82,13 +82,7 @@ public class SocketHandlerSecure extends SocketHandler {
             Key=null;
         }
 
-        if ((Channel!=null) && (Channel.isOpen()==true)) {
-            try{
-                Channel.close();
-            } catch (IOException ioe){
-                // do nothing.  already closed.
-            }
-        }
+
     }
     @Override
     public void Setup(){
@@ -110,11 +104,8 @@ public class SocketHandlerSecure extends SocketHandler {
             Cryptor.setEnabledCipherSuites(Context.getSupportedSSLParameters().getCipherSuites());//Ciphers
             Cryptor.setEnableSessionCreation(true);
 
-            Channel.socket().setKeepAlive(false);
-            Channel.socket().setReuseAddress(false);
-            Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
-            Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
-            Channel.configureBlocking(false);
+
+            Owner.Channel.configureBlocking(false);
 
             beginHandshake();
 
@@ -144,7 +135,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 case OK:
                     bbNetOut.flip();
                     while (bbNetOut.hasRemaining())
-                        Channel.write(bbNetOut);
+                        Owner.Channel.write(bbNetOut);
                     bbNetOut.compact();
                     bbNetOut.flip();
                     return Complete;
@@ -174,7 +165,7 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerResult Recv() {
         boolean needRetry = false;
         try {
-            iRead=Channel.read(bbNetIn);
+            iRead=Owner.Channel.read(bbNetIn);
             if (iRead>0) {
                 bbNetIn.flip();
                 while (bbNetIn.hasRemaining() || needRetry) {
@@ -223,7 +214,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
 
     @Override
-    public void beginHandshake()  {
+    public void beginHandshake() throws IOException  {
         if (issuedHandshake==false) {
 
             Owner.State = isHandShake;
@@ -288,7 +279,7 @@ public class SocketHandlerSecure extends SocketHandler {
         );
 
     }
-    private void handshakeFinished() {
+    private void handshakeFinished() throws IOException{
         bbNetIn.clear();
         bbNetOut.clear();
 
@@ -297,7 +288,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
         handshakeStatus= FINISHED;
         try {
-            Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+            Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
         } catch (ClosedChannelException cce){
             handshakeFailed();
             Syslog.Append("SocketHandlerSecure", "handshakeFinished.Channel.register", "Client Closed Channel.");
@@ -305,7 +296,7 @@ public class SocketHandlerSecure extends SocketHandler {
         }
         Owner.State = ItemState.isEstablished;
 
-
+        Owner.Channel.configureBlocking(false);
 
     }
     private HandshakeStatus handshakeWrap() {
@@ -324,7 +315,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 case OK:
                     bbNetOut.flip();
                     while (bbNetOut.hasRemaining())
-                        iWrite= Channel.write(bbNetOut);
+                        iWrite= Owner.Channel.write(bbNetOut);
                     bbNetOut.compact();
                     bbNetOut.flip();
                     return handshakeStatus;
@@ -374,11 +365,12 @@ public class SocketHandlerSecure extends SocketHandler {
                     case BUFFER_UNDERFLOW:
                         //bbNetIn.compact();
                         bbNetIn.limit(bbNetIn.capacity());
-                        iRead = Channel.read(bbNetIn);
+                        iRead = Owner.Channel.read(bbNetIn);
                         if (iRead==-1){
                             Owner.Errors.add(eRead);
                             Owner.Errors.add(eSSL);
-                            Channel.close();
+                            Owner.Commands.add(cmdError);
+                            Owner.Commands.add(cmdTeardown);
                         }
                         bbNetIn.flip();
                         //

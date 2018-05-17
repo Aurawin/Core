@@ -16,15 +16,15 @@ public abstract class SocketHandler implements SocketMethods {
         Owner = owner;
     }
     protected Item Owner;
-    public SocketChannel Channel;
     public SelectionKey Key;
     protected boolean issuedHandshake = false;
     public void Setup() {
         try {
-            Channel.setOption(TCP_NODELAY,true);
-            Channel.socket().setSoLinger(false,0);
-            Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
-            Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
+            issuedHandshake=false;
+            Owner.Channel.setOption(TCP_NODELAY,true);
+            Owner.Channel.socket().setSoLinger(true,2000);
+            Owner.Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);
+            Owner.Channel.socket().setSendBufferSize(Settings.RSR.SocketBufferSendSize);
 
 
         } catch (IOException ex){
@@ -32,27 +32,15 @@ public abstract class SocketHandler implements SocketMethods {
         }
     }
 
-    public void Reset(SocketChannel channel){
-        Channel=channel;
-        issuedHandshake=false;
-    }
-    public void Shutdown(){
-        try {
-            Channel.close();
-        } catch (Exception ex){
 
-        }
-        Channel = null;
-    }
+    public void Shutdown(){ }
     public void Release(){
         try {
-            if (Channel!=null)  Channel.close();
             if (Key!=null) Key.cancel();
         } catch (Exception ex){
             Syslog.Append("SocketHandler", "Release", ex.getMessage());
         } finally{
             Owner=null;
-            Channel=null;
             Key=null;
         }
     }

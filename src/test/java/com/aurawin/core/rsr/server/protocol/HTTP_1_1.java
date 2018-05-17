@@ -52,7 +52,7 @@ public class HTTP_1_1 extends com.aurawin.core.rsr.client.protocol.http.HTTP_1_1
             NoSuchMethodException,InvocationTargetException,
             InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner, aKind);
-        itm.SocketHandler.Channel=aChannel;
+        itm.Channel=aChannel;
         return itm;
     }
     @Override

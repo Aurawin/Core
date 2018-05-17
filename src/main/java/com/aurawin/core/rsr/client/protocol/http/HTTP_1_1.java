@@ -87,7 +87,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws NoSuchMethodException,
             InvocationTargetException, InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner,Kind);
-        itm.SocketHandler.Channel=aChannel;
+        itm.Channel=aChannel;
         return itm;
     }
     @Override public void registerSecurityMechanisms(){
@@ -233,7 +233,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         return Request.Method+" "+Request.URI+" "+ Version.toString()+Table.CRLF;
     }
 
-    private void Respond() {
+    public void Respond() {
 
         Buffers.Send.position(Buffers.Send.size());
         Buffers.Send.Write(getResponseCommandLine());
@@ -280,6 +280,20 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
 
             }
 
+        } else {
+            Response.Status=sEmpty;
+
+            prepareRequest();
+
+            Buffers.Send.position(Buffers.Send.size());
+            Buffers.Send.Write(getRequestCommandLine());
+
+            Buffers.Send.Write(getRequestHeaders());
+            Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
+            if (Request.Payload.size()>0) {
+                Request.Payload.Move(Buffers.Send);
+            }
+            Commands.add(cmdSend);
         }
     }
 }

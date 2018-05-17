@@ -5,12 +5,12 @@ import com.aurawin.core.Environment;
 import com.aurawin.core.lang.Database;
 import com.aurawin.core.lang.Table;
 
+import com.aurawin.core.rsr.Item;
 import com.aurawin.core.rsr.client.Client;
 import com.aurawin.core.rsr.def.EngineState;
 
 import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
-import com.aurawin.core.rsr.def.TransportConnect;
-import com.aurawin.core.rsr.def.TransportConnectStatus;
+import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
@@ -24,14 +24,18 @@ import org.junit.Test;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import static com.aurawin.core.rsr.def.TransportConnectStatus.tcsConnected;
+import static com.aurawin.core.rsr.def.ItemState.isEstablished;
+import static com.aurawin.core.rsr.def.ItemState.isFinalize;
+
 
 public class ClientTest {
+    boolean cmdIssued=false;
+    boolean cmdResponse=false;
+    Item rsrItem;
     public Client Engine;
-    public TransportConnect Transport;
     public HTTP_1_1 Client;
-    InetSocketAddress saServer  = new InetSocketAddress("172.16.1.2",1080);
-    InetSocketAddress saClient  = new InetSocketAddress("172.16.1.1",0);
+    InetSocketAddress saServer  = new InetSocketAddress("172.16.1.1",1080);
+    InetSocketAddress saClient  = new InetSocketAddress("172.16.1.2",0);
 
     @Before
     public void before() throws Exception {
@@ -82,14 +86,21 @@ public class ClientTest {
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
 
-        Transport=Engine.Connect(saServer,false);
-        while (Engine.State != EngineState.esStop) {
-            if (Transport.getStatus()== tcsConnected) {
-                Client = (HTTP_1_1) Transport.getOwnerOrWait();
-                Client.Request.URI="/index.html";
-                Client.Request.Method= "GET";
-                //Client.Credentials.Passport.Username="user";
-                //Client.Credentials.Passport.Password="pass";
+        rsrItem=Engine.Connect(saServer,false);
+        while ((Engine.State != EngineState.esStop) && (rsrItem.State!=isFinalize) ) {
+            if (rsrItem.State== isEstablished) {
+                if (!cmdIssued) {
+                    Client = (HTTP_1_1) rsrItem;
+                    Client.Request.URI = "/index.html";
+                    Client.Request.Method = "GET";
+
+                    Client.Request.Headers.Update("id", "12345");
+                    //Client.Credentials.Passport.Username="user";
+                    //Client.Credentials.Passport.Password="pass";
+                    Client.Query();
+                    cmdIssued=true;
+                }
+
             }
             Thread.sleep(100);
         }

@@ -4,7 +4,8 @@ import com.aurawin.core.lang.Table;
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.TransportConnect;
+
+import com.aurawin.core.rsr.def.Persist;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.concurrent.ThreadFactory;
 
 import static com.aurawin.core.rsr.def.ItemCommand.cmdAccept;
 import static com.aurawin.core.rsr.def.ItemCommand.cmdConnect;
+import static com.aurawin.core.rsr.def.ItemKind.Client;
 
 public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFactory {
     private long nextId;
@@ -81,21 +83,24 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     }
 
     @SuppressWarnings("unchecked")
-    public TransportConnect Connect(InetSocketAddress address, boolean persistent)throws InstantiationException, IllegalAccessException,
+    public Item Connect(InetSocketAddress address, boolean persistent)throws InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException
     {
-        TransportConnect tc = null;
+        Item itm = null;
         Items itms = getManager();
+
         if (itms!=null) {
             Class c = Owner.transportClass;
-            Object o = Owner.transportObject;
-
-            if ((c!=null) && (o !=null)) {
+            if (c!=null) {
                 Method m = c.getMethod("newInstance", itemConstructorParams);
                 try {
                     m.setAccessible(true);
-                    tc = new TransportConnect(itms.Engine,o,m,address,persistent);
-                    ((Item) o).Commands.add(cmdConnect);
+                    itm = (Item) m.invoke(Owner.transportObject,itms,SocketChannel.open(), Client);
+                    if (persistent) itm.Persistent=new Persist(Settings.RSR.persistDelay);
+                    itm.Address=address;
+                    itm.Commands.add(cmdConnect);
+                    itms.List.add(itm);
+
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(), "Connect", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), address.getHostString()));
                 }
@@ -104,7 +109,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                 Syslog.Append(getClass().getCanonicalName(),"Connect", Table.Format(Table.Exception.RSR.ManagerConnectTransport,address.getHostString()));
             }
         }
-        return tc;
+        return itm;
     }
 
     @SuppressWarnings("unchecked")

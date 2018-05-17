@@ -8,7 +8,7 @@ public class Persist {
     protected int Delay;
     protected Instant TTL;
     protected int Try;
-    protected TransportConnect TransportConnect;
+
 
     public Persist(int delay) {
         Delay = delay;
@@ -31,6 +31,7 @@ public class Persist {
     public void renewTTL(){
         TTL = Instant.now().plusMillis(Delay);
     }
+
 
     public boolean readyToTry(){
         return (Instant.now().isAfter(TTL));

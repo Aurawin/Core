@@ -51,9 +51,6 @@ public class Items  implements Runnable {
     private rsrResult ioResult;
     private rsrResult evResult;
 
-    private TransportConnect tcItem;
-    private TransportConnect tcNextItem;
-
     private Iterator<SelectionKey> isk;
 
     public Selector Keys;
@@ -143,8 +140,8 @@ public class Items  implements Runnable {
                     Method,
                     Table.Format(
                             Namespace,
-                            itm.SocketHandler.Channel.getLocalAddress().toString(),
-                            itm.SocketHandler.Channel.getRemoteAddress().toString()
+                            itm.Channel.getLocalAddress().toString(),
+                            itm.Channel.getRemoteAddress().toString()
                     )
             );
         } catch (Exception ex){
@@ -158,69 +155,59 @@ public class Items  implements Runnable {
     }
     private void processConnect(){
         processItem.Commands.remove(cmdConnect);
-        processItem.Commands.add(cmdPoll);
-        TransportConnect tcItem = processItem.connectionData;
 
-        if (tcItem.readyToConnect()) {
+
+        if (processItem.readyToConnect()) {
             try {
-                SocketChannel aChannel = SocketChannel.open();
-                if (!tcItem.hasOwner()) {
-                    Item itm = (Item) tcItem.getMethod().invoke(
-                            tcItem.getObject(),
-                            this,
-                            aChannel,
-                            Client
-                    );
-
-                    itm.Address = tcItem.getAddress();
-                    itm.bindAddress = Engine.Address;
-                    itm.Kind = Client;
-                    itm.connectionData = tcItem;
-                    tcItem.setOwner(itm);
-
-                }
-                Item itm = tcItem.getOwnerOrWait();
-                processItem=itm;
-                itm.SocketHandler.Reset(aChannel);
-                aChannel.socket().setSoLinger(false,20);
-                if (tcItem.getAddress() != null) {
-                    try {
-                        if (itm.bindAddress != null) {
-                            aChannel.bind(itm.bindAddress);
-                        }
-                        aChannel.configureBlocking(false);
-                        try {
-                            tcItem.attemptingConnect();
-
-                            if (aChannel.connect(itm.Address)) {
-                                tcItem.resetTrys();
-                            } else {
-                                tcItem.incTry();
-                                processItem.Commands.add(cmdConnect);
-                            }
-                        } catch (Exception e) {
-                            tcItem.incTry();
-                            if (tcItem.getTries() < Settings.RSR.Items.TransportConnect.MaxTries) {
-                                processItem.Commands.add(cmdConnect);
-                                aChannel.close();
-                            } else {
-                            }
-                            Syslog.Append(getClass().getCanonicalName(), "processItems.Connect", Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(), tcItem.getAddress().getHostString()));
-                        }
-                    } catch (Exception e) {
-                        tcItem.incTry();
-                        aChannel.close();
-                        Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Bind", Table.Format(Table.Exception.RSR.ManagerConnectWithBind, e.getMessage(), Engine.Address.toString(), tcItem.getAddress().toString()));
+                processItem.reAllocateChannel();
+                processItem.Channel.configureBlocking(true);
+                try {
+                    processItem.renewTTL();
+                    if (processItem.Channel.connect(processItem.Address)) {
+                        processItem.Commands.add(cmdSetup);
+                        processItem.resetTrys();
+                    } else {
+                        processItem.Channel.close();
+                        processItem.renewRetryTLL();
+                        processItem.incTrys();
+                        processItem.Commands.add(cmdConnect);
                     }
+                } catch (Exception e) {
+                    processItem.incTrys();
+                    if (processItem.allowedToRetry()){
+                        processItem.renewRetryTLL();
+                        processItem.Commands.add(cmdConnect);
+                    } else {
+                        processItem.Errors.add(eConnect);
+                        processItem.Commands.add(cmdError);
+                        processItem.Commands.add(cmdTeardown);
+                    }
+                    Syslog.Append(
+                            getClass().getCanonicalName(),
+                            "processItems.Connect",
+                            Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(),
+                                    processItem.Address.getHostString())
+                    );
                 }
-
             } catch (Exception e) {
-                Syslog.Append(getClass().getCanonicalName(), "processItems.Connect.Constructor", Table.Format(Table.Exception.RSR.ManagerConnectConstructor, e.getMessage(), tcItem.getAddress().toString()));
+                processItem.Errors.add(eConnect);
+                processItem.Commands.add(cmdError);
+                processItem.Commands.add(cmdTeardown);
 
+                Syslog.Append(
+                        getClass().getCanonicalName(),
+                        "processItems.Connect.Bind",
+                        Table.Format(Table.Exception.RSR.ManagerConnectWithBind, e.getMessage(),Engine.Address.toString(), processItem.Address.toString())
+                );
             }
-        } else if (tcItem.exceededTrys()==true) {
+
+
+        }if (!processItem.allowedToRetry()){
             // too many attempts to connect
+            processItem.Errors.add(eConnect);
             processItem.Commands.remove(cmdConnect);
+            processItem.Commands.add(cmdError);
+            processItem.Commands.add(cmdTeardown);
         }
     }
 
@@ -246,8 +233,8 @@ public class Items  implements Runnable {
                             processItem = itm;
                             if (itm != null) {
                                 try {
-                                    if (itm.SocketHandler.Channel.finishConnect()) {
-                                        if (itm.SocketHandler.Channel.isConnected()) {
+                                    if (itm.Channel.finishConnect()) {
+                                        if (itm.Channel.isConnected()) {
                                             itm.Commands.add(cmdSetup);
                                             itm.renewTTL();
                                         } else {
@@ -341,23 +328,20 @@ public class Items  implements Runnable {
     private void processTeardown(){
         processItem.Commands.remove(cmdTeardown);
         removalItems.add(processItem);
-        if (processItem.Kind==Client) {
-            TransportConnect tcData = processItem.getConnectionData();
-            if (tcData != null) {
-                if (!tcData.exceededTrys()) {
-                    processItem.Commands.add(cmdConnect);
-                } else {
-                    processItem.Teardown();
-                }
-            } else {
-                processItem.Teardown();
+        processItem.Teardown();
+        processItem.Disconnected();
+
+        if (processItem.Persistent!=null) {
+            if (processItem.Persistent.exceededTrys()) {
+                processItem.Finalized();
+                processItem.State = isFinalize;
+            } else if (processItem.Kind==Client){
+                processItem.Commands.add(cmdConnect);
             }
         } else {
-            processItem.Teardown();
+            processItem.Finalized();
+            processItem.State = isFinalize;
         }
-        processItem.Disconnected();
-        processItem.Finalized();
-        processItem.State = isNone;
     }
     private void processSetup(){
         try {
@@ -365,6 +349,7 @@ public class Items  implements Runnable {
             processItem.Setup();
             processItem.Initialized();
             if (processItem.Errors.isEmpty()){
+                processItem.Commands.add(cmdPoll);
                 if (processItem.Kind==Server){
                     processItem.State = isEstablished;
                     processItem.Commands.add(cmdPoll);

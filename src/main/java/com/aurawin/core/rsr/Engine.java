@@ -9,7 +9,7 @@ import com.aurawin.core.rsr.commands.Commands;
 import com.aurawin.core.rsr.commands.cmdSetBindIPandPort;
 import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.def.ItemKind;
-import com.aurawin.core.rsr.def.TransportConnect;
+
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.rsr.def.handlers.SocketHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
@@ -147,7 +147,7 @@ public abstract class Engine extends Thread  {
         }
     }
 
-    public TransportConnect Connect(InetSocketAddress a, boolean persistent) throws Exception{
+    public Item Connect(InetSocketAddress a, boolean persistent) throws Exception{
         return Managers.Connect(a,persistent);
     }
 

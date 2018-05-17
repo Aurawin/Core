@@ -80,7 +80,7 @@ public class IMAP_4_1 extends Item implements Transport{
     public IMAP_4_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws NoSuchMethodException,
             InvocationTargetException,InstantiationException, IllegalAccessException{
         IMAP_4_1 itm = new IMAP_4_1(aOwner,Kind);
-        itm.SocketHandler.Channel=aChannel;
+        itm.Channel=aChannel;
         return itm;
     }
     @Override public CredentialResult validateCredentials(Session ssn){

@@ -22,22 +22,12 @@ public class SocketHandlerPlain extends SocketHandler {
             Key.cancel();
             Key=null;
         }
-        if (Channel.isOpen()==true) {
-            try {
-                Channel.close();
-            } catch (IOException ex) {
-                Syslog.Append("SocketHandlerPlain", "Teardown", ex.getMessage());
-            }
-        }
-        Owner.Disconnected();
-        Owner.Finalized();
-        Owner.State = isNone;
     }
 
     @Override
     public void Setup(){
         try {
-            Channel.configureBlocking(false);
+            Owner.Channel.configureBlocking(false);
         } catch (IOException ex) {
             Syslog.Append("SocketHandlerPlain", "Setup", ex.getMessage());
             Shutdown();
@@ -46,10 +36,10 @@ public class SocketHandlerPlain extends SocketHandler {
         try {
             switch (Owner.Kind) {
                 case Client :
-                    Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ | SelectionKey.OP_CONNECT, Owner);
+                    Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ | SelectionKey.OP_CONNECT, Owner);
                     break;
                 case Server:
-                    Key = Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
+                    Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
                     break;
             }
         } catch (Exception ex){
@@ -68,10 +58,10 @@ public class SocketHandlerPlain extends SocketHandler {
 
     @Override
     public SocketHandlerResult Recv(){
-        if (Channel.isConnected()==true) {
+        if (Owner.Channel.isConnected()==true) {
             Owner.Owner.BufferRead.clear();
             try {
-                int i = Channel.read(Owner.Owner.BufferRead);
+                int i = Owner.Channel.read(Owner.Owner.BufferRead);
                 if (i == -1 )
                     return SocketHandlerResult.Failure;
             } catch (IOException ioe){
@@ -95,7 +85,7 @@ public class SocketHandlerPlain extends SocketHandler {
             Owner.Owner.BufferWrite.flip();
             while (Owner.Owner.BufferWrite.hasRemaining()) {
                 try {
-                    Channel.write(Owner.Owner.BufferWrite);
+                    Owner.Channel.write(Owner.Owner.BufferWrite);
                 } catch (IOException ioe){
                     return SocketHandlerResult.Failure;
                 }

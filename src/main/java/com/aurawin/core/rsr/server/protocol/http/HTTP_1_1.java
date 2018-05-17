@@ -85,7 +85,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     public HTTP_1_1 newInstance(Items aOwner, SocketChannel aChannel, ItemKind Kind)throws NoSuchMethodException,
             InvocationTargetException,InstantiationException, IllegalAccessException{
         HTTP_1_1 itm = new HTTP_1_1(aOwner,Kind);
-        itm.SocketHandler.Channel=aChannel;
+        itm.Channel=aChannel;
         return itm;
     }
     @Override public void registerSecurityMechanisms(){
