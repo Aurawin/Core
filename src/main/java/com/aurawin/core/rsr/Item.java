@@ -13,11 +13,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.nio.channels.Channel;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.time.Instant;
 import java.util.EnumSet;
 import java.util.Set;
 
+import static com.aurawin.core.rsr.def.ItemState.isConnecting;
+import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 
 
@@ -28,6 +31,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Credentials Credentials;
     public boolean Infinite;
     public int Timeout;
+    public SelectionKey keyConnect;
     public ItemKind Kind;
     public ItemState State = isNone;
     public SocketChannel Channel;
@@ -113,6 +117,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public void reAllocateChannel() throws IOException {
         if (Channel != null) Channel.close();
+        if (keyConnect!=null) keyConnect.cancel();
 
         Channel = SocketChannel.open();
         if (bindAddress != null) {
@@ -143,10 +148,13 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
     public boolean readyToConnect() {
         if (Persistent != null) {
-            return Persistent.readyToTry();
+            return ((State!=isConnecting) && Persistent.readyToTry());
         } else {
-            return Instant.now().isAfter(retryTTL);
+            return ((State!=isConnecting) && Instant.now().isAfter(retryTTL));
         }
+    }
+    public boolean readyForUse(){
+        return (State == isEstablished);
     }
     @Override
     public void Setup(){

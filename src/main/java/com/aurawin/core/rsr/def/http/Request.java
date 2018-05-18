@@ -22,12 +22,14 @@ import com.aurawin.core.stream.parser.XML;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
 
+import java.time.Instant;
 import java.util.EnumSet;
 
 public class Request implements QueryResolver {
     protected Item Owner;
     protected ResolveResult Result;
     public long Id;
+    public Instant TTL;
     public Version Version;
     public KeyPairs Headers;
     public KeyPairs Cookies;
@@ -116,6 +118,7 @@ public class Request implements QueryResolver {
 
     }
     public rsrResult Peek(){
+        TTL = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
         rsrResult r = rSuccess;
         long iLoc=Owner.Buffers.Recv.Find(Settings.RSR.Items.HTTP.Payload.Separator);
         if (iLoc>0) {

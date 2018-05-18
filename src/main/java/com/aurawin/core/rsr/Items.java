@@ -156,22 +156,33 @@ public class Items  implements Runnable {
     private void processConnect(){
         processItem.Commands.remove(cmdConnect);
 
-
         if (processItem.readyToConnect()) {
             try {
+                processItem.State=isNone;
+                processItem.Errors.clear();
                 processItem.reAllocateChannel();
-                processItem.Channel.configureBlocking(true);
+                processItem.Channel.configureBlocking(false);
                 try {
                     processItem.renewTTL();
                     processItem.renewRetryTLL();
+                    processItem.keyConnect=processItem.Channel.register(Keys,SelectionKey.OP_CONNECT, processItem);
+
+                    processItem.Channel.connect(processItem.Address);
+                    /*
                     if (processItem.Channel.connect(processItem.Address)) {
-                        processItem.Commands.add(cmdSetup);
+
+                        processItem.State = isConnecting;
                         processItem.resetTrys();
                     } else {
+                        processItem.State = isRefused;
+                        processItem.keyConnect.cancel();
                         processItem.Channel.close();
                         processItem.incTrys();
                         processItem.Commands.add(cmdConnect);
-                    }
+                    }*/
+                    processItem.resetTrys();
+                    processItem.State = isConnecting;
+                    processItem.Commands.add(cmdPoll);
                 } catch (Exception e) {
                     processItem.incTrys();
                     processItem.State=isRefused;
@@ -204,9 +215,8 @@ public class Items  implements Runnable {
             }
 
 
-        }if (processItem.allowedToRetry()){
+        } else if (processItem.allowedToRetry()){
             processItem.Commands.add(cmdConnect);
-            processItem.Errors.clear();
         } else{
             // too many attempts to connect
             processItem.Errors.add(eConnect);
@@ -239,6 +249,7 @@ public class Items  implements Runnable {
                             Item itm = (Item) k.attachment();
                             processItem = itm;
                             if (itm != null) {
+                                processItem.keyConnect.cancel();
                                 processItem.renewTTL();
                                 processItem.renewRetryTLL();
 

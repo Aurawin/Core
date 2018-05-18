@@ -13,7 +13,7 @@ public class Persist {
     public Persist(int delay) {
         Delay = delay;
         Try = 0;
-        TTL = Instant.now().plusMillis(Delay);
+        TTL = Instant.now();
     }
     public void resetTrys(){
         TTL = Instant.now().plusMillis(Delay);

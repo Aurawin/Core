@@ -12,6 +12,7 @@ import com.aurawin.core.rsr.def.EngineState;
 import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.def.http.Field;
+import com.aurawin.core.rsr.def.http.QueryResult;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
@@ -28,12 +29,13 @@ import java.util.Set;
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isFinalize;
 import static com.aurawin.core.rsr.def.http.Field.Id;
+import static com.aurawin.core.rsr.def.http.QueryResult.qResolved;
 
 
 public class ClientTest {
     boolean cmdIssued=false;
     boolean cmdResponse=false;
-
+    private QueryResult qr;
     public Client Engine;
     public HTTP_1_1 Client;
     InetSocketAddress saServer  = new InetSocketAddress("172.16.1.1",1080);
@@ -92,13 +94,28 @@ public class ClientTest {
         while ((Engine.State != EngineState.esStop) && (Client.State!=isFinalize) && (!Client.Response.Obtained)) {
             if (Client.State== isEstablished) {
                 if (!cmdIssued) {
+                    cmdIssued=true;
                     Client.Request.URI = "/index.html";
                     Client.Request.Method = "GET";
-
                     Client.Request.Headers.Update(Id, "12345");
                     //Client.Credentials.Passport.Username="user";
                     //Client.Credentials.Passport.Password="pass";
-                    Client.Query();
+                    qr= Client.Query();
+                    if (qr==qResolved) {
+                        Client.Request.URI = "/core/noid/ds";
+                        Client.Request.Method = "GET";
+                        Client.Request.Headers.Update(Id, "12345");
+                        qr = Client.Query();
+                        switch (qr) {
+                            case qResolved:
+                                //
+                                break;
+                            case qNotResovled:
+                                break;
+                            case qTimed:
+                                break;
+                        }
+                    }
 
                 }
 

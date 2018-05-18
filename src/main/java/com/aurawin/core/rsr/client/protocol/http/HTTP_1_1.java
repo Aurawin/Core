@@ -27,6 +27,7 @@ import static com.aurawin.core.rsr.def.ItemCommand.cmdSend;
 import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
 import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
+import static com.aurawin.core.rsr.def.http.QueryResult.*;
 import static com.aurawin.core.rsr.def.http.ResolveResult.rrNone;
 import static com.aurawin.core.rsr.def.http.Status.*;
 import static com.aurawin.core.rsr.def.rsrResult.*;
@@ -258,7 +259,9 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
            Commands.add(cmdTeardown);
     }
 
-    public void Query(){
+    public QueryResult Query(){
+        QueryResult r = qNotResovled;
+        Request.TTL=Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
         if (Request.Plugin!=null) {
             Request.URI=Request.pluginCommandInfo.Namespace;
             Request.Id=Id.Spin();
@@ -286,7 +289,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         Response.Status=sEmpty;
         Commands.add(cmdSend);
         Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
-        while ((Owner.Engine.State != esStop) && (!Response.Obtained) && Instant.now().isBefore(ttl)) {
+        while ((Owner.Engine.State != esStop) && (!Response.Obtained) && Instant.now().isBefore(Request.TTL)) {
             try {
                 if (Response.Status == sEmpty) {
                     Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);
@@ -295,6 +298,11 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
             }
 
         }
-
+        if (Response.Obtained) {
+            r = qResolved;
+        } else {
+            r = qTimed;
+        }
+        return r;
     }
 }

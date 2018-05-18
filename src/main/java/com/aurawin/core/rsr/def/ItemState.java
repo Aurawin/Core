@@ -1,3 +1,3 @@
 package com.aurawin.core.rsr.def;
 
-public enum ItemState {isNone,isEstablished,isHandShake,isRefused,isTimed,isFinalize}
+public enum ItemState {isNone,isConnecting,isEstablished,isHandShake,isRefused,isTimed,isFinalize}
