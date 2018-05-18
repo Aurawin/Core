@@ -152,6 +152,7 @@ public class Items  implements Runnable {
         processItem.Commands.remove(cmdAccept);
         processItem.Commands.add(cmdSetup);
         processItem.Connected();
+        System.out.println("Items.processAccept()");
     }
     private void processConnect(){
         processItem.Commands.remove(cmdConnect);
