@@ -11,6 +11,7 @@ import com.aurawin.core.rsr.def.EngineState;
 
 import com.aurawin.core.rsr.client.protocol.http.HTTP_1_1;
 import com.aurawin.core.rsr.def.ItemState;
+import com.aurawin.core.rsr.def.http.Field;
 import com.aurawin.core.solution.Settings;
 import com.aurawin.core.stored.Dialect;
 import com.aurawin.core.stored.Driver;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isFinalize;
+import static com.aurawin.core.rsr.def.http.Field.Id;
 
 
 public class ClientTest {
@@ -93,7 +95,7 @@ public class ClientTest {
                     Client.Request.URI = "/index.html";
                     Client.Request.Method = "GET";
 
-                    Client.Request.Headers.Update("id", "12345");
+                    Client.Request.Headers.Update(Id, "12345");
                     //Client.Credentials.Passport.Username="user";
                     //Client.Credentials.Passport.Password="pass";
                     Client.Query();

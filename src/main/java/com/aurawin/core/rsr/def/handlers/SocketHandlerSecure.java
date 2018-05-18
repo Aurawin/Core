@@ -202,8 +202,6 @@ public class SocketHandlerSecure extends SocketHandler {
             } else if (iRead==-1){
                 Owner.Errors.add(eSSL);
                 Owner.Errors.add(eRead);
-                Owner.Commands.add(cmdError);
-                Owner.Commands.add(cmdTeardown);
                 return SocketHandlerResult.Failure;
             }
 
