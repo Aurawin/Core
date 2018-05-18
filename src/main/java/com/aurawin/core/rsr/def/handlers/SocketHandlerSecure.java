@@ -200,7 +200,10 @@ public class SocketHandlerSecure extends SocketHandler {
                 }
                 bbNetIn.compact();
             } else if (iRead==-1){
-                Shutdown();
+                Owner.Errors.add(eSSL);
+                Owner.Errors.add(eRead);
+                Owner.Commands.add(cmdError);
+                Owner.Commands.add(cmdTeardown);
                 return SocketHandlerResult.Failure;
             }
 
