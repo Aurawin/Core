@@ -141,8 +141,12 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public void renewRetryTLL(){
         retryTTL = Instant.now().plusMillis(Settings.RSR.Items.TransportConnect.TryInterleave);
     }
-    public boolean readyToConnect(){
-        return Instant.now().isAfter(retryTTL);
+    public boolean readyToConnect() {
+        if (Persistent != null) {
+            return Persistent.readyToTry();
+        } else {
+            return Instant.now().isAfter(retryTTL);
+        }
     }
     @Override
     public void Setup(){

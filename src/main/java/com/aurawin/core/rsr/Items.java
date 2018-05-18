@@ -163,12 +163,12 @@ public class Items  implements Runnable {
                 processItem.Channel.configureBlocking(true);
                 try {
                     processItem.renewTTL();
+                    processItem.renewRetryTLL();
                     if (processItem.Channel.connect(processItem.Address)) {
                         processItem.Commands.add(cmdSetup);
                         processItem.resetTrys();
                     } else {
                         processItem.Channel.close();
-                        processItem.renewRetryTLL();
                         processItem.incTrys();
                         processItem.Commands.add(cmdConnect);
                     }
@@ -217,6 +217,8 @@ public class Items  implements Runnable {
     }
 
     private void processSend(){
+        processItem.renewTTL();
+        processItem.renewRetryTLL();
         processItem.SocketHandler.Send();
         if (processItem.Buffers.Send.Size==0)
             processItem.Commands.remove(cmdSend);
@@ -237,6 +239,9 @@ public class Items  implements Runnable {
                             Item itm = (Item) k.attachment();
                             processItem = itm;
                             if (itm != null) {
+                                processItem.renewTTL();
+                                processItem.renewRetryTLL();
+
                                 try {
                                     if (itm.Channel.finishConnect()) {
                                         if (itm.Channel.isConnected()) {
@@ -266,6 +271,8 @@ public class Items  implements Runnable {
                             Item itm = (Item) k.attachment();
                             processItem=itm;
                             if (itm != null) {
+                                processItem.renewTTL();
+                                processItem.renewRetryTLL();
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
                                 if (Read == SocketHandlerResult.Complete) {
                                     ioResult = itm.onPeek();
@@ -335,8 +342,9 @@ public class Items  implements Runnable {
     private void processTeardown(){
         processItem.Commands.remove(cmdTeardown);
         removalItems.add(processItem);
-        processItem.Teardown();
         processItem.Disconnected();
+        processItem.Teardown();
+
 
         if (processItem.Persistent!=null) {
             if (processItem.Persistent.exceededTrys()) {
