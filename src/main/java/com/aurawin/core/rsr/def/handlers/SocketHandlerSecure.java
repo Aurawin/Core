@@ -192,7 +192,6 @@ public class SocketHandlerSecure extends SocketHandler {
                             // wait for more data.
                             break;
                         case BUFFER_OVERFLOW:
-
                             needRetry=true;
                             break;
 
@@ -267,8 +266,7 @@ public class SocketHandlerSecure extends SocketHandler {
         Owner.Commands.add(cmdError);
     }
     private void handshakeFailed(){
-
-        handshakeStatus= FINISHED;
+        handshakeStatus=NOT_HANDSHAKING;
         Owner.State = ItemState.isNone;
         Owner.Errors.add(eSSL);
         Owner.Commands.add(cmdError);
