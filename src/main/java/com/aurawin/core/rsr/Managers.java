@@ -127,6 +127,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                     m.setAccessible(true);
                     Item itm = (Item) m.invoke(o, itms, aChannel,ItemKind.Server);
                     itms.List.add(itm);
+                    itm.Address=(InetSocketAddress) aChannel.getRemoteAddress();
                     itm.Commands.add(cmdAccept);
                 } catch (Exception e){
                     Syslog.Append(getClass().getCanonicalName(),"Accept", Table.Format(Table.Exception.RSR.ManagerAccept,e.getMessage()));
