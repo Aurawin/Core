@@ -174,6 +174,7 @@ public class Items  implements Runnable {
                     }
                 } catch (Exception e) {
                     processItem.incTrys();
+                    processItem.State=isRefused;
                     if (processItem.allowedToRetry()){
                         processItem.renewRetryTLL();
                         processItem.Commands.add(cmdConnect);
@@ -181,13 +182,14 @@ public class Items  implements Runnable {
                         processItem.Errors.add(eConnect);
                         processItem.Commands.add(cmdError);
                         processItem.Commands.add(cmdTeardown);
+
+                        Syslog.Append(
+                                getClass().getCanonicalName(),
+                                "processItems.Connect",
+                                Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(),
+                                        processItem.Address.getHostString())
+                        );
                     }
-                    Syslog.Append(
-                            getClass().getCanonicalName(),
-                            "processItems.Connect",
-                            Table.Format(Table.Exception.RSR.ManagerConnect, e.getMessage(),
-                                    processItem.Address.getHostString())
-                    );
                 }
             } catch (Exception e) {
                 processItem.Errors.add(eConnect);
@@ -202,7 +204,10 @@ public class Items  implements Runnable {
             }
 
 
-        }if (!processItem.allowedToRetry()){
+        }if (processItem.allowedToRetry()){
+            processItem.Commands.add(cmdConnect);
+            processItem.Errors.clear();
+        } else{
             // too many attempts to connect
             processItem.Errors.add(eConnect);
             processItem.Commands.remove(cmdConnect);

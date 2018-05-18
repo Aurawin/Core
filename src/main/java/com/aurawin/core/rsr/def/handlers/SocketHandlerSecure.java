@@ -371,10 +371,9 @@ public class SocketHandlerSecure extends SocketHandler {
                             Owner.Errors.add(eSSL);
                             Owner.Commands.add(cmdError);
                             Owner.Commands.add(cmdTeardown);
+                        } else if (iRead>=0) {
+                            bbNetIn.flip();
                         }
-                        bbNetIn.flip();
-                        //
-
                         needTry = true;
                         // wait for more data.
                         break;

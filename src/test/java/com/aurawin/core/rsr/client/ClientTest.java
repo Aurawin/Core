@@ -86,7 +86,7 @@ public class ClientTest {
         Engine.Start();
         System.out.println("ClientTest.clientHTTP running");
 
-        Client=(HTTP_1_1) Engine.Connect(saServer,false);
+        Client=(HTTP_1_1) Engine.Connect(saServer,true);
         while ((Engine.State != EngineState.esStop) && (Client.State!=isFinalize) && (!Client.Response.Obtained)) {
             if (Client.State== isEstablished) {
                 if (!cmdIssued) {
