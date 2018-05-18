@@ -257,6 +257,7 @@ public class Items  implements Runnable {
                                     if (itm.Channel.finishConnect()) {
                                         if (itm.Channel.isConnected()) {
                                             itm.Commands.add(cmdSetup);
+                                            itm.Commands.remove(cmdPoll);
                                             itm.renewTTL();
                                         } else {
                                             itm.Errors.add(eConnect);
