@@ -69,26 +69,26 @@ public class SocketHandlerSecure extends SocketHandler {
     }
     @Override
     public void Teardown(){
-        try {
-            Cryptor.closeInbound();
-        } catch (SSLException e) {
+        if (Cryptor!=null){
+            try {
+                Cryptor.closeInbound();
+                Cryptor.closeOutbound();
+            } catch (SSLException e) {
 
+            }
         }
-
-        Cryptor.closeOutbound();
-
     }
     @Override
     public void Setup(){
         super.Setup();
         try {
             issuedHandshake=false;
-            Context = Owner.Owner.Security.getContext();//SSLContext.getInstance("TLSv1.2");
+            Context = Owner.Owner.Security.getContext();
 
-            Cryptor=Context.createSSLEngine();
+            Cryptor=Context.createSSLEngine(Owner.Owner.Engine.Address.getHostName(),Owner.Owner.Engine.Address.getPort());
 
-            needNetInFlip = true; // (Owner.Kind==Server);
-            needNetOutFlip = true; //(Owner.Kind==Server);
+            needNetInFlip =  (Owner.Kind==Server);
+            needNetOutFlip = (Owner.Kind==Server);
             Cryptor.setUseClientMode((Owner.Kind==Client));
 
             Cryptor.setNeedClientAuth(false);

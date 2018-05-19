@@ -23,7 +23,7 @@ public class Persist {
         Delay = delay;
         TTL = Instant.now().plusMillis(Delay);
     }
-    public void reTry(){
+    public void inTrys(){
         Try+=1;
         TTL = Instant.now().plusMillis(Delay);
     }

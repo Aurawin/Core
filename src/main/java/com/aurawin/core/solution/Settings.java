@@ -172,7 +172,7 @@ public class Settings {
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
-        public static final int persistDelay = 20*1000 /*m-sec*/;
+        public static final int persistDelay = 2*1000 /*m-sec*/;
         public static final int refusedDelay = 20*1000 /*m-sec*/;
         public static final int AnyPort = 0;
         public static class TransportConnect{
@@ -346,6 +346,9 @@ public class Settings {
             public static int Timeout = 60 /*sec*/ * 1000/*ms-sec*/;
             public static int BufferSizeRead = 1024*1024*5; // 5MiB
             public static int BufferSizeWrite = 1024*1024; // 1MiB
+        }
+        public static class Client{
+            public static int Timeout = 20 /*sec*/ * 1000/*ms-sec*/;
         }
     }
     public static class Folder{

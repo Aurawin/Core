@@ -72,16 +72,17 @@ public class ServerTest {
                 new InetSocketAddress("172.16.1.2", 1080),
                 HTTP_1_1.class,
                 false,
-                "phoenix.aurawin.com"
+                "aurawin.com"
         );
         serverHTTP.loadSecurity(1l);
         Set<Class<? extends Plug>> ca = cs.scanPackageForPlugins(com.aurawin.core.Package.class);
         for (Class c : ca){
             Annotation ed = c.getAnnotation(Plugin.class);
             if (ed != null) {
-                System.out.println("Plugin "+ c.getName()+ " installed.");
+                System.out.println("Plugin "+ c.getName()+ " installing");
                 Plug p = (Plug) c.getConstructor().newInstance();
                 serverHTTP.installPlugin(p);
+                System.out.println("Plugin "+ c.getName()+ " installed");
 
             }
         }

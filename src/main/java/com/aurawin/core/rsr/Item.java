@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.EnumSet;
 import java.util.Set;
 
+import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.isConnecting;
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
@@ -39,7 +40,6 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public ItemState State = isNone;
     public SocketChannel Channel;
     public Instant TTL;
-    private Instant retryTTL;
     public InetSocketAddress Address;
     public InetSocketAddress bindAddress;
     public AutoNumber Id;
@@ -74,9 +74,9 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         Kind = aKind;
         Errors = EnumSet.noneOf(ItemError.class);
         Buffers = new Buffers();
-        Timeout = Settings.RSR.Server.Timeout;
+        Timeout = (aKind==Server) ? Settings.RSR.Server.Timeout: Settings.RSR.Client.Timeout;
         Methods = new MethodFactory();
-        retryTTL = Instant.now();
+        renewTTL();
         if (aOwner!=null){
             Owner = aOwner;
             Infinite = aOwner.Infinite;
@@ -109,9 +109,9 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
 
     public void renewTTL(){
-        TTL = ( (Infinite==true)|| (TTL==null) ) ? null : Instant.now().plusMillis(Timeout);
-        if (getPersistant()!=null)
-            getPersistant().renewTTL();
+        TTL = Instant.now().plusMillis(Timeout);
+        if (Persistent!=null)
+            Persistent.renewTTL();
     }
 
     public long getRemoteIp(){
@@ -142,21 +142,24 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public void incTrys(){
         Trys += 1;
-        if (Persistent!=null) Persistent.reTry();
+        if (Persistent!=null) Persistent.inTrys();
     }
-    public boolean allowedToRetry(){
-        return (Trys < Settings.RSR.Items.TransportConnect.MaxTries) ||
-                ((Persistent!=null) && (!Persistent.exceededTrys()));
+    public boolean exceededTrys(){
+        if (Persistent!=null) {
+            return Persistent.exceededTrys();
+        } else{
+            return (Trys < Settings.RSR.Items.TransportConnect.MaxTries);
+        }
+
+
 
     }
-    public void renewRetryTLL(){
-        retryTTL = Instant.now().plusMillis(Settings.RSR.Items.TransportConnect.TryInterleave);
-    }
+
     public boolean readyToConnect() {
         if (Persistent != null) {
             return ((State!=isConnecting) && Persistent.readyToTry());
         } else {
-            return ((State!=isConnecting) && Instant.now().isAfter(retryTTL));
+            return ((State!=isConnecting) && Instant.now().isAfter(TTL));
         }
     }
     public boolean readyForUse(){
@@ -169,9 +172,6 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     }
     @Override
     public void Teardown(){
-        Id = null;
         SocketHandler.Teardown();
-        Timeout=0;
-        TTL=null;
     }
 }

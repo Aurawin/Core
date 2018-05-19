@@ -159,13 +159,12 @@ public class Items  implements Runnable {
 
         if (processItem.readyToConnect()) {
             try {
+                processItem.incTrys();
                 processItem.State=isNone;
                 processItem.Errors.clear();
                 processItem.reAllocateChannel();
                 try {
                     processItem.renewTTL();
-                    processItem.renewRetryTLL();
-
                     processItem.Channel.connect(processItem.Address);
                     /*
                     if (processItem.Channel.connect(processItem.Address)) {
@@ -179,14 +178,14 @@ public class Items  implements Runnable {
                         processItem.incTrys();
                         processItem.Commands.add(cmdConnect);
                     }*/
-                    processItem.resetTrys();
+                    processItem.renewTTL();
                     processItem.State = isConnecting;
                     processItem.Commands.add(cmdPoll);
                 } catch (Exception e) {
                     processItem.incTrys();
                     processItem.State=isRefused;
-                    if (processItem.allowedToRetry()){
-                        processItem.renewRetryTLL();
+                    if (processItem.exceededTrys()){
+                        processItem.renewTTL();
                         processItem.Commands.add(cmdConnect);
                     } else {
                         processItem.Errors.add(eConnect);
@@ -214,7 +213,7 @@ public class Items  implements Runnable {
             }
 
 
-        } else if (processItem.allowedToRetry()){
+        } else if (!processItem.exceededTrys()){
             processItem.Commands.add(cmdConnect);
         } else{
             // too many attempts to connect
@@ -227,7 +226,6 @@ public class Items  implements Runnable {
 
     private void processSend(){
         processItem.renewTTL();
-        processItem.renewRetryTLL();
         processItem.SocketHandler.Send();
         if (processItem.Buffers.Send.Size==0)
             processItem.Commands.remove(cmdSend);
@@ -249,8 +247,6 @@ public class Items  implements Runnable {
                             processItem = itm;
                             if (itm != null) {
                                 processItem.renewTTL();
-                                processItem.renewRetryTLL();
-
                                 try {
                                     if (itm.Channel.finishConnect()) {
                                         if (itm.Channel.isConnected()) {
@@ -282,7 +278,6 @@ public class Items  implements Runnable {
                             processItem=itm;
                             if (itm != null) {
                                 processItem.renewTTL();
-                                processItem.renewRetryTLL();
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
                                 if (Read == SocketHandlerResult.Complete) {
                                     ioResult = itm.onPeek();
@@ -351,22 +346,18 @@ public class Items  implements Runnable {
     }
     private void processTeardown(){
         processItem.Commands.remove(cmdTeardown);
-        removalItems.add(processItem);
         processItem.Disconnected();
         processItem.Teardown();
 
 
-        if (processItem.Persistent!=null) {
-            if (processItem.Persistent.exceededTrys()) {
-                processItem.Finalized();
-                processItem.State = isFinalize;
-            } else if (processItem.Kind==Client){
-                processItem.Commands.add(cmdConnect);
-            }
-        } else {
+        if (processItem.exceededTrys()) {
             processItem.Finalized();
             processItem.State = isFinalize;
+            removalItems.add(processItem);
+        } else if (processItem.Kind==Client){
+            processItem.Commands.add(cmdConnect);
         }
+
     }
     private void processSetup(){
         try {
