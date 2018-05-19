@@ -15,6 +15,7 @@ import com.aurawin.core.stored.Manifest;
 
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Entities;
+import com.aurawin.core.stored.entities.security.Certificate;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
@@ -27,7 +28,7 @@ import java.util.Set;
 
 
 public class ServerTest {
-
+    private Certificate Cert;
 
     @Test
     public void testServer() throws Exception {
@@ -74,7 +75,19 @@ public class ServerTest {
                 false,
                 "aurawin.com"
         );
-        serverHTTP.loadSecurity(1l);
+        Cert= Certificate.createSelfSigned(
+                "*",
+                "*",
+                "*",
+                "*",
+                "*",
+                "*",
+                "*",
+                "*",
+                "*",
+                365
+        );
+        serverHTTP.loadSecurity(Cert);
         Set<Class<? extends Plug>> ca = cs.scanPackageForPlugins(com.aurawin.core.Package.class);
         for (Class c : ca){
             Annotation ed = c.getAnnotation(Plugin.class);
