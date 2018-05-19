@@ -17,10 +17,14 @@ import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.*;
 import static com.aurawin.core.rsr.def.ItemError.*;
+import static java.nio.channels.SelectionKey.OP_CONNECT;
+import static java.nio.channels.SelectionKey.OP_READ;
+import static java.nio.channels.SelectionKey.OP_WRITE;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 
@@ -149,10 +153,16 @@ public class Items  implements Runnable {
         }
     }
     private void processAccept(){
-        processItem.Commands.remove(cmdAccept);
-        processItem.Commands.add(cmdSetup);
-        processItem.Connected();
-        System.out.println("Items.processAccept()");
+        try {
+            processItem.keySelect = processItem.Channel.register(Keys, OP_READ | OP_WRITE, processItem);
+            processItem.Commands.remove(cmdAccept);
+            processItem.Commands.add(cmdSetup);
+            processItem.Connected();
+        } catch (ClosedChannelException cce){
+            processItem.Commands.add(cmdError);
+            processItem.Commands.add(cmdTeardown);
+        }
+
     }
     private void processConnect(){
         processItem.Commands.remove(cmdConnect);
