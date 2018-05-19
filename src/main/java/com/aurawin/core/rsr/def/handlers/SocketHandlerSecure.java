@@ -224,7 +224,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 while (
                         handshakeStatus!=FINISHED &&
                                 handshakeStatus!=NOT_HANDSHAKING &&
-                                !Owner.Errors.contains(eSSL)
+                                Owner.Errors.isEmpty()
                         ) {
                     if (Instant.now().isAfter(Owner.TTL)) {
                         Owner.Errors.add(eTimeout);
