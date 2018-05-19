@@ -18,10 +18,6 @@ import static java.net.StandardSocketOptions.TCP_NODELAY;
 public class SocketHandlerPlain extends SocketHandler {
     @Override
     public void Teardown(){
-        if (Key!=null){
-            Key.cancel();
-            Key=null;
-        }
     }
 
     @Override
@@ -34,14 +30,7 @@ public class SocketHandlerPlain extends SocketHandler {
             return;
         }
         try {
-            switch (Owner.Kind) {
-                case Client :
-                    Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ | SelectionKey.OP_CONNECT, Owner);
-                    break;
-                case Server:
-                    Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
-                    break;
-            }
+
         } catch (Exception ex){
             Syslog.Append("SocketHandlerPlain", "Setup", ex.getMessage());
             Shutdown();

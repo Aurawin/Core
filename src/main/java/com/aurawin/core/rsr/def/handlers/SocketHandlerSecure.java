@@ -77,12 +77,6 @@ public class SocketHandlerSecure extends SocketHandler {
 
         Cryptor.closeOutbound();
 
-        if (Key!=null){
-            Key.cancel();
-            Key=null;
-        }
-
-
     }
     @Override
     public void Setup(){
@@ -110,7 +104,7 @@ public class SocketHandlerSecure extends SocketHandler {
             beginHandshake();
 
         } catch (Exception e) {
-            Syslog.Append("SocketHandlerSecure", "Setup", e.getMessage());
+            Syslog.Append("SocketHandlerSecure", "Setup", e.toString());
             Owner.Errors.add(eSSL);
             Owner.Error();
             Shutdown();
@@ -278,7 +272,7 @@ public class SocketHandlerSecure extends SocketHandler {
         );
 
     }
-    private void handshakeFinished() throws IOException{
+    private void handshakeFinished() {
         bbNetIn.clear();
         bbNetOut.clear();
 
@@ -287,15 +281,17 @@ public class SocketHandlerSecure extends SocketHandler {
 
         handshakeStatus= FINISHED;
         try {
-            Key = Owner.Channel.register(Owner.Owner.Keys, SelectionKey.OP_WRITE | SelectionKey.OP_READ, Owner);
-        } catch (ClosedChannelException cce){
-            handshakeFailed();
-            Syslog.Append("SocketHandlerSecure", "handshakeFinished.Channel.register", "Client Closed Channel.");
-            return;
-        }
-        Owner.State = ItemState.isEstablished;
 
-        Owner.Channel.configureBlocking(false);
+            Owner.Channel.configureBlocking(false);
+            Owner.State = ItemState.isEstablished;
+
+        } catch (CancelledKeyException cke){
+            handshakeFailed();
+            Syslog.Append("SocketHandlerSecure", "handshakeFinished.Channel.register", cke.toString());
+
+        } catch (IOException ioe){
+            handshakeFailed();
+        }
 
     }
     private HandshakeStatus handshakeWrap() {

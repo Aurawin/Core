@@ -162,11 +162,9 @@ public class Items  implements Runnable {
                 processItem.State=isNone;
                 processItem.Errors.clear();
                 processItem.reAllocateChannel();
-                processItem.Channel.configureBlocking(false);
                 try {
                     processItem.renewTTL();
                     processItem.renewRetryTLL();
-                    processItem.keyConnect=processItem.Channel.register(Keys,SelectionKey.OP_CONNECT, processItem);
 
                     processItem.Channel.connect(processItem.Address);
                     /*
@@ -250,7 +248,6 @@ public class Items  implements Runnable {
                             Item itm = (Item) k.attachment();
                             processItem = itm;
                             if (itm != null) {
-                                processItem.keyConnect.cancel();
                                 processItem.renewTTL();
                                 processItem.renewRetryTLL();
 
@@ -376,6 +373,7 @@ public class Items  implements Runnable {
             processItem.Commands.remove(cmdSetup);
             processItem.Setup();
             processItem.Initialized();
+
             if (processItem.Errors.isEmpty()){
                 processItem.Commands.add(cmdPoll);
                 if (processItem.Kind==Server){

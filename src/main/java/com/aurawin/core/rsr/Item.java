@@ -22,6 +22,9 @@ import java.util.Set;
 import static com.aurawin.core.rsr.def.ItemState.isConnecting;
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
+import static java.nio.channels.SelectionKey.OP_CONNECT;
+import static java.nio.channels.SelectionKey.OP_READ;
+import static java.nio.channels.SelectionKey.OP_WRITE;
 
 
 public abstract class Item  implements Transport,AuthenticateHandler{
@@ -31,7 +34,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public Credentials Credentials;
     public boolean Infinite;
     public int Timeout;
-    public SelectionKey keyConnect;
+    public SelectionKey keySelect;
     public ItemKind Kind;
     public ItemState State = isNone;
     public SocketChannel Channel;
@@ -117,12 +120,15 @@ public abstract class Item  implements Transport,AuthenticateHandler{
 
     public void reAllocateChannel() throws IOException {
         if (Channel != null) Channel.close();
-        if (keyConnect!=null) keyConnect.cancel();
+        if (keySelect!=null) keySelect.cancel();
 
         Channel = SocketChannel.open();
         if (bindAddress != null) {
             Channel.bind(bindAddress);
         }
+        Channel.configureBlocking(false);
+        keySelect=Channel.register(Owner.Keys,OP_CONNECT | OP_READ | OP_WRITE, this);
+
         Channel.socket().setKeepAlive(false);
         Channel.socket().setReuseAddress(false);
         Channel.socket().setReceiveBufferSize(Settings.RSR.SocketBufferRecvSize);

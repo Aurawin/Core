@@ -16,7 +16,6 @@ public abstract class SocketHandler implements SocketMethods {
         Owner = owner;
     }
     protected Item Owner;
-    public SelectionKey Key;
     protected boolean issuedHandshake = false;
     public void Setup() {
         try {
@@ -35,13 +34,6 @@ public abstract class SocketHandler implements SocketMethods {
 
     public void Shutdown(){ }
     public void Release(){
-        try {
-            if (Key!=null) Key.cancel();
-        } catch (Exception ex){
-            Syslog.Append("SocketHandler", "Release", ex.getMessage());
-        } finally{
-            Owner=null;
-            Key=null;
-        }
+       Owner=null;
     }
 }
