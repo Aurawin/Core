@@ -171,6 +171,10 @@ public class Settings {
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
+
+        public static int NetworkSideBuffer = 1024*512*2;
+        public static int AppSideBuffer = 1024*512*1;
+
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 30*1000 /*m-sec*/;
         public static final int refusedDelay = 20*1000 /*m-sec*/;
@@ -188,11 +192,6 @@ public class Settings {
             public static float BufferGrowFactor=1.2f;
             public static int HandshakeTimeout = 1000*10; //milliseconds
             public static int HandshakeTimeoutDebug = 1000*60*2; //milliseconds
-
-            public static int SSLEngineBuffer = 1024*512*2;
-            public static int SSLEngineChannel = 1024*512*1;
-
-
         }
         public static class Items{
             public static int AutoremoveEmptyItemsDelay = 40*1000;

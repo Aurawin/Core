@@ -49,10 +49,10 @@ public class SocketHandlerSecure extends SocketHandler {
     private SSLEngineResult.HandshakeStatus handshakeStatus;
     private SSLEngineResult.Status Status;
 
-    ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.Security.SSLEngineChannel);
-    ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.Security.SSLEngineChannel);
-    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.Security.SSLEngineBuffer);
-    ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.Security.SSLEngineBuffer);
+    ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.NetworkSideBuffer);
+    ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.NetworkSideBuffer);
+    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.AppSideBuffer);
+    ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.AppSideBuffer);
 
     public SocketHandlerSecure(Item owner){
         super(owner);
