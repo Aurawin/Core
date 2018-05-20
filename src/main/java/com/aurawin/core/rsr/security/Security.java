@@ -11,9 +11,7 @@ import com.aurawin.core.stored.entities.Entities;
 import com.aurawin.core.stored.entities.security.Ban;
 import com.aurawin.core.stored.entities.security.LoginFailure;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -332,7 +330,27 @@ public class Security {
     }
     public SSLContext getContext() throws NoSuchAlgorithmException,KeyManagementException{
         SSLContext result = SSLContext.getInstance(Settings.Security.Protocols[0]);
-        result.init(KMF.getKeyManagers(),TMF.getTrustManagers(),new SecureRandom());
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers()
+                    {
+                        return null;
+                    }
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                    {
+                        //No need to implement.
+                    }
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                    {
+                        //No need to implement.
+                    }
+                }
+        };
+
+        result.init(KMF.getKeyManagers(), trustAllCerts, new SecureRandom());
+        //        result.init(KMF.getKeyManagers(),TMF.getTrustManagers(),new SecureRandom());
         return result;
     }
 
