@@ -290,6 +290,9 @@ public class SocketHandlerSecure extends SocketHandler {
                 }
 
             }
+            bbAppOut.clear();
+            bbNetOut.clear();
+
             return Complete;
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");
