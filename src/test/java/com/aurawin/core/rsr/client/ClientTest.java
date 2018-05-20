@@ -40,7 +40,7 @@ public class ClientTest {
     private QueryResult qr;
     public Client Engine;
     public HTTP_1_1 Client;
-    public MemoryStream Payload;
+    public MemoryStream Payload=new MemoryStream();
     InetSocketAddress saServer  = new InetSocketAddress("172.16.1.1",1080);
     InetSocketAddress saClient  = new InetSocketAddress("172.16.1.2",0);
 

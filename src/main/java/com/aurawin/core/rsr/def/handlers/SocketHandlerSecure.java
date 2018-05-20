@@ -259,33 +259,38 @@ public class SocketHandlerSecure extends SocketHandler {
             Owner.Buffers.Send.sliceAtPosition();
         }
         bbAppOut.flip();
-        bbNetOut.limit(bbNetOut.capacity());
         try {
+            while (bbAppOut.hasRemaining()) {
+                bbNetOut.limit(bbNetOut.capacity());
+                CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                bbAppOut.compact();
+                bbAppOut.flip();
+                Status = CryptResult.getStatus();
+                switch (Status) {
+                    case OK:
+                        bbNetOut.flip();
+                        while (bbNetOut.hasRemaining()) {
+                            Owner.renewTTL();
+                            Owner.Channel.write(bbNetOut);
+                        }
+                        bbNetOut.compact();
+                        bbNetOut.flip();
 
-            CryptResult = Cryptor.wrap(bbAppOut,bbNetOut);
-            bbAppOut.compact();
 
-            Status = CryptResult.getStatus();
-            switch (Status) {
-                case OK:
-                    bbNetOut.flip();
-                    while (bbNetOut.hasRemaining()) {
-                        Owner.renewTTL();
-                        Owner.Channel.write(bbNetOut);
-                    }
-                    bbNetOut.compact();
-                    bbNetOut.flip();
-                    return Complete;
-                case BUFFER_UNDERFLOW:
-                    Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
-                    return Failure;
-                case BUFFER_OVERFLOW:
-                    Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_OVERFLOW unexpected.");
-                    return Failure;
-                case CLOSED:
-                    return Failure;
+                        break;
+
+                    case BUFFER_UNDERFLOW:
+                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
+                        return Failure;
+                    case BUFFER_OVERFLOW:
+                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_OVERFLOW unexpected.");
+                        return Failure;
+                    case CLOSED:
+                        return Failure;
+                }
+
             }
-
+            return Complete;
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");
             cryptorFailed();
@@ -296,7 +301,6 @@ public class SocketHandlerSecure extends SocketHandler {
             return Failure;
         }
 
-        return Failure;
     }
 
     public SocketHandlerResult Recv() {
