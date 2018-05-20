@@ -154,6 +154,7 @@ public class Items  implements Runnable {
     }
     private void processAccept(){
         try {
+            processItem.Channel.configureBlocking(false);
             processItem.keySelect = processItem.Channel.register(Keys, OP_READ | OP_WRITE, processItem);
             processItem.Commands.remove(cmdAccept);
             processItem.Commands.add(cmdSetup);
@@ -161,7 +162,11 @@ public class Items  implements Runnable {
         } catch (ClosedChannelException cce){
             processItem.Commands.add(cmdError);
             processItem.Commands.add(cmdTeardown);
+        } catch (IOException ioe){
+            processItem.Commands.add(cmdError);
+            processItem.Commands.add(cmdTeardown);
         }
+
 
     }
     private void processConnect(){
