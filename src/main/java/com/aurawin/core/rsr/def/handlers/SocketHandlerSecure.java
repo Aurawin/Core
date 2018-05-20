@@ -85,7 +85,7 @@ public class SocketHandlerSecure extends SocketHandler {
             issuedHandshake=false;
             Context = Owner.Owner.Security.getContext();
 
-            Cryptor=Context.createSSLEngine(Owner.bindAddress.getHostName(),Owner.bindAddress.getPort());
+            Cryptor=Context.createSSLEngine();//Owner.Address.getHostName(),Owner.Address.getPort());
 
             needNetInFlip =  (Owner.Kind==Server);
             needNetOutFlip = (Owner.Kind==Server);
@@ -142,7 +142,7 @@ public class SocketHandlerSecure extends SocketHandler {
             }
 
         } catch (SSLException sle){
-            Syslog.Append("SocketHandlerSecure", "handshakeWrap.Channel.wrap", "SSL Exception");
+            Syslog.Append("SocketHandlerSecure", "handshakeWrap.Channel.wrap", sle.toString());
             handshakeFailed();
             return NOT_HANDSHAKING;
         } catch (IOException ioe){
