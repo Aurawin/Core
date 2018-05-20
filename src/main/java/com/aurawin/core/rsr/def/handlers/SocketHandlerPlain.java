@@ -51,17 +51,17 @@ public class SocketHandlerPlain extends SocketHandler {
             Owner.Owner.BufferRead.clear();
             try {
                 int i = Owner.Channel.read(Owner.Owner.BufferRead);
-                if (i == -1 )
+                if (i>0) {
+                    Owner.renewTTL();
+                    Owner.Owner.BufferRead.flip();
+                    Owner.Buffers.Recv.write(Owner.Owner.BufferRead);
+                    Owner.Owner.BufferRead.clear();
+                } else if (i == -1 ) {
                     return SocketHandlerResult.Failure;
+                }
             } catch (IOException ioe){
                 return SocketHandlerResult.Failure;
             }
-            Owner.Owner.BufferRead.flip();
-            Owner.Buffers.Recv.write(Owner.Owner.BufferRead);
-            Owner.Owner.BufferRead.clear();
-
-            Owner.TTL = Instant.now().plusMillis(Settings.RSR.Server.Timeout);
-
             return SocketHandlerResult.Complete;
         } else {
             return SocketHandlerResult.Failure;
@@ -74,6 +74,7 @@ public class SocketHandlerPlain extends SocketHandler {
             Owner.Owner.BufferWrite.flip();
             while (Owner.Owner.BufferWrite.hasRemaining()) {
                 try {
+                    Owner.renewTTL();
                     Owner.Channel.write(Owner.Owner.BufferWrite);
                 } catch (IOException ioe){
                     return SocketHandlerResult.Failure;

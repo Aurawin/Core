@@ -29,16 +29,19 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
     private Instant Expired;
     private Engine Owner;
 
-    private Class[] itemConstructorParams=new Class[3];
+    private Class[] itemConstructorParamsServer=new Class[3];
+    private Class[] itemConstructorParamsClient=new Class[1];
 
     public Managers(Engine aOwner){
         nextId=1;
         Owner=aOwner;
         lastCleanup=Instant.now();
 
-        itemConstructorParams[0] = Items.class;
-        itemConstructorParams[1] = SocketChannel.class;
-        itemConstructorParams[2] = ItemKind.class;
+        itemConstructorParamsServer[0] = Items.class;
+        itemConstructorParamsServer[1] = SocketChannel.class;
+        itemConstructorParamsServer[2] = ItemKind.class;
+
+        itemConstructorParamsClient[0] = Items.class;
 
     }
     @Override
@@ -92,10 +95,11 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
         if (itms!=null) {
             Class c = Owner.transportClass;
             if (c!=null) {
-                Method m = c.getMethod("newInstance", itemConstructorParams);
+                Method m = c.getMethod("newInstance", itemConstructorParamsClient);
                 try {
                     m.setAccessible(true);
-                    itm = (Item) m.invoke(Owner.transportObject,itms,SocketChannel.open(), Client);
+                    //itm = (Item) m.invoke(Owner.transportObject,itms,SocketChannel.open(), Client);
+                    itm = (Item) m.invoke(Owner.transportObject,itms);
                     if (persistent) itm.Persistent=new Persist(Settings.RSR.persistDelay);
                     itm.Address=address;
                     itm.bindAddress=Owner.Address;
@@ -124,7 +128,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
             if ((c!=null) && (o !=null)) {
                 try {
 
-                    Method m = c.getMethod("newInstance", itemConstructorParams);
+                    Method m = c.getMethod("newInstance", itemConstructorParamsServer);
                     m.setAccessible(true);
                     Item itm = (Item) m.invoke(o, itms, aChannel,ItemKind.Server);
                     itms.List.add(itm);

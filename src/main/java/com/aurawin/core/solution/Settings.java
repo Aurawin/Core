@@ -172,7 +172,7 @@ public class Settings {
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
-        public static final int persistDelay = 2*1000 /*m-sec*/;
+        public static final int persistDelay = 30*1000 /*m-sec*/;
         public static final int refusedDelay = 20*1000 /*m-sec*/;
         public static final int AnyPort = 0;
         public static class TransportConnect{
@@ -334,7 +334,8 @@ public class Settings {
 
         }
         public static class Server{
-            public static int AcceptYield = 25/*ms-sec*/;
+            public static int AcceptYield = 250/*ms-sec*/;
+            public static int ConnectYield = 500;
             public static int AcceptPool = 10; // can adjust size later
             public static int Backlog = 100;
             public static int ManagerYield = 25/*ms*/;
@@ -349,6 +350,7 @@ public class Settings {
         }
         public static class Client{
             public static int Timeout = 20 /*sec*/ * 1000/*ms-sec*/;
+            public static int CommandYield = 250;
         }
     }
     public static class Folder{

@@ -409,7 +409,8 @@ public class MemoryStream extends Channel {
             Dest.Collection.add(itm);
             Dest.Size+=itm.length;
         }
-        return Size;
+        Size=0;
+        return Dest.Size;
     }
 
     public synchronized long CopyFrom(MemoryStream Source){

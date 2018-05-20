@@ -243,7 +243,7 @@ public class SocketHandlerSecure extends SocketHandler {
                             break;
                     }
                 }
-                if ( (handshakeStatus == FINISHED) && (Owner.Errors.isEmpty()) ) {
+                if ( (((handshakeStatus == NOT_HANDSHAKING)) || (handshakeStatus == FINISHED)) && (Owner.Errors.isEmpty()) ) {
                     handshakeFinished();
                 }
             } catch (SSLException sle) {
@@ -269,8 +269,10 @@ public class SocketHandlerSecure extends SocketHandler {
             switch (Status) {
                 case OK:
                     bbNetOut.flip();
-                    while (bbNetOut.hasRemaining())
+                    while (bbNetOut.hasRemaining()) {
+                        Owner.renewTTL();
                         Owner.Channel.write(bbNetOut);
+                    }
                     bbNetOut.compact();
                     bbNetOut.flip();
                     return Complete;
@@ -302,6 +304,7 @@ public class SocketHandlerSecure extends SocketHandler {
         try {
             iRead=Owner.Channel.read(bbNetIn);
             if (iRead>0) {
+                Owner.renewTTL();
                 bbNetIn.flip();
                 while ((bbNetIn.hasRemaining() || needRetry) && Owner.Errors.isEmpty() ){
                     needRetry=false;

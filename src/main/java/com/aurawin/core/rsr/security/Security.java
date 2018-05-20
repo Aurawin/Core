@@ -333,24 +333,12 @@ public class Security {
 
         TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
-
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers()
-                    {
-                        return null;
-                    }
-                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
-                    {
-                        //No need to implement.
-                    }
-                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
-                    {
-                        //No need to implement.
-                    }
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers(){return null;}
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType){}
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType){}
                 }
         };
-
         result.init(KMF.getKeyManagers(), trustAllCerts, new SecureRandom());
-        //        result.init(KMF.getKeyManagers(),TMF.getTrustManagers(),new SecureRandom());
         return result;
     }
 

@@ -19,6 +19,7 @@ import com.aurawin.core.stored.Driver;
 import com.aurawin.core.stored.Manifest;
 import com.aurawin.core.stored.annotations.AnnotatedList;
 import com.aurawin.core.stored.entities.Entities;
+import com.aurawin.core.stream.MemoryStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +27,7 @@ import org.junit.Test;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
+import static com.aurawin.core.lang.Table.CRLF;
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
 import static com.aurawin.core.rsr.def.ItemState.isFinalize;
 import static com.aurawin.core.rsr.def.http.Field.Id;
@@ -38,6 +40,7 @@ public class ClientTest {
     private QueryResult qr;
     public Client Engine;
     public HTTP_1_1 Client;
+    public MemoryStream Payload;
     InetSocketAddress saServer  = new InetSocketAddress("172.16.1.1",1080);
     InetSocketAddress saClient  = new InetSocketAddress("172.16.1.2",0);
 
@@ -67,7 +70,6 @@ public class ClientTest {
                 al
         );
         Entities.Initialize(mf);
-
         Engine = new Client(
                 saClient,
                 HTTP_1_1.class,
@@ -75,6 +77,10 @@ public class ClientTest {
         );
         Engine.loadSecurity(1l);
         Engine.Configure();
+
+        for (int iLcv=1; iLcv<15000; iLcv++){
+            Payload.Write("Payload "+iLcv+CRLF);
+        }
     }
 
     @After
@@ -98,6 +104,7 @@ public class ClientTest {
                     Client.Request.URI = "/index.html";
                     Client.Request.Method = "GET";
                     Client.Request.Headers.Update(Id, "12345");
+                    Payload.Move(Client.Request.Payload);
                     //Client.Credentials.Passport.Username="user";
                     //Client.Credentials.Passport.Password="pass";
                     qr= Client.Query();

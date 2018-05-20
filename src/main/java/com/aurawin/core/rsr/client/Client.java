@@ -59,7 +59,7 @@ public class Client  extends Engine {
                         break;
                 }
                 try {
-                    sleep(Settings.RSR.Server.AcceptYield);
+                    sleep(Settings.RSR.Server.ConnectYield);
                 } catch (InterruptedException irqe) {
                     Syslog.Append(getClass().getCanonicalName(), "run", "Interrupted");
                 }

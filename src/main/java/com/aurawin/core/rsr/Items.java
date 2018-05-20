@@ -180,7 +180,10 @@ public class Items  implements Runnable {
                 processItem.reAllocateChannel();
                 try {
                     processItem.renewTTL();
-                    processItem.Channel.connect(processItem.Address);
+                    boolean bConnected = processItem.Channel.connect(processItem.Address);
+                    if (bConnected){
+                        //todo finish connection
+                    }
                     /*
                     if (processItem.Channel.connect(processItem.Address)) {
 
@@ -292,7 +295,6 @@ public class Items  implements Runnable {
                             Item itm = (Item) k.attachment();
                             processItem=itm;
                             if (itm != null) {
-                                processItem.renewTTL();
                                 Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
                                 if (Read == SocketHandlerResult.Complete) {
                                     ioResult = itm.onPeek();
@@ -361,6 +363,12 @@ public class Items  implements Runnable {
     }
     private void processTeardown(){
         processItem.Commands.remove(cmdTeardown);
+        if (processItem.keySelect!=null){
+            processItem.keySelect.cancel();
+            processItem.keySelect=null;
+        }
+
+
         processItem.Disconnected();
         processItem.Teardown();
 
