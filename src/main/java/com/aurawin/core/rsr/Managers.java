@@ -98,6 +98,7 @@ public class Managers extends ConcurrentLinkedQueue<Items> implements ThreadFact
                     itm = (Item) m.invoke(Owner.transportObject,itms,SocketChannel.open(), Client);
                     if (persistent) itm.Persistent=new Persist(Settings.RSR.persistDelay);
                     itm.Address=address;
+                    itm.bindAddress=Owner.Address;
                     itm.Commands.add(cmdConnect);
                     itms.List.add(itm);
 
