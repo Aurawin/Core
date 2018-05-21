@@ -358,9 +358,9 @@ public class SocketHandlerSecure extends SocketHandler {
                             Shutdown();
                             break;
                         case BUFFER_UNDERFLOW:
-
+                            bbNetIn.compact();
                             // wait for more data.
-                            break;
+                            return Complete;
                         case BUFFER_OVERFLOW:
                             needRetry = true;
                             break;
