@@ -62,6 +62,10 @@ public class SocketHandlerSecure extends SocketHandler {
         issuedHandshake=false;
     }
 
+    @Override
+    public boolean dataSendComplete(){
+        return ((Owner.Buffers.Send.Size==0) || (bbWriteCascade.hasRemaining()));
+    }
 
     @Override
     public void Release(){
