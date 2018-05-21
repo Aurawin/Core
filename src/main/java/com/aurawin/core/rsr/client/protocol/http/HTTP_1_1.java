@@ -289,7 +289,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         Response.Status=sEmpty;
         Commands.add(cmdSend);
         Instant ttl = Instant.now().plusMillis(Settings.RSR.ResponseToQueryDelay);
-        while ((Owner.Engine.State != esStop) && (!Response.Obtained) && Instant.now().isBefore(Request.TTL)) {
+        while ((Owner.Engine.State != esStop) && (!Response.Obtained)) {
             try {
                 if (Response.Status == sEmpty) {
                     Thread.sleep(Settings.RSR.TransportConnect.ResponseDelay);

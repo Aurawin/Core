@@ -51,9 +51,12 @@ public class SocketHandlerSecure extends SocketHandler {
     private SSLEngineResult.Status Status;
 
     ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
+    ByteBuffer bbWriteCascade = ByteBuffer.allocateDirect(ByteBufferLarger);
     ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
     ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
     ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
+
+
     public SocketHandlerSecure(Item owner){
         super(owner);
         issuedHandshake=false;
@@ -100,6 +103,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
             Owner.Channel.socket().setSendBufferSize(ByteBufferLarger);
             Owner.Channel.socket().setReceiveBufferSize(ByteBufferLarger);
+
             Owner.Channel.configureBlocking(false);
 
             beginHandshake();
@@ -127,8 +131,9 @@ public class SocketHandlerSecure extends SocketHandler {
             switch (Status) {
                 case OK:
                     bbNetOut.flip();
-                    while (bbNetOut.hasRemaining())
-                        iWrite= Owner.Channel.write(bbNetOut);
+                    while (bbNetOut.hasRemaining()) {
+                        iWrite = Owner.Channel.write(bbNetOut);
+                    }
                     bbNetOut.compact();
                     bbNetOut.flip();
                     return handshakeStatus;
@@ -255,45 +260,59 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-        while ( bbAppOut.hasRemaining() && (Owner.Buffers.Send.Size>0) ) {
-            Owner.Buffers.Send.read(bbAppOut);
-            Owner.Buffers.Send.sliceAtPosition();
+        bbWriteCascade.flip();
+        if  (bbWriteCascade.hasRemaining()) {
+            bbWriteCascade.flip();
+        } else {
+            while (!bbWriteCascade.hasRemaining() && bbAppOut.hasRemaining() && (Owner.Buffers.Send.Size > 0)) {
+                Owner.Buffers.Send.read(bbAppOut);
+                Owner.Buffers.Send.sliceAtPosition();
+            }
+            bbAppOut.flip();
         }
-        bbAppOut.flip();
         try {
-            while (bbAppOut.hasRemaining()) {
-                bbNetOut.limit(bbNetOut.capacity());
-                CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
-                bbAppOut.compact();
-                bbAppOut.flip();
-                Status = CryptResult.getStatus();
-                switch (Status) {
-                    case OK:
-                        bbNetOut.flip();
-                        while (bbNetOut.hasRemaining()) {
-                            Owner.renewTTL();
-                            Owner.Channel.write(bbNetOut);
-                        }
-                        bbNetOut.compact();
-                        bbNetOut.flip();
+            iWrite = -1;
+            while ( (iWrite!=0) && ( (bbWriteCascade.hasRemaining()) || (bbAppOut.hasRemaining())) ) {
+                    if (bbWriteCascade.hasRemaining()) {
+                        bbNetOut.put(bbWriteCascade);
+                        bbWriteCascade.clear();
+                    } else {
+                        CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                    }
+                    bbAppOut.compact();
+                    bbAppOut.flip();
 
+                    bbNetOut.flip();
+                    Status = CryptResult.getStatus();
+                    switch (Status) {
+                        case OK:
+                            while ((iWrite!=0) && (bbNetOut.hasRemaining()) ) {
+                                Owner.renewTTL();
+                                iWrite = Owner.Channel.write(bbNetOut);
+                            }
+                            if (iWrite==0){
+                                bbWriteCascade.compact();
+                                bbWriteCascade.put(bbNetOut);
+                                bbWriteCascade.flip();
 
-                        break;
+                            }
+                            bbNetOut.clear();
 
-                    case BUFFER_UNDERFLOW:
-                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
-                        return Failure;
-                    case BUFFER_OVERFLOW:
-                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_OVERFLOW unexpected.");
-                        return Failure;
-                    case CLOSED:
-                        return Failure;
-                }
+                            break;
+
+                        case BUFFER_UNDERFLOW:
+                            Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
+                            return Failure;
+                        case BUFFER_OVERFLOW:
+                            Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_OVERFLOW unexpected.");
+                            return Failure;
+                        case CLOSED:
+                            return Failure;
+                    }
+
 
             }
             bbAppOut.clear();
-            bbNetOut.clear();
-
             return Complete;
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");

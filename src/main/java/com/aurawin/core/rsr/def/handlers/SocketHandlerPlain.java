@@ -2,6 +2,7 @@ package com.aurawin.core.rsr.def.handlers;
 
 import com.aurawin.core.log.Syslog;
 import com.aurawin.core.rsr.Item;
+import com.aurawin.core.rsr.def.Buffers;
 import com.aurawin.core.solution.Settings;
 
 import java.io.IOException;
@@ -46,6 +47,10 @@ public class SocketHandlerPlain extends SocketHandler {
     }
 
     @Override
+    public boolean dataSendComplete(){
+        return Owner.Buffers.Send.Size==0;
+    }
+    @Override
     public SocketHandlerResult Recv(){
         if (Owner.Channel.isConnected()==true) {
             Owner.Owner.BufferRead.clear();
@@ -88,5 +93,6 @@ public class SocketHandlerPlain extends SocketHandler {
         }
         return SocketHandlerResult.Complete;
     }
+
 
 }
