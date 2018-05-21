@@ -172,8 +172,8 @@ public class Settings {
         public static int SocketBufferRecvSize = 1024*512;
         public static int SocketBufferSendSize = 1024*512;
 
-        public static int NetworkSideBuffer = 1024*512*2;
-        public static int AppSideBuffer = 1024*512*1;
+        public static int ByteBufferLarger  = 1024*512*2;
+        public static int ByteBufferSmaller = 1024*512*1;
 
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 30*1000 /*m-sec*/;
