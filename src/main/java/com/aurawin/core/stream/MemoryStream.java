@@ -166,6 +166,14 @@ public class MemoryStream extends Channel {
             is.close();
         }
     }
+    public synchronized long calculateSize(){
+        long size =0;
+        for (byte[]ba:Collection) {
+            size += ba.length;
+        }
+        return size;
+    }
+
     public synchronized int Write (InputStream Value) throws IOException{
         byte[] baBuffer=new byte[1024*1024];
         BufferedInputStream bfi= new BufferedInputStream(Value);
@@ -333,6 +341,8 @@ public class MemoryStream extends Channel {
         Size+=itm.length;
         return itm.length;
     }
+
+
 
     public synchronized void Clear() {
         // seek to Collection with position

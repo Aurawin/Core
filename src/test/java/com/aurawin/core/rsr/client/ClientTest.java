@@ -81,6 +81,11 @@ public class ClientTest {
         for (int iLcv=1; iLcv<1500000; iLcv++){
             Payload.Write("Payload Test testing payload "+iLcv+CRLF);
         }
+
+        long iSize1=Payload.Size;
+        long iSize2=Payload.calculateSize();
+
+        assert(iSize1==iSize2);
     }
 
     @After

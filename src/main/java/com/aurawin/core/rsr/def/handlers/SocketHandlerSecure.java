@@ -6,6 +6,7 @@ import com.aurawin.core.rsr.def.ItemCommand;
 import com.aurawin.core.rsr.def.ItemState;
 import com.aurawin.core.rsr.security.Security;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.stream.MemoryStream;
 import com.sun.net.httpserver.Authenticator;
 
 import javax.net.ssl.*;
@@ -270,12 +271,23 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-        if  (!bbWriteCascade.hasRemaining()) {
+        if (!bbWriteCascade.hasRemaining()) {
             while (!bbWriteCascade.hasRemaining() && bbAppOut.hasRemaining() && (Owner.Buffers.Send.Size > 0)) {
                 Owner.Buffers.Send.read(bbAppOut);
                 Owner.Buffers.Send.sliceAtPosition();
             }
             bbAppOut.flip();
+        }
+        if (Owner.Buffers.Send.Size == 0){
+            iWrite = 0;
+            MemoryStream ms = new MemoryStream();
+            ms.write(bbAppOut);
+            try {
+                ms.SaveToFile(new File("/home/atbrunner/Desktop/bb.txt"));
+            } catch (IOException ioe){
+
+            }
+            bbAppOut.rewind();
         }
         try {
             iWrite = -1;
