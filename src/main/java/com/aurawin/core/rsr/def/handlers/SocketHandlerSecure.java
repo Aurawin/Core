@@ -46,6 +46,8 @@ public class SocketHandlerSecure extends SocketHandler {
     private boolean needNetOutFlip = true;
     private int iRead;
     private int iWrite;
+    private long bytesRead;
+    private long bytesWrite;
     private SSLEngineResult CryptResult;
     private SSLEngineResult.HandshakeStatus handshakeStatus;
     private SSLEngineResult.Status Status;
@@ -60,11 +62,13 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerSecure(Item owner){
         super(owner);
         issuedHandshake=false;
+
+        bbWriteCascade.flip();
     }
 
     @Override
     public boolean dataSendComplete(){
-        return ((Owner.Buffers.Send.Size==0) || (bbWriteCascade.hasRemaining()));
+        return ( (Owner.Buffers.Send.Size==0) && (!bbWriteCascade.hasRemaining()));
     }
 
     @Override
@@ -137,6 +141,7 @@ public class SocketHandlerSecure extends SocketHandler {
                     bbNetOut.flip();
                     while (bbNetOut.hasRemaining()) {
                         iWrite = Owner.Channel.write(bbNetOut);
+                        bytesWrite+=iWrite;
                     }
                     bbNetOut.compact();
                     bbNetOut.flip();
@@ -194,6 +199,7 @@ public class SocketHandlerSecure extends SocketHandler {
                             Owner.Commands.add(cmdError);
                             Owner.Commands.add(cmdTeardown);
                         } else if (iRead>=0) {
+                            bytesRead+=iRead;
                             bbNetIn.flip();
                         }
                         needTry = true;
@@ -264,10 +270,7 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-        bbWriteCascade.flip();
-        if  (bbWriteCascade.hasRemaining()) {
-            bbWriteCascade.flip();
-        } else {
+        if  (!bbWriteCascade.hasRemaining()) {
             while (!bbWriteCascade.hasRemaining() && bbAppOut.hasRemaining() && (Owner.Buffers.Send.Size > 0)) {
                 Owner.Buffers.Send.read(bbAppOut);
                 Owner.Buffers.Send.sliceAtPosition();
@@ -280,19 +283,21 @@ public class SocketHandlerSecure extends SocketHandler {
                     if (bbWriteCascade.hasRemaining()) {
                         bbNetOut.put(bbWriteCascade);
                         bbWriteCascade.clear();
+                        bbWriteCascade.flip();
+                        bbAppOut.flip();
                     } else {
                         CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                        bbAppOut.compact();
+                        bbAppOut.flip();
                     }
-                    bbAppOut.compact();
-                    bbAppOut.flip();
-
-                    bbNetOut.flip();
                     Status = CryptResult.getStatus();
                     switch (Status) {
                         case OK:
+                            bbNetOut.flip();
                             while ((iWrite!=0) && (bbNetOut.hasRemaining()) ) {
                                 Owner.renewTTL();
                                 iWrite = Owner.Channel.write(bbNetOut);
+                                bytesWrite+=iWrite;
                             }
                             if (iWrite==0){
                                 bbWriteCascade.compact();
@@ -335,6 +340,7 @@ public class SocketHandlerSecure extends SocketHandler {
         try {
             iRead = Owner.Channel.read(bbNetIn);
             if (iRead>0) {
+                bytesRead+=iRead;
                 Owner.renewTTL();
                 bbNetIn.flip();
                 while ((bbNetIn.hasRemaining() || needRetry) && Owner.Errors.isEmpty()) {

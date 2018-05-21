@@ -78,8 +78,8 @@ public class ClientTest {
         Engine.loadSecurity(1l);
         Engine.Configure();
 
-        for (int iLcv=1; iLcv<150000; iLcv++){
-            Payload.Write("Payload "+iLcv+CRLF);
+        for (int iLcv=1; iLcv<1500000; iLcv++){
+            Payload.Write("Payload Test testing payload "+iLcv+CRLF);
         }
     }
 
