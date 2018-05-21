@@ -70,7 +70,7 @@ public class ServerTest {
         Entities.Initialize(mf);
 
         serverHTTP = new Server(
-                new InetSocketAddress("172.16.1.2", 1080),
+                new InetSocketAddress("172.16.1.1", 1080),
                 HTTP_1_1.class,
                 false,
                 "aurawin.com"

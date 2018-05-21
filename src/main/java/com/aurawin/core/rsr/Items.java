@@ -157,6 +157,7 @@ public class Items  implements Runnable {
             processItem.Channel.configureBlocking(false);
             processItem.keySelect = processItem.Channel.register(Keys, OP_READ | OP_WRITE, processItem);
             processItem.Commands.remove(cmdAccept);
+            processItem.bindAddress=Engine.Address;
             processItem.Commands.add(cmdSetup);
             processItem.Connected();
         } catch (ClosedChannelException cce){

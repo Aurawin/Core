@@ -29,6 +29,7 @@ import static com.aurawin.core.rsr.def.ItemState.isHandShake;
 import static com.aurawin.core.rsr.def.ItemState.isNone;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Complete;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Failure;
+import static com.aurawin.core.solution.Settings.RSR.ByteBufferLarger;
 import static com.aurawin.core.solution.Settings.RSR.Security.*;
 import static com.aurawin.core.solution.Settings.Security.Ciphers;
 import static com.aurawin.core.solution.Settings.Security.Protocols;
@@ -49,11 +50,10 @@ public class SocketHandlerSecure extends SocketHandler {
     private SSLEngineResult.HandshakeStatus handshakeStatus;
     private SSLEngineResult.Status Status;
 
-    ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.NetworkSideBuffer);
-    ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.NetworkSideBuffer);
-    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.AppSideBuffer);
-    ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.AppSideBuffer);
-
+    ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
+    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
+    ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
+    ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
     public SocketHandlerSecure(Item owner){
         super(owner);
         issuedHandshake=false;
@@ -98,7 +98,8 @@ public class SocketHandlerSecure extends SocketHandler {
             Cryptor.setEnabledCipherSuites(Context.getSupportedSSLParameters().getCipherSuites());//Ciphers
             Cryptor.setEnableSessionCreation(true);
 
-
+            Owner.Channel.socket().setSendBufferSize(ByteBufferLarger);
+            Owner.Channel.socket().setReceiveBufferSize(ByteBufferLarger);
             Owner.Channel.configureBlocking(false);
 
             beginHandshake();
@@ -309,12 +310,12 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerResult Recv() {
         boolean needRetry = false;
         try {
-            iRead=Owner.Channel.read(bbNetIn);
+            iRead = Owner.Channel.read(bbNetIn);
             if (iRead>0) {
                 Owner.renewTTL();
                 bbNetIn.flip();
-                while ((bbNetIn.hasRemaining() || needRetry) && Owner.Errors.isEmpty() ){
-                    needRetry=false;
+                while ((bbNetIn.hasRemaining() || needRetry) && Owner.Errors.isEmpty()) {
+                    needRetry = false;
 
                     CryptResult = Cryptor.unwrap(bbNetIn, bbAppIn);
 
@@ -329,25 +330,27 @@ public class SocketHandlerSecure extends SocketHandler {
 
                             bbAppIn.clear();
 
-                             break;
+                            break;
                         case CLOSED:
                             Shutdown();
                             break;
                         case BUFFER_UNDERFLOW:
+
                             // wait for more data.
                             break;
                         case BUFFER_OVERFLOW:
-                            needRetry=true;
+                            needRetry = true;
                             break;
 
                     }
                 }
                 bbNetIn.compact();
-            } else if (iRead==-1){
+            } else if (iRead == -1) {
                 Owner.Errors.add(eSSL);
                 Owner.Errors.add(eRead);
                 return SocketHandlerResult.Failure;
             }
+
 
         } catch (Exception e){
             Syslog.Append("SocketHandlerSecure", "Recv", e.getMessage());
