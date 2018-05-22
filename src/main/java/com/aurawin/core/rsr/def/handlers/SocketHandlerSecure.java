@@ -297,7 +297,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
         try {
             iWrite = -1;
-            while ( (iWrite!=0) && ( (bbAppOut.hasRemaining())) ) {
+            while ( (iWrite!=0) && ( ( bbAppOut.hasRemaining()) || Bytes.Buffer.containsData(bbNetOut)  ) )  {
                     CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
                     bbAppOut.compact();
                     bbAppOut.flip();

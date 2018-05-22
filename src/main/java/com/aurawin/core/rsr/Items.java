@@ -378,6 +378,9 @@ public class Items  implements Runnable {
             processItem.Finalized();
             processItem.State = isFinalize;
             removalItems.add(processItem);
+
+            processItem.Release();
+
         } else if (processItem.Kind==Client){
             processItem.Commands.add(cmdConnect);
         }
