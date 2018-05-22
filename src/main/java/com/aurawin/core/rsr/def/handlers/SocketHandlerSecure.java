@@ -23,9 +23,7 @@ import javax.xml.transform.OutputKeys;
 
 import static com.aurawin.core.rsr.def.ItemCommand.cmdError;
 import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
-import static com.aurawin.core.rsr.def.ItemError.eRead;
-import static com.aurawin.core.rsr.def.ItemError.eSSL;
-import static com.aurawin.core.rsr.def.ItemError.eTimeout;
+import static com.aurawin.core.rsr.def.ItemError.*;
 import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.isHandShake;
@@ -81,7 +79,10 @@ public class SocketHandlerSecure extends SocketHandler {
     @Override
     public void Release(){
         super.Release();
-
+        bbAppOut=null;
+        bbAppIn=null;
+        bbNetOut=null;
+        bbNetIn=null;
         Cryptor=null;
         CryptResult=null;
     }
@@ -95,10 +96,6 @@ public class SocketHandlerSecure extends SocketHandler {
 
             }
         }
-        bbAppOut=null;
-        bbAppIn=null;
-        bbNetOut=null;
-        bbNetIn=null;
     }
     @Override
     public void Setup(){
@@ -325,8 +322,8 @@ public class SocketHandlerSecure extends SocketHandler {
                             return Failure;
                         case BUFFER_OVERFLOW:
                             bbNetOut.compact();
-                            //bbNetOut.position(bbNetOut.limit());
-                            // should set limit to size()
+
+
                             break;
                         case CLOSED: return Failure;
                         default: break;
@@ -389,6 +386,7 @@ public class SocketHandlerSecure extends SocketHandler {
             } else if (iRead == -1) {
                 Owner.Errors.add(eSSL);
                 Owner.Errors.add(eRead);
+                Owner.Errors.add(eReset);
                 return SocketHandlerResult.Failure;
             }
 
