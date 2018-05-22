@@ -174,31 +174,34 @@ public class MemoryStream extends Channel {
         return size;
     }
 
-    public synchronized int Write (InputStream Value) throws IOException{
+    public synchronized long Write (InputStream Value) throws IOException{
+        int iWrite=0;
         byte[] baBuffer=new byte[1024*1024];
         BufferedInputStream bfi= new BufferedInputStream(Value);
         try {
-            int iWrite = bfi.read(baBuffer);//Value.read(baBuffer);
-            if (iWrite > -1) {
-                byte[] baAppend = new byte[iWrite];
-                System.arraycopy(baBuffer, 0, baAppend, 0, iWrite);
-                byte[] Chunk = null;
-                if (Collection.size() >= 1) {
-                    Chunk = Collection.removeLast();
+            while (bfi.available()>0) {
+                iWrite = bfi.read(baBuffer);//Value.read(baBuffer);
+                if (iWrite > -1) {
+                    byte[] baAppend = new byte[iWrite];
+                    System.arraycopy(baBuffer, 0, baAppend, 0, iWrite);
+                    byte[] Chunk = null;
+                    if (Collection.size() >= 1) {
+                        Chunk = Collection.removeLast();
+                    }
+                    if ((Chunk != null) && (Chunk.length + iWrite > MaxChunkSize)) {
+                        Collection.add(baAppend);
+                    } else if (Chunk == null) {
+                        Collection.add(baAppend);
+                    } else {
+                        byte[] baComb = new byte[Chunk.length + iWrite];
+                        System.arraycopy(Chunk, 0, baComb, 0, Chunk.length);
+                        System.arraycopy(baAppend, 0, baComb, Chunk.length, iWrite);
+                        Collection.add(baComb);
+                    }
+                    Size += iWrite;
                 }
-                if ((Chunk != null) && (Chunk.length + iWrite > MaxChunkSize)) {
-                    Collection.add(baAppend);
-                } else if (Chunk == null) {
-                    Collection.add(baAppend);
-                } else {
-                    byte[] baComb = new byte[Chunk.length + iWrite];
-                    System.arraycopy(Chunk, 0, baComb, 0, Chunk.length);
-                    System.arraycopy(baAppend, 0, baComb, Chunk.length, iWrite);
-                    Collection.add(baComb);
-                }
-                Size += iWrite;
             }
-            return iWrite;
+            return Size;
         } finally{
             bfi.close();
         }
