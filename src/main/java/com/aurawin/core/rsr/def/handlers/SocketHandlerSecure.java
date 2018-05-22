@@ -14,6 +14,7 @@ import javax.net.ssl.*;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
+import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.time.Instant;
@@ -94,6 +95,10 @@ public class SocketHandlerSecure extends SocketHandler {
 
             }
         }
+        bbAppOut=null;
+        bbAppIn=null;
+        bbNetOut=null;
+        bbNetIn=null;
     }
     @Override
     public void Setup(){
@@ -117,7 +122,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
             Owner.Channel.socket().setSendBufferSize(ByteBufferLarger);
             Owner.Channel.socket().setReceiveBufferSize(ByteBufferLarger);
-
+            Owner.Channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
             Owner.Channel.configureBlocking(false);
 
             beginHandshake();

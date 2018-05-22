@@ -1,6 +1,6 @@
 #maven.buildNumber.plugin properties file
-#Mon May 21 11:43:25 CDT 2018
+#Tue May 22 07:48:15 CDT 2018
 buildMonth=${buildMonth}
 buildDay=${buildDay}
 buildYear=${buildYear}
-buildNumber=406
+buildNumber=408
