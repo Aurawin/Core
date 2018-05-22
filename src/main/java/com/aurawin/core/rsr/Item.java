@@ -30,6 +30,8 @@ import static java.nio.channels.SelectionKey.OP_WRITE;
 
 public abstract class Item  implements Transport,AuthenticateHandler{
     public volatile EnumSet<ItemCommand> Commands = EnumSet.noneOf(ItemCommand.class);
+    public boolean sendEnabled = false;
+    public boolean recvEnabled = false;
     public Version Version;
     public Buffers Buffers;
     public Credentials Credentials;

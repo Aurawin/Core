@@ -281,9 +281,9 @@ public class Items  implements Runnable {
                                     }
                                 } catch (ConnectException ex) {
                                     itm.Errors.add(eConnect);
-                                    if (ex.getMessage().equalsIgnoreCase("connection refused")){
+                                    if (ex.getMessage().equalsIgnoreCase("connection refused")) {
                                         itm.State = isRefused;
-                                    } else if (ex.getMessage().equalsIgnoreCase("connection timeout")){
+                                    } else if (ex.getMessage().equalsIgnoreCase("connection timeout")) {
                                         itm.State = isTimed;
                                     }
                                     itm.Errors.add(eConnect);
@@ -292,7 +292,13 @@ public class Items  implements Runnable {
                                     itm.Commands.remove(cmdPoll);
                                 }
                             }
-                        } else if ((k.readyOps() & (SelectionKey.OP_READ | SelectionKey.OP_WRITE) ) != 0) {
+                        }
+                        if ( (k.readyOps() & (SelectionKey.OP_WRITE)) != 0 ){
+                            Item itm = (Item) k.attachment();
+                            processItem=itm;
+                            processItem.sendEnabled=true;
+                        }
+                        if ( (k.readyOps() & (SelectionKey.OP_READ )) != 0) {
                             Item itm = (Item) k.attachment();
                             processItem=itm;
                             if (itm != null) {

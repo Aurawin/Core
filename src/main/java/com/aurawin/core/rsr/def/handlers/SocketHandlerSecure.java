@@ -313,7 +313,7 @@ public class SocketHandlerSecure extends SocketHandler {
                             }
                             if (iWrite==0){
                                 bbNetOut.compact();
-                                // should have position>0 and limit to size
+                                Owner.sendEnabled=false;
                             } else {
                                 if (bbNetOut.position()==bbNetOut.limit())
                                     bbNetOut.clear(); // resets everything
