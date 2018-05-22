@@ -89,13 +89,16 @@ public class SocketHandlerSecure extends SocketHandler {
     @Override
     public void Teardown(){
         if (Cryptor!=null){
+            Cryptor.closeOutbound();
+
             try {
                 Cryptor.closeInbound();
-                Cryptor.closeOutbound();
-            } catch (SSLException e) {
+
+            } catch (SSLException e1) {
 
             }
         }
+
     }
     @Override
     public void Setup(){

@@ -166,19 +166,18 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         super.Release();
         Request.Release();
         Response.Release();
+
+        Request=null;
+        Response = null;
     }
 
     @Override
     public void Finalized() {
-        Request=null;
-        Response = null;
-
         Resolution=null;
         methodState=null;
     }
 
     public void Initialized() {
-
         Request.Reset();
         Response.Reset();
         Resolution=rrNone;
