@@ -283,7 +283,7 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerResult Send() {
 
         // get more data on the app side
-        if (Owner.Buffers.Send.Size > 0)  {
+        if ((Owner.Buffers.Send.Size > 0) && (Owner.sendEnabled)) {
             bbAppOut.compact();
             if (bbAppOut.position()==bbAppOut.limit())
               bbAppOut.flip();
@@ -297,7 +297,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
         try {
             iWrite = -1;
-            while ( (iWrite!=0) && ( ( bbAppOut.hasRemaining()) || Bytes.Buffer.containsData(bbNetOut)  ) )  {
+            while ( Owner.sendEnabled && (iWrite!=0) && ( ( bbAppOut.hasRemaining()) || Bytes.Buffer.containsData(bbNetOut)  ) )  {
                     CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
                     bbAppOut.compact();
                     bbAppOut.flip();
@@ -314,6 +314,7 @@ public class SocketHandlerSecure extends SocketHandler {
                             if (iWrite==0){
                                 bbNetOut.compact();
                                 Owner.sendEnabled=false;
+                                break;
                             } else {
                                 if (bbNetOut.position()==bbNetOut.limit())
                                     bbNetOut.clear(); // resets everything

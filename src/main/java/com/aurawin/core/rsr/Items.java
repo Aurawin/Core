@@ -299,6 +299,7 @@ public class Items  implements Runnable {
                             processItem.sendEnabled=true;
                         }
                         if ( (k.readyOps() & (SelectionKey.OP_READ )) != 0) {
+                            processItem.recvEnabled=true;
                             Item itm = (Item) k.attachment();
                             processItem=itm;
                             if (itm != null) {
