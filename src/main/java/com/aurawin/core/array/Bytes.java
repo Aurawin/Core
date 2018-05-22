@@ -1,6 +1,7 @@
 package com.aurawin.core.array;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,11 @@ public class Bytes {
     public static final byte[] CRLFDOTCRLF = {13,10,46,13,10};
     public static final byte[] LF = {10};
 
-
+    public static class Buffer{
+        public static boolean containsData(ByteBuffer bb){
+            return bb.remaining()!=bb.capacity() && (bb.limit()!=0);
+        }
+    }
 
     public static final int indexOf(byte[] aOuter, byte[] aInner) {
         for(int i = 0; i < aOuter.length - aInner.length+1; ++i) {

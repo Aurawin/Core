@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
@@ -78,10 +79,11 @@ public class ClientTest {
         Engine.loadSecurity(1l);
         Engine.Configure();
 
-        for (int iLcv=1; iLcv<1500000; iLcv++){
-            Payload.Write("Payload Test testing payload "+iLcv+CRLF);
+        for (int iLcv=1; iLcv<=1500000; iLcv++){
+            Payload.Write("Payload Test te" +
+                    "sting payload "+String.valueOf(iLcv)+CRLF);
         }
-
+        Payload.SaveToFile(new File("/home/atbrunner/Desktop/Payload.txt"));
         long iSize1=Payload.Size;
         long iSize2=Payload.calculateSize();
 
