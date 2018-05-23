@@ -294,50 +294,85 @@ public class SocketHandlerSecure extends SocketHandler {
         }
         try {
             iWrite = -1;
-            while ( Owner.sendEnabled && (iWrite!=0) && ( ( bbAppOut.hasRemaining()) || Bytes.Buffer.containsData(bbNetOut)  ) )  {
-                 if (bbNetOut.position()==0) {
-                     CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
-                     bbAppOut.compact();
-                     bbAppOut.flip();
-                 }
-                    // should have position>0 and limit to size
+            while ((Owner.sendEnabled && (iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining())))){
+                iWrite = -1;
+                while (bbAppOut.hasRemaining() && bbNetOut.hasRemaining() && (iWrite == -1) ) {
+                    CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
                     Status = CryptResult.getStatus();
                     switch (Status) {
-                        case OK:
-                            bbNetOut.flip();
-                            while ((iWrite!=0) && (bbNetOut.hasRemaining()) ) {
-                                Owner.renewTTL();
-                                iWrite = Owner.Channel.write(bbNetOut);
-                                bytesWrite+=iWrite;
-                            }
-                            if (iWrite==0){
-                                bbNetOut.compact();
-                                Owner.sendEnabled=false;
-                                break;
-                            } else {
-                                if (bbNetOut.position()==bbNetOut.limit())
-                                    bbNetOut.clear(); // resets everything
-                            }
-                            break;
-
                         case BUFFER_UNDERFLOW:
-                            Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
-                            return Failure;
-                        case BUFFER_OVERFLOW:
-                            ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity()+Settings.RSR.ByteBufferIncreaseBy);
-                            bbNetOut.compact();
-                            bbNetOut.flip();
-                            bb.put(bbNetOut);
-                            bbNetOut=bb;
-
-
+                            iWrite = 0;
                             break;
-                        case CLOSED: return Failure;
-                        default: break;
+                        case BUFFER_OVERFLOW:
+                            // send existing data then get more data
+                            iWrite=0;
+//                            ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity() + Settings.RSR.ByteBufferIncreaseBy);
+//                            bbNetOut.limit(bbNetOut.position());
+//                            bbNetOut.rewind();
+//                            bb.put(bbNetOut);
+//                            bbNetOut = bb;
+                            break;
+                        case CLOSED:
+                            iWrite = 0;
+                            Owner.Errors.add(eSSL);
+                            Owner.Errors.add(eWrite);
+                            Owner.Errors.add(eReset);
+                            break;
+
                     }
+                }
+                bbAppOut.compact();
+                bbAppOut.flip();
+                bbNetOut.flip();
 
-
+                while ((Owner.sendEnabled) && (bbNetOut.hasRemaining())) {
+                    Owner.renewTTL();
+                    iWrite = Owner.Channel.write(bbNetOut);
+                    bytesWrite += iWrite;
+                    Owner.sendEnabled=(iWrite!=0);
+                }
+                bbNetOut.compact();
+                Owner.sendEnabled=false;  //wait for signal
+                //bbNetOut.flip();
             }
+            // should have position>0 and limit to size
+             /*   Status = CryptResult.getStatus();
+                switch (Status) {
+                    case OK:
+                        bbNetOut.flip();
+                        while ((iWrite!=0) && (bbNetOut.hasRemaining()) ) {
+                            Owner.renewTTL();
+                            iWrite = Owner.Channel.write(bbNetOut);
+                            bytesWrite+=iWrite;
+                        }
+                        if (iWrite==0){
+                            bbNetOut.compact();
+                            Owner.sendEnabled=false;
+                            break;
+                        } else {
+                            if (bbNetOut.position()==bbNetOut.limit())
+                                bbNetOut.clear(); // resets everything
+                        }
+                        break;
+
+                    case BUFFER_UNDERFLOW:
+                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
+                        return Failure;
+                    case BUFFER_OVERFLOW:
+                        ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity()+Settings.RSR.ByteBufferIncreaseBy);
+                        bbNetOut.compact();
+                        bbNetOut.flip();
+                        bb.put(bbNetOut);
+                        bbNetOut=bb;
+
+
+                        break;
+                    case CLOSED: return Failure;
+                    default: break;
+                }
+            }
+            */
+
             return Complete;
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");
