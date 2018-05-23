@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.util.Random;
 import java.util.Set;
 
 import static com.aurawin.core.lang.Table.CRLF;
@@ -36,6 +37,11 @@ import static com.aurawin.core.rsr.def.http.QueryResult.qResolved;
 
 
 public class ClientTest {
+    final String alphabet = "abcdefghigjklmnopqrstuvwzyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    final int len = alphabet.length();
+    final Random r = new Random();
+    String line = "";
+
     boolean cmdIssued=false;
     boolean cmdResponse=false;
     private QueryResult qr;
@@ -79,9 +85,14 @@ public class ClientTest {
         Engine.loadSecurity(1l);
         Engine.Configure();
 
-        for (int iLcv=1; iLcv<=1500000; iLcv++){
-            Payload.Write("Payload Test testing payload "+String.valueOf(iLcv)+CRLF);
+        for (int jLcv = 1; jLcv <= 1024*2; jLcv++) {
+            line += alphabet.charAt(r.nextInt(len));
         }
+        for (int iLcv = 1; iLcv <= 1024*800; iLcv++){
+
+            Payload.Write(line + " " + iLcv + CRLF);
+        }
+
         Payload.SaveToFile(new File("/home/atbrunner/Desktop/Payload.txt"));
         long iSize1=Payload.Size;
         long iSize2=Payload.calculateSize();
