@@ -6,13 +6,17 @@ import com.aurawin.core.array.Bytes;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import static com.aurawin.core.lang.Table.CRLF;
 
 public class MemoryStream extends Channel {
     public static Integer MaxChunkSize = 1024*1024*512;
 
-    protected LinkedList<byte[]> Collection = new LinkedList<byte[]>();
+    protected volatile LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
     public MemoryStream(byte[] bytes){
         Size=0;
@@ -87,6 +91,7 @@ public class MemoryStream extends Channel {
         Position=newPosition;
         return this;
     }
+
     @Override
     public int read(ByteBuffer dst){
         if (dst.hasRemaining()==true){
@@ -99,15 +104,17 @@ public class MemoryStream extends Channel {
             int iColSize=0;
             long iWrite=(Size-Position);
             int iLcv =0;
-            // seek to Collection with position
-            while ( (iLcv<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
-                iColSize=Collection.get(iLcv).length;
+            byte[] col;
+            Object[] itms = Collection.toArray();
+            while ( (iLcv<itms.length) && (iWrite>0) && (iRemain>0) ) {
+                col = (byte[])itms[iLcv];
+                iColSize=col.length;
                 if (iPreSeek+iColSize>=Position) {
                     iOffset=(Position-iPreSeek);
                     iChunk=iColSize-(int) iOffset;
                     if (iChunk>iRemain)
                         iChunk=iRemain;
-                    dst.put(Collection.get(iLcv).clone(),(int)iOffset,iChunk);
+                    dst.put(col,(int)iOffset,iChunk);
                     Position+=iChunk;
                     iRemain-=iChunk;
                     iWrite-=iChunk;
@@ -128,17 +135,17 @@ public class MemoryStream extends Channel {
     @Override
     public void close(){}
 
-    public synchronized boolean hasRemaining(){
+    public boolean hasRemaining(){
         return Position!=Size;
     }
-    public synchronized int Write (byte[] Value){
+    public int Write (byte[] Value){
         byte[] itm = Value.clone();
         Collection.add(itm);
         Size+=itm.length;
 
         return itm.length;
     }
-    public synchronized void SaveToFile(File Output) throws IOException{
+    public void SaveToFile(File Output) throws IOException{
         if (!Output.exists()) Output.createNewFile();
         BufferedOutputStream buffOut=new BufferedOutputStream(new FileOutputStream(Output));
         try {
@@ -150,16 +157,22 @@ public class MemoryStream extends Channel {
         }
     }
     @Override
-    public synchronized String toString(){
+    public String toString(){
         StringBuffer sb = new StringBuffer();
         String chunk;
-        for(byte[] ba:Collection){
-            chunk=new String(ba);
-            sb.append(chunk);
-        }
+        chunk = "Position : "+Position+CRLF;
+        sb.append(chunk);
+        chunk = "Size : "+Size+CRLF;
+        sb.append(chunk);
+
+//        for(byte[] ba:Collection){
+//            chunk=new String(ba);
+//            sb.append(chunk);
+//        }
+
         return sb.toString();
     }
-    public synchronized void LoadFromFile(File File) throws IOException{
+    public void LoadFromFile(File File) throws IOException{
         Collection.clear();
         FileInputStream is = new FileInputStream(File);
         try {
@@ -168,15 +181,11 @@ public class MemoryStream extends Channel {
             is.close();
         }
     }
-    public synchronized long calculateSize(){
-        long size =0;
-        for (byte[]ba:Collection) {
-            size += ba.length;
-        }
-        return size;
+    public long calculateSize(){
+        return size();
     }
 
-    public synchronized long Write (InputStream Value) throws IOException{
+    public long Write (InputStream Value) throws IOException{
         int iWrite=0;
         byte[] baBuffer=new byte[1024*1024];
         BufferedInputStream bfi= new BufferedInputStream(Value);
@@ -208,7 +217,7 @@ public class MemoryStream extends Channel {
             bfi.close();
         }
     }
-    public synchronized int Write (long Value){
+    public int Write (long Value){
 
          byte[] itm = new byte[] {
             (byte) (Value >> 56),
@@ -226,7 +235,7 @@ public class MemoryStream extends Channel {
 
         return itm.length;
     }
-    public synchronized int Write (int Value){
+    public  int Write (int Value){
         byte[] itm = new byte[] {
                 (byte) (Value >> 32),
                 (byte) (Value >> 24),
@@ -239,13 +248,13 @@ public class MemoryStream extends Channel {
 
         return itm.length;
     }
-    public synchronized byte[] Read(int Count){
+    public  byte[] Read(int Count){
         return Read(Position,Count,false);
     }
-    public synchronized byte[] Read(){
+    public  byte[] Read(){
         return Read(Position,Size,false);
     }
-    public synchronized long readWhole(int Count){
+    public  long readWhole(int Count){
         byte[] ba = Read(Count);
         long result = 0;
         for (int i = 0; i < ba.length; i++)
@@ -256,7 +265,7 @@ public class MemoryStream extends Channel {
         return result;
 
     }
-    public synchronized String readString(int count, String charset){
+    public  String readString(int count, String charset){
         try {
             return new String(Read(count), charset);
         } catch (UnsupportedEncodingException iee){
@@ -264,7 +273,8 @@ public class MemoryStream extends Channel {
         }
 
     }
-    public synchronized String readStringUntil(byte until,long position, String charset){
+
+    public  String readStringUntil(byte until,long position, String charset){
 
         long idx = Find(new byte[]{Byte.valueOf(until)},position);
 
@@ -274,14 +284,14 @@ public class MemoryStream extends Channel {
         return readString(count, charset);
 
     }
-    public synchronized byte readByte(){
+    public  byte readByte(){
         byte[] ba = Read(1);
         return ba[0];
     }
-    public synchronized int readInteger(){
+    public  int readInteger(){
         return (int) readWhole(4);
     }
-    public synchronized double readDecimal(int Count){
+    public  double readDecimal(int Count){
         byte[] ba = Read(Count);
         double result = ba[0];
 
@@ -291,7 +301,7 @@ public class MemoryStream extends Channel {
         return result;
 
     }
-    public synchronized byte[] Read(long Offset,long Count, boolean Peak){
+    public  byte[] Read(long Offset,long Count, boolean Peak){
         long OldPosition=Position;
         Position=Offset;
 
@@ -310,9 +320,10 @@ public class MemoryStream extends Channel {
 
         // seek to Collection with position
 
+        Object[] itms = Collection.toArray();
 
-        while ( (iLcv<Collection.size()) && (iRead>0) ) {
-            col = Collection.get(iLcv);
+        while ( (iLcv<itms.length) && (iRead>0) ) {
+            col = (byte[])itms[iLcv];
             iColSize=col.length;
             if (iPreSeek+iColSize>=Position) {
                 iOffset=(int)(Position-iPreSeek);
@@ -332,7 +343,7 @@ public class MemoryStream extends Channel {
         if (Peak==true) Position=OldPosition;
         return Result;
     }
-    public synchronized int Write (boolean Value){
+    public  int Write (boolean Value){
         byte[] itm = new byte[1];
         itm[0]=(Value==true) ? (byte) 1 : (byte) 0;
         Collection.add(itm);
@@ -340,7 +351,7 @@ public class MemoryStream extends Channel {
 
         return itm.length;
     }
-    public synchronized int Write (String Value){
+    public  int Write (String Value){
         byte[] itm = Value.getBytes();
         Collection.add(itm);
         Size+=itm.length;
@@ -349,7 +360,7 @@ public class MemoryStream extends Channel {
 
 
 
-    public synchronized void Clear() {
+    public  void Clear() {
         // seek to Collection with position
 
         while (Collection.size() > 0) {
@@ -359,38 +370,40 @@ public class MemoryStream extends Channel {
         Position=0;
         Size=0;
     }
-    public synchronized void sliceAtPosition(){
-        int iLcv =0;
-        int iColSize=0;
+    public  void sliceAtPosition(){
+        if (Position>0) {
+            int iLcv = 0;
+            int iColSize = 0;
 
-        long iPreSeek=0;
-        int iOffset=0;
-        int iChunk=0;
+            long iPreSeek = 0;
+            int iOffset = 0;
+            int iChunk = 0;
 
-        while ( (iLcv<Collection.size()) && (Position<=Size) ) {
-            iColSize=Collection.get(iLcv).length;
-            if (iPreSeek+iColSize>=Position) {
-                // this array is the current []
-                iOffset=(int)(Position-iPreSeek);
-                iChunk=iColSize-iOffset;
-                if (iChunk>0) {
-                    byte[] baChunk = new byte[iChunk];
-                    System.arraycopy(Collection.get(iLcv), iOffset, baChunk, 0, iChunk);
-                    Collection.set(iLcv, baChunk);
-                    iLcv = Collection.size();
+            while ((iLcv < Collection.size()) && (Position <= Size)) {
+                iColSize = Collection.get(iLcv).length;
+                if (iPreSeek + iColSize >= Position) {
+                    // this array is the current []
+                    iOffset = (int) (Position - iPreSeek);
+                    iChunk = iColSize - iOffset;
+                    if (iChunk > 0) {
+                        byte[] baChunk = new byte[iChunk];
+                        System.arraycopy(Collection.get(iLcv), iOffset, baChunk, 0, iChunk);
+                        Collection.set(iLcv, baChunk);
+                        iLcv = Collection.size();
+                    } else {
+                        Collection.remove(iLcv);
+                    }
+
                 } else {
                     Collection.remove(iLcv);
                 }
-
-            } else {
-                Collection.remove(iLcv);
+                iPreSeek += iColSize;
             }
-            iPreSeek+=iColSize;
+            Size = size();
+            Position = 0;
         }
-        Size=size();
-        Position=0;
     }
-    public synchronized void Move(MemoryStream dest, long length){
+    public  void Move(MemoryStream dest, long length){
         sliceAtPosition();
         dest.Clear();
         if (length>0) {
@@ -417,7 +430,7 @@ public class MemoryStream extends Channel {
             sliceAtPosition();
         }
     }
-    public synchronized long Move(MemoryStream Dest){
+    public  long Move(MemoryStream Dest){
         sliceAtPosition();
         while (Collection.size() >0 ) {
             byte[] itm = Collection.pop();
@@ -428,7 +441,7 @@ public class MemoryStream extends Channel {
         return Dest.Size;
     }
 
-    public synchronized long CopyFrom(MemoryStream Source){
+    public  long CopyFrom(MemoryStream Source){
         Position=Size;
         if (Source!=null) {
             Source.Collection.stream()
@@ -437,7 +450,7 @@ public class MemoryStream extends Channel {
         }
         return Size;
     }
-    public synchronized long Find(byte[] Term, long position){
+    public  long Find(byte[] Term, long position){
         long iPreSeek=0;
         int iOffset=0;
         int iChunk=0;
@@ -472,7 +485,7 @@ public class MemoryStream extends Channel {
         return iResult;
 
     }
-    public synchronized long Find(String Term, long position){
+    public  long Find(String Term, long position){
         try {
             return Find(Term.getBytes("UTF-8"),position);
 
@@ -482,7 +495,7 @@ public class MemoryStream extends Channel {
 
     }
 
-    public synchronized long Find(String Term){
+    public  long Find(String Term){
         return Find(Term, Position);
     }
 

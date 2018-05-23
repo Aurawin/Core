@@ -169,11 +169,13 @@ public class Settings {
         public static int ResponseToQueryDelay = 1000*60;
         public static boolean Infinite = true;
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
-        public static int SocketBufferRecvSize = 1024*512;
-        public static int SocketBufferSendSize = 1024*512;
+        public static int SocketBufferRecvSize = 1024*1000;
+        public static int SocketBufferSendSize = 1024*1000;
 
-        public static int ByteBufferLarger  = 1024*512*2;
-        public static int ByteBufferSmaller = 1024*512*1;
+        public static int ByteBufferRead = 1024*1000*50;
+        public static int ByteBufferLarger  = 1024*40;
+        public static int ByteBufferSmaller = 1024*30;
+        public static int ByteBufferIncreaseBy = 1024*6;
 
         public static final String contentTypeXML = "text/xml; charset=\"utf-8\"";
         public static final int persistDelay = 30*1000 /*m-sec*/;

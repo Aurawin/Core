@@ -33,6 +33,8 @@ import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Failure;
 import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Pending;
 import static com.aurawin.core.solution.Settings.RSR.ByteBufferLarger;
 import static com.aurawin.core.solution.Settings.RSR.Security.*;
+import static com.aurawin.core.solution.Settings.RSR.SocketBufferRecvSize;
+import static com.aurawin.core.solution.Settings.RSR.SocketBufferSendSize;
 import static com.aurawin.core.solution.Settings.Security.Ciphers;
 import static com.aurawin.core.solution.Settings.Security.Protocols;
 import static java.time.LocalTime.now;
@@ -51,13 +53,13 @@ public class SocketHandlerSecure extends SocketHandler {
     private int iWrite;
     private long bytesRead;
     private long bytesWrite;
+
     private SSLEngineResult CryptResult;
     private SSLEngineResult.HandshakeStatus handshakeStatus;
     private SSLEngineResult.Status Status;
 
     ByteBuffer bbNetOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
-    //ByteBuffer bbWriteCascade = ByteBuffer.allocateDirect(ByteBufferLarger);
-    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
+    ByteBuffer bbAppOut = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferRead);
     ByteBuffer bbAppIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferLarger);
     ByteBuffer bbNetIn = ByteBuffer.allocateDirect(Settings.RSR.ByteBufferSmaller);
 
@@ -65,8 +67,6 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerSecure(Item owner){
         super(owner);
         issuedHandshake=false;
-
-        //bbWriteCascade.flip();
     }
 
     @Override
@@ -120,9 +120,9 @@ public class SocketHandlerSecure extends SocketHandler {
             Cryptor.setEnabledCipherSuites(Context.getSupportedSSLParameters().getCipherSuites());//Ciphers
             Cryptor.setEnableSessionCreation(true);
 
-            Owner.Channel.socket().setSendBufferSize(ByteBufferLarger);
-            Owner.Channel.socket().setReceiveBufferSize(ByteBufferLarger);
-            Owner.Channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
+            Owner.Channel.socket().setSendBufferSize(SocketBufferSendSize);
+            Owner.Channel.socket().setReceiveBufferSize(SocketBufferRecvSize);
+            Owner.Channel.socket().setTcpNoDelay(true);
             Owner.Channel.configureBlocking(false);
 
             beginHandshake();
@@ -161,7 +161,9 @@ public class SocketHandlerSecure extends SocketHandler {
                     Syslog.Append("SocketHandlerSecure", "handshakeWrap", "BUFFER_UNDERFLOW unexpected.");
                     return NOT_HANDSHAKING;
                 case BUFFER_OVERFLOW:
-                    Syslog.Append("SocketHandlerSecure", "handshakeWrap", "BUFFER_OVERFLOW unexpected.");
+                    ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity()+Settings.RSR.ByteBufferIncreaseBy);
+                    bb.put(bbNetOut);
+                    bbNetOut=bb;
                     return NOT_HANDSHAKING;
                 case CLOSED:
                     return NOT_HANDSHAKING;
@@ -281,28 +283,23 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-
-        // get more data on the app side
         if ( (Owner.Buffers.Send.hasRemaining()) && (Owner.sendEnabled)) {
             bbAppOut.compact();
             if (bbAppOut.position()==bbAppOut.limit())
               bbAppOut.flip();
             Owner.Buffers.Send.read(bbAppOut);
-            //Owner.Buffers.Send.sliceAtPosition();
             bbAppOut.flip();
         } else if (!Owner.Buffers.Send.hasRemaining()){
-            Owner.Buffers.Send.sliceAtPosition();
-        } else{
-            iWrite=0;
-            // check here about rewind or continue with compact?
+            Owner.Buffers.Send.Clear();
         }
-
         try {
             iWrite = -1;
             while ( Owner.sendEnabled && (iWrite!=0) && ( ( bbAppOut.hasRemaining()) || Bytes.Buffer.containsData(bbNetOut)  ) )  {
-                    CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
-                    bbAppOut.compact();
-                    bbAppOut.flip();
+                 if (bbNetOut.position()==0) {
+                     CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                     bbAppOut.compact();
+                     bbAppOut.flip();
+                 }
                     // should have position>0 and limit to size
                     Status = CryptResult.getStatus();
                     switch (Status) {
@@ -327,7 +324,11 @@ public class SocketHandlerSecure extends SocketHandler {
                             Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
                             return Failure;
                         case BUFFER_OVERFLOW:
+                            ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity()+Settings.RSR.ByteBufferIncreaseBy);
                             bbNetOut.compact();
+                            bbNetOut.flip();
+                            bb.put(bbNetOut);
+                            bbNetOut=bb;
 
 
                             break;
@@ -376,7 +377,10 @@ public class SocketHandlerSecure extends SocketHandler {
 
                             break;
                         case CLOSED:
-                            Shutdown();
+                            Owner.Errors.add(eRead);
+                            Owner.Errors.add(eSSL);
+                            Owner.Commands.add(cmdError);
+                            Owner.Commands.add(cmdTeardown);
                             break;
                         case BUFFER_UNDERFLOW:
                             bbNetIn.compact();
