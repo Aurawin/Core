@@ -128,7 +128,9 @@ public class MemoryStream extends Channel {
     @Override
     public void close(){}
 
-
+    public synchronized boolean hasRemaining(){
+        return Position==Size;
+    }
     public synchronized int Write (byte[] Value){
         byte[] itm = Value.clone();
         Collection.add(itm);

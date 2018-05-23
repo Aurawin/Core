@@ -245,7 +245,9 @@ public class Items  implements Runnable {
 
     private void processSend(){
         processItem.renewTTL();
-        processItem.SocketHandler.Send();
+        if (processItem.sendEnabled) {
+            processItem.SocketHandler.Send();
+        }
         if (processItem.SocketHandler.dataSendComplete())
             processItem.Commands.remove(cmdSend);
     }

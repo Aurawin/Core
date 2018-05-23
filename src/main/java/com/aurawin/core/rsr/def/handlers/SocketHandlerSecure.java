@@ -283,14 +283,16 @@ public class SocketHandlerSecure extends SocketHandler {
     public SocketHandlerResult Send() {
 
         // get more data on the app side
-        if ((Owner.Buffers.Send.Size > 0) && (Owner.sendEnabled)) {
+        if ( (Owner.Buffers.Send.hasRemaining()) && (Owner.sendEnabled)) {
             bbAppOut.compact();
             if (bbAppOut.position()==bbAppOut.limit())
               bbAppOut.flip();
             Owner.Buffers.Send.read(bbAppOut);
-            Owner.Buffers.Send.sliceAtPosition();
+            //Owner.Buffers.Send.sliceAtPosition();
             bbAppOut.flip();
-        } else {
+        } else if (!Owner.Buffers.Send.hasRemaining()){
+            Owner.Buffers.Send.sliceAtPosition();
+        } else{
             iWrite=0;
             // check here about rewind or continue with compact?
         }

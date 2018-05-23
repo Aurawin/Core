@@ -80,8 +80,7 @@ public class ClientTest {
         Engine.Configure();
 
         for (int iLcv=1; iLcv<=1500000; iLcv++){
-            Payload.Write("Payload Test te" +
-                    "sting payload "+String.valueOf(iLcv)+CRLF);
+            Payload.Write("Payload Test testing payload "+String.valueOf(iLcv)+CRLF);
         }
         Payload.SaveToFile(new File("/home/atbrunner/Desktop/Payload.txt"));
         long iSize1=Payload.Size;
