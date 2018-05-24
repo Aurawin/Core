@@ -136,7 +136,7 @@ public class MemoryStream extends Channel {
     public void close(){}
 
     public boolean hasRemaining(){
-        return Position!=Size;
+        return (Size!=0) && (Position!=Size);
     }
     public int Write (byte[] Value){
         byte[] itm = Value.clone();

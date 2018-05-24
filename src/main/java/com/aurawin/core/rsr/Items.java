@@ -17,6 +17,7 @@ import static com.aurawin.core.rsr.def.ItemKind.Client;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.*;
 import static com.aurawin.core.rsr.def.ItemError.*;
+import static com.aurawin.core.rsr.def.handlers.SocketHandlerResult.Complete;
 import static java.nio.channels.SelectionKey.OP_CONNECT;
 import static java.nio.channels.SelectionKey.OP_READ;
 import static java.nio.channels.SelectionKey.OP_WRITE;
@@ -245,17 +246,25 @@ public class Items  implements Runnable {
 
     private void processSend(){
         processItem.renewTTL();
-        if (processItem.sendEnabled) {
-            Thread.setPriority(Settings.RSR.Items.ThreadPriorityHigh);
-            try {
-                processItem.SocketHandler.Send();
-            } finally {
-                Thread.setPriority(Settings.RSR.Items.ThreadPriorityNormal);
+        Thread.setPriority(Settings.RSR.Items.ThreadPriorityHigh);
+        try {
+
+            switch (processItem.SocketHandler.Send()){
+                case Complete:
+                    processItem.Buffers.Send.sliceAtPosition();
+                    processItem.Commands.remove(cmdSend);
+                    processItem.setDataToSend(false);
+                    break;
+                case Failure:
+                    processItem.setDataToSend(false);
+                    break;
+                case Pending:
+                    // dataToSend is already set
+                    break;
             }
-        }
-        if (processItem.SocketHandler.dataSendComplete()){
-            processItem.Buffers.Send.Clear();
-            processItem.Commands.remove(cmdSend);
+
+        } finally {
+            Thread.setPriority(Settings.RSR.Items.ThreadPriorityNormal);
         }
 
     }
@@ -305,13 +314,11 @@ public class Items  implements Runnable {
                         }
                         if ( k.isValid() && (k.readyOps() & OP_WRITE)!=0) {
                             processItem=(Item) k.attachment();
-                            processItem.sendEnabled=true;
                             processItem.Commands.add(cmdSend);
                         }
                         if ( k.isValid() && (k.readyOps() & OP_READ)!=0 ) {
                             processItem=(Item) k.attachment();
                             processItem.Commands.add(cmdRecv);
-                            processItem.recvEnabled=true;
                         }
                     } finally {
                         isk.remove();

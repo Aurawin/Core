@@ -281,7 +281,8 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-        if ( (Owner.Buffers.Send.hasRemaining()) && (Owner.sendEnabled)) {
+        if ( Owner.Buffers.Send.hasRemaining())   {
+            Owner.setDataToSend(true);
             bbAppOut.compact();
             if (bbAppOut.position()==bbAppOut.limit())
               bbAppOut.flip();
@@ -290,43 +291,55 @@ public class SocketHandlerSecure extends SocketHandler {
         }
         try {
             iWrite = -1;
-            while ((Owner.sendEnabled && (iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining())))){
-                iWrite = -1;
-                while (bbAppOut.hasRemaining() && bbNetOut.hasRemaining() && (iWrite == -1) ) {
-                    CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
-                    Status = CryptResult.getStatus();
-                    switch (Status) {
-                        case BUFFER_UNDERFLOW:
-                            iWrite = 0;
-                            break;
-                        case BUFFER_OVERFLOW:
-                            // send existing data then get more data
-                            iWrite=0;
-                            break;
-                        case CLOSED:
-                            iWrite = 0;
-                            Owner.Errors.add(eSSL);
-                            Owner.Errors.add(eWrite);
-                            Owner.Errors.add(eReset);
-                            break;
+            if (Owner.hasDataToSend()) {
+                while ((iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining()))) {
+                    iWrite = -1;
+                    while (bbAppOut.hasRemaining() && bbNetOut.hasRemaining() && (iWrite == -1)) {
+                        CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                        Status = CryptResult.getStatus();
+                        switch (Status) {
+                            case BUFFER_UNDERFLOW:
+                                iWrite = 0;
+                                return Pending;
+                            case BUFFER_OVERFLOW:
+                                // send existing data then get more data
+                                iWrite = 0;
+                                break;
+                            case CLOSED:
+                                iWrite = 0;
+                                Owner.Errors.add(eSSL);
+                                Owner.Errors.add(eWrite);
+                                Owner.Errors.add(eReset);
+                                return Failure;
 
+                        }
                     }
-                }
-                bbAppOut.compact();
-                bbAppOut.flip();
-                bbNetOut.flip();
+                    bbAppOut.compact();
+                    bbAppOut.flip();
+                    bbNetOut.flip();
+                    iWrite = -1;
+                    if (bbNetOut.hasRemaining()) {
+                        while ((iWrite != 0) && (bbNetOut.hasRemaining())) {
+                            Owner.renewTTL();
+                            iWrite = Owner.Channel.write(bbNetOut);
+                            bytesWrite += iWrite;
+                        }
+                        Owner.setDataToSend(bbNetOut.hasRemaining());
+                        bbNetOut.compact();
+                        return Complete;
+                    } else {
+                        bbNetOut.compact();
+                        Owner.setDataToSend(false);
+                        return Pending;
+                    }
 
-                while ((Owner.sendEnabled) && (bbNetOut.hasRemaining())) {
-                    Owner.renewTTL();
-                    iWrite = Owner.Channel.write(bbNetOut);
-                    bytesWrite += iWrite;
-                    Owner.sendEnabled=(iWrite!=0);
                 }
-                bbNetOut.compact();
-                Owner.sendEnabled=false;  //wait for signal
-                //bbNetOut.flip();
+                Owner.setDataToSend(bbNetOut.hasRemaining() || bbAppOut.hasRemaining());
+                return Complete;
+            } else {
+                return Pending;
             }
-            return Complete;
+
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");
             cryptorFailed();

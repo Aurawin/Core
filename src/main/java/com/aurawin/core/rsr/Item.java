@@ -30,8 +30,6 @@ import static java.nio.channels.SelectionKey.OP_WRITE;
 
 public abstract class Item  implements Transport,AuthenticateHandler{
     protected volatile EnumSet<ItemCommand> Commands = EnumSet.noneOf(ItemCommand.class);
-    public boolean sendEnabled = false;
-    public boolean recvEnabled = false;
     public Version Version;
     public Buffers Buffers;
     public Credentials Credentials;
@@ -46,6 +44,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public InetSocketAddress bindAddress;
     public AutoNumber Id;
     protected SocketHandler SocketHandler;
+    protected boolean dataToSend;
 
 
     private int Trys;
@@ -58,7 +57,10 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public MethodFactory Methods;
     private boolean Released;
 
-
+    public void setDataToSend(boolean val){
+        dataToSend=val;
+    }
+    public boolean hasDataToSend(){ return dataToSend;}
     public Persist getPersistant() {
         return Persistent;
     }
