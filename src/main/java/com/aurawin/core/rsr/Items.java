@@ -303,12 +303,12 @@ public class Items  implements Runnable {
                                 }
                             }
                         }
-                        if ( k.isValid() && k.isWritable() ){
+                        if ( k.isValid() && (k.readyOps() & OP_WRITE)!=0) {
                             processItem=(Item) k.attachment();
                             processItem.sendEnabled=true;
                             processItem.Commands.add(cmdSend);
                         }
-                        if ( k.isValid() && k.isReadable() ) {
+                        if ( k.isValid() && (k.readyOps() & OP_READ)!=0 ) {
                             processItem=(Item) k.attachment();
                             processItem.Commands.add(cmdRecv);
                             processItem.recvEnabled=true;
