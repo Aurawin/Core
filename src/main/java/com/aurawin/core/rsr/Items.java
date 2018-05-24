@@ -249,7 +249,12 @@ public class Items  implements Runnable {
     private void processSend(){
         processItem.renewTTL();
         if (processItem.sendEnabled) {
-            processItem.SocketHandler.Send();
+            Thread.setPriority(Settings.RSR.Items.ThreadPriorityHigh);
+            try {
+                processItem.SocketHandler.Send();
+            } finally {
+                Thread.setPriority(Settings.RSR.Items.ThreadPriorityNormal);
+            }
         }
         if (processItem.SocketHandler.dataSendComplete()){
             processItem.Buffers.Send.Clear();
@@ -322,54 +327,59 @@ public class Items  implements Runnable {
         }
     }
     private void processRecv(){
-        Read = processItem.SocketHandler.Recv(); //<-- buffers read into memory
-        if (Read == SocketHandlerResult.Complete) {
-            ioResult = processItem.onPeek();
-            switch (ioResult) {
-                case rPostpone:
-                    processItem.renewTTL();
-                    break;
-                case rSuccess:
-                    processItem.renewTTL();
+        Thread.setPriority(Settings.RSR.Items.ThreadPriorityHigh);
+        try {
+            Read = processItem.SocketHandler.Recv(); //<-- buffers read into memory
+            if (Read == SocketHandlerResult.Complete) {
+                ioResult = processItem.onPeek();
+                switch (ioResult) {
+                    case rPostpone:
+                        processItem.renewTTL();
+                        break;
+                    case rSuccess:
+                        processItem.renewTTL();
 
-                    Session ssn = Entities.openSession();
-                    try {
-                        evResult = processItem.onProcess(ssn);
-                        switch (evResult) {
-                            case rPostpone:
-                                processItem.renewTTL();
-                                break;
-                            case rSuccess:
-                                processItem.renewTTL();
-                                break;
-                            case rFailure:
-                                logEntry(processItem, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
-                                processItem.Errors.add(eRead);
-                                processItem.Commands.add(cmdError);
-                                processItem.Commands.add(cmdTeardown);
-                                processItem.Commands.remove(cmdPoll);
-                                break;
+                        Session ssn = Entities.openSession();
+                        try {
+                            evResult = processItem.onProcess(ssn);
+                            switch (evResult) {
+                                case rPostpone:
+                                    processItem.renewTTL();
+                                    break;
+                                case rSuccess:
+                                    processItem.renewTTL();
+                                    break;
+                                case rFailure:
+                                    logEntry(processItem, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
+                                    processItem.Errors.add(eRead);
+                                    processItem.Commands.add(cmdError);
+                                    processItem.Commands.add(cmdTeardown);
+                                    processItem.Commands.remove(cmdPoll);
+                                    break;
+                            }
+                            if (processItem.Kind == Server) processItem.Reset();
+                        } finally {
+                            ssn.close();
                         }
-                        if (processItem.Kind==Server) processItem.Reset();
-                    } finally {
-                        ssn.close();
-                    }
 
-                    break;
-                case rFailure:
-                    logEntry(processItem, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");
-                    processItem.Errors.add(eRead);
-                    processItem.Commands.add(cmdError);
-                    processItem.Commands.add(cmdTeardown);
-                    processItem.Commands.remove(cmdPoll);
-                    break;
+                        break;
+                    case rFailure:
+                        logEntry(processItem, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");
+                        processItem.Errors.add(eRead);
+                        processItem.Commands.add(cmdError);
+                        processItem.Commands.add(cmdTeardown);
+                        processItem.Commands.remove(cmdPoll);
+                        break;
+                }
+
+            } else if (Read == SocketHandlerResult.Failure) {
+                processItem.Errors.add(eReset);
+                processItem.Commands.add(cmdError);
+                processItem.Commands.add(cmdTeardown);
+                processItem.Commands.remove(cmdPoll);
             }
-
-        } else if (Read == SocketHandlerResult.Failure) {
-            processItem.Errors.add(eReset);
-            processItem.Commands.add(cmdError);
-            processItem.Commands.add(cmdTeardown);
-            processItem.Commands.remove(cmdPoll);
+        } finally {
+            Thread.setPriority(Settings.RSR.Items.ThreadPriorityNormal);
         }
     }
     private void processError(){
