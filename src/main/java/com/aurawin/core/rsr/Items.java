@@ -24,11 +24,8 @@ import static java.nio.channels.SelectionKey.OP_WRITE;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
+import java.nio.channels.*;
 
-import java.nio.channels.SocketChannel;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -131,7 +128,7 @@ public class Items  implements Runnable {
                     processItems();
                 } catch (Exception e) {
 
-                    Syslog.Append(getClass().getCanonicalName(),"processItems",Table.Format(Table.Exception.RSR.ItemsLoop,e.getMessage()));
+                    Syslog.Append(getClass().getCanonicalName(),"processItems",Table.Format(Table.Exception.RSR.ItemsLoop,e.toString()));
                 } finally {
                     End = Instant.now();
                 }
@@ -275,43 +272,43 @@ public class Items  implements Runnable {
                                 )
 
                         {
-                            Item itm = (Item) k.attachment();
-                            processItem = itm;
-                            if (itm != null) {
+
+                            processItem = (Item) k.attachment();
+                            if (processItem != null) {
                                 processItem.renewTTL();
                                 try {
-                                    if (itm.Channel.finishConnect()) {
-                                        if (itm.Channel.isConnected()) {
-                                            itm.Commands.add(cmdSetup);
-                                            itm.Commands.remove(cmdPoll); // ssl needs this
-                                            itm.renewTTL();
+                                    if (processItem.Channel.finishConnect()) {
+                                        if (processItem.Channel.isConnected()) {
+                                            processItem.Commands.add(cmdSetup);
+                                            processItem.Commands.remove(cmdPoll); // ssl needs this
+                                            processItem.renewTTL();
                                         } else {
-                                            itm.Errors.add(eConnect);
-                                            itm.Commands.add(cmdError);
-                                            itm.Commands.add(cmdTeardown);
-                                            itm.Commands.remove(cmdPoll);
+                                            processItem.Errors.add(eConnect);
+                                            processItem.Commands.add(cmdError);
+                                            processItem.Commands.add(cmdTeardown);
+                                            processItem.Commands.remove(cmdPoll);
                                         }
                                     }
                                 } catch (ConnectException ex) {
-                                    itm.Errors.add(eConnect);
+                                    processItem.Errors.add(eConnect);
                                     if (ex.getMessage().equalsIgnoreCase("connection refused")) {
-                                        itm.State = isRefused;
+                                        processItem.State = isRefused;
                                     } else if (ex.getMessage().equalsIgnoreCase("connection timeout")) {
-                                        itm.State = isTimed;
+                                        processItem.State = isTimed;
                                     }
-                                    itm.Errors.add(eConnect);
-                                    itm.Commands.add(cmdError);
-                                    itm.Commands.add(cmdTeardown);
-                                    itm.Commands.remove(cmdPoll);
+                                    processItem.Errors.add(eConnect);
+                                    processItem.Commands.add(cmdError);
+                                    processItem.Commands.add(cmdTeardown);
+                                    processItem.Commands.remove(cmdPoll);
                                 }
                             }
                         }
-                        if ( (k.readyOps() & (SelectionKey.OP_WRITE)) != 0 ){
+                        if ( k.isValid() && k.isWritable() ){
                             processItem=(Item) k.attachment();
                             processItem.sendEnabled=true;
                             processItem.Commands.add(cmdSend);
                         }
-                        if ( (k.readyOps() & (SelectionKey.OP_READ )) != 0) {
+                        if ( k.isValid() && k.isReadable() ) {
                             processItem=(Item) k.attachment();
                             processItem.Commands.add(cmdRecv);
                             processItem.recvEnabled=true;
