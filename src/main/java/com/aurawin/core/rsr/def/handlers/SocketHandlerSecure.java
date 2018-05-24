@@ -335,44 +335,6 @@ public class SocketHandlerSecure extends SocketHandler {
                 Owner.sendEnabled=false;  //wait for signal
                 //bbNetOut.flip();
             }
-            // should have position>0 and limit to size
-             /*   Status = CryptResult.getStatus();
-                switch (Status) {
-                    case OK:
-                        bbNetOut.flip();
-                        while ((iWrite!=0) && (bbNetOut.hasRemaining()) ) {
-                            Owner.renewTTL();
-                            iWrite = Owner.Channel.write(bbNetOut);
-                            bytesWrite+=iWrite;
-                        }
-                        if (iWrite==0){
-                            bbNetOut.compact();
-                            Owner.sendEnabled=false;
-                            break;
-                        } else {
-                            if (bbNetOut.position()==bbNetOut.limit())
-                                bbNetOut.clear(); // resets everything
-                        }
-                        break;
-
-                    case BUFFER_UNDERFLOW:
-                        Syslog.Append("SocketHandlerSecure", "Send", "BUFFER_UNDERFLOW unexpected.");
-                        return Failure;
-                    case BUFFER_OVERFLOW:
-                        ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity()+Settings.RSR.ByteBufferIncreaseBy);
-                        bbNetOut.compact();
-                        bbNetOut.flip();
-                        bb.put(bbNetOut);
-                        bbNetOut=bb;
-
-
-                        break;
-                    case CLOSED: return Failure;
-                    default: break;
-                }
-            }
-            */
-
             return Complete;
         } catch (SSLException sle){
             Syslog.Append("SocketHandlerSecure", "Send.Cryptor.wrap", "SSL Exception");
@@ -437,7 +399,7 @@ public class SocketHandlerSecure extends SocketHandler {
             return SocketHandlerResult.Failure;
         }
 
-        return Owner.Buffers.Recv.hasRemaining() ? Pending: Complete;
+        return bbNetIn.hasRemaining() ? Pending: Complete;
     }
     private void cryptorFailed() {
         Owner.State = ItemState.isNone;
