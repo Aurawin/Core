@@ -306,11 +306,6 @@ public class SocketHandlerSecure extends SocketHandler {
                         case BUFFER_OVERFLOW:
                             // send existing data then get more data
                             iWrite=0;
-//                            ByteBuffer bb = ByteBuffer.allocate(bbNetOut.capacity() + Settings.RSR.ByteBufferIncreaseBy);
-//                            bbNetOut.limit(bbNetOut.position());
-//                            bbNetOut.rewind();
-//                            bb.put(bbNetOut);
-//                            bbNetOut = bb;
                             break;
                         case CLOSED:
                             iWrite = 0;
