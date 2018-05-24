@@ -209,8 +209,6 @@ public class SocketHandlerSecure extends SocketHandler {
                         if (iRead==-1){
                             Owner.Errors.add(eRead);
                             Owner.Errors.add(eSSL);
-                            Owner.Commands.add(cmdError);
-                            Owner.Commands.add(cmdTeardown);
                         } else if (iRead>=0) {
                             bytesRead+=iRead;
                             bbNetIn.flip();
@@ -289,8 +287,6 @@ public class SocketHandlerSecure extends SocketHandler {
               bbAppOut.flip();
             Owner.Buffers.Send.read(bbAppOut);
             bbAppOut.flip();
-        } else if (!Owner.Buffers.Send.hasRemaining()){
-            Owner.Buffers.Send.Clear();
         }
         try {
             iWrite = -1;
@@ -367,8 +363,6 @@ public class SocketHandlerSecure extends SocketHandler {
                         case CLOSED:
                             Owner.Errors.add(eRead);
                             Owner.Errors.add(eSSL);
-                            Owner.Commands.add(cmdError);
-                            Owner.Commands.add(cmdTeardown);
                             break;
                         case BUFFER_UNDERFLOW:
                             bbNetIn.compact();
@@ -399,15 +393,11 @@ public class SocketHandlerSecure extends SocketHandler {
     private void cryptorFailed() {
         Owner.State = ItemState.isNone;
         Owner.Errors.add(eSSL);
-        Owner.Commands.add(cmdTeardown);
-        Owner.Commands.add(cmdError);
     }
     private void handshakeFailed(){
         handshakeStatus=NOT_HANDSHAKING;
         Owner.State = ItemState.isNone;
         Owner.Errors.add(eSSL);
-        Owner.Commands.add(cmdError);
-        Owner.Commands.add(cmdTeardown);
         Syslog.Append(
                 "SocketHandlerSecure",
                 "handshakeFailed",

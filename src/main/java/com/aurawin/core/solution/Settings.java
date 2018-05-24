@@ -169,8 +169,8 @@ public class Settings {
         public static int ResponseToQueryDelay = 1000*60;
         public static boolean Infinite = true;
         public static int NextCheck = 10/*sec*/ * 1000/*ms-sec*/;
-        public static int SocketBufferRecvSize = 1024*1024*4;
-        public static int SocketBufferSendSize = 1024*1024*4;
+        public static int SocketBufferRecvSize = 1024*1024*5;
+        public static int SocketBufferSendSize = 1024*1024*5;
 
         public static int ByteBufferLarger  = 1024*1024*5;
         public static int ByteBufferSmaller = 1024*1024*4;
@@ -196,6 +196,8 @@ public class Settings {
             public static int HandshakeTimeoutDebug = 1000*60*2; //milliseconds
         }
         public static class Items{
+            public static int ThreadPriorityNormal = 8;
+            public static int ThreadPriorityHigh = 10;
             public static int AutoremoveEmptyItemsDelay = 40*1000;
             public static int AutoremoveCleanupInterval = 10*1000;
             public static class Header {

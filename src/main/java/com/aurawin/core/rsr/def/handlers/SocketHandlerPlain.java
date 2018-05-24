@@ -87,9 +87,6 @@ public class SocketHandlerPlain extends SocketHandler {
             }
             Owner.Owner.BufferWrite.clear();
             Owner.Buffers.Send.sliceAtPosition();
-            if (Owner.Buffers.Send.Size==0) Owner.Commands.remove(cmdSend);
-        } else {
-            if (Owner.Buffers.Send.Size == 0) Owner.Commands.remove(cmdSend);
         }
         return SocketHandlerResult.Complete;
     }

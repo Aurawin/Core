@@ -2,6 +2,8 @@ package com.aurawin.core.rsr.def;
 
 import com.aurawin.core.lang.Table;
 
+import java.util.EnumSet;
+
 public enum ItemError {
     eReset (Table.String(Table.Error.RSR.Reset)),
     eDNS (Table.String(Table.Error.RSR.DNS)),
@@ -10,7 +12,6 @@ public enum ItemError {
     eTimeout (Table.String(Table.Error.RSR.Timeout)),
     eSSL(Table.String(Table.Error.RSR.SSL)),
     eConnect (Table.String(Table.Error.RSR.Connect));
-
 
     ItemError(String value){
         this.value = value;

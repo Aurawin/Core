@@ -37,6 +37,7 @@ import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -91,6 +92,8 @@ public class Items  implements Runnable {
     @Override
     public void run() {
         Started = Instant.now();
+        Thread = java.lang.Thread.currentThread();
+        Thread.setPriority(Settings.RSR.Items.ThreadPriorityNormal);
         if (Engine.SSL.Enabled){
             try {
                 Security.Load(Engine.SSL.getCertificate());
@@ -248,8 +251,11 @@ public class Items  implements Runnable {
         if (processItem.sendEnabled) {
             processItem.SocketHandler.Send();
         }
-        if (processItem.SocketHandler.dataSendComplete())
+        if (processItem.SocketHandler.dataSendComplete()){
+            processItem.Buffers.Send.Clear();
             processItem.Commands.remove(cmdSend);
+        }
+
     }
 
     private void processPoll(){
@@ -272,7 +278,7 @@ public class Items  implements Runnable {
                                     if (itm.Channel.finishConnect()) {
                                         if (itm.Channel.isConnected()) {
                                             itm.Commands.add(cmdSetup);
-                                            itm.Commands.remove(cmdPoll);
+                                            itm.Commands.remove(cmdPoll); // ssl needs this
                                             itm.renewTTL();
                                         } else {
                                             itm.Errors.add(eConnect);
@@ -296,65 +302,14 @@ public class Items  implements Runnable {
                             }
                         }
                         if ( (k.readyOps() & (SelectionKey.OP_WRITE)) != 0 ){
-                            Item itm = (Item) k.attachment();
-                            processItem=itm;
+                            processItem=(Item) k.attachment();
                             processItem.sendEnabled=true;
+                            processItem.Commands.add(cmdSend);
                         }
                         if ( (k.readyOps() & (SelectionKey.OP_READ )) != 0) {
+                            processItem=(Item) k.attachment();
+                            processItem.Commands.add(cmdRecv);
                             processItem.recvEnabled=true;
-                            Item itm = (Item) k.attachment();
-                            processItem=itm;
-                            if (itm != null) {
-                                Read = itm.SocketHandler.Recv(); //<-- buffers read into memory
-                                if (Read == SocketHandlerResult.Complete) {
-                                    ioResult = itm.onPeek();
-                                    switch (ioResult) {
-                                        case rPostpone:
-                                            itm.renewTTL();
-                                            break;
-                                        case rSuccess:
-                                            itm.renewTTL();
-
-                                            Session ssn = Entities.openSession();
-                                            try {
-                                                evResult = itm.onProcess(ssn);
-                                                switch (evResult) {
-                                                    case rPostpone:
-                                                        itm.renewTTL();
-                                                        break;
-                                                    case rSuccess:
-                                                        itm.renewTTL();
-                                                        break;
-                                                    case rFailure:
-                                                        logEntry(itm, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
-                                                        itm.Errors.add(eRead);
-                                                        itm.Commands.add(cmdError);
-                                                        itm.Commands.add(cmdTeardown);
-                                                        itm.Commands.remove(cmdPoll);
-                                                        break;
-                                                }
-                                                if (itm.Kind==Server) itm.Reset();
-                                            } finally {
-                                                ssn.close();
-                                            }
-
-                                            break;
-                                        case rFailure:
-                                            logEntry(itm, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");
-                                            itm.Errors.add(eRead);
-                                            itm.Commands.add(cmdError);
-                                            itm.Commands.add(cmdTeardown);
-                                            itm.Commands.remove(cmdPoll);
-                                            break;
-                                    }
-
-                                } else if (Read == SocketHandlerResult.Failure) {
-                                    itm.Errors.add(eReset);
-                                    itm.Commands.add(cmdError);
-                                    itm.Commands.add(cmdTeardown);
-                                    itm.Commands.remove(cmdPoll);
-                                }
-                            }
                         }
                     } finally {
                         isk.remove();
@@ -366,7 +321,57 @@ public class Items  implements Runnable {
             Syslog.Append("Items","processItems",Table.String(Table.Exception.RSR.UnableToSelectItemKeys));
         }
     }
+    private void processRecv(){
+        Read = processItem.SocketHandler.Recv(); //<-- buffers read into memory
+        if (Read == SocketHandlerResult.Complete) {
+            ioResult = processItem.onPeek();
+            switch (ioResult) {
+                case rPostpone:
+                    processItem.renewTTL();
+                    break;
+                case rSuccess:
+                    processItem.renewTTL();
 
+                    Session ssn = Entities.openSession();
+                    try {
+                        evResult = processItem.onProcess(ssn);
+                        switch (evResult) {
+                            case rPostpone:
+                                processItem.renewTTL();
+                                break;
+                            case rSuccess:
+                                processItem.renewTTL();
+                                break;
+                            case rFailure:
+                                logEntry(processItem, Table.Error.RSR.ProcessFailure, getClass().getCanonicalName(), "processItems -> Read -> onProcess");
+                                processItem.Errors.add(eRead);
+                                processItem.Commands.add(cmdError);
+                                processItem.Commands.add(cmdTeardown);
+                                processItem.Commands.remove(cmdPoll);
+                                break;
+                        }
+                        if (processItem.Kind==Server) processItem.Reset();
+                    } finally {
+                        ssn.close();
+                    }
+
+                    break;
+                case rFailure:
+                    logEntry(processItem, Table.Error.RSR.PeekFailure, getClass().getCanonicalName(), "processItems -> Read -> onPeek");
+                    processItem.Errors.add(eRead);
+                    processItem.Commands.add(cmdError);
+                    processItem.Commands.add(cmdTeardown);
+                    processItem.Commands.remove(cmdPoll);
+                    break;
+            }
+
+        } else if (Read == SocketHandlerResult.Failure) {
+            processItem.Errors.add(eReset);
+            processItem.Commands.add(cmdError);
+            processItem.Commands.add(cmdTeardown);
+            processItem.Commands.remove(cmdPoll);
+        }
+    }
     private void processError(){
         processItem.Commands.remove(cmdError);
         processItem.Error();
@@ -377,11 +382,8 @@ public class Items  implements Runnable {
             processItem.keySelect.cancel();
             processItem.keySelect=null;
         }
-
-
         processItem.Disconnected();
         processItem.Teardown();
-
 
         if (processItem.exceededTrys()) {
             processItem.Finalized();
@@ -391,9 +393,10 @@ public class Items  implements Runnable {
             processItem.Release();
 
         } else if (processItem.Kind==Client){
+            // exceededTrys computed for persistent connections
             processItem.Commands.add(cmdConnect);
         }
-
+        processItem.Errors.clear();
     }
     private void processSetup(){
         try {
@@ -421,16 +424,38 @@ public class Items  implements Runnable {
         Iterator<Item> it = List.iterator();
         while (it.hasNext()) {
             processItem=it.next();
-            for (ItemCommand c:processItem.Commands){
-                switch (c) {
-                    case cmdAccept: processAccept(); break;
-                    case cmdConnect: processConnect(); break;
-                    case cmdSend: processSend(); break;
-                    case cmdPoll: processPoll(); break;
-                    case cmdError: processError(); break;
-                    case cmdSetup: processSetup(); break;
-                    case cmdTeardown: processTeardown(); break;
+            if ( processItem.Errors.isEmpty() ){
+                for (ItemCommand c:processItem.Commands) {
+                    switch (c) {
+                        case cmdAccept:
+                            processAccept();
+                            break;
+                        case cmdConnect:
+                            processConnect();
+                            break;
+                        case cmdSend:
+                            processSend();
+                            break;
+                        case cmdRecv:
+                            processRecv();
+                            break;
+                        case cmdPoll:
+                            processPoll();
+                            break;
+                        case cmdError:
+                            processError();
+                            break;
+                        case cmdSetup:
+                            processSetup();
+                            break;
+                        case cmdTeardown:
+                            processTeardown();
+                            break;
+                    }
                 }
+            } else {
+                processError();
+                processTeardown();
             }
         }
         List.removeAll(removalItems);
