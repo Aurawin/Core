@@ -399,7 +399,7 @@ public class SocketHandlerSecure extends SocketHandler {
             return SocketHandlerResult.Failure;
         }
 
-        return bbNetIn.hasRemaining() ? Pending: Complete;
+        return Complete;
     }
     private void cryptorFailed() {
         Owner.State = ItemState.isNone;
