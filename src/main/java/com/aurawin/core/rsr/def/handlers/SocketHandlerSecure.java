@@ -387,18 +387,14 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Recv() {
-        boolean needRetry = false;
         try {
             iRead = Owner.Channel.read(bbNetIn);
             if (iRead>0) {
                 bytesRead+=iRead;
                 Owner.renewTTL();
                 bbNetIn.flip();
-                while ((bbNetIn.hasRemaining() || needRetry) && Owner.Errors.isEmpty()) {
-                    needRetry = false;
-
+                while (bbNetIn.hasRemaining() && Owner.Errors.isEmpty()) {
                     CryptResult = Cryptor.unwrap(bbNetIn, bbAppIn);
-
                     Status = CryptResult.getStatus();
                     switch (Status) {
                         case OK:
@@ -419,11 +415,11 @@ public class SocketHandlerSecure extends SocketHandler {
                             break;
                         case BUFFER_UNDERFLOW:
                             bbNetIn.compact();
-                            // wait for more data.
-                            return Complete;
+                            return Pending;
                         case BUFFER_OVERFLOW:
-                            needRetry = true;
-                            break;
+                            // wait to read more data
+                            bbNetIn.compact();
+                            return Pending;
 
                     }
                 }
@@ -441,7 +437,7 @@ public class SocketHandlerSecure extends SocketHandler {
             return SocketHandlerResult.Failure;
         }
 
-        return Complete;
+        return Owner.Buffers.Recv.hasRemaining() ? Pending: Complete;
     }
     private void cryptorFailed() {
         Owner.State = ItemState.isNone;
