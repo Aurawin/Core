@@ -337,7 +337,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 Owner.setDataToSend(bbNetOut.hasRemaining() || bbAppOut.hasRemaining());
                 return Complete;
             } else {
-                return Pending;
+                return Complete;
             }
 
         } catch (SSLException sle){

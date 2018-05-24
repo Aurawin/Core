@@ -73,7 +73,8 @@ public class Settings {
 
         public static final int KeySize = 2048;
         public static final String SignatureAlgorithm="SHA1withRSA"; // "SHA-256"; // "MD5WithRSA";
-        public static final String [] Ciphers = new String[] {"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"};
+        //public static final String [] Ciphers = new String[] {"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"};
+        public static final String [] Ciphers = new String[] {"TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"};
         public static final String [] Protocols = new String[] {"TLSv1.2"};
         public static class Certificate {//md5WithRSAEncryption_oid
 
