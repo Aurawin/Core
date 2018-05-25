@@ -356,7 +356,7 @@ public class SocketHandlerSecure extends SocketHandler {
         try {
             iRead = Owner.Channel.read(bbNetIn);
             if (iRead>0) {
-                bytesRead+=iRead;
+                bytesRead += iRead;
                 Owner.renewTTL();
                 bbNetIn.flip();
                 while (bbNetIn.hasRemaining() && Owner.Errors.isEmpty()) {
@@ -376,7 +376,7 @@ public class SocketHandlerSecure extends SocketHandler {
                         case CLOSED:
                             Owner.Errors.add(eRead);
                             Owner.Errors.add(eSSL);
-                            break;
+                            return Failure;
                         case BUFFER_UNDERFLOW:
                             bbNetIn.compact();
                             return Pending;
@@ -388,11 +388,14 @@ public class SocketHandlerSecure extends SocketHandler {
                     }
                 }
                 bbNetIn.compact();
+            } else if (iRead==0){
+                return Pending;
+
             } else if (iRead == -1) {
                 Owner.Errors.add(eSSL);
                 Owner.Errors.add(eRead);
                 Owner.Errors.add(eReset);
-                return SocketHandlerResult.Failure;
+                return Failure;
             }
 
 
