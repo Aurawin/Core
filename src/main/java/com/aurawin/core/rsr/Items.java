@@ -182,22 +182,8 @@ public class Items  implements Runnable {
                 processItem.reAllocateChannel();
                 try {
                     processItem.renewTTL();
-                    boolean bConnected = processItem.Channel.connect(processItem.Address);
-                    if (bConnected){
-                        //todo finish connection
-                    }
-                    /*
-                    if (processItem.Channel.connect(processItem.Address)) {
+                    processItem.Channel.connect(processItem.Address);
 
-                        processItem.State = isConnecting;
-                        processItem.resetTrys();
-                    } else {
-                        processItem.State = isRefused;
-                        processItem.keyConnect.cancel();
-                        processItem.Channel.close();
-                        processItem.incTrys();
-                        processItem.Commands.add(cmdConnect);
-                    }*/
                     processItem.renewTTL();
                     processItem.State = isConnecting;
                     processItem.Commands.add(cmdPoll);
@@ -378,7 +364,7 @@ public class Items  implements Runnable {
                     }
                     break;
                 case Pending:
-                    processItem.Commands.remove(cmdRecv);
+                    //processItem.Commands.remove(cmdRecv);
                     break;
                 case Failure:
                     processItem.Errors.add(eReset);
