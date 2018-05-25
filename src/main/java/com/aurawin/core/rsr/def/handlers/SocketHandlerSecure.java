@@ -109,7 +109,7 @@ public class SocketHandlerSecure extends SocketHandler {
             issuedHandshake=false;
             Context = Owner.Owner.Security.getContext();
 
-            Cryptor=Context.createSSLEngine();//Owner.Address.getHostName(),Owner.Address.getPort());
+            Cryptor=Context.createSSLEngine();
 
             needNetInFlip =  (Owner.Kind==Server);
 
@@ -297,7 +297,7 @@ public class SocketHandlerSecure extends SocketHandler {
             if (bytesToSend>0 || hasData) {
                 while ((iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining()))) {
                     iWrite = -1;
-                    while (bbAppOut.hasRemaining() && bbNetOut.hasRemaining() && (iWrite == -1)) {
+                    while (bbAppOut.hasRemaining() || bbNetOut.hasRemaining() && (iWrite == -1)) {
                         CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
                         Status = CryptResult.getStatus();
                         switch (Status) {
