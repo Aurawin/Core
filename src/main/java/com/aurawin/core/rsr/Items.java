@@ -237,7 +237,6 @@ public class Items  implements Runnable {
 
             switch (processItem.SocketHandler.Send()){
                 case Complete:
-                    if (processItem.Buffers.Send.Size>0) processItem.Buffers.Send.sliceAtPosition();
                     if (!processItem.SocketHandler.hasBytesToSend()) processItem.Commands.remove(cmdSend);
                     break;
                 case Failure:

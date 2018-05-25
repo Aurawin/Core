@@ -53,6 +53,8 @@ public class SocketHandlerSecure extends SocketHandler {
     private int iWrite;
     private long bytesRead;
     private long bytesWrite;
+    private long preCrypt;
+    private long postCrypt;
 
     private SSLEngineResult CryptResult;
     private SSLEngineResult.HandshakeStatus handshakeStatus;
@@ -283,22 +285,28 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
-        boolean hasData=false;
-        if ( Owner.Buffers.Send.hasRemaining())   {
-            bbAppOut.compact();
-            if (bbAppOut.position()==bbAppOut.limit())
-              bbAppOut.flip();
-            Owner.Buffers.Send.read(bbAppOut);
-            bbAppOut.flip();
-            hasData=true;
+        boolean hasNewData=false;
+        if ( Owner.Buffers.Send.hasRemaining() ) {
+            if (bytesToSend==0) {
+                bbAppOut.compact();
+                if (bbAppOut.position()==bbAppOut.limit())
+                  bbAppOut.flip();
+                Owner.Buffers.Send.read(bbAppOut);
+                bbAppOut.flip();
+                hasNewData=true;
+            }
+        } else if (Owner.Buffers.Send.Size!=0){
+            Owner.Buffers.Send.sliceAtPosition();
         }
         try {
             iWrite = -1;
-            if (bytesToSend>0 || hasData) {
+            if (bytesToSend>0 || hasNewData) {
                 while ((iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining()))) {
                     iWrite = -1;
-                    while (bbAppOut.hasRemaining() || bbNetOut.hasRemaining() && (iWrite == -1)) {
+                    while ((bbAppOut.hasRemaining() || bbNetOut.hasRemaining() ||  (bytesToSend==0) ) && (iWrite == -1) ) {
+                        preCrypt=bbNetOut.limit()-bbNetOut.position();
                         CryptResult = Cryptor.wrap(bbAppOut, bbNetOut);
+                        postCrypt=bbNetOut.limit()-bbNetOut.position();
                         Status = CryptResult.getStatus();
                         switch (Status) {
                             case BUFFER_UNDERFLOW:
@@ -315,7 +323,8 @@ public class SocketHandlerSecure extends SocketHandler {
                                 Owner.Errors.add(eReset);
                                 return Failure;
                             case OK:
-                                bytesToSend+=bbNetOut.limit()-bbNetOut.position();
+                                bytesToSend+=preCrypt-postCrypt;
+                                if (preCrypt-postCrypt==0) iWrite=0;
                         }
                     }
                     bbAppOut.compact();
