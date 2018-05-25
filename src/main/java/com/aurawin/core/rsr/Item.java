@@ -44,7 +44,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public InetSocketAddress bindAddress;
     public AutoNumber Id;
     protected SocketHandler SocketHandler;
-    protected boolean dataToSend;
+
 
 
     private int Trys;
@@ -57,10 +57,7 @@ public abstract class Item  implements Transport,AuthenticateHandler{
     public MethodFactory Methods;
     private boolean Released;
 
-    public void setDataToSend(boolean val){
-        dataToSend=val;
-    }
-    public boolean hasDataToSend(){ return dataToSend;}
+
     public Persist getPersistant() {
         return Persistent;
     }

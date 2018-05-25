@@ -15,10 +15,15 @@ public abstract class SocketHandler implements SocketMethods {
     public SocketHandler(Item owner) {
         Owner = owner;
     }
+    protected long bytesToSend;
+    protected long bytesToRecv;
+
     protected Item Owner;
     protected boolean issuedHandshake = false;
     public void Setup() {
         try {
+            bytesToRecv=0;
+            bytesToSend=0;
             issuedHandshake=false;
             Owner.Channel.setOption(TCP_NODELAY,true);
             Owner.Channel.socket().setSoLinger(true,2000);
@@ -31,7 +36,9 @@ public abstract class SocketHandler implements SocketMethods {
         }
     }
 
-
+    public boolean hasBytesToSend(){
+        return ( (Owner.Buffers.Send.Position!=Owner.Buffers.Send.Size) || (bytesToSend>0) );
+    }
     public void Shutdown(){ }
     public void Release(){
        Owner=null;

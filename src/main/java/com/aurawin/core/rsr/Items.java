@@ -237,12 +237,10 @@ public class Items  implements Runnable {
 
             switch (processItem.SocketHandler.Send()){
                 case Complete:
-                    processItem.Buffers.Send.sliceAtPosition();
-                    processItem.Commands.remove(cmdSend);
-                    processItem.setDataToSend(false);
+                    if (processItem.Buffers.Send.Size>0) processItem.Buffers.Send.sliceAtPosition();
+                    if (!processItem.SocketHandler.hasBytesToSend()) processItem.Commands.remove(cmdSend);
                     break;
                 case Failure:
-                    processItem.setDataToSend(false);
                     break;
                 case Pending:
                     // dataToSend is already set

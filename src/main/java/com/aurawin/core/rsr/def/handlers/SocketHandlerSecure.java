@@ -104,6 +104,8 @@ public class SocketHandlerSecure extends SocketHandler {
     public void Setup(){
         super.Setup();
         try {
+            bytesToSend=0;
+            bytesToRecv=0;
             issuedHandshake=false;
             Context = Owner.Owner.Security.getContext();
 
@@ -281,17 +283,18 @@ public class SocketHandlerSecure extends SocketHandler {
     }
 
     public SocketHandlerResult Send() {
+        boolean hasData=false;
         if ( Owner.Buffers.Send.hasRemaining())   {
-            Owner.setDataToSend(true);
             bbAppOut.compact();
             if (bbAppOut.position()==bbAppOut.limit())
               bbAppOut.flip();
             Owner.Buffers.Send.read(bbAppOut);
             bbAppOut.flip();
+            hasData=true;
         }
         try {
             iWrite = -1;
-            if (Owner.hasDataToSend()) {
+            if (bytesToSend>0 || hasData) {
                 while ((iWrite != 0) && ((bbAppOut.hasRemaining()) || (bbNetOut.hasRemaining()))) {
                     iWrite = -1;
                     while (bbAppOut.hasRemaining() && bbNetOut.hasRemaining() && (iWrite == -1)) {
@@ -311,7 +314,8 @@ public class SocketHandlerSecure extends SocketHandler {
                                 Owner.Errors.add(eWrite);
                                 Owner.Errors.add(eReset);
                                 return Failure;
-
+                            case OK:
+                                bytesToSend+=bbNetOut.limit()-bbNetOut.position();
                         }
                     }
                     bbAppOut.compact();
@@ -323,18 +327,16 @@ public class SocketHandlerSecure extends SocketHandler {
                             Owner.renewTTL();
                             iWrite = Owner.Channel.write(bbNetOut);
                             bytesWrite += iWrite;
+                            bytesToSend-=iWrite;
                         }
-                        Owner.setDataToSend(bbNetOut.hasRemaining());
                         bbNetOut.compact();
                         return Complete;
                     } else {
                         bbNetOut.compact();
-                        Owner.setDataToSend(false);
                         return Pending;
                     }
 
                 }
-                Owner.setDataToSend(bbNetOut.hasRemaining() || bbAppOut.hasRemaining());
                 return Complete;
             } else {
                 return Complete;
@@ -389,7 +391,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 }
                 bbNetIn.compact();
             } else if (iRead==0){
-                return Pending;
+                return Complete;
 
             } else if (iRead == -1) {
                 Owner.Errors.add(eSSL);
