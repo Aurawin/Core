@@ -296,7 +296,11 @@ public class SocketHandlerSecure extends SocketHandler {
                 hasNewData=true;
             }
         } else if (Owner.Buffers.Send.Size!=0){
-            Owner.Buffers.Send.sliceAtPosition();
+            try {
+                Owner.Buffers.Send.sliceAtPosition();
+            } catch (Exception ex){
+                Syslog.Append(getClass().getCanonicalName(),"Send.sliceAtPosition",ex.toString());
+            }
         }
         try {
             iWrite = -1;

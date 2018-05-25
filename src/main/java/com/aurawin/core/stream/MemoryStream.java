@@ -105,9 +105,9 @@ public class MemoryStream extends Channel {
             long iWrite=(Size-Position);
             int iLcv =0;
             byte[] col;
-            Object[] itms = Collection.toArray(new Object[Collection.size()]);
-            while ( (iLcv<itms.length) && (iWrite>0) && (iRemain>0) ) {
-                col = (byte[])itms[iLcv];
+
+            while ( (iLcv<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
+                col = (byte[])Collection.get(iLcv);
                 iColSize=col.length;
                 if (iPreSeek+iColSize>=Position) {
                     iOffset=(Position-iPreSeek);
@@ -319,11 +319,8 @@ public class MemoryStream extends Channel {
         byte[] Result = new byte[(int) Count];
 
         // seek to Collection with position
-
-        Object[] itms = Collection.toArray(new Object[Collection.size()]);
-
-        while ( (iLcv<itms.length) && (iRead>0) ) {
-            col = (byte[])itms[iLcv];
+        while ( (iLcv<Collection.size()) && (iRead>0) ) {
+            col = Collection.get(iLcv);
             iColSize=col.length;
             if (iPreSeek+iColSize>=Position) {
                 iOffset=(int)(Position-iPreSeek);

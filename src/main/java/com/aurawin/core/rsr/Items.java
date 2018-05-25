@@ -431,28 +431,60 @@ public class Items  implements Runnable {
                 for (ItemCommand c:processItem.Commands) {
                     switch (c) {
                         case cmdAccept:
-                            processAccept();
+                            try {
+                                processAccept();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processAccept", ex.toString());
+                            }
                             break;
                         case cmdConnect:
-                            processConnect();
+                            try {
+                                processConnect();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processConnect", ex.toString());
+                            }
                             break;
                         case cmdSend:
-                            processSend();
+                            try {
+                                processSend();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processSend", ex.toString());
+                            }
                             break;
                         case cmdRecv:
-                            processRecv();
+                            try {
+                                processRecv();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processRecv", ex.toString());
+                            }
                             break;
                         case cmdPoll:
-                            processPoll();
+                            try {
+                                processPoll();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processPoll", ex.toString());
+                            }
                             break;
                         case cmdError:
-                            processError();
+                            try {
+                                processError();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processError", ex.toString());
+                            }
                             break;
                         case cmdSetup:
-                            processSetup();
+                            try {
+                                processSetup();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName(), "processSetup", ex.toString());
+                            }
                             break;
                         case cmdTeardown:
-                            processTeardown();
+                            try {
+                                processTeardown();
+                            } catch (Exception ex){
+                                Syslog.Append(getClass().getCanonicalName() , "processTeardown", ex.getMessage());
+                            }
                             break;
                     }
                 }
