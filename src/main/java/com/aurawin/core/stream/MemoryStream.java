@@ -54,7 +54,7 @@ public class MemoryStream extends Channel {
     }
     @Override
     public int write(ByteBuffer src){
-        // write entire to
+
         if (src.hasRemaining()==true){
             int iWrite=src.remaining();
 
@@ -72,17 +72,19 @@ public class MemoryStream extends Channel {
 
             if  (Chunk!=null) {
                 if  (Chunk.length+iWrite>MaxChunkSize) {
-                  Collection.add(baAppend);
+                    Collection.addLast(Chunk);// add prior remove
+                    Collection.addLast(baAppend);
                 } else {
                     byte [] baComb = new byte[Chunk.length+iWrite];
                     System.arraycopy(Chunk,0,baComb,0,Chunk.length);
                     System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
-                    Collection.add(baComb);
+                    Collection.addLast(baComb);
                 }
             } else {
                 Collection.add(baAppend);
             }
             Size+=iWrite;
+
             return iWrite;
         } else {
             return 0;

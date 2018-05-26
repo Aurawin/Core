@@ -22,6 +22,7 @@ import static java.nio.channels.SelectionKey.OP_CONNECT;
 import static java.nio.channels.SelectionKey.OP_READ;
 import static java.nio.channels.SelectionKey.OP_WRITE;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.ByteBuffer;
@@ -297,7 +298,8 @@ public class Items  implements Runnable {
                         }
                         if ( k.isValid() && (k.readyOps() & OP_WRITE)!=0) {
                             processItem=(Item) k.attachment();
-                            processItem.Commands.add(cmdSend);
+                            if (processItem.Buffers.Send.hasRemaining())
+                                processItem.Commands.add(cmdSend);
                         }
                         if ( k.isValid() && (k.readyOps() & OP_READ)!=0 ) {
                             processItem=(Item) k.attachment();

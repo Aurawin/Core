@@ -22,6 +22,7 @@ import com.aurawin.core.stream.parser.XML;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.EnumSet;
 
@@ -132,8 +133,10 @@ public class Request implements QueryResolver {
         } else if (Owner.Buffers.Recv.Size<Settings.RSR.Items.HTTP.Payload.MaxHeaderSize) {
             r  =  rPostpone;
         } else {
+
             r = rFailure;
         }
+
         return r;
     }
     public rsrResult Read(){
