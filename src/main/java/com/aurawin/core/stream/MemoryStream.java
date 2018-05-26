@@ -2,6 +2,7 @@ package com.aurawin.core.stream;
 
 
 import com.aurawin.core.array.Bytes;
+import com.aurawin.core.stream.def.ReadStats;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -14,6 +15,7 @@ import java.util.LinkedList;
 import static com.aurawin.core.lang.Table.CRLF;
 
 public class MemoryStream extends Channel {
+    private ReadStats readStats = new ReadStats();
     public static Integer MaxChunkSize = 1024*1024*5;
 
     protected volatile LinkedList<byte[]> Collection = new LinkedList<byte[]>();
@@ -100,22 +102,23 @@ public class MemoryStream extends Channel {
     @Override
     public int read(ByteBuffer dst){
         if (dst.hasRemaining()==true){
-            long iPreSeek=0;
-            long iOffset=0;
 
+            long iOffset=0;
             int iRemain=dst.remaining();
+            long iWrite=(Size-Position);
+
             int iChunk=0;
             int iTotal=0;
             int iColSize=0;
-            long iWrite=(Size-Position);
-            int iLcv =0;
+
+
             byte[] col;
 
-            while ( (iLcv<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
-                col = (byte[])Collection.get(iLcv);
+            while ( (readStats.collectionIndex<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
+                col = (byte[])Collection.get(readStats.collectionIndex);
                 iColSize=col.length;
-                if (iPreSeek+iColSize>=Position) {
-                    iOffset=(Position-iPreSeek);
+                if (readStats.collectionStart+iColSize>=Position) {
+                    iOffset=(Position-readStats.collectionStart);
                     iChunk=iColSize-(int) iOffset;
                     if (iChunk>iRemain)
                         iChunk=iRemain;
@@ -125,8 +128,8 @@ public class MemoryStream extends Channel {
                     iWrite-=iChunk;
                     iTotal+=iChunk;
                 }
-                iPreSeek+=iColSize;
-                iLcv++;
+                readStats.collectionStart+=iColSize;
+                readStats.collectionIndex++;
             }
             return iTotal;
         } else {
@@ -373,6 +376,7 @@ public class MemoryStream extends Channel {
         Size=0;
     }
     public  void sliceAtPosition(){
+        readStats.Reset();
         if (Position>0) {
             int iLcv = 0;
             int iColSize = 0;
