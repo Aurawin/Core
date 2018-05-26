@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import static com.aurawin.core.lang.Table.CRLF;
 
 public class MemoryStream extends Channel {
-    public static Integer MaxChunkSize = 1024*1024*512;
+    public static Integer MaxChunkSize = 1024*1024*5;
 
     protected volatile LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
@@ -58,6 +58,8 @@ public class MemoryStream extends Channel {
         if (src.hasRemaining()==true){
             int iWrite=src.remaining();
 
+            if (iWrite<=0)
+                return 0;
 
             byte[] Chunk = null;
             byte[] baAppend = new byte[iWrite];
@@ -68,16 +70,17 @@ public class MemoryStream extends Channel {
                 Chunk = Collection.removeLast();
             }
 
-            if ( (Chunk!=null) && (Chunk.length+iWrite>MaxChunkSize)) {
-                Collection.add(baAppend);
-            } else if (Chunk==null){
-                Collection.add(baAppend);
+            if  (Chunk!=null) {
+                if  (Chunk.length+iWrite>MaxChunkSize) {
+                  Collection.add(baAppend);
+                } else {
+                    byte [] baComb = new byte[Chunk.length+iWrite];
+                    System.arraycopy(Chunk,0,baComb,0,Chunk.length);
+                    System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
+                    Collection.add(baComb);
+                }
             } else {
-                byte [] baComb = new byte[Chunk.length+iWrite];
-                System.arraycopy(Chunk,0,baComb,0,Chunk.length);
-                System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
-
-                Collection.add(baComb);
+                Collection.add(baAppend);
             }
             Size+=iWrite;
             return iWrite;
