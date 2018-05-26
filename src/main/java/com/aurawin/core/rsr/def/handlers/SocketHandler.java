@@ -37,7 +37,7 @@ public abstract class SocketHandler implements SocketMethods {
     }
 
     public boolean hasBytesToSend(){
-        return ( (Owner.Buffers.Send.Position!=Owner.Buffers.Send.Size) || (bytesToSend>0) );
+        return ( (Owner.Buffers.Send.position()!=Owner.Buffers.Send.Size) || (bytesToSend>0) );
     }
     public void Shutdown(){ }
     public void Release(){

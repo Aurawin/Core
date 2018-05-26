@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import static com.aurawin.core.lang.Table.CRLF;
 
 public class MemoryStream extends Channel {
+    private long Position;
     private ReadStats readStats = new ReadStats();
     public static Integer MaxChunkSize = 1024*1024*5;
 
@@ -22,11 +23,11 @@ public class MemoryStream extends Channel {
 
     public MemoryStream(byte[] bytes){
         Size=0;
-        Position=0;
+        position(0);
     }
     public MemoryStream(){
         Size=0;
-        Position=0;
+        position(0);
     }
     public void Release(){
         Clear();
@@ -95,6 +96,27 @@ public class MemoryStream extends Channel {
     }
     @Override
     public SeekableByteChannel position(long newPosition){
+        readStats.Reset();
+        byte[] col;
+        long iChunk=0;
+        long iRemain=newPosition;
+
+        while ( (readStats.collectionIndex<Collection.size()) && (iRemain>0) ) {
+            col = Collection.get(readStats.collectionIndex);
+            if (readStats.collectionStart<col.length) {
+                iChunk=(int) (col.length-readStats.collectionStart);
+                if (iChunk>iRemain)
+                    iChunk=iRemain;
+                if (iChunk>col.length)
+                    iChunk=col.length;
+                readStats.collectionStart=(int) (readStats.collectionStart+iChunk);
+                iRemain-=iChunk;
+            } else {
+                readStats.collectionStart=0;
+                readStats.collectionIndex++;
+            }
+
+        }
         Position=newPosition;
         return this;
     }
@@ -102,34 +124,36 @@ public class MemoryStream extends Channel {
     @Override
     public int read(ByteBuffer dst){
         if (dst.hasRemaining()==true){
-
-            long iOffset=0;
             int iRemain=dst.remaining();
             long iWrite=(Size-Position);
 
             int iChunk=0;
             int iTotal=0;
-            int iColSize=0;
+
 
 
             byte[] col;
 
             while ( (readStats.collectionIndex<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
-                col = (byte[])Collection.get(readStats.collectionIndex);
-                iColSize=col.length;
-                if (readStats.collectionStart+iColSize>=Position) {
-                    iOffset=(Position-readStats.collectionStart);
-                    iChunk=iColSize-(int) iOffset;
+                col = Collection.get(readStats.collectionIndex);
+                if (readStats.collectionStart<col.length) {
+                    iChunk=(int) (col.length-readStats.collectionStart);
                     if (iChunk>iRemain)
                         iChunk=iRemain;
-                    dst.put(col,(int)iOffset,iChunk);
+                    if (iChunk>col.length)
+                        iChunk=col.length;
+                    if (iChunk>iWrite)
+                        iChunk=(int) iWrite;
+                    dst.put(col,readStats.collectionStart,iChunk);
+                    readStats.collectionStart=readStats.collectionStart+iChunk;
                     Position+=iChunk;
                     iRemain-=iChunk;
                     iWrite-=iChunk;
                     iTotal+=iChunk;
+                } else {
+                    readStats.collectionStart=0;
+                    readStats.collectionIndex++;
                 }
-                readStats.collectionStart+=iColSize;
-                readStats.collectionIndex++;
             }
             return iTotal;
         } else {

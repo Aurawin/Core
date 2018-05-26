@@ -35,7 +35,7 @@ public class MD5 {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
 
-            Stream.Position = 0;
+            Stream.position(0);
             byte[] Data = Stream.Read();
             md.reset();
             md.update(Data);

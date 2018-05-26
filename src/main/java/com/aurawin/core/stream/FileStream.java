@@ -8,12 +8,13 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 
 public class FileStream extends Channel {
+    private long Position;
     private RandomAccessFile Data;
 
     public FileStream(File f, String mode) throws IOException{
         Data = new RandomAccessFile(f, mode);
         Size= Data.length();
-        Position=Data.getFilePointer();
+        position(Data.getFilePointer());
     }
     public FileStream(String name, String mode) throws IOException{
         Data = new RandomAccessFile(name, mode);
