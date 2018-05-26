@@ -88,10 +88,11 @@ public class ClientTest {
         for (int jLcv = 1; jLcv <= 1024*2; jLcv++) {
             line += alphabet.charAt(r.nextInt(len));
         }
-        for (int iLcv = 1; iLcv <= 1024*100; iLcv++){
+        for (int iLcv = 1; iLcv <= 1024*720; iLcv++){
 
             Payload.Write(line + " " + iLcv + CRLF);
         }
+
 
         Payload.SaveToFile(new File("/home/atbrunner/Desktop/Payload.txt"));
         long iSize1=Payload.Size;

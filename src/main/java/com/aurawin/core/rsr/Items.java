@@ -380,11 +380,12 @@ public class Items  implements Runnable {
         processItem.Error();
     }
     private void processTeardown(){
-        processItem.Commands.remove(cmdTeardown);
+        processItem.Commands.clear();
         if (processItem.keySelect!=null){
             processItem.keySelect.cancel();
             processItem.keySelect=null;
         }
+        processItem.Buffers.Reset();
         processItem.Disconnected();
         processItem.Teardown();
 
