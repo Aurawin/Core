@@ -205,9 +205,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
 
     private void Respond() {
-        Buffers.Send.position(Buffers.Send.size());
         Buffers.Send.Write(getCommandLine());
-
         Buffers.Send.Write(getHeaders());
         Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
 

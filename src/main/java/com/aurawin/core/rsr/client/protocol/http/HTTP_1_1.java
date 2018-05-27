@@ -243,8 +243,6 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
 
     public void Respond() {
-
-        Buffers.Send.position(Buffers.Send.size());
         Buffers.Send.Write(getResponseCommandLine());
 
         Buffers.Send.Write(getResponseHeaders());
@@ -267,7 +265,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
             Request.Id=Id.Spin();
             Response.Status=sEmpty;
             prepareRequest();
-            Buffers.Send.position(Buffers.Send.size());
+
             Buffers.Send.Write(getRequestCommandLine());
             Buffers.Send.Write(getRequestHeaders());
             Buffers.Send.Write(Settings.RSR.Items.HTTP.Payload.Separator);
@@ -277,7 +275,6 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         } else {
             prepareRequest();
 
-            Buffers.Send.position(Buffers.Send.size());
             Buffers.Send.Write(getRequestCommandLine());
 
             Buffers.Send.Write(getRequestHeaders());
