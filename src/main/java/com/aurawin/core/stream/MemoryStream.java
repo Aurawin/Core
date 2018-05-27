@@ -70,8 +70,8 @@ public class MemoryStream implements SeekableByteChannel {
                 if  (Chunk.length+iWrite>MaxChunkSize) {
                     Collection.addLast(Chunk);// add prior remove
                     Collection.addLast(baAppend);
-                    streamStats.collectionStart=Collection.size();
-                    streamStats.collectionIndex=iWrite; // last entry
+                    streamStats.collectionIndex=Collection.size();
+                    streamStats.collectionStart=iWrite; // last entry
                     streamStats.size+=iWrite;
                     streamStats.position+=iWrite;
                 } else {
@@ -79,15 +79,15 @@ public class MemoryStream implements SeekableByteChannel {
                     System.arraycopy(Chunk,0,baComb,0,Chunk.length);
                     System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
                     Collection.addLast(baComb);
-                    streamStats.collectionStart=Collection.size();
-                    streamStats.collectionIndex=baComb.length; // last entry
+                    streamStats.collectionIndex=Collection.size();
+                    streamStats.collectionStart=iWrite; // last entry
                     streamStats.size+=iWrite;
                     streamStats.position+=iWrite;
                 }
             } else {
                 Collection.add(baAppend);
-                streamStats.collectionStart=Collection.size();
-                streamStats.collectionIndex=iWrite; // last entry
+                streamStats.collectionIndex=Collection.size();
+                streamStats.collectionStart=iWrite; // last entry
                 streamStats.size+=iWrite;
                 streamStats.position+=iWrite;
             }
@@ -128,7 +128,10 @@ public class MemoryStream implements SeekableByteChannel {
 
     @Override
     public int read(ByteBuffer dst){
+
         if (dst.hasRemaining()==true){
+            position(0);
+
             int iRemain=dst.remaining();
             long iWrite=(size()-streamStats.position);
 
@@ -160,6 +163,8 @@ public class MemoryStream implements SeekableByteChannel {
                     streamStats.collectionIndex++;
                 }
             }
+
+
             return iTotal;
         } else {
             return 0;
@@ -411,11 +416,12 @@ public class MemoryStream implements SeekableByteChannel {
             int iChunk=0;
             byte[] baPOP;
             byte[] baChunk;
-            while (iLcv<streamStats.collectionIndex){
-                Collection.pop();
-                iLcv++;
-            }
+
             if (streamStats.collectionIndex<Collection.size()){
+                while (iLcv<streamStats.collectionIndex){
+                    Collection.pop();
+                    iLcv++;
+                }
                 baPOP = Collection.pop();
                 iChunk = baPOP.length - streamStats.collectionStart;
                 baChunk = new byte[iChunk];

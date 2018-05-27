@@ -286,6 +286,7 @@ public class SocketHandlerSecure extends SocketHandler {
 
     public SocketHandlerResult Send() {
         boolean hasNewData=false;
+        Owner.Buffers.Send.position(0);
         if ( Owner.Buffers.Send.hasRemaining() ) {
             if (bytesToSend==0) {
                 bbAppOut.compact();
