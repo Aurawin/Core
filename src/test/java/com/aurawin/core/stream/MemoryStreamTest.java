@@ -16,7 +16,7 @@ public class MemoryStreamTest {
     final String alphabet = "abcdefghigjklmnopqrstuvwzyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     final int len = alphabet.length();
     final int testSize = 2048;
-    final int biasRemoval = testSize+2;
+    final int biasRemoval = (testSize+2)/10;
     final Random r = new Random();
     final MemoryStream Input = new MemoryStream();
     final MemoryStream Output = new MemoryStream();

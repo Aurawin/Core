@@ -70,26 +70,17 @@ public class MemoryStream implements SeekableByteChannel {
                 if  (Chunk.length+iWrite>MaxChunkSize) {
                     Collection.addLast(Chunk);// add prior remove
                     Collection.addLast(baAppend);
-                    streamStats.collectionIndex=Collection.size();
-                    streamStats.collectionStart=iWrite; // last entry
                     streamStats.size+=iWrite;
-                    streamStats.position+=iWrite;
                 } else {
                     byte [] baComb = new byte[Chunk.length+iWrite];
                     System.arraycopy(Chunk,0,baComb,0,Chunk.length);
                     System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
                     Collection.addLast(baComb);
-                    streamStats.collectionIndex=Collection.size();
-                    streamStats.collectionStart=iWrite; // last entry
                     streamStats.size+=iWrite;
-                    streamStats.position+=iWrite;
                 }
             } else {
                 Collection.add(baAppend);
-                streamStats.collectionIndex=Collection.size();
-                streamStats.collectionStart=iWrite; // last entry
                 streamStats.size+=iWrite;
-                streamStats.position+=iWrite;
             }
             return iWrite;
         } else {
@@ -279,10 +270,8 @@ public class MemoryStream implements SeekableByteChannel {
             (byte) Value
         };
         Collection.add(itm);
-        streamStats.collectionIndex=Collection.size()-1;
-        streamStats.collectionStart=itm.length;
         streamStats.size+=itm.length;
-        streamStats.position+=itm.length;
+
         return itm.length;
     }
     public  int Write (int Value){
@@ -294,10 +283,7 @@ public class MemoryStream implements SeekableByteChannel {
                 (byte) Value
         };
         Collection.add(itm);
-        streamStats.collectionIndex=Collection.size()-1;
-        streamStats.collectionStart=itm.length;
         streamStats.size+=itm.length;
-        streamStats.position+=itm.length;
         return itm.length;
     }
     public  byte[] Read(int Count){
@@ -383,22 +369,14 @@ public class MemoryStream implements SeekableByteChannel {
         byte[] itm = new byte[1];
         itm[0]=(Value==true) ? (byte) 1 : (byte) 0;
         Collection.add(itm);
-
-        streamStats.collectionIndex=Collection.size()-1;
-        streamStats.collectionStart=itm.length;
         streamStats.size+=itm.length;
-        streamStats.position+=itm.length;
-
         return itm.length;
     }
     public  int Write (String Value){
         byte[] itm = Value.getBytes();
         Collection.add(itm);
 
-        streamStats.collectionIndex=Collection.size()-1;
-        streamStats.collectionStart=itm.length;
         streamStats.size+=itm.length;
-        streamStats.position+=itm.length;
         return itm.length;
     }
 
@@ -444,12 +422,13 @@ public class MemoryStream implements SeekableByteChannel {
             byte[] baChunk;
             byte[] baRemain;
 
-            while ((streamStats.collectionIndex<Collection.size()) && (iTotal<length) ){
+            while ((Collection.size()>0) && (iTotal<length) ){
                 baPOP = Collection.pop();
                 iChunk = baPOP.length;
                 if ((iChunk+iTotal)>length) {
                     iRemain=iChunk-(int) (length-iTotal);
                     iChunk = iChunk-iRemain;
+                    iTotal+=iChunk;
                     baChunk=new byte[iChunk];
                     baRemain=new byte[iRemain];
                     System.arraycopy(baPOP, 0, baChunk, 0, iChunk); // copy bits before in POP
@@ -463,7 +442,6 @@ public class MemoryStream implements SeekableByteChannel {
                 } else {
                     dest.Collection.add(baPOP);
                 }
-                streamStats.collectionIndex+=1;
             }
             dest.streamStats.Reset();
             dest.streamStats.size=dest.calculateSize();
