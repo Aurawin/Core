@@ -347,20 +347,29 @@ public class MemoryStream implements SeekableByteChannel {
         long iTotal=0;
         long iRead=Count;
         byte[] col;
+        boolean nextCollection = false;
         byte[] Result = new byte[(int) Count];
 
         // seek to Collection with position
         while ( (streamStats.collectionIndex<Collection.size()) && (iRead>0) ) {
             col = Collection.get(streamStats.collectionIndex);
             iChunk=col.length-streamStats.collectionStart;
-            if (iChunk>iRead)
-                iChunk=iRead;
+            if (iChunk>=iRead) {
+                iChunk = iRead;
+                nextCollection=false;
+            } else {
+                nextCollection=true;
+            }
             System.arraycopy(col, streamStats.collectionStart, Result,(int)iTotal , (int) iChunk);
             streamStats.position+=iChunk;
             iRead-=iChunk;
             iTotal+=iChunk;
-            streamStats.collectionIndex++;
-            streamStats.collectionStart=0;
+            if (nextCollection) {
+                streamStats.collectionIndex++;
+                streamStats.collectionStart = 0;
+            } else{
+                streamStats.collectionStart+=iChunk;
+            }
         }
         if (Peak==true) position(OldPosition);
         return Result;
@@ -394,17 +403,18 @@ public class MemoryStream implements SeekableByteChannel {
             int iChunk=0;
             byte[] baPOP;
             byte[] baChunk;
-
+            while (iLcv< streamStats.collectionIndex) {
+                Collection.pop();
+                iLcv++;
+            }
             if (streamStats.collectionIndex<Collection.size()){
-                while (iLcv<streamStats.collectionIndex){
-                    Collection.pop();
-                    iLcv++;
-                }
                 baPOP = Collection.pop();
                 iChunk = baPOP.length - streamStats.collectionStart;
-                baChunk = new byte[iChunk];
-                System.arraycopy(baPOP, streamStats.collectionStart, baChunk, 0, iChunk);
-                Collection.addFirst(baChunk);
+                if (iChunk>0) {
+                    baChunk = new byte[iChunk];
+                    System.arraycopy(baPOP, streamStats.collectionStart, baChunk, 0, iChunk);
+                    Collection.addFirst(baChunk);
+                }
             }
         }
         streamStats.Reset();

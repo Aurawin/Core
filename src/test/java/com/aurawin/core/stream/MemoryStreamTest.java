@@ -21,6 +21,7 @@ public class MemoryStreamTest {
     final MemoryStream Input = new MemoryStream();
     final MemoryStream Output = new MemoryStream();
     String line = "";
+    byte[] baRead;
 
 
     @Before
@@ -40,7 +41,14 @@ public class MemoryStreamTest {
     }
     @Test
     public void Test() throws IOException {
+        for (int iLcv = 0; iLcv < 10; iLcv++){
+            baRead = Input.Read(Input.position(), testSize+2, false);
+        }
+        Input.sliceAtPosition();
         Input.SaveToFile(new File("/home/atbrunner/Desktop/Input.txt"));
+
+
+
         Output.LoadFromFile(new File("/home/atbrunner/Desktop/Input.txt"));
         Output.SaveToFile(new File("/home/atbrunner/Desktop/Output.txt"));
         ByteBuffer bb = ByteBuffer.allocate(5000000);
