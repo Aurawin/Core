@@ -122,7 +122,7 @@ public class ClientTest {
                     Client.Request.URI = "/index.html";
                     Client.Request.Method = "GET";
                     Client.Request.Headers.Update(Id, "12345");
-                    Payload.Move(Client.Request.Payload);
+                    //Payload.Move(Client.Request.Payload);
                     //Client.Credentials.Passport.Username="user";
                     //Client.Credentials.Passport.Password="pass";
                     qr= Client.Query();

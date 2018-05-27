@@ -407,6 +407,7 @@ public class MemoryStream implements SeekableByteChannel {
                 Collection.pop();
                 iLcv++;
             }
+            streamStats.collectionIndex=0;
             if (streamStats.collectionIndex<Collection.size()){
                 baPOP = Collection.pop();
                 iChunk = baPOP.length - streamStats.collectionStart;
