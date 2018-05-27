@@ -197,7 +197,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
     }
 
     private void prepareResponse(){
-        Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));
+        Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.size()));
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.Engine.Realm);
         Response.Headers.Update(Field.Server,Owner.Engine.Stamp);
@@ -212,7 +212,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
 
     private void prepareRequest(){
         Response.Obtained=false;
-        Request.Headers.Update(Field.ContentLength,Long.toString(Request.Payload.Size));
+        Request.Headers.Update(Field.ContentLength,Long.toString(Request.Payload.size()));
         Request.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Request.Headers.Update(Field.Host,Owner.Engine.Realm);
         Request.Headers.Update(Field.Client,Owner.Engine.Stamp);

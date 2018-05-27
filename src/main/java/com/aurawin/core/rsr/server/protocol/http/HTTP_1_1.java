@@ -184,7 +184,7 @@ public class HTTP_1_1 extends Item implements Transport,ResourceRequiresAuthenti
         methodState=None;
     }
     private void Prepare(){
-        Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.Size));
+        Response.Headers.Update(Field.ContentLength,Long.toString(Response.Payload.size()));
         Response.Headers.Update(Field.Date, Time.rfc822(new Date()));
         Response.Headers.Update(Field.Host,Owner.Engine.Realm);
         Response.Headers.Update(Field.Server,Owner.Engine.Stamp);

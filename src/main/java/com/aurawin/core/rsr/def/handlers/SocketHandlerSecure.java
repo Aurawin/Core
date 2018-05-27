@@ -74,7 +74,7 @@ public class SocketHandlerSecure extends SocketHandler {
     @Override
     public boolean dataSendComplete(){
 
-        return (Owner.Buffers.Send.Size==0) && !Bytes.Buffer.containsData(bbNetOut) && !Bytes.Buffer.containsData(bbAppOut);
+        return (Owner.Buffers.Send.size()==0) && !Bytes.Buffer.containsData(bbNetOut) && !Bytes.Buffer.containsData(bbAppOut);
 
     }
 
@@ -295,7 +295,7 @@ public class SocketHandlerSecure extends SocketHandler {
                 bbAppOut.flip();
                 hasNewData=true;
             }
-        } else if (Owner.Buffers.Send.Size!=0){
+        } else if (Owner.Buffers.Send.size()!=0){
             try {
                 Owner.Buffers.Send.sliceAtPosition();
             } catch (Exception ex){

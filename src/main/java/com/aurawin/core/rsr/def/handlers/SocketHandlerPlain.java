@@ -48,7 +48,7 @@ public class SocketHandlerPlain extends SocketHandler {
 
     @Override
     public boolean dataSendComplete(){
-        return Owner.Buffers.Send.Size==0;
+        return Owner.Buffers.Send.size()==0;
     }
     @Override
     public SocketHandlerResult Recv(){
@@ -73,7 +73,7 @@ public class SocketHandlerPlain extends SocketHandler {
         }
     }
     public SocketHandlerResult Send(){
-        if (Owner.Buffers.Send.Size>0) {
+        if (Owner.Buffers.Send.size()>0) {
             Owner.Owner.BufferWrite.clear();
             Owner.Buffers.Send.read(Owner.Owner.BufferWrite);
             Owner.Owner.BufferWrite.flip();

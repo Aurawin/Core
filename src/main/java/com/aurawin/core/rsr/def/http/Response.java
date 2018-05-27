@@ -72,11 +72,11 @@ public class Response{
             s = Read(Owner.Buffers.Recv.Read(0,iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength,true ));
             if (s!=sEmpty){
                 long cLen=Headers.ValueAsLong(Field.ContentLength,0);
-                r =  ( (cLen==0) || ( (cLen+iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength)<=Owner.Buffers.Recv.Size) ) ? rSuccess : rPostpone;
+                r =  ( (cLen==0) || ( (cLen+iLoc+Settings.RSR.Items.HTTP.Payload.SeparatorLength)<=Owner.Buffers.Recv.size()) ) ? rSuccess : rPostpone;
             } else{
                 r = rPostpone;
             }
-        } else if (Owner.Buffers.Recv.Size<Settings.RSR.Items.HTTP.Payload.MaxHeaderSize) {
+        } else if (Owner.Buffers.Recv.size()<Settings.RSR.Items.HTTP.Payload.MaxHeaderSize) {
             r  =  rPostpone;
         } else {
             r = rFailure;

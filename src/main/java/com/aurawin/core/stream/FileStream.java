@@ -7,18 +7,17 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 
-public class FileStream extends Channel {
+public class FileStream implements SeekableByteChannel {
     private long Position;
+
     private RandomAccessFile Data;
 
     public FileStream(File f, String mode) throws IOException{
         Data = new RandomAccessFile(f, mode);
-        Size= Data.length();
         position(Data.getFilePointer());
     }
     public FileStream(String name, String mode) throws IOException{
         Data = new RandomAccessFile(name, mode);
-        Size=Data.length();
         Position=Data.getFilePointer();
     }
     public SeekableByteChannel truncate(long size){
@@ -31,8 +30,12 @@ public class FileStream extends Channel {
         }
     }
 
-    public long size(){
-        return Size; //todo
+    public long size()   {
+        try {
+            return Data.length();
+        } catch (IOException ioe){
+            return 0;
+        }
     }
     public long position(){
         return Position; // todo
@@ -53,7 +56,6 @@ public class FileStream extends Channel {
                 // todo
                 iCount = -1;
             }
-            Size = ch.size();
             Position = ch.position();
             return iCount;
         } catch (IOException e){
@@ -74,7 +76,6 @@ public class FileStream extends Channel {
                 // todo
                 iCount = -1;
             }
-            Size = ch.size();
             Position = ch.position();
             return iCount;
         } catch (IOException e){
@@ -91,7 +92,6 @@ public class FileStream extends Channel {
         try {
             ch.position(Position);
             iCount+=ch.read(dst);
-            Size=ch.size();
             Position=ch.position();
         } catch (IOException e){
             // todo

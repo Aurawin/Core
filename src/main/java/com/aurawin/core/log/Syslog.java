@@ -65,7 +65,7 @@ public class Syslog {
                     _end
             };
             try {
-                _fs.position(_fs.Size);
+                _fs.position(_fs.size());
                 _fs.write(Concat.toByteBuffer(Data));
             } catch (UnsupportedEncodingException e) {
                 System.err.println(Table.Exception.Syslog.Notice(Table.Exception.Syslog.UnableToWriteEntry));

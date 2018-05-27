@@ -95,7 +95,7 @@ public class ClientTest {
 
 
         Payload.SaveToFile(new File("/home/atbrunner/Desktop/Payload.txt"));
-        long iSize1=Payload.Size;
+        long iSize1=Payload.size();
         long iSize2=Payload.calculateSize();
 
         assert(iSize1==iSize2);

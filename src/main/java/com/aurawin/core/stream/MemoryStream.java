@@ -2,31 +2,26 @@ package com.aurawin.core.stream;
 
 
 import com.aurawin.core.array.Bytes;
-import com.aurawin.core.stream.def.ReadStats;
+import com.aurawin.core.stream.def.StreamStats;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import static com.aurawin.core.lang.Table.CRLF;
 
-public class MemoryStream extends Channel {
-    private long Position;
-    private ReadStats readStats = new ReadStats();
+public class MemoryStream implements SeekableByteChannel {
+
+    protected StreamStats streamStats = new StreamStats();
     public static Integer MaxChunkSize = 1024*1024*5;
 
     protected volatile LinkedList<byte[]> Collection = new LinkedList<byte[]>();
 
     public MemoryStream(byte[] bytes){
-        Size=0;
         position(0);
     }
     public MemoryStream(){
-        Size=0;
         position(0);
     }
     public void Release(){
@@ -38,7 +33,7 @@ public class MemoryStream extends Channel {
         /*
          This will chop off data at a certain length;
         */
-        if ( (size==0) || (size>Size) ) {
+        if ( (size==0) || (size>size()) ) {
             Clear();
         } else {
             // todo truncate data
@@ -47,17 +42,15 @@ public class MemoryStream extends Channel {
     }
     @Override
     public long size(){
-        long size =0 ;
-        for (byte[] b : Collection) size+=b.length;
-        return size;
+        return streamStats.size;
     }
     @Override
     public long position(){
-        return Position;
+        return streamStats.position;
     }
     @Override
     public int write(ByteBuffer src){
-
+        long Size = size();
         if (src.hasRemaining()==true){
             int iWrite=src.remaining();
 
@@ -77,17 +70,27 @@ public class MemoryStream extends Channel {
                 if  (Chunk.length+iWrite>MaxChunkSize) {
                     Collection.addLast(Chunk);// add prior remove
                     Collection.addLast(baAppend);
+                    streamStats.collectionStart=Collection.size();
+                    streamStats.collectionIndex=iWrite; // last entry
+                    streamStats.size+=iWrite;
+                    streamStats.position+=iWrite;
                 } else {
                     byte [] baComb = new byte[Chunk.length+iWrite];
                     System.arraycopy(Chunk,0,baComb,0,Chunk.length);
                     System.arraycopy(baAppend,0,baComb,Chunk.length,iWrite);
                     Collection.addLast(baComb);
+                    streamStats.collectionStart=Collection.size();
+                    streamStats.collectionIndex=baComb.length; // last entry
+                    streamStats.size+=iWrite;
+                    streamStats.position+=iWrite;
                 }
             } else {
                 Collection.add(baAppend);
+                streamStats.collectionStart=Collection.size();
+                streamStats.collectionIndex=iWrite; // last entry
+                streamStats.size+=iWrite;
+                streamStats.position+=iWrite;
             }
-            Size+=iWrite;
-
             return iWrite;
         } else {
             return 0;
@@ -96,28 +99,30 @@ public class MemoryStream extends Channel {
     }
     @Override
     public SeekableByteChannel position(long newPosition){
-        readStats.Reset();
         byte[] col;
+        long size = streamStats.size;
         long iChunk=0;
         long iRemain=newPosition;
-
-        while ( (readStats.collectionIndex<Collection.size()) && (iRemain>0) ) {
-            col = Collection.get(readStats.collectionIndex);
-            if (readStats.collectionStart<col.length) {
-                iChunk=(int) (col.length-readStats.collectionStart);
+        streamStats.Reset();
+        streamStats.size=size;
+        while ( (streamStats.collectionIndex<Collection.size()) && (iRemain>0) ) {
+            col = Collection.get(streamStats.collectionIndex);
+            if (streamStats.collectionStart<col.length) {
+                iChunk=(int) (col.length-streamStats.collectionStart);
                 if (iChunk>iRemain)
                     iChunk=iRemain;
                 if (iChunk>col.length)
                     iChunk=col.length;
-                readStats.collectionStart=(int) (readStats.collectionStart+iChunk);
+                streamStats.collectionStart=(int) (streamStats.collectionStart+iChunk);
+
                 iRemain-=iChunk;
             } else {
-                readStats.collectionStart=0;
-                readStats.collectionIndex++;
+                streamStats.collectionStart=0;
+                streamStats.collectionIndex++;
             }
 
         }
-        Position=newPosition;
+        streamStats.position=newPosition;
         return this;
     }
 
@@ -125,7 +130,7 @@ public class MemoryStream extends Channel {
     public int read(ByteBuffer dst){
         if (dst.hasRemaining()==true){
             int iRemain=dst.remaining();
-            long iWrite=(Size-Position);
+            long iWrite=(size()-streamStats.position);
 
             int iChunk=0;
             int iTotal=0;
@@ -134,25 +139,25 @@ public class MemoryStream extends Channel {
 
             byte[] col;
 
-            while ( (readStats.collectionIndex<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
-                col = Collection.get(readStats.collectionIndex);
-                if (readStats.collectionStart<col.length) {
-                    iChunk=(int) (col.length-readStats.collectionStart);
+            while ( (streamStats.collectionIndex<Collection.size()) && (iWrite>0) && (iRemain>0) ) {
+                col = Collection.get(streamStats.collectionIndex);
+                if (streamStats.collectionStart<col.length) {
+                    iChunk=(int) (col.length-streamStats.collectionStart);
                     if (iChunk>iRemain)
                         iChunk=iRemain;
                     if (iChunk>col.length)
                         iChunk=col.length;
                     if (iChunk>iWrite)
                         iChunk=(int) iWrite;
-                    dst.put(col,readStats.collectionStart,iChunk);
-                    readStats.collectionStart=readStats.collectionStart+iChunk;
-                    Position+=iChunk;
+                    dst.put(col,streamStats.collectionStart,iChunk);
+                    streamStats.collectionStart=streamStats.collectionStart+iChunk;
+                    streamStats.position+=iChunk;
                     iRemain-=iChunk;
                     iWrite-=iChunk;
                     iTotal+=iChunk;
                 } else {
-                    readStats.collectionStart=0;
-                    readStats.collectionIndex++;
+                    streamStats.collectionStart=0;
+                    streamStats.collectionIndex++;
                 }
             }
             return iTotal;
@@ -168,13 +173,15 @@ public class MemoryStream extends Channel {
     public void close(){}
 
     public boolean hasRemaining(){
-        return (Size!=0) && (Position!=Size);
+        return (streamStats.position!=streamStats.size);
     }
     public int Write (byte[] Value){
         byte[] itm = Value.clone();
         Collection.add(itm);
-        Size+=itm.length;
-
+        streamStats.collectionIndex=Collection.size()-1;
+        streamStats.collectionStart=itm.length;
+        streamStats.size+=itm.length;
+        streamStats.position+=itm.length;
         return itm.length;
     }
     public void SaveToFile(File Output) throws IOException{
@@ -192,19 +199,19 @@ public class MemoryStream extends Channel {
     public String toString(){
         StringBuffer sb = new StringBuffer();
         String chunk;
-        chunk = "Position : "+Position+CRLF;
+        chunk = "Position : "+streamStats.position+CRLF;
         sb.append(chunk);
-        chunk = "Size : "+Size+CRLF;
+        chunk = "Size : "+streamStats.size+CRLF;
         sb.append(chunk);
-
-//        for(byte[] ba:Collection){
-//            chunk=new String(ba);
-//            sb.append(chunk);
-//        }
+        chunk = "Index : "+streamStats.collectionIndex+CRLF;
+        sb.append(chunk);
+        chunk = "Start : "+streamStats.collectionStart+CRLF;
+        sb.append(chunk);
 
         return sb.toString();
     }
     public void LoadFromFile(File File) throws IOException{
+        streamStats.Reset();
         Collection.clear();
         FileInputStream is = new FileInputStream(File);
         try {
@@ -214,12 +221,15 @@ public class MemoryStream extends Channel {
         }
     }
     public long calculateSize(){
-        return size();
+        long size =0 ;
+        for (byte[] b : Collection) size+=b.length;
+        return size;
     }
 
-    public long Write (InputStream Value) throws IOException{
+    public void Write (InputStream Value) throws IOException{
         int iWrite=0;
         byte[] baBuffer=new byte[1024*1024];
+        byte[] Chunk = null;
         BufferedInputStream bfi= new BufferedInputStream(Value);
         try {
             while (bfi.available()>0) {
@@ -227,24 +237,26 @@ public class MemoryStream extends Channel {
                 if (iWrite > -1) {
                     byte[] baAppend = new byte[iWrite];
                     System.arraycopy(baBuffer, 0, baAppend, 0, iWrite);
-                    byte[] Chunk = null;
-                    if (Collection.size() >= 1) {
-                        Chunk = Collection.removeLast();
-                    }
-                    if ((Chunk != null) && (Chunk.length + iWrite > MaxChunkSize)) {
-                        Collection.add(baAppend);
-                    } else if (Chunk == null) {
-                        Collection.add(baAppend);
+
+                    Chunk = (Collection.size() >= 1) ? Collection.removeLast() : null;
+
+                    if (Chunk != null) {
+                        if  (Chunk.length + iWrite > MaxChunkSize) {
+                            Collection.addLast(Chunk);
+                            Collection.addLast(baAppend);
+                        } else {
+                            byte[] baComb = new byte[Chunk.length + iWrite];
+                            System.arraycopy(Chunk, 0, baComb, 0, Chunk.length);
+                            System.arraycopy(baAppend, 0, baComb, Chunk.length, iWrite);
+                            Collection.addLast(baComb);
+                        }
                     } else {
-                        byte[] baComb = new byte[Chunk.length + iWrite];
-                        System.arraycopy(Chunk, 0, baComb, 0, Chunk.length);
-                        System.arraycopy(baAppend, 0, baComb, Chunk.length, iWrite);
-                        Collection.add(baComb);
+                        Collection.addLast(baAppend);
                     }
-                    Size += iWrite;
                 }
             }
-            return Size;
+            streamStats.Reset();
+            streamStats.size=calculateSize();
         } finally{
             bfi.close();
         }
@@ -261,10 +273,11 @@ public class MemoryStream extends Channel {
             (byte) (Value >> 8),
             (byte) Value
         };
-
         Collection.add(itm);
-        Size+=itm.length;
-
+        streamStats.collectionIndex=Collection.size()-1;
+        streamStats.collectionStart=itm.length;
+        streamStats.size+=itm.length;
+        streamStats.position+=itm.length;
         return itm.length;
     }
     public  int Write (int Value){
@@ -276,15 +289,17 @@ public class MemoryStream extends Channel {
                 (byte) Value
         };
         Collection.add(itm);
-        Size+=itm.length;
-
+        streamStats.collectionIndex=Collection.size()-1;
+        streamStats.collectionStart=itm.length;
+        streamStats.size+=itm.length;
+        streamStats.position+=itm.length;
         return itm.length;
     }
     public  byte[] Read(int Count){
-        return Read(Position,Count,false);
+        return Read(streamStats.position,Count,false);
     }
     public  byte[] Read(){
-        return Read(Position,Size,false);
+        return Read(streamStats.position,size(),false);
     }
     public  long readWhole(int Count){
         byte[] ba = Read(Count);
@@ -311,7 +326,7 @@ public class MemoryStream extends Channel {
         long idx = Find(new byte[]{Byte.valueOf(until)},position);
 
         int count = (int) (idx - position);
-        Position = position;
+        position(position);
 
         return readString(count, charset);
 
@@ -334,182 +349,171 @@ public class MemoryStream extends Channel {
 
     }
     public  byte[] Read(long Offset,long Count, boolean Peak){
-        long OldPosition=Position;
-        Position=Offset;
+        long OldPosition=position();
+        position(Offset);
 
-        long iPreSeek=0;
-        int iOffset=0;
         long iChunk=0;
-        int iTotal=0;
-        int iColSize=0;
+        long iTotal=0;
         long iRead=Count;
-        int iLcv =0;
         byte[] col;
-
-
-
         byte[] Result = new byte[(int) Count];
 
         // seek to Collection with position
-        while ( (iLcv<Collection.size()) && (iRead>0) ) {
-            col = Collection.get(iLcv);
-            iColSize=col.length;
-            if (iPreSeek+iColSize>=Position) {
-                iOffset=(int)(Position-iPreSeek);
-                iChunk=iColSize-iOffset;
-                if (iChunk>iRead)
-                    iChunk=iRead;
-                System.arraycopy(col, iOffset, Result, iTotal, (int) iChunk);
-
-                Position+=iChunk;
-
-                iRead-=iChunk;
-                iTotal+=iChunk;
-            }
-            iPreSeek+=iColSize;
-            iLcv++;
+        while ( (streamStats.collectionIndex<Collection.size()) && (iRead>0) ) {
+            col = Collection.get(streamStats.collectionIndex);
+            iChunk=col.length-streamStats.collectionStart;
+            if (iChunk>iRead)
+                iChunk=iRead;
+            System.arraycopy(col, streamStats.collectionStart, Result,(int)iTotal , (int) iChunk);
+            streamStats.position+=iChunk;
+            iRead-=iChunk;
+            iTotal+=iChunk;
+            streamStats.collectionIndex++;
+            streamStats.collectionStart=0;
         }
-        if (Peak==true) Position=OldPosition;
+        if (Peak==true) position(OldPosition);
         return Result;
     }
     public  int Write (boolean Value){
         byte[] itm = new byte[1];
         itm[0]=(Value==true) ? (byte) 1 : (byte) 0;
         Collection.add(itm);
-        Size+=itm.length;
+
+        streamStats.collectionIndex=Collection.size()-1;
+        streamStats.collectionStart=itm.length;
+        streamStats.size+=itm.length;
+        streamStats.position+=itm.length;
 
         return itm.length;
     }
     public  int Write (String Value){
         byte[] itm = Value.getBytes();
         Collection.add(itm);
-        Size+=itm.length;
+
+        streamStats.collectionIndex=Collection.size()-1;
+        streamStats.collectionStart=itm.length;
+        streamStats.size+=itm.length;
+        streamStats.position+=itm.length;
         return itm.length;
     }
 
 
 
     public  void Clear() {
-        // seek to Collection with position
-
         while (Collection.size() > 0) {
-            byte[] itm = Collection.pop();
-            itm = null;
+            Collection.pop();
         }
-        Position=0;
-        Size=0;
+        streamStats.Reset();
     }
     public  void sliceAtPosition(){
-        readStats.Reset();
-        if (Position>0) {
-            int iLcv = 0;
-            int iColSize = 0;
-
-            long iPreSeek = 0;
-            int iOffset = 0;
-            int iChunk = 0;
-
-            while ((iLcv < Collection.size()) && (Position <= Size)) {
-                iColSize = Collection.get(iLcv).length;
-                if (iPreSeek + iColSize >= Position) {
-                    // this array is the current []
-                    iOffset = (int) (Position - iPreSeek);
-                    iChunk = iColSize - iOffset;
-                    if (iChunk > 0) {
-                        byte[] baChunk = new byte[iChunk];
-                        System.arraycopy(Collection.get(iLcv), iOffset, baChunk, 0, iChunk);
-                        Collection.set(iLcv, baChunk);
-                        iLcv = Collection.size();
-                    } else {
-                        Collection.remove(iLcv);
-                    }
-
-                } else {
-                    Collection.remove(iLcv);
-                }
-                iPreSeek += iColSize;
+        if (streamStats.position>0) {
+            int iLcv=0;
+            int iChunk=0;
+            byte[] baPOP;
+            byte[] baChunk;
+            while (iLcv<streamStats.collectionIndex){
+                Collection.pop();
+                iLcv++;
             }
-            Size = size();
-            Position = 0;
+            if (streamStats.collectionIndex<Collection.size()){
+                baPOP = Collection.pop();
+                iChunk = baPOP.length - streamStats.collectionStart;
+                baChunk = new byte[iChunk];
+                System.arraycopy(baPOP, streamStats.collectionStart, baChunk, 0, iChunk);
+                Collection.addFirst(baChunk);
+            }
         }
+        streamStats.Reset();
+        streamStats.size=calculateSize();
     }
     public  void Move(MemoryStream dest, long length){
-        sliceAtPosition();
         dest.Clear();
+        sliceAtPosition();
         if (length>0) {
-            int iLcv = 0;
-            int iColSize = 0;
-            int iChunk = 0;
-            long iMoved = 0;
+            int iLcv=0;
+            int iChunk=0;
+            int iRemain=0;
+            long iTotal=0;
+            byte[] baPOP;
+            byte[] baChunk;
+            byte[] baRemain;
 
-            while ((iLcv < Collection.size()) && (Position < Size) && (iMoved < length)) {
-                iColSize = Collection.get(iLcv).length;
-                iChunk = iColSize;
-                if ((iChunk + iMoved) > length) iChunk = (int) (length - iMoved);
-                if (iChunk > 0) {
-                    byte[] baChunk = new byte[iChunk];
-                    System.arraycopy(Collection.get(iLcv), 0, baChunk, 0, iChunk);
-                    dest.Write(baChunk);
-                    iMoved += iChunk;
-                    iLcv++;
-                    Position += iChunk;
+            while ((streamStats.collectionIndex<Collection.size()) && (iTotal<length) ){
+                baPOP = Collection.pop();
+                iChunk = baPOP.length;
+                if ((iChunk+iTotal)>length) {
+                    iRemain=iChunk-(int) (length-iTotal);
+                    iChunk = iChunk-iRemain;
+                    baChunk=new byte[iChunk];
+                    baRemain=new byte[iRemain];
+                    System.arraycopy(baPOP, 0, baChunk, 0, iChunk); // copy bits before in POP
+                    System.arraycopy(baPOP, iChunk, baRemain, 0, iRemain);
+                    dest.Collection.add(baChunk);
+                    Collection.addFirst(baRemain); // leftovers remain in original collection
+
+                    baRemain=new byte[iRemain];
+
+
                 } else {
-                    iLcv++;
+                    dest.Collection.add(baPOP);
                 }
+                streamStats.collectionIndex+=1;
             }
-            sliceAtPosition();
+            dest.streamStats.Reset();
+            dest.streamStats.size=dest.calculateSize();
+
+            streamStats.Reset();
+            streamStats.size=calculateSize();
+
         }
     }
-    public  long Move(MemoryStream Dest){
+    public  void Move(MemoryStream Dest){
         sliceAtPosition();
         while (Collection.size() >0 ) {
             byte[] itm = Collection.pop();
             Dest.Collection.add(itm);
-            Dest.Size+=itm.length;
+
+            Dest.streamStats.Reset();
+            Dest.streamStats.size=Dest.calculateSize();
         }
-        Size=0;
-        return Dest.Size;
+        streamStats.Reset();
     }
 
-    public  long CopyFrom(MemoryStream Source){
-        Position=Size;
+    public  void CopyFrom(MemoryStream Source){
+        position(streamStats.size);
         if (Source!=null) {
             Source.Collection.stream()
                     .forEach(ba->Collection.add(ba.clone()));
-            Size = Size+Source.Size;
         }
-        return Size;
     }
     public  long Find(byte[] Term, long position){
         long iPreSeek=0;
-        int iOffset=0;
-        int iChunk=0;
         long iSeek = position;
         long iResult = -1;
         int iLcv =0;
         int idxTerm=-1;
-        int iColSize=0;
+
         int iColPosition=0;
         int iTermLen=Term.length;
 
         byte[] bWindow = null;
         byte[] col = null;
 
-        while ( (iLcv<Collection.size()) && (iSeek<Size) ) {
+        while ( (iLcv<Collection.size()) && (iSeek<streamStats.size) ) {
             col = Collection.get(iLcv);
-            if (iPreSeek+col.length>=Position) {
+            if (iPreSeek+col.length>=position) {
                 iColPosition =(int) (position - iPreSeek);
                 idxTerm = Bytes.indexOf(col, Term,(int) iColPosition, 0);
                 if (idxTerm > -1) {
                     iResult = idxTerm + iPreSeek;
                     break;
                 } else {
-                    iSeek += iColSize;
+                    iSeek += col.length;
                     iLcv++;
                 }
 
             } else {
-                iPreSeek+=iColSize;
+                iPreSeek+=col.length;
             }
         }
         return iResult;
@@ -526,7 +530,7 @@ public class MemoryStream extends Channel {
     }
 
     public  long Find(String Term){
-        return Find(Term, Position);
+        return Find(Term, streamStats.position);
     }
 
 }
