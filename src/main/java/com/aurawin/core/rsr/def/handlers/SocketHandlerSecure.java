@@ -292,7 +292,9 @@ public class SocketHandlerSecure extends SocketHandler {
                 if (bbAppOut.position()==bbAppOut.limit())
                   bbAppOut.flip();
                 Owner.Buffers.Send.read(bbAppOut);
+                Owner.Buffers.Send.sliceAtPosition();
                 bbAppOut.flip();
+
                 hasNewData=true;
             }
         } else if (Owner.Buffers.Send.size()!=0){

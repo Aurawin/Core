@@ -88,7 +88,7 @@ public class ClientTest {
         for (int jLcv = 1; jLcv <= 1024*2; jLcv++) {
             line += alphabet.charAt(r.nextInt(len));
         }
-        for (int iLcv = 1; iLcv <= 1024*720; iLcv++){
+        for (int iLcv = 1; iLcv <= 1024*1; iLcv++){
 
             Payload.Write(line + " " + iLcv + CRLF);
         }
