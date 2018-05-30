@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.util.EnumSet;
 import java.util.Set;
 
+import static com.aurawin.core.rsr.def.ItemCommand.cmdTeardown;
 import static com.aurawin.core.rsr.def.ItemKind.Server;
 import static com.aurawin.core.rsr.def.ItemState.isConnecting;
 import static com.aurawin.core.rsr.def.ItemState.isEstablished;
@@ -151,9 +152,10 @@ public abstract class Item  implements Transport,AuthenticateHandler{
         } else{
             return (Trys < Settings.RSR.Items.TransportConnect.MaxTries);
         }
+    }
 
-
-
+    public void Disconnect(){
+        Commands.add(cmdTeardown);
     }
 
     public boolean readyToConnect() {
