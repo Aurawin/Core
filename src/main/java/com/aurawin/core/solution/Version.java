@@ -25,9 +25,11 @@ public class Version {
     public long Minor;
     @Expose(serialize = true, deserialize = true)
     public long Build;
-
+    public String toString(){
+        return Major + "."+ Mid+"."+Minor+"."+Build;
+    }
     public void loadFromResource(String resource) throws IOException{
-        InputStream is = com.aurawin.core.solution.Version.class.getResourceAsStream(defaultResource);
+        InputStream is = getClass().getResourceAsStream(defaultResource);
         InputStreamReader ir = new InputStreamReader(is, UTF_8);
         BufferedReader r = new BufferedReader(ir);
         StringBuilder sb = new StringBuilder(MaxBufferSize);

@@ -53,7 +53,7 @@ public class ClientTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("AuProcess", "Aurawin ClientTest", "Universal");
+        Settings.Initialize("AuProcess", "Aurawin LLC","Aurawin ClientTest", "Universal");
         AnnotatedList al = new AnnotatedList();
         ClassScanner cs= new ClassScanner();
         Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);

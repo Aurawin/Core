@@ -15,6 +15,7 @@ import com.aurawin.core.rsr.def.handlers.SocketHandler;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerPlain;
 import com.aurawin.core.rsr.def.handlers.SocketHandlerSecure;
 import com.aurawin.core.solution.Settings;
+import com.aurawin.core.solution.Version;
 import com.aurawin.core.stored.entities.security.Certificate;
 import com.aurawin.core.stored.entities.Entities;
 import org.hibernate.Session;
@@ -32,7 +33,7 @@ public abstract class Engine extends Thread  {
     public volatile Security SSL;
     public volatile EngineState State;
 
-
+    public volatile Version Version;
     public volatile String Realm;
     public volatile long realmId;
 
@@ -57,6 +58,8 @@ public abstract class Engine extends Thread  {
             InvocationTargetException,IOException,NoSuchMethodException,InstantiationException,IllegalAccessException
     {
         nextId=1;
+        Version = new Version();
+        Version.loadFromResouce();
 
         Address = address;
 
@@ -79,8 +82,9 @@ public abstract class Engine extends Thread  {
         Stamp = (
             System.getProperty(Settings.Properties.Title)+" Version "+
             System.getProperty(Settings.Properties.Version.Major)+"."+
-            System.getProperty(Settings.Properties.Version.Middle)+"."+
-            System.getProperty(Settings.Properties.Version.Minor)+" for Java ("+
+            System.getProperty(Settings.Properties.Version.Middle)+"." +
+            System.getProperty(Settings.Properties.Version.Minor)+" By "+
+            System.getProperty(Settings.Properties.Vendor)+"for Java ("+
             System.getProperty(Settings.Properties.Java.Version)+") on "+
             System.getProperty(Settings.Properties.OS.Name)+" "+
             System.getProperty(Settings.Properties.OS.Architecture)+" ("+

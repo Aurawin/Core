@@ -30,6 +30,7 @@ public class Settings {
         public static final String Program = "program.name";
         public static final String Title = "program.title";
         public static final String Edition = "program.edition";
+        public static final String Vendor = "program.vendor";
         public static class Java{
             public static final String Version = "java.version";
         }
@@ -270,11 +271,12 @@ public class Settings {
             return Base()+ java.io.File.separator+System.getProperty(Properties.Program)+".cfg";
         }
     }
-    public static void Initialize(String program, String title, String edition) throws IOException{
+    public static void Initialize(String program, String vendor, String title, String edition) throws IOException{
         Version = new Version();
         Version.loadFromResouce();
 
         System.setProperty(Properties.Program,program);
+        System.setProperty(Properties.Vendor,vendor);
         System.setProperty(Properties.Title,title);
         System.setProperty(Properties.Edition,edition);
 

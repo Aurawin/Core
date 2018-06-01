@@ -44,7 +44,7 @@ public class ServerTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("AuProcess","Aurawin ServerTest","Universal");
+        Settings.Initialize("AuProcess","Aurawin LLC","Aurawin ServerTest","Universal");
         AnnotatedList al = new AnnotatedList();
         ClassScanner cs= new ClassScanner();
         Set<Class<?>> sa = cs.scanPackageForNamespaced(com.aurawin.core.Package.class);

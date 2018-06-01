@@ -120,7 +120,7 @@ public class LoaderTest {
 
     @Before
     public void before() throws Exception {
-        Settings.Initialize("loader.Test","Aurawin ServerTest","Test");
+        Settings.Initialize("loader.Test","Aurawin LLC","Aurawin ServerTest","Test");
         Compiler=new Singleton();
 
         AnnotatedList annotations = new AnnotatedList();

@@ -8,7 +8,7 @@
     <url>https://aurawin.com/</url>
     <groupId>com.aurawin</groupId>
     <artifactId>core</artifactId>
-    <version>2018.5.30.2</version>
+    <version>2018.6.1.1</version>
     <scm>
         <connection>scm:svn:http://127.0.0.1/dummy</connection>
         <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
@@ -16,6 +16,7 @@
         <url>http://127.0.0.1/dummy</url>
     </scm>
     <packaging>jar</packaging>
+
     <build>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <resources>
@@ -26,6 +27,7 @@
         </resources>
         <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
     </build>
+
     <properties>
         <maven.compiler.source>10</maven.compiler.source>
         <maven.compiler.target>10</maven.compiler.target>
@@ -35,7 +37,7 @@
         <repository>
             <id>aurawin</id>
             <name>Aurawin</name>
-            <url>http://au2.aurawin.com:8081/repository/aurawin</url>
+            <url>http://maven.aurawin.com:8081/repository/aurawin</url>
         </repository>
     </distributionManagement>
     <dependencies>
